@@ -9,4 +9,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 )
 
-// StrictMode in Dev only
+/* StrictMode in Dev only */
