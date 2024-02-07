@@ -53,10 +53,30 @@ class Info(models.Model):
     banner_img = models.ImageField(upload_to="./images")
     grade_id = models.IntegerField(default=0)
     user_id = models.IntegerField(default=0)
-    padels = ArrayField(models.IntegerField(default=0), size=2)
-    badges = ArrayField(models.IntegerField(default=0), size=2)
-    boards = ArrayField(models.IntegerField(default=0), size=2)
     exp = models.IntegerField(default=0)
+
+    class Items(models.Field):
+        ''' represent items that User have and current used item '''
+
+        def __init__(self, item_class, *args, **kwargs):
+            self.item_class = item_class
+            self.current_item = kwargs.get("default")
+            self.items = [self.current_item]
+            super().__init__(*args, **kwargs)
+
+        ''' get current_item object of the <item_class> object'''
+        def get_current_item(self) -> any | None:
+            return self.current_item
+
+        ''' get items object of the <item_class> object'''
+        def get_items(self):
+            return self.items
+
+
+    from .models import Friend # ! Change this to item type
+    padels = Items(Friend, default=0) # !
+    badges = Items(Friend, default=0) # !
+    boards = Items(Friend, default=0) # !
 
 
 class Friend(models.Model):
