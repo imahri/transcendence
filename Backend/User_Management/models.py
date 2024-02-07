@@ -57,3 +57,35 @@ class Info(models.Model):
     badges = ArrayField(models.IntegerField(default=0), size=2)
     boards = ArrayField(models.IntegerField(default=0), size=2)
     exp = models.IntegerField(default=0)
+
+
+class Friend(models.Model):
+    """
+        Fields => [
+            friend_id,
+            status,
+            user_id,
+            is_friend,
+            is_blocked,
+            conversation_id
+        ]
+    """
+    class Friendship(models.TextChoices):
+        FRIEND = ('F', "friend")
+        BLOCKED = ('B', "blocked")
+        INVITED = ('I', "invited")
+
+    status = models.CharField(max_lenght=1, choices=Friendship)
+    friend_id = models.IntegerField()
+    # conversation_id = models.OneToOneField(Conversation)
+    user_id = models.ForeignKey(User)
+
+    def is_friend(self):
+        if self.status == 'F':
+            return True
+        return False
+
+    def is_blocked(self):
+        if self.status == 'B':
+            return True
+        return False
