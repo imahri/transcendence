@@ -44,13 +44,13 @@ class Info(models.Model):
     energy = models.IntegerField(default=10)
     wallet = models.IntegerField(default=0)
 
-    class Gender(models.TextChoices):
-        MALE = 'M', 'Male'
-        FEMALE = 'F', 'Female'
-
-    gender = models.CharField(max_length=1, choices=Gender)
-    profile_img = models.ImageField(upload_to="./images")
-    banner_img = models.ImageField(upload_to="./images")
+    GENDER = (
+        ('M', 'Male'),
+        ('F', 'Female')
+    )
+    gender = models.CharField(max_length=1, choices=GENDER)
+    profile_img = models.ImageField(upload_to="./images", blank=True)
+    banner_img = models.ImageField(upload_to="./images", blank=True)
     grade_id = models.IntegerField(default=0)
     user_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
@@ -65,18 +65,19 @@ class Info(models.Model):
             super().__init__(*args, **kwargs)
 
         ''' get current_item object of the <item_class> object'''
+
         def get_current_item(self) -> any | None:
             return self.current_item
 
         ''' get items object of the <item_class> object'''
+
         def get_items(self):
             return self.items
 
-
-    from .models import Friend # ! Change this to item type
-    padels = Items(Friend, default=0) # !
-    badges = Items(Friend, default=0) # !
-    boards = Items(Friend, default=0) # !
+    from .models import Friend  # ! Change this to item type
+    padels = Items(Friend, default=0)  # !
+    badges = Items(Friend, default=0)  # !
+    boards = Items(Friend, default=0)  # !
 
 
 class Friend(models.Model):
