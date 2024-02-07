@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
+
 class User(AbstractUser):
     """
         Username and Email and Password are required. Other fields are optional.
@@ -16,10 +17,9 @@ class User(AbstractUser):
         ]
     """
     email = models.EmailField(unique=True)
+    REQUIRED_FIELDS = ["email", "username",
+                        "firstname", "lastname", "password"]
 
-    from .models import Info
-    info = Info
-    REQUIRED_FIELDS = ['username', 'email', 'password']
 
 class Info(models.Model):
     """
@@ -38,16 +38,17 @@ class Info(models.Model):
             exp
         ]
     """
-    level = models.FloatField()
-    energy = models.IntegerField()
-    wallet = models.IntegerField()
+
+    user = models.OneToOneField(User)
+    level = models.IntegerField(default=0)
+    energy = models.IntegerField(default=10)
+    wallet = models.IntegerField(default=0)
 
     class Gender(models.TextChoices):
         MALE = 'M', 'Male'
         FEMALE = 'F', 'Female'
 
     gender = models.CharField(max_length=1, choices=Gender)
-
     profile_img = models.ImageField(upload_to="./images")
     banner_img = models.ImageField(upload_to="./images")
     grade_id = models.IntegerField(default=0)
