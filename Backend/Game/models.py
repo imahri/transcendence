@@ -7,15 +7,15 @@ class Acheivement(models.Model):
     name = models.CharField()
     icon_path = models.ImageField(upload_to="images")
     users = models.ManyToManyField(
-        User, related_name="acheivements")
+        User, related_name="acheivements", null=True, on_delete=models.SET_NULL)
 
 
 class Match(models.Model):
     from .models import Match  # !
 
-    enemy = models.OneToOneField(User)
+    enemy = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     score = models.IntegerField(default=0)
-    enemy_match = models.OneToOneField(Match)
+    enemy_match = models.OneToOneField(Match, null=True, on_delete=models.SET_NULL)
     played_at = models.TimeField(auto_now=True)
 
     MATCH_MODES = (
@@ -25,7 +25,7 @@ class Match(models.Model):
         (2, "Tournement")
     )
     mode = models.IntegerField(choices=MATCH_MODES)
-    user = models.ForeignKey(User, related_name="matches")
+    user = models.ForeignKey(User, related_name="matches", null=True, on_delete=models.SET_NULL)
 
 
 class Grade(models.Model):

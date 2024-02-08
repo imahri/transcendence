@@ -15,7 +15,7 @@ class Message(models.Model):
     sender_id = models.IntegerField()
     message = models.TextField(max_length=100)
     sended_at = models.TimeField(auto_now=True)
-    conversation = models.ForeignKey(Conversation, related_name="messages")
+    conversation = models.ForeignKey(Conversation, related_name="messages", null=True, on_delete=models.SET_NULL)
 
 
 class Group(models.Model):
@@ -35,5 +35,5 @@ class Member(models.Model):
         ('R', "REGULAR")
     )
     privilege = models.CharField(choices=PRIVILEGE)
-    user = models.OneToOneField(User)
-    group = models.ForeignKey(Group, related_name="members")
+    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    group = models.ForeignKey(Group, related_name="members", null=True, on_delete=models.SET_NULL)

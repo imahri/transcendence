@@ -39,7 +39,7 @@ class Info(models.Model):
         ]
     """
 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     level = models.IntegerField(default=0)
     energy = models.IntegerField(default=10)
     wallet = models.IntegerField(default=0)
@@ -97,9 +97,9 @@ class Friend(models.Model):
         INVITED = ('I', "invited")
 
     status = models.CharField(max_lenght=1, choices=Friendship)
-    friend = models.OneToOneField(User)
-    conversation = models.OneToOneField(Conversation)
-    user = models.ForeignKey(User, related_name="friends")
+    friend = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    conversation = models.OneToOneField(Conversation, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name="friends", null=True, on_delete=models.SET_NULL)
 
     def is_friend(self):
         if self.status == 'F':
