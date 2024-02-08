@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres.fields import ArrayField
+from ..Chat.models import Conversation
 
 
 class User(AbstractUser):
@@ -97,9 +97,9 @@ class Friend(models.Model):
         INVITED = ('I', "invited")
 
     status = models.CharField(max_lenght=1, choices=Friendship)
-    friend_id = models.IntegerField()
-    # conversation_id = models.OneToOneField(Conversation)
-    user_id = models.ForeignKey(User)
+    friend = models.OneToOneField(User)
+    conversation = models.OneToOneField(Conversation)
+    user = models.ForeignKey(User, related_name="friends")
 
     def is_friend(self):
         if self.status == 'F':

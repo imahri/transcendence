@@ -1,5 +1,5 @@
 from django.db import models
-
+from ..User_Management.models import User
 
 class Conversation(models.Model):
 
@@ -15,7 +15,7 @@ class Message(models.Model):
     sender_id = models.IntegerField()
     message = models.TextField(max_length=100)
     sended_at = models.TimeField(auto_now=True)
-    conversation = models.ForeignKey(Conversation)
+    conversation = models.ForeignKey(Conversation, related_name="messages")
 
 
 class Group(models.Model):
@@ -35,5 +35,5 @@ class Member(models.Model):
         ('R', "REGULAR")
     )
     privilege = models.CharField(choices=PRIVILEGE)
-    user_id = models.IntegerField()
-    group = models.ForeignKey(Group)
+    user = models.OneToOneField(User)
+    group = models.ForeignKey(Group, related_name="members")
