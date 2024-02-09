@@ -58,10 +58,6 @@ class Info(models.Model):
     grade_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
 
-    # padels = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE) Items #!
-    # badges = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE) Items #!
-    # boards = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE) Items #!
-
 
 class Friend(models.Model):
     """
