@@ -16,8 +16,12 @@ class User(AbstractUser):
         ]
     """
     email = models.EmailField(unique=True)
-    REQUIRED_FIELDS = ["email", "username",
-                        "firstname", "lastname", "password"]
+    REQUIRED_FIELDS = [
+        "email",
+        "firstname",
+        "lastname",
+        "password"
+    ]
 
 
 class Info(models.Model):
@@ -51,7 +55,6 @@ class Info(models.Model):
     profile_img = models.ImageField(upload_to="./images", blank=True)
     banner_img = models.ImageField(upload_to="./images", blank=True)
     grade_id = models.IntegerField(default=0)
-    user_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
 
     class Items(models.Field):
@@ -95,9 +98,12 @@ class Friend(models.Model):
         INVITED = ('I', "invited")
 
     status = models.CharField(max_length=1, choices=Friendship)
-    friend = models.OneToOneField('User_Management.User', null=True, on_delete=models.SET_NULL)
-    conversation = models.OneToOneField('Chat.Conversation', null=True, on_delete=models.SET_NULL)
-    user = models.ForeignKey('User_Management.User', related_name="friends", null=True, on_delete=models.SET_NULL)
+    friend = models.OneToOneField(
+        'User_Management.User', null=True, on_delete=models.SET_NULL)
+    conversation = models.OneToOneField(
+        'Chat.Conversation', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(
+        'User_Management.User', related_name="friends", null=True, on_delete=models.SET_NULL)
 
     def is_friend(self):
         if self.status == 'F':
