@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from ..Chat.models import Conversation
 
 
 class User(AbstractUser):
@@ -66,7 +65,7 @@ class Info(models.Model):
 
         ''' get current_item object of the <item_class> object'''
 
-        def get_current_item(self) -> any | None:
+        def get_current_item(self):
             return self.current_item
 
         ''' get items object of the <item_class> object'''
@@ -74,10 +73,9 @@ class Info(models.Model):
         def get_items(self):
             return self.items
 
-    from .models import Friend  # ! Change this to item type
-    padels = Items(Friend, default=0)  # !
-    badges = Items(Friend, default=0)  # !
-    boards = Items(Friend, default=0)  # !
+    padels = Items('Game.Padel', default=0)
+    badges = Items('Game.Badge', default=0)
+    boards = Items('Game.Board', default=0)
 
 
 class Friend(models.Model):
@@ -96,10 +94,10 @@ class Friend(models.Model):
         BLOCKED = ('B', "blocked")
         INVITED = ('I', "invited")
 
-    status = models.CharField(max_lenght=1, choices=Friendship)
-    friend = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
-    conversation = models.OneToOneField(Conversation, null=True, on_delete=models.SET_NULL)
-    user = models.ForeignKey(User, related_name="friends", null=True, on_delete=models.SET_NULL)
+    status = models.CharField(max_length=1, choices=Friendship)
+    friend = models.OneToOneField('User_Management.User', null=True, on_delete=models.SET_NULL)
+    conversation = models.OneToOneField('Chat.Conversation', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey('User_Management.User', related_name="friends", null=True, on_delete=models.SET_NULL)
 
     def is_friend(self):
         if self.status == 'F':

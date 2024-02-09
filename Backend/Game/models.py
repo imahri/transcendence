@@ -1,5 +1,4 @@
 from django.db import models
-from ..User_Management.models import User
 
 
 class Acheivement(models.Model):
@@ -7,25 +6,23 @@ class Acheivement(models.Model):
     name = models.CharField()
     icon_path = models.ImageField(upload_to="images")
     users = models.ManyToManyField(
-        User, related_name="acheivements", null=True, on_delete=models.SET_NULL)
+        'User_Management.User', related_name="acheivements", null=True)
 
 
 class Match(models.Model):
-    from .models import Match  # !
 
-    enemy = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    enemy = models.OneToOneField('User_Management.User', null=True, on_delete=models.SET_NULL)
     score = models.IntegerField(default=0)
-    enemy_match = models.OneToOneField(Match, null=True, on_delete=models.SET_NULL)
+    enemy_match = models.OneToOneField('Game.Match', null=True, on_delete=models.SET_NULL)
     played_at = models.TimeField(auto_now=True)
 
     MATCH_MODES = (
-        ''' Note: Add Modes'''
         (0, "Classic"),
         (1, "Ranked"),
         (2, "Tournement")
     )
     mode = models.IntegerField(choices=MATCH_MODES)
-    user = models.ForeignKey(User, related_name="matches", null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey('User_Management.User', related_name="matches", null=True, on_delete=models.SET_NULL)
 
 
 class Grade(models.Model):

@@ -1,6 +1,4 @@
 from django.db import models
-from ..User_Management.models import User
-
 class Conversation(models.Model):
 
     Modes = (
@@ -35,5 +33,5 @@ class Member(models.Model):
         ('R', "REGULAR")
     )
     privilege = models.CharField(choices=PRIVILEGE)
-    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField('User_Management.User', null=True, on_delete=models.SET_NULL)
     group = models.ForeignKey(Group, related_name="members", null=True, on_delete=models.SET_NULL)
