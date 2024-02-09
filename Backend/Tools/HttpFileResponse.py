@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from core.settings import MEDIA_ROOT
 
 def HttpFileResponse(file_name, Content_type=None):
+    ''' serve static file as Response'''
     try:
         path = os.path.join(MEDIA_ROOT, file_name)
         file = open(path, "rb")
