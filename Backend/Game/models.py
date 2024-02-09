@@ -1,3 +1,5 @@
+from itertools import chain
+from pyexpat import model
 from django.db import models
 
 
@@ -34,24 +36,53 @@ class Grade(models.Model):
     image = models.ImageField(upload_to="images")
 
 
-class Padel(models.Model):
+class Items(models.Model):
+    ''' represent items that User have and current used item '''
+
+    ITEM_TYPES = (
+        ('padels', 'Padels'),
+        ('badges', 'Badges'),
+        ('boards', 'Boards'),
+    )
+
+    user = models.OneToOneField(
+        'User_Management.User', related_name='items', null=True, on_delete=models.SET_NULL)
+    item_class = models.CharField(max_length=10, choices=ITEM_TYPES)
+    owned_items = models.ManyToManyField(
+        'Game.Item', related_name='owned_by')
+    current_item = models.OneToOneField(
+        'Game.Item', on_delete=models.SET_NULL, null=True, related_name='in_use')
+
+    # ''' get current_item object of the <item_class> object'''
+
+    # def get_current_item(self):
+    #     return self.current_item
+
+    # ''' get items object of the <item_class> object'''
+
+    # def get_items(self):
+    #     return self.items
+
+
+class Item(models.Model):
+
+    price = models.IntegerField()
+    image_path = models.ImageField(upload_to="static/images")
+
+
+class Padel(Item):
 
     name = models.CharField(max_length=50)
     definition = models.TextField()
     # ability = None # !
     # special = None # !
-    image_path = models.ImageField(upload_to="static/images")
-    price = models.IntegerField()
 
 
-class Badge(models.Model):
+class Badge(Item):
 
     color = models.CharField(max_length=7, default='#FF0000')
-    image_path = models.ImageField(upload_to="static/images")
-    price = models.IntegerField()
 
 
-class Board(models.Model):
+class Board(Item):
 
-    image_path = models.ImageField(upload_to="static/images")
-    price = models.IntegerField()
+    name = models.CharField(max_length=50)

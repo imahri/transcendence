@@ -1,5 +1,7 @@
 {
   "editor.smoothScrolling": true,
   "workbench.list.smoothScrolling": true,
-  "terminal.integrated.smoothScrolling": true
+  "terminal.integrated.smoothScrolling": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic"
 }

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from Game.models import Padel, Board, Badge
 
 
 class User(AbstractUser):
@@ -57,28 +58,9 @@ class Info(models.Model):
     grade_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
 
-    class Items(models.Field):
-        ''' represent items that User have and current used item '''
-
-        def __init__(self, item_class, *args, **kwargs):
-            self.item_class = item_class
-            self.current_item = kwargs.get("default")
-            self.items = [self.current_item]
-            super().__init__(*args, **kwargs)
-
-        ''' get current_item object of the <item_class> object'''
-
-        def get_current_item(self):
-            return self.current_item
-
-        ''' get items object of the <item_class> object'''
-
-        def get_items(self):
-            return self.items
-
-    padels = Items('Game.Padel', default=0)
-    badges = Items('Game.Badge', default=0)
-    boards = Items('Game.Board', default=0)
+    # padels = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE) Items #!
+    # badges = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE) Items #!
+    # boards = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE) Items #!
 
 
 class Friend(models.Model):
@@ -92,10 +74,11 @@ class Friend(models.Model):
             conversation_id
         ]
     """
-    class Friendship(models.TextChoices):
-        FRIEND = ('F', "friend")
-        BLOCKED = ('B', "blocked")
-        INVITED = ('I', "invited")
+    Friendship = (
+        ('F', "friend"),
+        ('B', "blocked"),
+        ('I', "invited")
+    )
 
     status = models.CharField(max_length=1, choices=Friendship)
     friend = models.OneToOneField(
