@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { isValidEmail } from "../AuthTools/tokenManagment";
 
 import logo from "../assets/logo-login.png";
+
 import "./Register.css";
+
 
 function Register() {
 
@@ -100,7 +102,7 @@ function Register() {
       <div className="info">
         <img src={logo} className="logo" alt=""></img>
         <h1 className="h1-register">
-          Create <br /> new <span>account</span>
+          Create <span>account</span>
         </h1>
       </div>
       {/*<div className={error ? "error": 'hidden'} >
