@@ -1,0 +1,84 @@
+.register-feild {
+    width: 80%;
+    height: 55px;
+    margin: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+@media (max-width: 592px) {
+  .register-feild {
+    height: auto;
+    display: block;
+  } 
+  .register-input-container{
+    height: 50px;
+    margin-top: 30px;
+  }
+}
+
+
+.register-input-container {
+    background-color: #3F3A44;
+    border-radius: 5px;
+    display: flex;
+    padding-top: 5px;
+    
+  }
+  
+  .register-input-container input[type="text"],
+  .register-input-container input[type="password"] {
+    padding-left: 20px;
+    color: white;
+    outline: none;
+  }
+  
+  .register-input-container svg {
+    width: 25px; 
+    height: 20px; 
+    cursor: pointer; 
+    margin-top: 15px;
+    padding-right: 5px;
+}
+span{
+    color: #0275A3;
+}
+
+.cross-vector{
+    position: absolute;
+    top: 0;
+    right: 60px;
+    cursor: pointer;
+}
+
+/* .error-register{
+  color: red;
+} */
+
+
+/* .error{
+  border: 1px solid #c51244;
+}
+
+
+.error{
+  background-color: #ED4337;
+  margin-left: 50px;
+  margin-right: 50px;
+  width: 80%;
+  height: 40px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.error span{
+  color: white;
+}
+.error-input{
+ border: 2px solid #ED4337;
+}
+.hidden{
+  display: none;
+} */
