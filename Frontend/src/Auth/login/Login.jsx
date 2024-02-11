@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef} from "react";
 import { settoken, getToken } from "../AuthTools/tokenManagment";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo-login.png";
 import "./Login.css";
 
 function Login() {
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
-
   const navigate = useNavigate();
+  const Form = useRef(null);
+
 
   function welcomeRedirect() {
     navigate("/");
@@ -23,6 +22,12 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const FormField = Form.current;
+    const username = FormField['username'].value.trim();
+    const password = FormField['password'].value.trim();
+
+    console.log(username);
+    console.log(password);
     const requestBody = {
       username: username,
       password: password,
@@ -53,6 +58,7 @@ function Login() {
 
   
 
+
   return (
     <>
       <svg
@@ -75,16 +81,15 @@ function Login() {
         <img src={logo} className="logo" alt=""></img>
         <h1 className="h1-login">Login</h1>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} ref={Form}>
         <div className="input-container">
-        <label className="label-input" forHtml="username">Enter your username</label>
+        <label className="label-input" htmlFor="username">Enter your username</label>
           <input
             className="input-button"
             required
             type="text"
             id="username"
             placeholder=""
-            onChange={(e) => setUserName(e.target.value)}
           />
           <svg
             width="33"
@@ -117,14 +122,13 @@ function Login() {
         </div>
 
         <div className="input-container">
-        <label className="label-input" forHtml="password">Enter your Password</label>
+        <label className="label-input" htmlFor="password">Enter your Password</label>
           <input
             className="input-button"
             required
             type="password"
             id="password"
             placeholder=""
-            onChange={(e) => setPassword(e.target.value)}
           />
 
           <svg

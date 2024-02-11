@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { isValidEmail } from "../AuthTools/tokenManagment";
@@ -8,18 +8,7 @@ import "./Register.css";
 
 function Register() {
 
-  const [firstname, setFirstname] = useState();
-  const [lastname, setLastname] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-
-  // const [firstname_error, setFirstname_err] = useState();
-  // const [lastname_error, setLastname_err] = useState();
-  // const [email_error, setEmail_err] = useState();
-  // const [password_error, setPassword_err] = useState();
-  // const [error, set_err] = useState();
-
-
+  const Form = useRef(null);
   const navigate = useNavigate();
 
   function welcomRedirect(){
@@ -29,6 +18,14 @@ function Register() {
 
 
   const registerSubmit = async  (e) => {
+
+    const FormField = Form.current;
+    
+    const firstname = FormField['firstname'].value.trim();
+    const lastname = FormField['last-name'].value.trim();
+    const email = FormField['email'].value.trim();
+    const password = FormField['firstname'].value.trim();
+    // const username = FormField['username'].value
 
     e.preventDefault();
     if (!firstname.trim()){
@@ -109,18 +106,17 @@ function Register() {
       {/*<div className={error ? "error": 'hidden'} >
         <span>Error in register Form!</span>
       </div> */}
-      <form onSubmit={ registerSubmit }>
+      <form onSubmit={ registerSubmit } ref={Form}>
         <div className="register-feild">
         <div className="register-input-container">
           {/* <div className={`register-input-container ${firstname_error ? "error-input" : ''}`}> */}
-          <label className="label-input" forHtml="firstname">Enter your firstname</label>
+          <label className="label-input" htmlFor="firstname">Enter your firstname</label>
             <input
               className="input-button"
               required
               type="text"
               id="firstname"
               placeholder=""
-                onChange={(e) => setFirstname(e.target.value)}
             />
 
             <svg
@@ -155,14 +151,13 @@ function Register() {
 
           <div className="register-input-container">
           {/* <div className={`register-input-container ${lastname_error ? "error-input" : ''}`}> */}
-          <label className="label-input" forHtml="last-name">Enter your lastname</label>
+          <label className="label-input" htmlFor="last-name">Enter your lastname</label>
             <input
               className="input-button"
               required
               type="text"
               id="last-name"
               placeholder=""
-                onChange={(e) => setLastname(e.target.value)}
             />
 
             <svg
@@ -197,14 +192,13 @@ function Register() {
         </div>
         <div className="input-container">
         {/* <div className={`input-container ${email_error ? "error-input" : ''}`}> */}
-        <label className="label-input" forHtml="email">Enter your Email</label>
+        <label className="label-input" htmlFor="email">Enter your Email</label>
           <input
             className="input-button"
             required
             type="text"
             id="email"
             placeholder=""
-              onChange={(e) => setEmail(e.target.value)}
           />
           <svg
             width="24"
@@ -221,14 +215,13 @@ function Register() {
         </div>
         <div className="input-container">
         {/* <div className={`input-container ${password_error ? "error-input" : ''}`}> */}
-        <label className="label-input" forHtml="password">Enter password</label>
+        <label className="label-input" htmlFor="password">Enter password</label>
           <input
             className="input-button"
             required
             type="password"
             id="password"
             placeholder=""
-              onChange={(e) => setPassword(e.target.value)}
           />
 
           <svg
