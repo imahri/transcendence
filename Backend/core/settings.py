@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'User_Management',
+    'Authentication',
     'Game',
     'Chat'
 ]
