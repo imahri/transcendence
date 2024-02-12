@@ -30,22 +30,23 @@ class Login(APIView):
 
     @staticmethod
     def genJWT(user: User):
-        return AccessToken.for_user(user), RefreshToken.for_user(user)
+        return AccessToken.for_user(user).__str__(), RefreshToken.for_user(user).__str__()
 
     def post(self, request):
+        ''' Login with { identifier, password  } '''
         try:
-            identifier = request.data['identifier']
-            password = request.data['password']
-            user = User.objects.filter(
-                Q(username=identifier) | Q(email=identifier)).first()
+            identifier = request.data.get('identifier')
+            password = request.data.get('password')
+            user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
             if user is None:
-                raise ObjectDoesNotExist
+                raise ObjectDoesNotExist()
             if user.check_password(password) is False:
-                raise exceptions.AuthenticationFailed()  # "invalid username or password"
+                return None
             access_token, refresh_token = Login.genJWT(user)
             return JsonResponse({
+                'user': user.get_full_name(),
                 'access': access_token,
                 'refresh': refresh_token
             })
         except Exception as error:
-            return Response(data="invalid username or password", status=status.HTTP_400_BAD_REQUEST)
+            raise exceptions.AuthenticationFailed(str(error))
