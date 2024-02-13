@@ -22,7 +22,7 @@ class Message(models.Model):
 class Group(models.Model):
 
     name = models.CharField(max_length=20)
-    image = models.ImageField(upload_to="images", blank=True)
+    image = models.ImageField(upload_to="static/images", blank=True)
     conversation_id = models.IntegerField()
 
 

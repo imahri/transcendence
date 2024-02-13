@@ -33,7 +33,7 @@ class Match(models.Model):
 class Grade(models.Model):
 
     name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="images")
+    image = models.ImageField(upload_to="static/images")
 
 
 class Items(models.Model):

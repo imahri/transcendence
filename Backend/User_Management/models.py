@@ -53,8 +53,8 @@ class Info(models.Model):
         ('F', 'Female')
     )
     gender = models.CharField(max_length=1, choices=GENDER)
-    profile_img = models.ImageField(upload_to="./images", blank=True)
-    banner_img = models.ImageField(upload_to="./images", blank=True)
+    profile_img = models.ImageField(upload_to="static/images", blank=True)
+    banner_img = models.ImageField(upload_to="static/images", blank=True)
     grade_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
 
