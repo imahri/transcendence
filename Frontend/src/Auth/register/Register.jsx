@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { isValidEmail } from "../AuthTools/tokenManagment";
 
 import logo from "../assets/logo-login.png";
-
+import { getToken } from "../AuthTools/tokenManagment";
 import "./Register.css";
 
 
@@ -12,6 +12,12 @@ function Register() {
 
   const Form = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (getToken()){
+      navigate("/home");
+    }
+  }, [])
 
   function welcomRedirect(){
     navigate("/");
@@ -24,45 +30,40 @@ function Register() {
     const FormField = Form.current;
     
     const firstname = FormField['firstname'].value.trim();
-    const lastname = FormField['last-name'].value.trim();
+    const lastname = FormField['lastname'].value.trim();
     const email = FormField['email'].value.trim();
-    const password = FormField['firstname'].value.trim();
+    const password = FormField['password'].value.trim();
     // const username = FormField['username'].value
 
     e.preventDefault();
-    if (!firstname.trim()){
-      // setFirstname_err(true);
-      // set_err(true);
+    if (!firstname){
+      console.log("user name is empty")
       return ;
     }
-    if (!lastname.trim()){
-      // setLastname_err(true);
-      // set_err(true);
-      return;
+    if (!lastname){
+      console.log("last name is empty")
+return;
     }
     if (!isValidEmail(email)){
-      console.log("3asssiri")
-      // setEmail_err(true);
-      // set_err(true);
+      console.log("email is not valid")
       return ;
     }
-    if (!password.trim() || password.length < 8) {
-      // setPassword_err(true);
-      // set_err(true);
-
+    if (!password || password.length < 8) {
+      console.log(password)
+      console.log("password is not valid")
       return ;
     }
     
     const requestBody = {
       username: firstname, //username is firstname for now but the design will change to enter username
-      firstname: firstname,
-      lastname: lastname,
+      first_name: firstname,
+      last_name: lastname,
       password: password,
       email: email,
     }
 
     try{
-        const response = await fetch("http://localhost:8000/Auth/register/", {
+        const response = await fetch("http://localhost:8000/auth/register", {
           method: "POST",
           headers:{
             "Content-Type": "application/json",
@@ -155,12 +156,12 @@ function Register() {
 
           <div className="register-input-container">
           {/* <div className={`register-input-container ${lastname_error ? "error-input" : ''}`}> */}
-          <label className="label-input" htmlFor="last-name">Enter your lastname</label>
+          <label className="label-input" htmlFor="lastname">Enter your lastname</label>
             <input
               className="input-button"
               required
               type="text"
-              id="last-name"
+              id="lastname"
               placeholder=""
             />
 

@@ -29,12 +29,12 @@ function Login() {
     console.log(username);
     console.log(password);
     const requestBody = {
-      username: username,
+      identifier: username,
       password: password,
     };
 
     try {
-      const response = await fetch("http://localhost:8000/Auth/login/", {
+      const response = await fetch("http://localhost:8000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
