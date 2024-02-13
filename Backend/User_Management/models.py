@@ -1,20 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from Game.models import Padel, Board, Badge
 
 
 class User(AbstractUser):
     """
-        Username and Email and Password are required. Other fields are optional.
-
-        Fields => [
-            email,
-            username = inherited,
-            firstname = inherited,
-            lastname = inherited,
-            password = inherited,
-            date_joined = inherited
-        ]
+        Username and Email are required. Other fields are optional.
     """
     email = models.EmailField(unique=True)
     REQUIRED_FIELDS = [
@@ -27,20 +17,7 @@ class User(AbstractUser):
 
 class Info(models.Model):
     """
-        Fields => [
-            level,
-            energy,
-            wallet,
-            gender,
-            profile_img,
-            banner_img,
-            grade_id,
-            user_id,
-            padels,
-            badges,
-            boards,
-            exp
-        ]
+        Store additional info about the User
     """
 
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
@@ -61,14 +38,7 @@ class Info(models.Model):
 
 class Friend(models.Model):
     """
-        Fields => [
-            friend_id,
-            status,
-            user_id,
-            is_friend,
-            is_blocked,
-            conversation_id
-        ]
+        Define the relation between two Users
     """
     Friendship = (
         ('F', "friend"),
