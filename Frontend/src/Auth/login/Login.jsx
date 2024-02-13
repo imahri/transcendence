@@ -19,7 +19,7 @@ function Login() {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const FormField = Form.current;
@@ -44,7 +44,6 @@ function Login() {
 
       if (response.ok) {
         const tokens = await response.json();
-
         settoken(tokens);
         console.log("Login successful");
         navigate("/home");
@@ -153,7 +152,7 @@ function Login() {
           Submit
         </button>
         <div className="other-button">
-          <button className="other-method google"></button>
+          <button id="google-signin-button" className="other-method google"></button>
           <button className="other-method intra"></button>
         </div>
         <div className="link-register">
