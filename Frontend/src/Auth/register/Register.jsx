@@ -41,6 +41,7 @@ function Register() {
       return;
     }
     if (!isValidEmail(email)){
+      console.log("3asssiri")
       // setEmail_err(true);
       // set_err(true);
       return ;
@@ -48,6 +49,7 @@ function Register() {
     if (!password.trim() || password.length < 8) {
       // setPassword_err(true);
       // set_err(true);
+
       return ;
     }
     

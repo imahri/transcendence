@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { getToken } from '../AuthTools/tokenManagment';
@@ -15,6 +15,13 @@ function Welcome() {
       navigate("/home");
     }
   }, []);
+
+  // useLayoutEffect(()=>{
+  //   if (getToken()){
+  //     navigate("/home");
+  //   }
+  // }, []);
+
 
   function Tologin(){
     navigate("/login");
