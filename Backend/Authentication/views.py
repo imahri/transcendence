@@ -1,5 +1,3 @@
-from pickle import TRUE
-import stat
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,7 +7,8 @@ from User_Management.serializers import UserSerializer
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 class Register(APIView):
     """Register View"""
@@ -59,3 +58,17 @@ class Login(APIView):
             )
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
+
+
+@permission_classes([IsAuthenticated])
+class TwoFactorAuthView(APIView):
+    """Two_Factor_Auth"""
+
+    def post(self, request):
+        pass
+        # create URI
+        # generate QR code and save it in database
+        # send image in response
+
+    def get(self, request):
+        pass

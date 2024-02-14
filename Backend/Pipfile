@@ -11,6 +11,8 @@ psycopg2 = "*"
 pyjwt = "*"
 pillow = "*"
 djangorestframework-simplejwt = "*"
+pyotp = "*"
+qrcode = "*"
 
 [dev-packages]
 

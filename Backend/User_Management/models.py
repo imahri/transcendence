@@ -8,6 +8,8 @@ class User(AbstractUser):
     """
 
     email = models.EmailField(unique=True)
+    is_2FA_active = models.BooleanField(default=False)
+    uri_2FA = models.ImageField(upload_to="static/images/2FW")
     REQUIRED_FIELDS = ["email", "first_name", "last_name", "password"]
 
     @staticmethod
