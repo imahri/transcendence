@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { isValidEmail } from "../AuthTools/tokenManagment";
@@ -7,88 +7,110 @@ import logo from "../assets/logo-login.png";
 import { getToken } from "../AuthTools/tokenManagment";
 import "./Register.css";
 
-
 function Register() {
-
   const Form = useRef(null);
   const navigate = useNavigate();
 
+  const [error, setError] = useState();
+  const [errorPassword, setErrorPassword] = useState();
+  const [errorLastname, setErrorLastname] = useState();
+  const [errorFirstame, setErrorFirstname] = useState();
+  const [errorEmail, setErrorEmail] = useState();
+
   useEffect(() => {
-    if (getToken()){
+    if (getToken()) {
       navigate("/home");
     }
-  }, [])
+  }, []);
 
-  function welcomRedirect(){
+  function welcomRedirect() {
     navigate("/");
   }
 
+  function showPassword(){
+    let svg = document.getElementById("eyeIcon");
+    let path = svg.querySelector("path");
+    var PasswordInput = document.getElementById('password');
+    //if the type of button is password swith it to text and vice-versa
+    PasswordInput.type = (PasswordInput.type == 'text') ? 'password' : 'text';
+    let color = (PasswordInput.type == 'text') ? '#00B6FF' :   '#8C8C8C';
+    path.setAttribute("fill", color)
+  }
 
+  function errorInForm(funct) {
+    //I change the state to true to re-render the componnents and disply the eroor section
+    funct(true);
+    setError(true);
+    setTimeout(() => {
+      //here i try to display error msg but only for 5s
+      funct(false);
+      setError(false);
+    }, 5000);
+  }
 
-  const registerSubmit = async  (e) => {
-
+  const registerSubmit = async (e) => {
     const FormField = Form.current;
-    
-    const firstname = FormField['firstname'].value.trim();
-    const lastname = FormField['lastname'].value.trim();
-    const email = FormField['email'].value.trim();
-    const password = FormField['password'].value.trim();
+
+    const firstname = FormField["firstname"].value.trim();
+    const lastname = FormField["lastname"].value.trim();
+    const email = FormField["email"].value.trim();
+    const password = FormField["password"].value.trim();
     // const username = FormField['username'].value
 
     e.preventDefault();
-    if (!firstname){
-      console.log("user name is empty")
-      return ;
+    if (!firstname) {
+      console.log("user name is empty");
+      errorInForm(setErrorFirstname);
+      return;
     }
-    if (!lastname){
-      console.log("last name is empty")
-return;
+    if (!lastname) {
+      errorInForm(setErrorLastname);
+      console.log("last name is empty");
+      return;
     }
-    if (!isValidEmail(email)){
-      console.log("email is not valid")
-      return ;
+    if (!isValidEmail(email)) {
+      errorInForm(setErrorEmail);
+      console.log("email is not valid");
+      return;
     }
     if (!password || password.length < 8) {
-      console.log(password)
-      console.log("password is not valid")
-      return ;
+      errorInForm(setErrorPassword);
+      console.log("password is not valid");
+      return;
     }
-    
+
     const requestBody = {
       username: firstname, //username is firstname for now but the design will change to enter username
       first_name: firstname,
       last_name: lastname,
       password: password,
       email: email,
-    }
+    };
 
-    try{
-        const response = await fetch("http://localhost:8000/auth/register", {
-          method: "POST",
-          headers:{
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+    try {
+      const response = await fetch("http://localhost:8000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-        if (response.ok){
-          console.log("Login successful");
-          navigate("/login");
-        }
-        else{
-          console.error("Login failed");
-        }
-    }
-    catch (error){
+      if (response.ok) {
+        console.log("Login successful");
+        navigate("/login");
+      } else {
+        console.error("Login failed");
+      }
+    } catch (error) {
       console.error("Network error:", error);
     }
-
-  }
-
+  };
 
   return (
     <>
-      <svg onClick={ welcomRedirect} 
+      <svg
+        onClick={welcomRedirect}
         className="cross-vector"
         width="26"
         height="26"
@@ -108,14 +130,37 @@ return;
           Create <span>account</span>
         </h1>
       </div>
-      {/*<div className={error ? "error": 'hidden'} >
+      <div className={error ? "error" : "hidden"}>
+        <svg
+          width="16"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z"
+            fill="white"
+          />
+          <path
+            d="M14.5 25H17.5V22H14.5V25ZM14.5 6V19H17.5V6H14.5Z"
+            fill="#FF0000"
+          />
+        </svg>
+
         <span>Error in register Form!</span>
-      </div> */}
-      <form onSubmit={ registerSubmit } ref={Form}>
+      </div>
+      <form onSubmit={registerSubmit} ref={Form}>
         <div className="register-feild">
-        <div className="register-input-container">
-          {/* <div className={`register-input-container ${firstname_error ? "error-input" : ''}`}> */}
-          <label className="label-input" htmlFor="firstname">Enter your firstname</label>
+          {/* <div className="register-input-container"> */}
+          <div
+            className={`register-input-container ${
+              errorFirstame ? "error-input" : ""
+            }`}
+          >
+            <label className="label-input" htmlFor="firstname">
+              Enter your firstname
+            </label>
             <input
               className="input-button"
               required
@@ -154,9 +199,15 @@ return;
             </svg>
           </div>
 
-          <div className="register-input-container">
-          {/* <div className={`register-input-container ${lastname_error ? "error-input" : ''}`}> */}
-          <label className="label-input" htmlFor="lastname">Enter your lastname</label>
+          {/* <div className="register-input-container"> */}
+          <div
+            className={`register-input-container ${
+              errorLastname ? "error-input" : ""
+            }`}
+          >
+            <label className="label-input" htmlFor="lastname">
+              Enter your lastname
+            </label>
             <input
               className="input-button"
               required
@@ -195,9 +246,11 @@ return;
             </svg>
           </div>
         </div>
-        <div className="input-container">
-        {/* <div className={`input-container ${email_error ? "error-input" : ''}`}> */}
-        <label className="label-input" htmlFor="email">Enter your Email</label>
+        {/* <div className="input-container"> */}
+        <div className={`input-container ${errorEmail ? "error-input" : ""}`}>
+          <label className="label-input" htmlFor="email">
+            Enter your Email
+          </label>
           <input
             className="input-button"
             required
@@ -218,9 +271,13 @@ return;
             />
           </svg>
         </div>
-        <div className="input-container">
-        {/* <div className={`input-container ${password_error ? "error-input" : ''}`}> */}
-        <label className="label-input" htmlFor="password">Enter password</label>
+        {/* <div className="input-container"> */}
+        <div
+          className={`input-container ${errorPassword ? "error-input" : ""}`}
+        >
+          <label className="label-input" htmlFor="password">
+            Enter password
+          </label>
           <input
             className="input-button"
             required
@@ -229,7 +286,8 @@ return;
             placeholder=""
           />
 
-          <svg
+          <svg onClick={showPassword}
+          id="eyeIcon"
             width="24"
             height="14"
             viewBox="0 0 24 14"
