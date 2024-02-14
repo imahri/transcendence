@@ -1,4 +1,4 @@
-import React, { useEffect, useRef} from "react";
+import React, { useEffect, useRef, useState} from "react";
 import { settoken, getToken } from "../AuthTools/tokenManagment";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo-login.png";
@@ -7,6 +7,10 @@ import "./Login.css";
 function Login() {
   const navigate = useNavigate();
   const Form = useRef(null);
+
+  const [error, setError] = useState();
+  const [errorPassword, setErrorPassword] = useState();
+  const [errorUsername, setErrorUsername] = useState();
 
 
   function welcomeRedirect() {
@@ -19,6 +23,16 @@ function Login() {
     }
   }, []);
 
+  function errorInForm(funct){ //I change the state to true to re-render the componnents and disply the eroor section 
+    funct(true); 
+    setError(true); 
+    setTimeout(() =>{ //here i try to display error msg but only for 5s
+      funct(false);
+      setError(false);
+    }, 5000)
+  }
+
+
    const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,7 +40,16 @@ function Login() {
     const username = FormField['username'].value.trim();
     const password = FormField['password'].value.trim();
 
-    console.log(username);
+    if (!username){
+      console.log("user name is empty")
+      errorInForm(setErrorUsername);
+      return;
+    }
+    if (!password){
+      console.log("password is empty")
+      errorInForm(setErrorPassword);
+      return;
+    }
     console.log(password);
     const requestBody = {
       identifier: username,
@@ -55,8 +78,63 @@ function Login() {
     }
   };
 
+  const get42Token = async (code) =>{
+
+    let body = {code: code}
+    try{
+        const response = await fetch("http://localhost:8000/Auth/42",{
+          method: 'POST',
+          headers:{"Content-Type": "application/json"},
+          body: JSON.stringify(body),
+        });
+    
+        if (response.ok) {
+          const tokens = await response.json();
+          settoken(tokens);
+          console.log("Login successful");
+          navigate("/home");
+        } else {
+          console.error("Login failed");
+        }
+    } catch (error) {
+      console.error("Network error:", error);
+  }
+
   
 
+  }
+
+  useEffect(()=>{
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    let code = urlParams.get('code');
+
+    if (code){
+      console.log('code', code)
+      get42Token(code)  
+    }
+
+  }, [])
+
+  
+
+  const handel42 = async (e) =>{
+    e.preventDefault();
+    
+    const externalUrl = 'https://api.intra.42.fr/oauth/authorize';  
+    const params = {
+      client_id : "u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259",
+      redirect_uri : "http://localhost:8080/login",
+      response_type: 'code',
+    };
+
+      const queryString = Object.keys(params)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
+  
+      const redirectUrl = `${externalUrl}?${queryString}`;      
+      window.location.href = redirectUrl;
+  }
 
   return (
     <>
@@ -80,8 +158,16 @@ function Login() {
         <img src={logo} className="logo" alt=""></img>
         <h1 className="h1-login">Login</h1>
       </div>
+      <div className={error ? "error" : "hidden"} >
+      <svg width="16" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="white"/>
+      <path d="M14.5 25H17.5V22H14.5V25ZM14.5 6V19H17.5V6H14.5Z" fill="#FF0000"/>
+      </svg>
+
+        <span>Error in login Form!</span>
+      </div>
       <form onSubmit={handleSubmit} ref={Form}>
-        <div className="input-container">
+        <div className={`input-container ${errorUsername ? "error-input" : ''}` }>
         <label className="label-input" htmlFor="username">Enter your username</label>
           <input
             className="input-button"
@@ -120,7 +206,7 @@ function Login() {
           </svg>
         </div>
 
-        <div className="input-container">
+        <div className={`input-container ${errorPassword? "error-input" : ''}`}>
         <label className="label-input" htmlFor="password">Enter your Password</label>
           <input
             className="input-button"
@@ -153,7 +239,7 @@ function Login() {
         </button>
         <div className="other-button">
           <button id="google-signin-button" className="other-method google"></button>
-          <button className="other-method intra"></button>
+          <button className="other-method intra" onClick={handel42}></button>
         </div>
         <div className="link-register">
           <span>What are you waiting For?</span>

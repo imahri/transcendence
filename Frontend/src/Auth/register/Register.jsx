@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, } from "react-router-dom";
 
 import { isValidEmail } from "../AuthTools/tokenManagment";
 
@@ -13,6 +13,12 @@ function Register() {
   const Form = useRef(null);
   const navigate = useNavigate();
 
+  const [error, setError] = useState();
+  const [errorPassword, setErrorPassword] = useState();
+  const [errorLastname, setErrorLastname] = useState();
+  const [errorFirstame, setErrorFirstname] = useState();
+  const [errorEmail, setErrorEmail] = useState();
+
   useEffect(() => {
     if (getToken()){
       navigate("/home");
@@ -23,7 +29,14 @@ function Register() {
     navigate("/");
   }
 
-
+  function errorInForm(funct){ //I change the state to true to re-render the componnents and disply the eroor section 
+    funct(true); 
+    setError(true); 
+    setTimeout(() =>{ //here i try to display error msg but only for 5s
+      funct(false);
+      setError(false);
+    }, 5000)
+  }
 
   const registerSubmit = async  (e) => {
 
@@ -38,18 +51,21 @@ function Register() {
     e.preventDefault();
     if (!firstname){
       console.log("user name is empty")
+      errorInForm(setErrorFirstname);
       return ;
     }
     if (!lastname){
+      errorInForm(setErrorLastname);
       console.log("last name is empty")
 return;
     }
     if (!isValidEmail(email)){
+      errorInForm(setErrorEmail);
       console.log("email is not valid")
       return ;
     }
     if (!password || password.length < 8) {
-      console.log(password)
+      errorInForm(setErrorPassword);
       console.log("password is not valid")
       return ;
     }
@@ -108,13 +124,17 @@ return;
           Create <span>account</span>
         </h1>
       </div>
-      {/*<div className={error ? "error": 'hidden'} >
+      <div className={error ? "error": 'hidden'} >
+      <svg width="16" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="white"/>
+      <path d="M14.5 25H17.5V22H14.5V25ZM14.5 6V19H17.5V6H14.5Z" fill="#FF0000"/>
+      </svg>
         <span>Error in register Form!</span>
-      </div> */}
+      </div>
       <form onSubmit={ registerSubmit } ref={Form}>
         <div className="register-feild">
-        <div className="register-input-container">
-          {/* <div className={`register-input-container ${firstname_error ? "error-input" : ''}`}> */}
+        {/* <div className="register-input-container"> */}
+          <div className={`register-input-container ${errorFirstame ? "error-input" : ''}`}>
           <label className="label-input" htmlFor="firstname">Enter your firstname</label>
             <input
               className="input-button"
@@ -154,8 +174,8 @@ return;
             </svg>
           </div>
 
-          <div className="register-input-container">
-          {/* <div className={`register-input-container ${lastname_error ? "error-input" : ''}`}> */}
+          {/* <div className="register-input-container"> */}
+          <div className={`register-input-container ${errorLastname ? "error-input" : ''}`}>
           <label className="label-input" htmlFor="lastname">Enter your lastname</label>
             <input
               className="input-button"
@@ -195,8 +215,8 @@ return;
             </svg>
           </div>
         </div>
-        <div className="input-container">
-        {/* <div className={`input-container ${email_error ? "error-input" : ''}`}> */}
+        {/* <div className="input-container"> */}
+        <div className={`input-container ${errorEmail ? "error-input" : ''}`}>
         <label className="label-input" htmlFor="email">Enter your Email</label>
           <input
             className="input-button"
@@ -218,8 +238,8 @@ return;
             />
           </svg>
         </div>
-        <div className="input-container">
-        {/* <div className={`input-container ${password_error ? "error-input" : ''}`}> */}
+        {/* <div className="input-container"> */}
+        <div className={`input-container ${errorPassword ? "error-input" : ''}`}>
         <label className="label-input" htmlFor="password">Enter password</label>
           <input
             className="input-button"
