@@ -7,27 +7,28 @@ class Acheivement(models.Model):
 
     name = models.CharField(max_length=50)
     icon_path = models.ImageField(upload_to="static/images")
-    users = models.ManyToManyField(
-        'User_Management.User', related_name="acheivements")
+    users = models.ManyToManyField("User_Management.User", related_name="acheivements")
 
 
 class Match(models.Model):
 
     enemy = models.OneToOneField(
-        'User_Management.User', null=True, on_delete=models.SET_NULL)
+        "User_Management.User", null=True, on_delete=models.SET_NULL
+    )
     score = models.IntegerField(default=0)
     enemy_match = models.OneToOneField(
-        'Game.Match', null=True, on_delete=models.SET_NULL)
+        "Game.Match", null=True, on_delete=models.SET_NULL
+    )
     played_at = models.TimeField(auto_now=True)
 
-    MATCH_MODES = (
-        (0, "Classic"),
-        (1, "Ranked"),
-        (2, "Tournement")
-    )
+    MATCH_MODES = ((0, "Classic"), (1, "Ranked"), (2, "Tournement"))
     mode = models.IntegerField(choices=MATCH_MODES)
     user = models.ForeignKey(
-        'User_Management.User', related_name="matches", null=True, on_delete=models.SET_NULL)
+        "User_Management.User",
+        related_name="matches",
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
 
 class Grade(models.Model):
@@ -37,21 +38,25 @@ class Grade(models.Model):
 
 
 class Items(models.Model):
-    ''' represent items that User have and current used item '''
+    """represent items that User have and current used item"""
 
     ITEM_TYPES = (
-        ('padels', 'Padels'),
-        ('badges', 'Badges'),
-        ('boards', 'Boards'),
+        ("padels", "Padels"),
+        ("badges", "Badges"),
+        ("boards", "Boards"),
     )
 
     user = models.OneToOneField(
-        'User_Management.User', related_name='items', null=True, on_delete=models.SET_NULL)
+        "User_Management.User",
+        related_name="items",
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     item_class = models.CharField(max_length=10, choices=ITEM_TYPES)
-    owned_items = models.ManyToManyField(
-        'Game.Item', related_name='owned_by')
+    owned_items = models.ManyToManyField("Game.Item", related_name="owned_by")
     current_item = models.OneToOneField(
-        'Game.Item', on_delete=models.SET_NULL, null=True, related_name='in_use')
+        "Game.Item", on_delete=models.SET_NULL, null=True, related_name="in_use"
+    )
 
     # ''' get current_item object of the <item_class> object'''
 
@@ -80,7 +85,7 @@ class Padel(Item):
 
 class Badge(Item):
 
-    color = models.CharField(max_length=7, default='#FF0000')
+    color = models.CharField(max_length=7, default="#FF0000")
 
 
 class Board(Item):

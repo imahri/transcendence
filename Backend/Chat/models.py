@@ -3,10 +3,7 @@ from django.db import models
 
 class Conversation(models.Model):
 
-    Modes = (
-        ('G', "GROUP"),
-        ('D', "DM")
-    )
+    Modes = (("G", "GROUP"), ("D", "DM"))
     mode = models.CharField(max_length=1, choices=Modes)
 
 
@@ -16,7 +13,8 @@ class Message(models.Model):
     message = models.TextField(max_length=100)
     sended_at = models.TimeField(auto_now=True)
     conversation = models.ForeignKey(
-        Conversation, related_name="messages", null=True, on_delete=models.SET_NULL)
+        Conversation, related_name="messages", null=True, on_delete=models.SET_NULL
+    )
 
 
 class Group(models.Model):
@@ -29,13 +27,11 @@ class Group(models.Model):
 class Member(models.Model):
 
     nickname = models.CharField(max_length=50)
-    PRIVILEGE = (
-        ('O', "OWNER"),
-        ('A', "ADMIN"),
-        ('R', "REGULAR")
-    )
+    PRIVILEGE = (("O", "OWNER"), ("A", "ADMIN"), ("R", "REGULAR"))
     privilege = models.CharField(max_length=1, choices=PRIVILEGE)
     user = models.OneToOneField(
-        'User_Management.User', null=True, on_delete=models.SET_NULL)
+        "User_Management.User", null=True, on_delete=models.SET_NULL
+    )
     group = models.ForeignKey(
-        Group, related_name="members", null=True, on_delete=models.SET_NULL)
+        Group, related_name="members", null=True, on_delete=models.SET_NULL
+    )
