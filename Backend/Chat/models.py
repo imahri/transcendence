@@ -1,4 +1,5 @@
 from django.db import models
+from core.settings import IMAGES_ROOT_
 
 
 class Conversation(models.Model):
@@ -20,7 +21,7 @@ class Message(models.Model):
 class Group(models.Model):
 
     name = models.CharField(max_length=20)
-    image = models.ImageField(upload_to="static/images", blank=True)
+    image = models.ImageField(upload_to=IMAGES_ROOT_, blank=True)
     conversation_id = models.IntegerField()
 
 

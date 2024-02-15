@@ -14,10 +14,12 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+APP_NAME = "transcendence App"
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, "static")
 IMAGES_ROOT = os.path.join(MEDIA_ROOT, "images")
+IMAGES_ROOT_ = "static/images"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -35,9 +37,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 AUTH_USER_MODEL = "User_Management.User"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
+    "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 # JWT Config

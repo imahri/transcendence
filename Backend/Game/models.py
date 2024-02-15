@@ -1,12 +1,13 @@
 from itertools import chain
 from pyexpat import model
 from django.db import models
+from core.settings import IMAGES_ROOT_
 
 
 class Acheivement(models.Model):
 
     name = models.CharField(max_length=50)
-    icon_path = models.ImageField(upload_to="static/images")
+    icon_path = models.ImageField(upload_to=IMAGES_ROOT_)
     users = models.ManyToManyField("User_Management.User", related_name="acheivements")
 
 
@@ -34,7 +35,7 @@ class Match(models.Model):
 class Grade(models.Model):
 
     name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="static/images")
+    image = models.ImageField(upload_to=IMAGES_ROOT_)
 
 
 class Items(models.Model):
@@ -72,7 +73,7 @@ class Items(models.Model):
 class Item(models.Model):
 
     price = models.IntegerField()
-    image_path = models.ImageField(upload_to="static/images")
+    image_path = models.ImageField(upload_to=IMAGES_ROOT_)
 
 
 class Padel(Item):
