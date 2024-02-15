@@ -16,6 +16,7 @@ class User(AbstractUser):
     is_2FA_active = models.BooleanField(default=False)
     uri_2FA = models.URLField(max_length=200, blank=True)
     qrcode_2FA = models.FilePathField(max_length=100, blank=True)
+    # secret_code_2FA = models.CharField(max_length=50, blank=True)
 
     @staticmethod
     def create(data=None, **kwargs):
