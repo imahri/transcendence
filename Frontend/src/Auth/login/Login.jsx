@@ -4,24 +4,27 @@ import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo-login.png";
 import "./Login.css";
 
+import { PopupEnternumber } from "../FactorAuth/Popup";
+
 function Login() {
   const navigate = useNavigate();
   const Form = useRef(null);
   const [error, setError] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const [errorUsername, setErrorUsername] = useState();
+  const [popUp2Fa, setPopUp2Fa ] = useState(true);
 
   function welcomeRedirect() {
     navigate("/");
   }
 
- function showPassword(){
+  function showPassword() {
     let svg = document.getElementById("eyeIcon");
     let path = svg.querySelector("path");
-    var PasswordInput = document.getElementById('password');
+    var PasswordInput = document.getElementById("password");
     //if the type of button is password swith it to text and vice-versa
-    PasswordInput.type = (PasswordInput.type == 'text') ? 'password' : 'text';
-    let color = (PasswordInput.type == 'text') ? '#00B6FF' :   '#8C8C8C';
+    PasswordInput.type = PasswordInput.type == "text" ? "password" : "text";
+    let color = PasswordInput.type == "text" ? "#00B6FF" : "#8C8C8C";
     path.setAttribute("fill", color);
   }
 
@@ -129,7 +132,6 @@ function Login() {
         <span>Error in Login Form!</span>
       </div>
       <form onSubmit={handleSubmit} ref={Form}>
-        {/* <div className="input-container"> */}
         <div
           className={`input-container ${errorUsername ? "error-input" : ""}`}
         >
@@ -173,7 +175,6 @@ function Login() {
           </svg>
         </div>
 
-        {/* <div className="input-container"> */}
         <div
           className={`input-container ${errorPassword ? "error-input" : ""}`}
         >
@@ -188,7 +189,8 @@ function Login() {
             placeholder=""
           />
 
-          <svg onClick={showPassword}
+          <svg
+            onClick={showPassword}
             id="eyeIcon"
             width="24"
             height="14"
@@ -224,6 +226,9 @@ function Login() {
           </Link>
         </div>
       </form>
+      {popUp2Fa && <PopupEnternumber update={setPopUp2Fa}/>}
+    
+
     </>
   );
 }
