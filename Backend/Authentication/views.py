@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, exceptions
 from Tools.HttpFileResponse import HttpFileResponse
@@ -85,10 +86,10 @@ class TwoFactorAuthView(APIView):
         except Exception as error:
             raise exceptions.ValidationError(str(error))
 
-    def get(self, request):
+    @api_view(["GET"])
+    def get_qrcode(self, request):
         """
-        verify OTP: add OTP=<otp code> in query parametre
-        get qrcode only: add qrcode=only in query parametre
+        get qrcode only
         """
         try:
             user = User.objects.get(request.user.username)
@@ -96,7 +97,16 @@ class TwoFactorAuthView(APIView):
                 raise exceptions.NotAcceptable(detail="2FA is off")
             if request.GET.get("qrcode") == "only":
                 return HttpFileResponse(user.qrcode_2FA)
+        except Exception:
+            return exceptions.NotAuthenticated()
+
+    def get(self, request):
+        """
+        verify OTP: add user=<username>&OTP=<otp code> in query parametre
+        """
+        try:
             otp = request.GET.get("OTP")
+            user = User.objects.get(request.GET.get("user"))
             if User.TwoFactorAuth.verify(user, otp) is False:
                 raise exceptions.AuthenticationFailed("invalid OTP")
             access_token, refresh_token = Login.genJWT(user)
@@ -114,6 +124,11 @@ class TwoFactorAuthView(APIView):
         """
         Disable 2FA: no body required
         """
-        user = User.objects.get(request.user.username)
-        User.TwoFactorAuth.turn_off_2FA(user)
-        return Response("2FA turn off successfully")
+        try:
+            user = User.objects.get(request.user.username)
+            User.TwoFactorAuth.turn_off_2FA(user)
+            return Response("2FA turn off successfully")
+        except Exception as error:
+            return JsonResponse(
+                {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
+            )
