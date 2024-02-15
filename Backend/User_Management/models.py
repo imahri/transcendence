@@ -16,7 +16,7 @@ class User(AbstractUser):
     is_2FA_active = models.BooleanField(default=False)
     uri_2FA = models.URLField(max_length=200, blank=True)
     qrcode_2FA = models.FilePathField(max_length=100, blank=True)
-    # secret_code_2FA = models.CharField(max_length=50, blank=True)
+    secret_code_2FA = models.CharField(max_length=50, blank=True)
 
     @staticmethod
     def create(data=None, **kwargs):
@@ -64,25 +64,38 @@ class User(AbstractUser):
 
         @staticmethod
         def turn_on_2FA(user: User):
-            uri = pyotp.totp.TOTP(SECRET_KEY).provisioning_uri(
+            secret_code_2FA = f"{SECRET_KEY}_{user.username}"  #! Hash this secret key
+            uri = pyotp.totp.TOTP(secret_code_2FA).provisioning_uri(
                 name=user.username, issuer_name=APP_NAME
             )
             otp_qrcode_path = f"{IMAGES_ROOT_}/{user.username}_totp.png"
             qrcode.make(uri).save(otp_qrcode_path)
             user.update(
-                {"uri_2FA": uri, "qrcode_2FA": otp_qrcode_path, "is_2FA_active": True}
+                {
+                    "uri_2FA": uri,
+                    "qrcode_2FA": otp_qrcode_path,
+                    "secret_code_2FA": secret_code_2FA,
+                    "is_2FA_active": True,
+                }
             )
             user.save()
             return otp_qrcode_path
 
         @staticmethod
         def turn_off_2FA(user: User):
-            user.update({"uri_2FA": "", "qrcode_2FA": "", "is_2FA_active": False})
+            user.update(
+                {
+                    "uri_2FA": "",
+                    "qrcode_2FA": "",
+                    "secret_code_2FA": "",
+                    "is_2FA_active": False,
+                }
+            )
             user.save()
 
         @staticmethod
         def verify(user: User, code: str) -> bool:
-            totp = pyotp.TOTP(SECRET_KEY)
+            totp = pyotp.TOTP(user.secret_code_2FA)
             return totp.verify(code)
 
 
