@@ -60,10 +60,9 @@ class User(AbstractUser):
         pass
 
     class TwoFactorAuth:
-        from models import User
 
         @staticmethod
-        def turn_on_2FA(user: User):
+        def turn_on_2FA(user):
             secret_code_2FA = f"{SECRET_KEY}_{user.username}"  #! Hash this secret key
             uri = pyotp.totp.TOTP(secret_code_2FA).provisioning_uri(
                 name=user.username, issuer_name=APP_NAME
@@ -82,7 +81,7 @@ class User(AbstractUser):
             return otp_qrcode_path
 
         @staticmethod
-        def turn_off_2FA(user: User):
+        def turn_off_2FA(user):
             user.update(
                 {
                     "uri_2FA": "",
@@ -94,7 +93,7 @@ class User(AbstractUser):
             user.save()
 
         @staticmethod
-        def verify(user: User, code: str) -> bool:
+        def verify(user, code: str) -> bool:
             totp = pyotp.TOTP(user.secret_code_2FA)
             return totp.verify(code)
 
