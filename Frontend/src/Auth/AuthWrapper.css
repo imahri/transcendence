@@ -5,10 +5,13 @@
     height: 100vh;
     width: 100%;
     display: flex;
+    position: relative;
+    z-index: 1;
   }
   
   .rigth-container{
     position: fixed;
+    z-index: 2;
     top: 0;
     right: 0;
     width: 50%;
