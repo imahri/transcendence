@@ -68,14 +68,13 @@ class TwoFactorAuthView(APIView):
     """Two_Factor_Auth"""
 
     def check_permissions(self, request):
-        if request.method == 'GET':
+        if request.method == "GET":
             return True
         return super().check_permissions(request)
 
-
     def post(self, request):
-        """ 
-            Enable 2FA: no body required
+        """
+        Enable 2FA: no body required
         """
         try:
             user = User.objects.get(username=request.user.username)
@@ -86,34 +85,34 @@ class TwoFactorAuthView(APIView):
         except Exception as error:
             raise exceptions.ValidationError(str(error))
 
-
     def get(self, request):
         """
-            verify OTP: add OTP=<otp code> in query parametre
-            get qrcode only: add qrcode=only in query parametre
+        verify OTP: add OTP=<otp code> in query parametre
+        get qrcode only: add qrcode=only in query parametre
         """
         try:
             user = User.objects.get(request.user.username)
             if user.is_2FA_active is False:
                 raise exceptions.NotAcceptable(detail="2FA is off")
-            if request.GET.get('qrcode') == 'only':
+            if request.GET.get("qrcode") == "only":
                 return HttpFileResponse(user.qrcode_2FA)
-            otp = request.GET.get('OTP')
+            otp = request.GET.get("OTP")
             if User.TwoFactorAuth.verify(user, otp) is False:
                 raise exceptions.AuthenticationFailed("invalid OTP")
             access_token, refresh_token = Login.genJWT(user)
-            return JsonResponse({
-                    'user': user.get_full_name(),
-                    'access': access_token,
-                    'refresh': refresh_token,
-                })
+            return JsonResponse(
+                {
+                    "user": user.get_full_name(),
+                    "access": access_token,
+                    "refresh": refresh_token,
+                }
+            )
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
 
-
     def delete(self, request):
         """
-            Disable 2FA: no body required
+        Disable 2FA: no body required
         """
         user = User.objects.get(request.user.username)
         User.TwoFactorAuth.turn_off_2FA(user)

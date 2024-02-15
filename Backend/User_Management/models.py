@@ -58,39 +58,32 @@ class User(AbstractUser):
     def get_friends(self):
         pass
 
-
     class TwoFactorAuth:
         from models import User
 
         @staticmethod
         def turn_on_2FA(user: User):
             uri = pyotp.totp.TOTP(SECRET_KEY).provisioning_uri(
-                    name=user.username,
-                    issuer_name=APP_NAME
-                )
+                name=user.username, issuer_name=APP_NAME
+            )
             otp_qrcode_path = f"{IMAGES_ROOT_}/{user.username}_totp.png"
             qrcode.make(uri).save(otp_qrcode_path)
-            user.update({
-                'uri_2FA': uri,
-                'qrcode_2FA': otp_qrcode_path,
-                'is_2FA_active': True
-            })
+            user.update(
+                {"uri_2FA": uri, "qrcode_2FA": otp_qrcode_path, "is_2FA_active": True}
+            )
             user.save()
             return otp_qrcode_path
 
         @staticmethod
         def turn_off_2FA(user: User):
-            user.update({
-                'uri_2FA': "",
-                'qrcode_2FA': "",
-                'is_2FA_active': False
-            })
+            user.update({"uri_2FA": "", "qrcode_2FA": "", "is_2FA_active": False})
             user.save()
 
         @staticmethod
         def verify(user: User, code: str) -> bool:
             totp = pyotp.TOTP(SECRET_KEY)
             return totp.verify(code)
+
 
 class Info(models.Model):
     """
