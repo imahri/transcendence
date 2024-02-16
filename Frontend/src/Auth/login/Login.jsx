@@ -8,9 +8,9 @@ import { PopupEnternumber } from "../FactorAuth/Popup";
 
 
 // ADD: if user has OTP it should not logged instead i will show popup 
+let Gusername;
 
 function Login() {
-  let Gusername;
   const navigate = useNavigate();
   const Form = useRef(null);
   const [error, setError] = useState();
@@ -88,8 +88,8 @@ function Login() {
 
         //if 2OTP requiered 
         Gusername = username;
-        setPopUp2Fa(true);
-        // navigate("/home");
+        // setPopUp2Fa(true);
+        navigate("/home");
       } else {
         console.error("Login failed");
       }
