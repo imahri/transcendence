@@ -47,7 +47,7 @@
 .popUp button{
     width: 138px;
     height: 37px;
-    background: rgba(60, 255, 126, 0.5);    
+    background: rgba(60, 255, 126, 0.7);    
     border-radius: 10px;
     border: none;
     
@@ -59,17 +59,47 @@
     cursor: pointer;
     margin-bottom: 50px;
 }
-
+/* 
 .popUp input{
-    border-radius: 10px;
-    border: none;
     height: 37px;
     width: 60%;
     margin-bottom: 30px;
     margin-top: 30px;
-}
+} */
 
 .popUp img{
  width: 50%;
  height: 300px;   
+}
+
+.allNumber{
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 30px;
+}
+.threeNumber{
+    /* background-color: blue; */
+    display: flex;
+}
+.threeNumber input{ 
+    border-radius: 10px;
+    border: none;
+    width: 50px;
+    height: 50px;
+    margin: 10px;   
+}
+.threeNumber input[type="text"]{
+    color: black;
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    outline: none;
+}
+
+.threeNumber input:focus{
+    /* color: #3E0A61; */
+    color: black;
 }
