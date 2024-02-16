@@ -82,7 +82,7 @@ span{
   color: white;
 }
 .error-input{
-  animation: shake 0.9s ease-in-out;
+  animation: shake 1s ease-in-out;
   border: 1px solid red;
 }
 .error-input label{

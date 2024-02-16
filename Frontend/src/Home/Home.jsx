@@ -4,9 +4,6 @@ import { useState, useEffect } from "react";
 import { getToken, refreshAndRefetch } from "../Auth/AuthTools/tokenManagment";
 import { PopupSetup2Fa, desactivate2FA } from "../Auth/FactorAuth/Popup";
 
-
-
-
 function Home() {
  
 
