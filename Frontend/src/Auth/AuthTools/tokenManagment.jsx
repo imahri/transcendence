@@ -12,7 +12,44 @@ export function getToken(){
     return Cookies.get('access_token');
 }
 
+
 export function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+}
+
+export async function refreshToken(){
+
+    console.log("refresh hhhhh");
+    const refresh_token = Cookies.get('refresh_token');
+    const body = {refresh : refresh_token};
+
+    try {
+        const respons = await fetch('http://localhost:8000/auth/refresh_token', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body),
+        });
+        if (respons.ok){
+            const data = await respons.json();
+            const access_token = data.access;
+            Cookies.set('access_token', await access_token, { sameSite: 'strict' });
+            return true;
+        }
+        else{
+            console.error('response error : ', respons);
+            return false;
+        }
+    }
+    catch (error){
+        console.error('network error : ', error);
+        return false;
+    }
+}
+
+export async  function refreshAndRefetch(refetshFunction, navig){
+    if (await  refreshToken())
+        await refetshFunction();
+    else
+        navigate(navig);
 }
