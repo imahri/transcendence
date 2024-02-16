@@ -16,7 +16,7 @@ function Login() {
   const [error, setError] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const [errorUsername, setErrorUsername] = useState();
-  const [popUp2Fa, setPopUp2Fa ] = useState();
+  const [popUp2Fa, setPopUp2Fa ] = useState(true);
 
   function welcomeRedirect() {
     navigate("/");
