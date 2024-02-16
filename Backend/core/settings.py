@@ -48,8 +48,8 @@ REST_FRAMEWORK = {
 # JWT Config
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=60), #! Edit this
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=60), #! Edit this
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
