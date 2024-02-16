@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import img from "../../Home/CodeQr.png";
 import "./Popup.css";
-import { getToken, settoken } from "../AuthTools/tokenManagment";
-import { Navigate } from "react-router-dom";
+import { getToken, settoken, refreshAndRefetch } from "../AuthTools/tokenManagment";
+import { useNavigate } from "react-router-dom";
+
 
 
 export async function desactivate2FA(){
   const token = getToken();
-
   const response = await fetch('http://localhost:8000/auth/2FA', {
     method: 'DELETE',
     headers: {'Authorization': 'Bearer ' + token}
@@ -35,7 +35,7 @@ async function getCodeQr(){
 
 export function PopupSetup2Fa(props) {
 
-
+  const navigate = useNavigate();
   const [QrImage, setQrImage] =  useState("");
 
 
@@ -45,12 +45,14 @@ export function PopupSetup2Fa(props) {
           const response = await getCodeQr();
           if (response.ok){
             const responseBlob = await response.blob()
-            console.log("blob :", responseBlob);
             const src = URL.createObjectURL(responseBlob);
-            console.log("url :", src)
             setQrImage(src);
           }
-          else{
+          else if (response.status == 401){
+            refreshAndRefetch(req, '/login');
+            // i Want to re-fetch should i call the function again or what
+          }
+          else {
             console.error('response error', response);
           }
         }
