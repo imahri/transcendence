@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
-from core.settings import APP_NAME, SECRET_KEY, IMAGES_ROOT_
+from core.settings import APP_NAME, IMAGES_ROOT, SECRET_KEY, IMAGES_ROOT_
 
 
 class User(AbstractUser):
@@ -67,7 +67,7 @@ class User(AbstractUser):
             uri = pyotp.totp.TOTP(secret_code_2FA).provisioning_uri(
                 name=user.username, issuer_name=APP_NAME
             )
-            otp_qrcode_path = f"{IMAGES_ROOT_}/{user.username}_totp.png"
+            otp_qrcode_path = f"{IMAGES_ROOT}/{user.username}_totp.png"
             qrcode.make(uri).save(otp_qrcode_path)
             user.update(
                 {

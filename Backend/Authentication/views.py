@@ -86,9 +86,6 @@ class TwoFactorAuthView(APIView):
             if user.is_2FA_active is True:
                 raise exceptions.NotAcceptable(detail="2FA is already on")
             qrcode_path = User.TwoFactorAuth.turn_on_2FA(user)
-            base_dir = settings.BASE_DIR
-            qrcode_path = os.path.join(base_dir, qrcode_path)
-            # You should provide the absoulute path of file
             return HttpFileResponse(qrcode_path)
         except Exception as error:
             raise exceptions.ValidationError(str(error))
