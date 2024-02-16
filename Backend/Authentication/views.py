@@ -86,7 +86,7 @@ class TwoFactorAuthView(APIView):
             if user.is_2FA_active is True:
                 raise exceptions.NotAcceptable(detail="2FA is already on")
             qrcode_path = User.TwoFactorAuth.turn_on_2FA(user)
-            return HttpFileResponse(qrcode_path)
+            return HttpFileResponse(qrcode_path, Content_type="image/png")
         except Exception as error:
             raise exceptions.ValidationError(str(error))
 
