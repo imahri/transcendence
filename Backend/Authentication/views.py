@@ -7,13 +7,9 @@ from Tools.HttpFileResponse import HttpFileResponse
 from User_Management.models import User
 from User_Management.serializers import UserSerializer
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
-
-from django.conf import settings
-
 
 
 @permission_classes([AllowAny])
@@ -49,9 +45,7 @@ class Login(APIView):
         try:
             identifier = request.data.get("identifier")
             password = request.data.get("password")
-            user = User.objects.filter(
-                Q(username=identifier) | Q(email=identifier)
-            ).first()
+            user = User.get_by_identifier(identifier)
             if user is None:
                 raise ObjectDoesNotExist()
             if user.check_password(password) is False:
@@ -67,7 +61,6 @@ class Login(APIView):
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
 
-import os
 
 class TwoFactorAuthView(APIView):
     """Two_Factor_Auth"""
@@ -82,7 +75,7 @@ class TwoFactorAuthView(APIView):
         Enable 2FA: no body required
         """
         try:
-            user = User.objects.get(username=request.user.username)
+            user = User.get_by_identifier(request.user.username)
             if user.is_2FA_active is True:
                 raise exceptions.NotAcceptable(detail="2FA is already on")
             qrcode_path = User.TwoFactorAuth.turn_on_2FA(user)
@@ -96,7 +89,7 @@ class TwoFactorAuthView(APIView):
         get qrcode only
         """
         try:
-            user = User.objects.get(request.user.username)
+            user = User.get_by_identifier(request.user.username)
             if user.is_2FA_active is False:
                 raise exceptions.NotAcceptable(detail="2FA is off")
             if request.GET.get("qrcode") == "only":
@@ -110,7 +103,7 @@ class TwoFactorAuthView(APIView):
         """
         try:
             otp = request.GET.get("OTP")
-            user = User.objects.get(username=request.GET.get("user")) #change it to username or email
+            user = User.get_by_identifier(request.GET.get("user"))
             if User.TwoFactorAuth.verify(user, otp) is False:
                 raise exceptions.AuthenticationFailed("invalid OTP")
             access_token, refresh_token = Login.genJWT(user)
@@ -129,7 +122,7 @@ class TwoFactorAuthView(APIView):
         Disable 2FA: no body required
         """
         try:
-            user = User.objects.get(username=request.user.username) #change it to username == and check user name or email
+            user = User.get_by_identifier(request.user.username)
             User.TwoFactorAuth.turn_off_2FA(user)
             return Response("2FA turn off successfully")
         except Exception as error:
