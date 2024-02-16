@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
-from core.settings import APP_NAME, IMAGES_ROOT, SECRET_KEY, IMAGES_ROOT_
+from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
+from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class User(AbstractUser):
@@ -40,6 +42,13 @@ class User(AbstractUser):
         serializer.save()
         return serializer.instance
 
+    @staticmethod
+    def get_by_identifier(identifier: str):
+        user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
+        if user is None:
+            raise ObjectDoesNotExist()
+        return user
+
     def get(self):
         """Get User field"""
         from User_Management.serializers import UserSerializer
@@ -63,7 +72,9 @@ class User(AbstractUser):
 
         @staticmethod
         def turn_on_2FA(user):
-            secret_code_2FA = f"{SECRET_KEY}_{user.username}"  #! Hash this secret key
+            from django.utils.crypto import get_random_string
+
+            secret_code_2FA = user.username  #! Hash this secret key
             uri = pyotp.totp.TOTP(secret_code_2FA).provisioning_uri(
                 name=user.username, issuer_name=APP_NAME
             )
