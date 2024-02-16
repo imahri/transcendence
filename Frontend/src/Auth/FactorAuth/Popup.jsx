@@ -4,6 +4,7 @@ import "./Popup.css";
 import { getToken, settoken, refreshAndRefetch } from "../AuthTools/tokenManagment";
 import { useNavigate } from "react-router-dom";
 
+let numbers = "";
 
 
 export async function desactivate2FA(){
@@ -100,6 +101,8 @@ export function PopupSetup2Fa(props) {
 
 async function sendNumber(username, code){
 
+  // console.log('code : ', code);
+  // console.log('number : ', code);
   let params = new URLSearchParams();
   params.append('user', username);
   params.append('OTP', code);
@@ -110,6 +113,8 @@ async function sendNumber(username, code){
   return response;
 }
 
+
+
 export function PopupEnternumber(props) {
   
   const setPopUp = props.update;
@@ -119,13 +124,13 @@ export function PopupEnternumber(props) {
 
   async function submitNumber(){
 
-    const numbers = res.current;
+    // const numbers = res.current;
     const username = props.username;
 
     // user name will be recived in props
     try{
-      const response = await sendNumber(username, numbers.value);
-
+      const response = await sendNumber(username, numbers);
+      numbers = "";
       if (response.ok){
         const tokens = await response.json();
         settoken(tokens);
@@ -145,7 +150,6 @@ export function PopupEnternumber(props) {
   }
 
   const [inputIndex, setIndex] = useState(1);
-  let numbers;
   function getnumber(e, index){
     const number = e.target.value;
     console.log(number);
@@ -161,7 +165,8 @@ export function PopupEnternumber(props) {
       return;
     }
 
-    numbers += number;
+    if (number)
+      numbers += number;
     if (index != 6)
       setIndex(index + 1);
     

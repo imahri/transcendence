@@ -16,7 +16,7 @@ function Login() {
   const [error, setError] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const [errorUsername, setErrorUsername] = useState();
-  const [popUp2Fa, setPopUp2Fa ] = useState(true);
+  const [popUp2Fa, setPopUp2Fa ] = useState();
 
   function welcomeRedirect() {
     navigate("/");
@@ -88,8 +88,8 @@ function Login() {
 
         //if 2OTP requiered 
         Gusername = username;
-        // setPopUp2Fa(true);
-        navigate("/home");
+        setPopUp2Fa(true);
+        // navigate("/home");
       } else {
         console.error("Login failed");
       }
