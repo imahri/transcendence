@@ -6,13 +6,17 @@ import "./Login.css";
 
 import { PopupEnternumber } from "../FactorAuth/Popup";
 
+
+// ADD: if user has OTP it should not logged instead i will show popup 
+
 function Login() {
+  let Gusername;
   const navigate = useNavigate();
   const Form = useRef(null);
   const [error, setError] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const [errorUsername, setErrorUsername] = useState();
-  const [popUp2Fa, setPopUp2Fa ] = useState(true);
+  const [popUp2Fa, setPopUp2Fa ] = useState();
 
   function welcomeRedirect() {
     navigate("/");
@@ -81,7 +85,11 @@ function Login() {
         const tokens = await response.json();
         settoken(tokens);
         console.log("Login successful");
-        navigate("/home");
+
+        //if 2OTP requiered 
+        Gusername = username;
+        setPopUp2Fa(true);
+        // navigate("/home");
       } else {
         console.error("Login failed");
       }
@@ -226,7 +234,7 @@ function Login() {
           </Link>
         </div>
       </form>
-      {popUp2Fa && <PopupEnternumber update={setPopUp2Fa}/>}
+      {popUp2Fa && <PopupEnternumber update={setPopUp2Fa} username={Gusername} />}
     
 
     </>

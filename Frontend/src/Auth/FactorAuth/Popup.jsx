@@ -1,7 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import img from "../../Home/CodeQr.png";
 import "./Popup.css";
-import { getToken } from "../AuthTools/tokenManagment";
+import { getToken, settoken } from "../AuthTools/tokenManagment";
+import { Navigate } from "react-router-dom";
+
+
+export async function desactivate2FA(){
+  const token = getToken();
+
+  const response = await fetch('http://localhost:8000/auth/2FA', {
+    method: 'DELETE',
+    headers: {'Authorization': 'Bearer ' + token}
+  });
+
+  return response;
+
+}
+
+
 
 // still if the access token expire and if the qrCode is not found
 // if the 2Fa is already activated
@@ -86,15 +102,10 @@ async function sendNumber(username, code){
   params.append('user', username);
   params.append('OTP', code);
   
-  const url = 'http://localhost:8000/2Fa?' + params.toString();
+  const url = 'http://localhost:8000/auth/2FA?' + params.toString();
   
-  // console.log(url);
-
-  // const response = await
-
-
-  // const response = await fetch('http://localhost:8000/2Fa' + new URLSearchParams({user: username, OTP: code}));
-
+  const response = await fetch(url);
+  return response;
 }
 
 export function PopupEnternumber(props) {
@@ -104,17 +115,29 @@ export function PopupEnternumber(props) {
 
 
 
-  function submitNumber(){
+  async function submitNumber(){
 
     const numbers = res.current;
+    const username = props.username;
 
-    // console.log(numbers.value);
-    sendNumber("ouss ama", numbers.value);
+    // user name will be recived in props
+    try{
+      const response = await sendNumber(username, numbers.value);
 
-    // send Get request to the backend and send user name and digit in query string
+      if (response.ok){
+        const tokens = await response.json();
+        settoken(tokens);
+        console.log("login success");
+        Navigate("/home");
 
+      }else{
+        console.log("error response :", response);
+      }
 
-
+    }
+    catch (error){
+      console.log("Network error : ",error)
+    }
 
     setPopUp(false); 
   }

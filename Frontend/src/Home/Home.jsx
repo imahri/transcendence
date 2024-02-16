@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { PopupSetup2Fa } from "../Auth/FactorAuth/Popup";
+import { PopupSetup2Fa, desactivate2FA } from "../Auth/FactorAuth/Popup";
 
 
 
@@ -16,15 +16,34 @@ function Home() {
     setPopUp(true);
   }
 
+  async function desactivate(){
+    
+    try{
+      const response = await desactivate2FA();
+      if (response.ok){
+        console.log('2FA turn off successfully"');
+        setFactorAuth(false);
+      }
+      else{
+        console.error("respons error :", response);
+      }
+    }
+    catch (error){
+      console.error("network error :" , error);
+    }
+
+    
+  }
+
   return (
     <>
       <div >
         <h1> Welcome to the home</h1>
 
         {!FactorAuth ? (
-          <button onClick={() => setFactorAuth(true)}>Activate 2FA </button>
+          <button onClick={()=> setFactorAuth(true) }>Activate 2FA </button>
         ) : (
-          <button onClick={() => setFactorAuth(false)}>Desactivate 2FA</button>
+          <button onClick={desactivate}>Desactivate 2FA</button>
         )}
 
         {FactorAuth && <button onClick={showQr}>show Qr</button>}
