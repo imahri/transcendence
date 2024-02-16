@@ -113,7 +113,7 @@ class TwoFactorAuthView(APIView):
         """
         try:
             otp = request.GET.get("OTP")
-            user = User.objects.get(request.GET.get("user"))
+            user = User.objects.get(username=request.GET.get("user")) #change it to username or email
             if User.TwoFactorAuth.verify(user, otp) is False:
                 raise exceptions.AuthenticationFailed("invalid OTP")
             access_token, refresh_token = Login.genJWT(user)
@@ -132,7 +132,7 @@ class TwoFactorAuthView(APIView):
         Disable 2FA: no body required
         """
         try:
-            user = User.objects.get(request.user.username)
+            user = User.objects.get(username=request.user.username) #change it to username == and check user name or email
             User.TwoFactorAuth.turn_off_2FA(user)
             return Response("2FA turn off successfully")
         except Exception as error:
