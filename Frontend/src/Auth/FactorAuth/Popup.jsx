@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import img from "../../Home/CodeQr.png";
 import "./Popup.css";
 import { getToken, settoken } from "../AuthTools/tokenManagment";
 import { Navigate } from "react-router-dom";
