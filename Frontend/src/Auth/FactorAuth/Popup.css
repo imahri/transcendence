@@ -59,13 +59,6 @@
     cursor: pointer;
     margin-bottom: 50px;
 }
-/* 
-.popUp input{
-    height: 37px;
-    width: 60%;
-    margin-bottom: 30px;
-    margin-top: 30px;
-} */
 
 .popUp img{
  width: 50%;
@@ -73,24 +66,21 @@
 }
 
 .allNumber{
-    /* background-color: aqua; */
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     width: 80%;
     margin: 30px;
 }
-.threeNumber{
-    /* background-color: blue; */
-    display: flex;
-}
-.threeNumber input{ 
+
+.allNumber input{ 
     border-radius: 10px;
     border: none;
-    width: 50px;
+    width: 40%;
     height: 50px;
-    margin: 10px;   
 }
-.threeNumber input[type="text"]{
+
+.allNumber input[type="text"]{
     color: black;
     font-family: "Chakra Petch", sans-serif;
     font-weight: bold;
@@ -99,7 +89,36 @@
     outline: none;
 }
 
-.threeNumber input:focus{
-    /* color: #3E0A61; */
+.allNumber input:focus{
     color: black;
 }
+
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+  }
+  
+  
+  .error-2Fa{
+    animation: shake 1s;
+    background-color: red;
+    width: 50%;
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .error-2Fa svg{
+    padding-bottom: 2px;
+  }
+  .error-2Fa span{
+    padding: 5px;
+    color: white;
+  }
