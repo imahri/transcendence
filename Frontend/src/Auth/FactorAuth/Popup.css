@@ -10,18 +10,30 @@
     backdrop-filter: blur(5px);
 }
 
+.width90{
+    width: 90%;
+}
+
+.width620px{
+    width: 620px;
+}
+
+@media  (max-width: 650px){
+    .width620px{
+        width: 90%;
+    }
+}
 
 .popUp{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%;
     height: auto;    
     background-color: #343434;
     box-shadow: 0px 4px 40px 5px #000000;
      border-radius: 25px;
     position: relative;
-    }
+}
 
 .close-popup {
     position: absolute;
@@ -45,25 +57,30 @@
 }
 
 
+.readySubmit{
+    color: white;
+}
+.notready{
+    color: rgba(243, 243, 243, 0.61);
+}
+
 .popUp button{
     width: 138px;
     height: 37px;
     background: rgba(60, 255, 126, 0.7);    
     border-radius: 10px;
     border: none;
-    
-    font-family: 'Chakra Petch';
+        font-family: 'Chakra Petch';
     font-style: normal;
     font-weight: 700;
     font-size: 16px;
-    color: rgba(243, 243, 243, 0.61);
     cursor: pointer;
     margin-bottom: 50px;
 }
 
 .popUp img{
     width: 50%;
-    height: 300px;   
+    height: 50%;   
 }
 
 .allNumber{
@@ -109,7 +126,7 @@
 .error-2Fa{
     animation: shake 1s;
     background-color: red;
-    width: 50%;
+    width: 60%;
     height: 40px;
     border-radius: 5px;
     display: flex;
@@ -123,10 +140,11 @@
 .error-2Fa span{
     padding: 5px;
     color: white;
+    font-family: "Chakra Petch", sans-serif;
 }
 
 @media (max-width: 560px) {
-        .popUp h2{
+    .popUp h2{
              font-weight: 500;
             font-size: 15px;
     }
@@ -136,12 +154,23 @@
     .allNumber input{ 
             width: 80%;
     }
-    .error-2Fa{
+    .error-2Fa {
         width: 80%;
     }
 }
 @media (max-width: 460px) {
-        .popUp h2{
+    .popUp h2{
             font-size: 12px;
+    }
+    .error-2Fa span{
+        font-size: 14px;
+    }
+}
+@media (max-width: 360px) {
+    .popUp h1{ 
+        font-size: 16px;
+    }
+    .error-2Fa span{
+        font-size: 10px;
     }
 }

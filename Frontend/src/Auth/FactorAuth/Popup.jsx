@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Popup.css";
 import { getToken, settoken, refreshAndRefetch } from "../AuthTools/tokenManagment";
-import { useNavigate } from "react-router-dom";
-
-
 
 
 export async function desactivate2FA(){
@@ -19,7 +16,7 @@ export async function desactivate2FA(){
 // still if the access token expire and if the qrCode is not found
 // if the 2Fa is already activated
 
-async function getCodeQr(){
+async function fetchCodeQr(){
 
   const token = getToken();
   const response = await fetch('http://localhost:8000/auth/2FA', {
@@ -27,47 +24,60 @@ async function getCodeQr(){
     headers: {'Authorization': 'Bearer ' + token}
   });
   return response;
-} 
+}
+
+async function refetchCodeQr(){
+
+  const token = getToken();
+  const response = await fetch('http://localhost:8000/auth/2FA/qrcode', {
+    headers: {'Authorization': 'Bearer ' + token}
+  });
+  return response;
+}
+
+async function getCodeQr(setQrImage, setError){
+  try {
+    const response = await fetchCodeQr();
+    if (response.ok){
+      const responseBlob = await response.blob()
+      const src = URL.createObjectURL(responseBlob);
+      setQrImage(src);
+    }
+    else if (response.status == 400){
+      console.log(response)
+       const secondResponse = await refetchCodeQr();
+       const secondBlob = await secondResponse.blob();
+       const secondSrc = URL.createObjectURL(secondBlob);
+       setQrImage(secondSrc); // refactor function and check status of response 
+    }
+    else if (response.status == 401){
+      refreshAndRefetch(getCodeQr, '/login');
+      // i Want to re-fetch should i call the function again or what
+    }
+    else {
+      setError(true);
+      console.error('response error', response);
+    }
+  }
+  catch (error) {
+    setError(true);
+    console.log("Network error:", error);
+  }
+}
 
 
 export function PopupSetup2Fa(props) {
 
-  const navigate = useNavigate();
-  const [QrImage, setQrImage] =  useState("");
-
-
-  useEffect(() => {
-    async function req(){
-        try {
-          const response = await getCodeQr();
-          if (response.ok){
-            const responseBlob = await response.blob()
-            const src = URL.createObjectURL(responseBlob);
-            setQrImage(src);
-          }
-          else if (response.status == 401){
-            refreshAndRefetch(req, '/login');
-            // i Want to re-fetch should i call the function again or what
-          }
-          else {
-            console.error('response error', response);
-          }
-        }
-        catch (error) {
-          console.log("Network error:", error);
-        }
-      }
-      //send a post methode to the server and wait for Code Qr to render it 
-  
-      req();
-
-  }, [])
   const setPopUp = props.update;
+  const [QrImage, setQrImage] =  useState("");
+  const [error, setError] =  useState();
+
+  useEffect(() => {getCodeQr(setQrImage, setError)} , [])
+
   return (
-
-
+    <>
     <div className="popUpContainer">
-      <div className="popUp">
+      <div className="popUp width620px">
         <svg
           onClick={() => setPopUp(false)}
           className="close-popup"
@@ -86,11 +96,33 @@ export function PopupSetup2Fa(props) {
         <h1>Tow Factor Authentication Setup</h1>
         <h2>1. Install Google Authenticator App</h2>
         <h2>2. Open the App and Scan the Qr Code </h2>
+        {error && 
+        <div className={error ? 'error-2Fa' : 'hidden'}>
+        <svg
+        width="16"
+        height="32"
+        viewBox="0 0 32 32"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        >
+        <path
+          d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z"
+          fill="white"
+        />
+        <path
+          d="M14.5 25H17.5V22H14.5V25ZM14.5 6V19H17.5V6H14.5Z"
+          fill="#FF0000"
+        />
+        </svg>
+        <span>Can't Get the codeQr now ! try it later</span>
+    </div>
+    }
         {QrImage && <img src={QrImage} alt=""></img> }
         <h2>3. Click the button to finish setup</h2>
         <button onClick={() => setPopUp(false)}>ok</button>
       </div>
     </div>
+    </>
   );
 }
 
@@ -114,6 +146,7 @@ async function submitNumber(username, code, setErrorSubmit) {
     setErrorSubmit(true);
     setTimeout(() => setErrorSubmit(false) , 5000);
   }
+
   if (isNaN(code) || code.length != 6){
     error();
     return;
@@ -126,8 +159,8 @@ async function submitNumber(username, code, setErrorSubmit) {
       settoken(tokens);
       console.log("login success");
       Navigate("/home");
-
-    }else{
+    }
+    else{
       error();
       console.log("error response :", response);
     }
@@ -137,13 +170,17 @@ async function submitNumber(username, code, setErrorSubmit) {
   }
 }
 
-function setNumber(e, setError, setCode) {
+function setNumber(e, setError, setCode, setReady) {
   let number = e.target.value;
   setCode(number);      
   if (isNaN(number)){
     setError(true);
     setTimeout(() => setError(false) , 1000);
   }
+  if (number.length == 6)
+    setReady(true);
+  else
+    setReady(false);
 }
 
 export function PopupEnternumber(props) {
@@ -153,11 +190,12 @@ export function PopupEnternumber(props) {
   const [error, setError] = useState();
   const [errorSubmit, setErrorSubmit] = useState();
   const [code, setCode] = useState();
+  const [ready, setReady] = useState();
 
   return (
     <>
       <div className="popUpContainer">
-        <div className="popUp">
+        <div className="popUp width90">
           <svg
             onClick={() => setPopUp(false)}
             className="close-popup"
@@ -195,9 +233,9 @@ export function PopupEnternumber(props) {
           <span>The code is inccorect!</span>
       </div>
           <div className='allNumber'>
-              <input onChange={(e) => setNumber(e, setError, setCode)} className={error ? 'error-input' : ''} type="text" maxLength="6" autoFocus={true}/>
+              <input onChange={(e) => setNumber(e, setError, setCode, setReady)} className={error ? 'error-input' : ''} type="text" maxLength="6" autoFocus={true}/>
           </div>
-          <button onClick={() => {submitNumber(username, code, setErrorSubmit) }}>verify</button>
+          <button className={ready ? 'readySubmit' : 'notready'} onClick={() => {submitNumber(username, code, setErrorSubmit) }}>verify</button>
         </div>
       </div>
     </>
