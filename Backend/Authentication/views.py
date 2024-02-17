@@ -85,8 +85,10 @@ class TwoFactorAuthView(APIView):
         except Exception as error:
             raise exceptions.ValidationError(str(error))
 
+
+    @staticmethod
     @api_view(["GET"])
-    def get_qrcode(self, request):
+    def get_qrcode(request):
         """
         get qrcode only
         """
@@ -94,8 +96,7 @@ class TwoFactorAuthView(APIView):
             user = User.get_by_identifier(request.user.username)
             if user.is_2FA_active is False:
                 raise exceptions.NotAcceptable(detail="2FA is off")
-            if request.GET.get("qrcode") == "only":
-                return HttpFileResponse(user.qrcode_2FA)
+            return HttpFileResponse(user.qrcode_2FA, Content_type="image/png")
         except Exception:
             return exceptions.NotAuthenticated()
 

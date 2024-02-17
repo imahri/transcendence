@@ -30,20 +30,22 @@ class User(AbstractUser):
 
         from User_Management.serializers import UserSerializer
 
-        if data is None:
-            data = {
-                "username": kwargs.get("username"),
-                "email": kwargs.get("email"),
-                "first_name": kwargs.get("first_name"),
-                "last_name": kwargs.get("last_name"),
-                "password": kwargs.get("password"),
-            }
-        serializer = UserSerializer(data)
+        valid_data: dict = {}
+        if data is not None:
+            valid_data = data
+        else:
+            for key, value in kwargs.items():
+                valid_data[key] = value
+        serializer = UserSerializer(valid_data)
         serializer.save()
         return serializer.instance
 
     @staticmethod
     def get_by_identifier(identifier: str):
+        """
+        Get user by username or email
+        If the identifier is not found raise a ObjectDoesNotExist.
+        """
         user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
         if user is None:
             raise ObjectDoesNotExist()
@@ -56,10 +58,14 @@ class User(AbstractUser):
         serializer = UserSerializer(self)
         return serializer.data
 
-    def update(self, data: dict, return_updated_data=False):
+    def update(self, return_updated_data=False, **kwargs):
         """Update User field except password ( use <obj>.set_password )"""
-
-        User.objects.update(**data)
+        kwargs.pop("password", None)
+        update_fields = []
+        for key, value in kwargs.items():
+            update_fields.append(key)
+            setattr(self, key, value)
+        self.save()
         return self.get() if return_updated_data is True else None
 
     def get_info(self):
@@ -89,10 +95,10 @@ class User(AbstractUser):
 
         @staticmethod
         def turn_off_2FA(user):
-            user.uri_2FA = "",
-            user.qrcode_2FA = "",
-            user.secret_code_2FA = "",
-            user.is_2FA_active = False,
+            user.uri_2FA = ""
+            user.qrcode_2FA = ""
+            user.secret_code_2FA = ""
+            user.is_2FA_active = False
             user.save()
 
         @staticmethod
