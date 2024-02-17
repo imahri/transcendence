@@ -16,7 +16,7 @@ function Login() {
   const [error, setError] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const [errorUsername, setErrorUsername] = useState();
-  const [popUp2Fa, setPopUp2Fa ] = useState(true);
+  const [popUp2Fa, setPopUp2Fa ] = useState();
 
   function welcomeRedirect() {
     navigate("/");
@@ -82,14 +82,17 @@ function Login() {
       });
 
       if (response.ok) {
-        const tokens = await response.json();
-        settoken(tokens);
-        console.log("Login successful");
+        const responseBody = await response.json();
 
-        //if 2OTP requiered 
-        Gusername = username;
-        setPopUp2Fa(true);
-        // navigate("/home");
+        if (responseBody.success != undefined){
+          console.log("OTP required");
+          Gusername = username;
+          setPopUp2Fa(true);
+          return;
+        }
+        console.log("login success");
+        settoken(responseBody);
+        navigate("/home");
       } else {
         console.error("Login failed");
       }
