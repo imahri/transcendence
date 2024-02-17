@@ -50,6 +50,8 @@ class Login(APIView):
                 raise ObjectDoesNotExist()
             if user.check_password(password) is False:
                 return None
+            if user.is_2FA_active is True:
+                return JsonResponse({"success": "2FA Required"})
             access_token, refresh_token = Login.genJWT(user)
             return JsonResponse(
                 {

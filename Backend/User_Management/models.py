@@ -80,27 +80,19 @@ class User(AbstractUser):
             )
             otp_qrcode_path = f"{IMAGES_ROOT}/{user.username}_totp.png"
             qrcode.make(uri).save(otp_qrcode_path)
-            user.update(
-                {
-                    "uri_2FA": uri,
-                    "qrcode_2FA": otp_qrcode_path,
-                    "secret_code_2FA": secret_code_2FA,
-                    "is_2FA_active": True,
-                }
-            )
+            user.uri_2FA = uri
+            user.qrcode_2FA = otp_qrcode_path
+            user.secret_code_2FA = secret_code_2FA
+            user.is_2FA_active = True
             user.save()
             return otp_qrcode_path
 
         @staticmethod
         def turn_off_2FA(user):
-            user.update(
-                {
-                    "uri_2FA": "",
-                    "qrcode_2FA": "",
-                    "secret_code_2FA": "",
-                    "is_2FA_active": False,
-                }
-            )
+            user.uri_2FA = "",
+            user.qrcode_2FA = "",
+            user.secret_code_2FA = "",
+            user.is_2FA_active = False,
             user.save()
 
         @staticmethod
