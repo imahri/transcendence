@@ -7,8 +7,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* filter: blur(4px); */
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
 }
 
 
@@ -16,7 +15,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 620px;
+    width: 90%;
     height: auto;    
     background-color: #343434;
     box-shadow: 0px 4px 40px 5px #000000;
@@ -44,6 +43,8 @@
     font-size: 20px;
     color: rgba(243, 243, 243, 0.61);
 }
+
+
 .popUp button{
     width: 138px;
     height: 37px;
@@ -61,15 +62,15 @@
 }
 
 .popUp img{
- width: 50%;
- height: 300px;   
+    width: 50%;
+    height: 300px;   
 }
 
 .allNumber{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     margin: 30px;
 }
 
@@ -79,6 +80,7 @@
     width: 40%;
     height: 50px;
 }
+
 
 .allNumber input[type="text"]{
     color: black;
@@ -101,10 +103,10 @@
     60% { transform: translateX(-10px); }
     80% { transform: translateX(10px); }
     100% { transform: translateX(0); }
-  }
-  
-  
-  .error-2Fa{
+}
+
+
+.error-2Fa{
     animation: shake 1s;
     background-color: red;
     width: 50%;
@@ -113,12 +115,33 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .error-2Fa svg{
+}
+
+.error-2Fa svg{
     padding-bottom: 2px;
-  }
-  .error-2Fa span{
+}
+.error-2Fa span{
     padding: 5px;
     color: white;
-  }
+}
+
+@media (max-width: 560px) {
+        .popUp h2{
+             font-weight: 500;
+            font-size: 15px;
+    }
+    .popUp h1{ 
+            font-size: 20px;
+    }
+    .allNumber input{ 
+            width: 80%;
+    }
+    .error-2Fa{
+        width: 80%;
+    }
+}
+@media (max-width: 460px) {
+        .popUp h2{
+            font-size: 12px;
+    }
+}
