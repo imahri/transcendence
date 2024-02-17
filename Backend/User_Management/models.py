@@ -40,6 +40,16 @@ class User(AbstractUser):
         serializer.save()
         return serializer.instance
 
+    def update(self, return_updated_data=False, **kwargs):
+        """Update User field except password ( use <obj>.set_password )"""
+        kwargs.pop("password", None)
+        update_fields = []
+        for key, value in kwargs.items():
+            update_fields.append(key)
+            setattr(self, key, value)
+        self.save()
+        return self.get() if return_updated_data is True else None
+
     @staticmethod
     def get_by_identifier(identifier: str):
         """
