@@ -92,7 +92,7 @@ class User(AbstractUser):
             user.uri_2FA = "",
             user.qrcode_2FA = "",
             user.secret_code_2FA = "",
-            user.is_2FA_active = False,
+            user.is_2FA_active = False
             user.save()
 
         @staticmethod
