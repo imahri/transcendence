@@ -61,25 +61,26 @@ class User(AbstractUser):
             raise ObjectDoesNotExist()
         return user
 
-    def get(self):
+    def get(self, include_info=False):
         """Get User field"""
         from User_Management.serializers import UserSerializer
 
         serializer = UserSerializer(self)
+        if include_info:
+            return {**dict(serializer.data), **dict(self.get_info())}
         return serializer.data
 
-    def update(self, return_updated_data=False, **kwargs):
-        """Update User field except password ( use <obj>.set_password )"""
-        kwargs.pop("password", None)
-        update_fields = []
-        for key, value in kwargs.items():
-            update_fields.append(key)
-            setattr(self, key, value)
-        self.save()
-        return self.get() if return_updated_data is True else None
+    def set_info(self):
+        Info.create(self)
 
     def get_info(self):
-        pass
+        """
+        level, energy, wallet, gender, exp
+        """
+        from User_Management.serializers import InfoSerializer
+
+        serializer = InfoSerializer(Info.objects.get(user=self))
+        return serializer.data
 
     def get_friends(self):
         pass
@@ -122,17 +123,21 @@ class Info(models.Model):
     Store additional info about the User
     """
 
-    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     level = models.IntegerField(default=0)
     energy = models.IntegerField(default=10)
     wallet = models.IntegerField(default=0)
 
     GENDER = (("M", "Male"), ("F", "Female"))
-    gender = models.CharField(max_length=1, choices=GENDER)
+    gender = models.CharField(max_length=1, choices=GENDER, blank=True)
     profile_img = models.ImageField(upload_to=IMAGES_ROOT_, blank=True)
     banner_img = models.ImageField(upload_to=IMAGES_ROOT_, blank=True)
     grade_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
+
+    @staticmethod
+    def create(user: User):
+        Info(user=user).save()
 
 
 class Friend(models.Model):
