@@ -30,40 +30,57 @@ class User(AbstractUser):
 
         from User_Management.serializers import UserSerializer
 
-        if data is None:
-            data = {
-                "username": kwargs.get("username"),
-                "email": kwargs.get("email"),
-                "first_name": kwargs.get("first_name"),
-                "last_name": kwargs.get("last_name"),
-                "password": kwargs.get("password"),
-            }
-        serializer = UserSerializer(data)
+        valid_data: dict = {}
+        if data is not None:
+            valid_data = data
+        else:
+            for key, value in kwargs.items():
+                valid_data[key] = value
+        serializer = UserSerializer(valid_data)
         serializer.save()
         return serializer.instance
 
+    def update(self, return_updated_data=False, **kwargs):
+        """Update User field except password ( use <obj>.set_password )"""
+        kwargs.pop("password", None)
+        update_fields = []
+        for key, value in kwargs.items():
+            update_fields.append(key)
+            setattr(self, key, value)
+        self.save()
+        return self.get() if return_updated_data is True else None
+
     @staticmethod
     def get_by_identifier(identifier: str):
+        """
+        Get user by username or email
+        If the identifier is not found raise a ObjectDoesNotExist.
+        """
         user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
         if user is None:
             raise ObjectDoesNotExist()
         return user
 
-    def get(self):
+    def get(self, include_info=False):
         """Get User field"""
         from User_Management.serializers import UserSerializer
 
         serializer = UserSerializer(self)
+        if include_info:
+            return {**dict(serializer.data), **dict(self.get_info())}
         return serializer.data
 
-    def update(self, data: dict, return_updated_data=False):
-        """Update User field except password ( use <obj>.set_password )"""
-
-        User.objects.update(**data)
-        return self.get() if return_updated_data is True else None
+    def set_info(self):
+        Info.create(self)
 
     def get_info(self):
-        pass
+        """
+        level, energy, wallet, gender, exp
+        """
+        from User_Management.serializers import InfoSerializer
+
+        serializer = InfoSerializer(Info.objects.get(user=self))
+        return serializer.data
 
     def get_friends(self):
         pass
@@ -89,9 +106,9 @@ class User(AbstractUser):
 
         @staticmethod
         def turn_off_2FA(user):
-            user.uri_2FA = "",
-            user.qrcode_2FA = "",
-            user.secret_code_2FA = "",
+            user.uri_2FA = ""
+            user.qrcode_2FA = ""
+            user.secret_code_2FA = ""
             user.is_2FA_active = False
             user.save()
 
@@ -106,17 +123,21 @@ class Info(models.Model):
     Store additional info about the User
     """
 
-    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     level = models.IntegerField(default=0)
     energy = models.IntegerField(default=10)
     wallet = models.IntegerField(default=0)
 
     GENDER = (("M", "Male"), ("F", "Female"))
-    gender = models.CharField(max_length=1, choices=GENDER)
+    gender = models.CharField(max_length=1, choices=GENDER, blank=True)
     profile_img = models.ImageField(upload_to=IMAGES_ROOT_, blank=True)
     banner_img = models.ImageField(upload_to=IMAGES_ROOT_, blank=True)
     grade_id = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
+
+    @staticmethod
+    def create(user: User):
+        Info(user=user).save()
 
 
 class Friend(models.Model):
