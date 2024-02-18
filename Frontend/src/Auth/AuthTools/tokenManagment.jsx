@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import { REFRESH_TOKEN_URL } from '../../URLS';
 
 
 export function settoken(tokens) {
@@ -25,7 +26,7 @@ export async function refreshToken(){
     const body = {refresh : refresh_token};
 
     try {
-        const respons = await fetch('http://localhost:8000/auth/refresh_token', {
+        const respons = await fetch(REFRESH_TOKEN_URL, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body),

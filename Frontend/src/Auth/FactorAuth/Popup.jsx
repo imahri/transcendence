@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Popup.css";
 import { getToken, settoken, refreshAndRefetch } from "../AuthTools/tokenManagment";
+import { TOWFACTOR_URL, TOWFACTOR_QR_URL } from "../../URLS";
 
 
 export async function desactivate2FA(){
   const token = getToken();
-  const response = await fetch('http://localhost:8000/auth/2FA', {
+  const response = await fetch(TOWFACTOR_URL, {
     method: 'DELETE',
     headers: {'Authorization': 'Bearer ' + token}
   });
@@ -19,7 +20,7 @@ export async function desactivate2FA(){
 async function fetchCodeQr(){
 
   const token = getToken();
-  const response = await fetch('http://localhost:8000/auth/2FA', {
+  const response = await fetch(TOWFACTOR_URL, {
     method: 'POST',
     headers: {'Authorization': 'Bearer ' + token}
   });
@@ -29,7 +30,7 @@ async function fetchCodeQr(){
 async function refetchCodeQr(){
 
   const token = getToken();
-  const response = await fetch('http://localhost:8000/auth/2FA/qrcode', {
+  const response = await fetch(TOWFACTOR_QR_URL, {
     headers: {'Authorization': 'Bearer ' + token}
   });
   return response;
@@ -46,6 +47,11 @@ async function getCodeQr(setQrImage, setError){
     else if (response.status == 400){
       console.log(response)
        const secondResponse = await refetchCodeQr();
+       if (!secondResponse.ok){
+        setError(true);
+        console.error('response error', response);
+        return;  
+       }
        const secondBlob = await secondResponse.blob();
        const secondSrc = URL.createObjectURL(secondBlob);
        setQrImage(secondSrc); // refactor function and check status of response 
@@ -134,7 +140,7 @@ async function sendNumber(username, code){
   params.append('user', username);
   params.append('OTP', code);
   
-  const url = 'http://localhost:8000/auth/2FA?' + params.toString();
+  const url = TOWFACTOR_URL + '?' + params.toString();
   
   const response = await fetch(url);
   return response;
