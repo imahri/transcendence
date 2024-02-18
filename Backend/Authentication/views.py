@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, exceptions
-from rest_framework.exceptions import NotAcceptable
+from rest_framework.exceptions import NotAcceptable, AuthenticationFailed
 from Tools.HttpFileResponse import HttpFileResponse
 from User_Management.models import User
 from User_Management.serializers import UserSerializer
@@ -53,7 +53,7 @@ class Login(APIView):
             if user is None:
                 raise ObjectDoesNotExist()
             if user.check_password(password) is False:
-                return None
+                raise AuthenticationFailed("Wrong password")
             if user.is_2FA_active is True:
                 return JsonResponse({"success": "2FA Required"})
             access_token, refresh_token = Login.genJWT(user)

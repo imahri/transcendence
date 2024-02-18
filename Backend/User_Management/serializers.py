@@ -16,8 +16,8 @@ class UserSerializer(ModelSerializer):
             last_name=validated_data["last_name"],
         )
         new_user.set_password(validated_data["password"])
-        new_user.set_info()
         new_user.save()
+        new_user.set_info()
         return new_user
 
     def save(self, **kwargs):
