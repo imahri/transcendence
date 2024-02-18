@@ -80,7 +80,7 @@ export function PopupSetup2Fa(props) {
   const [QrImage, setQrImage] =  useState("");
   const [error, setError] =  useState();
 
-  useEffect(() => {getCodeQr(setQrImage, setError)})
+  useEffect(() => {getCodeQr(setQrImage, setError)}, [])
 
   return (
     <>
