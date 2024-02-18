@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Popup.css";
 import { getToken, settoken, refreshAndRefetch } from "../AuthTools/tokenManagment";
 import { TOWFACTOR_URL, TOWFACTOR_QR_URL } from "../../URLS";
+import { useNavigate } from "react-router-dom";
 
+let navigate;
 
 export async function desactivate2FA(){
   const token = getToken();
@@ -78,7 +80,7 @@ export function PopupSetup2Fa(props) {
   const [QrImage, setQrImage] =  useState("");
   const [error, setError] =  useState();
 
-  useEffect(() => {getCodeQr(setQrImage, setError)} , [])
+  useEffect(() => {getCodeQr(setQrImage, setError)})
 
   return (
     <>
@@ -164,7 +166,7 @@ async function submitNumber(username, code, setErrorSubmit) {
       const tokens = await response.json();
       settoken(tokens);
       console.log("login success");
-      Navigate("/home");
+      navigate("/home");
     }
     else{
       error();
@@ -197,6 +199,8 @@ export function PopupEnternumber(props) {
   const [errorSubmit, setErrorSubmit] = useState();
   const [code, setCode] = useState();
   const [ready, setReady] = useState();
+
+  navigate = useNavigate();
 
   return (
     <>
