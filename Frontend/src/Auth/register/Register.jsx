@@ -5,9 +5,12 @@ import { isValidEmail } from "../AuthTools/tokenManagment";
 
 import logo from "../assets/logo-login.png";
 import { getToken } from "../AuthTools/tokenManagment";
+import { postRequest, showPassword} from "../AuthTools/LoginRegisterTools";
+import { REGISTER_URL } from "../../URLS";
 import "./Register.css";
 
 function Register() {
+
   const Form = useRef(null);
   const navigate = useNavigate();
 
@@ -17,37 +20,10 @@ function Register() {
   const [errorFirstame, setErrorFirstname] = useState();
   const [errorEmail, setErrorEmail] = useState();
 
-  useEffect(() => {
-    if (getToken()) {
-      navigate("/home");
-    }
-  }, []);
+  useEffect(() => { getToken()? navigate("/home") :''}, []);
 
-  function welcomRedirect() {
-    navigate("/");
-  }
 
-  function showPassword(){
-    let svg = document.getElementById("eyeIcon");
-    let path = svg.querySelector("path");
-    var PasswordInput = document.getElementById('password');
-    //if the type of button is password swith it to text and vice-versa
-    PasswordInput.type = (PasswordInput.type == 'text') ? 'password' : 'text';
-    let color = (PasswordInput.type == 'text') ? '#00B6FF' :   '#8C8C8C';
-    path.setAttribute("fill", color)
-  }
-
-  function errorInForm(funct) {
-    //I change the state to true to re-render the componnents and disply the eroor section
-    funct(true);
-    setError(true);
-    setTimeout(() => {
-      //here i try to display error msg but only for 5s
-      funct(false);
-      setError(false);
-    }, 5000);
-  }
-
+  
   const registerSubmit = async (e) => {
     const FormField = Form.current;
 
@@ -60,21 +36,21 @@ function Register() {
     e.preventDefault();
     if (!firstname) {
       console.log("user name is empty");
-      errorInForm(setErrorFirstname);
+      errorInForm(setErrorFirstname, setError);
       return;
     }
     if (!lastname) {
-      errorInForm(setErrorLastname);
+      errorInForm(setErrorLastname, setError);
       console.log("last name is empty");
       return;
     }
     if (!isValidEmail(email)) {
-      errorInForm(setErrorEmail);
+      errorInForm(setErrorEmail, setError);
       console.log("email is not valid");
       return;
     }
     if (!password || password.length < 8) {
-      errorInForm(setErrorPassword);
+      errorInForm(setErrorPassword, setError);
       console.log("password is not valid");
       return;
     }
@@ -88,13 +64,7 @@ function Register() {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await postRequest(REGISTER_URL, requestBody);
 
       if (response.ok) {
         console.log("Login successful");
@@ -110,7 +80,7 @@ function Register() {
   return (
     <>
       <svg
-        onClick={welcomRedirect}
+        onClick={() => navigate('/')}
         className="cross-vector"
         width="26"
         height="26"

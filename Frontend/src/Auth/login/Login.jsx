@@ -5,106 +5,79 @@ import logo from "../assets/logo-login.png";
 import "./Login.css";
 
 import { PopupEnternumber } from "../FactorAuth/Popup";
+import { postRequest, showPassword, errorInForm } from "../AuthTools/LoginRegisterTools";
+import { LOGIN_URL } from "../../URLS";
 
-
-// ADD: if user has OTP it should not logged instead i will show popup 
 let Gusername;
+let  navigate;
 
-function Login() {
-  const navigate = useNavigate();
+
+
+const handleSubmit = async (e, Form, setErrorUsername, setErrorPassword, setError, setPopUp2Fa) => {
+  
+  e.preventDefault();
+
+  const FormField = Form.current;
+  const username = FormField["username"].value.trim();
+  const password = FormField["password"].value.trim();
+
+  if (!username) {
+    console.log("user name is empty");
+    errorInForm(setErrorUsername, setError);
+    return;
+  }
+  if (!password) {
+    console.log("password is empty");
+    errorInForm(setErrorPassword, setError);
+    return;
+  }
+
+  const requestBody = {
+    identifier: username,
+    password: password,
+  };
+
+  try {
+
+    const response = await postRequest( LOGIN_URL, requestBody);  
+    if (response.ok) {
+
+      const responseBody = await response.json();
+      if (responseBody.success != undefined){
+        console.log("OTP required");
+        Gusername = username;
+        setPopUp2Fa(true);
+        return;
+      }
+      console.log("login success");
+      settoken(responseBody);
+      navigate("/home");
+    } else {
+      setError(true);
+      setTimeout(() => {setError(false)}, 5000);
+      console.error("Login failed", response);
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+  }
+};
+
+
+export default function Login() {
+
+  navigate = useNavigate();
   const Form = useRef(null);
   const [error, setError] = useState();
   const [errorPassword, setErrorPassword] = useState();
   const [errorUsername, setErrorUsername] = useState();
   const [popUp2Fa, setPopUp2Fa ] = useState();
 
-  function welcomeRedirect() {
-    navigate("/");
-  }
-
-  function showPassword() {
-    let svg = document.getElementById("eyeIcon");
-    let path = svg.querySelector("path");
-    var PasswordInput = document.getElementById("password");
-    //if the type of button is password swith it to text and vice-versa
-    PasswordInput.type = PasswordInput.type == "text" ? "password" : "text";
-    let color = PasswordInput.type == "text" ? "#00B6FF" : "#8C8C8C";
-    path.setAttribute("fill", color);
-  }
-
-  useEffect(() => {
-    if (getToken()) {
-      navigate("/home");
-    }
-  }, []);
-
-  function errorInForm(funct) {
-    //I change the state to true to re-render the componnents and disply the eroor section
-    funct(true);
-    setError(true);
-    setTimeout(() => {
-      //here i try to display error msg but only for 5s
-      funct(false);
-      setError(false);
-    }, 5000);
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const FormField = Form.current;
-    const username = FormField["username"].value.trim();
-    const password = FormField["password"].value.trim();
-
-    if (!username) {
-      console.log("user name is empty");
-      errorInForm(setErrorUsername);
-      return;
-    }
-    if (!password) {
-      console.log("password is empty");
-      errorInForm(setErrorPassword);
-      return;
-    }
-
-    const requestBody = {
-      identifier: username,
-      password: password,
-    };
-
-    try {
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (response.ok) {
-        const responseBody = await response.json();
-
-        if (responseBody.success != undefined){
-          console.log("OTP required");
-          Gusername = username;
-          setPopUp2Fa(true);
-          return;
-        }
-        console.log("login success");
-        settoken(responseBody);
-        navigate("/home");
-      } else {
-        console.error("Login failed");
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-    }
-  };
-
+  useEffect(() => { getToken() ? navigate("/home") : ''}, []);
+  
   return (
     <>
       <svg
-        onClick={welcomeRedirect}
+        onClick={() => navigate('/')}
         className="cross-vector"
         width="26"
         height="26"
@@ -142,7 +115,7 @@ function Login() {
         </svg>
         <span>Error in Login Form!</span>
       </div>
-      <form onSubmit={handleSubmit} ref={Form}>
+      <form onSubmit={(e) =>handleSubmit(e, Form, setErrorUsername, setErrorPassword, setError, setPopUp2Fa)} ref={Form}>
         <div
           className={`input-container ${errorUsername ? "error-input" : ""}`}
         >
@@ -243,5 +216,3 @@ function Login() {
     </>
   );
 }
-
-export default Login;
