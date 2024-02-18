@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, exceptions
+from rest_framework.exceptions import NotAcceptable
 from Tools.HttpFileResponse import HttpFileResponse
 from User_Management.models import User
 from User_Management.serializers import UserSerializer
@@ -10,6 +11,9 @@ from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
+
+
+# ! Use request.user
 
 
 @permission_classes([AllowAny])
@@ -124,9 +128,13 @@ class TwoFactorAuthView(APIView):
         Disable 2FA: no body required
         """
         try:
+            if not request.user.is_2FA_active:
+                raise NotAcceptable("2FA is already off")
             user = User.get_by_identifier(request.user.username)
             User.TwoFactorAuth.turn_off_2FA(user)
             return Response("2FA turn off successfully")
+        except NotAcceptable as error:
+            raise error
         except Exception as error:
             return JsonResponse(
                 {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
