@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { isValidEmail } from "../AuthTools/tokenManagment";
-
 import logo from "../assets/logo-login.png";
 import { getToken } from "../AuthTools/tokenManagment";
-import { postRequest, showPassword} from "../AuthTools/LoginRegisterTools";
+import { postRequest, showPassword, errorInForm} from "../AuthTools/LoginRegisterTools";
 import { REGISTER_URL } from "../../URLS";
 import "./Register.css";
 
@@ -70,7 +69,7 @@ function Register() {
         console.log("Login successful");
         navigate("/login");
       } else {
-        console.error("Login failed");
+        console.error("Login failed", response);
       }
     } catch (error) {
       console.error("Network error:", error);
