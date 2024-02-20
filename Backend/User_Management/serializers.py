@@ -32,7 +32,8 @@ class InfoSerializer(ModelSerializer):
         fields = ["level", "energy", "wallet", "gender", "exp"]
 
     def create(self, validated_data):
-        user_info = self.Meta.model(validated_data)
+        user = validated_data["user"]
+        user_info = self.Meta.model(user)
         user_info.save()
         return user_info
 
