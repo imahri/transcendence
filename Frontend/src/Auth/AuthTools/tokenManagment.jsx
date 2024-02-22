@@ -6,13 +6,19 @@ export function settoken(tokens) {
 
     Cookies.set('access_token', tokens.access, { sameSite: 'strict' });
     Cookies.set('refresh_token', tokens.refresh, { sameSite: 'strict' });
+}
 
+export function removeTokens(){
+    Cookies.remove('refresh_token');
+    Cookies.remove('access_token');
 }
 
 export function getToken(){
     return Cookies.get('access_token');
 }
-
+export function getRefreshToken(){
+    return Cookies.get('refresh_token');
+}
 
 export function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

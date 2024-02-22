@@ -1,8 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getToken, refreshAndRefetch } from "../Auth/AuthTools/tokenManagment";
+import { getToken, refreshAndRefetch, getRefreshToken, removeTokens } from "../Auth/AuthTools/tokenManagment";
 import { PopupSetup2Fa, desactivate2FA } from "../Auth/FactorAuth/Popup";
+import { LOGOUT_URL } from "../URLS";
+
+import './Home.css'
 
 function Home() {
  
@@ -42,9 +45,35 @@ function Home() {
   
   }
 
+  async function logout(){
+    
+    try{
+      const requestBody = {refresh: getRefreshToken()};
+      const response = await fetch(LOGOUT_URL, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(requestBody)
+      });
+      if (response.ok){
+          removeTokens();
+          navigate('/');
+      }
+      else{
+        console.error("response error :" , response);
+      }
+    }
+    catch (error){
+      console.error("network error :" , error);
+    }
+    
+
+
+
+  }
+
   return (
     <>
-      <div >
+      <div className="home-container">
         <h1> Welcome to the home</h1>
 
         {!FactorAuth ? (
@@ -57,11 +86,7 @@ function Home() {
 
         {popUp && <PopupSetup2Fa update={setPopUp} />}
 
-        <div>
-          <h2>Test</h2>
-          <h2>Test</h2>
-          <h2>Test</h2>
-        </div>
+        <button className="logout" onClick={logout}>Logout</button>
       </div>
     </>
   );
