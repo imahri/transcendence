@@ -67,6 +67,9 @@ class Login(APIView):
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
 
+    def delete(self, request):
+        pass
+
 
 class TwoFactorAuthView(APIView):
     """Two_Factor_Auth"""
