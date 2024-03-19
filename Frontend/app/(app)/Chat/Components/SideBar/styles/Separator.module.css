@@ -1,0 +1,4 @@
+.separator {
+    @apply w-[60%] h-1 m-0 border-none rounded bg-[#303030];
+}
+

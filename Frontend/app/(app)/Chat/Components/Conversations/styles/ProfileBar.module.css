@@ -1,0 +1,39 @@
+.container {
+	@apply h-[10%] w-full flex justify-between items-center;
+}
+
+.profileBar {
+	@apply w-[25%] h-full flex items-center;
+}
+
+.profileBar img {
+	@apply w-20 h-20 rounded-full mx-6;
+}
+
+.profileInfo {
+	@apply h-20 flex flex-col justify-center;
+}
+
+.profileBar h2 {
+	@apply text-start text-white text-3xl font-semibold;
+}
+
+.profileBar h3 {
+	@apply text-[#B4B4B4] font-light;
+}
+
+.status {
+	@apply mb-5 ml-3 w-2.5 h-2.5 rounded-full;
+}
+
+.options {
+	@apply w-[10%] h-full grid place-items-center;
+}
+
+.options button {
+	@apply w-[50%] h-[35%] grid place-items-center;
+}
+
+.options img {
+	@apply h-full;
+}

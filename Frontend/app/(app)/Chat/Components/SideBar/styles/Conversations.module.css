@@ -1,0 +1,21 @@
+.container {
+	@apply w-full h-[46.96rem] flex flex-col space-y-4 items-center justify-start;
+	@apply overflow-y-scroll scrollbar-hide;
+}
+
+.focus_section {
+	@apply bg-gradient-to-r from-[#bf50eb87] via-[#b536f0b0] to-[#3F0A62];
+}
+
+.section {
+	@apply h-[5.8rem] min-h-[5.8rem] w-[85%] bg-[#303030] rounded-xl flex flex-row justify-between;
+	@apply hover:bg-[#262626];
+}
+
+.image {
+	@apply h-full w-[22.154%] rounded-l-sm flex justify-center items-center;
+}
+
+.img {
+	@apply h-2/3 w-2/3 rounded-full;
+}

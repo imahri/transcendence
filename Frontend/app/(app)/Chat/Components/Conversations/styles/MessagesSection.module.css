@@ -1,0 +1,26 @@
+.container {
+	@apply h-[80%] w-full overflow-y-scroll scrollbar-hide flex flex-col space-y-7 pt-10 pb-5;
+}
+
+.messageSection {
+	@apply min-h-24 w-full flex;
+	@apply text-white;
+}
+
+.message {
+	/* @apply h-[80%] w-[30%]; */
+	@apply min-h-20 max-w-[70%];
+	@apply bg-[#303030] flex flex-col justify-center items-start pl-4 pr-3;
+}
+
+.message_name {
+	@apply text-[#A0A0A0] font-semibold;
+}
+
+.message_text {
+	@apply font-semibold mr-3;
+}
+
+.message_time {
+	@apply text-[#A0A0A0] font-semibold mt-3;
+}
