@@ -12,7 +12,6 @@ async function fetchUser() {
 }
 
 async function layoutUtils(navigate, setUser) {
-	!getToken() ? navigate.replace("welcome") : "";
 
 	const storedUser = localStorage.getItem("user");
 	if (storedUser) {
