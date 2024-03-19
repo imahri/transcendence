@@ -10,5 +10,5 @@ export default function middleware(request) {
 }
 
 export const config = {
-	matcher: "/((?!login|register|favicon.ico).*)",
+	matcher: "/((?!login|register|_next/static|favicon.ico).*)",
 };
