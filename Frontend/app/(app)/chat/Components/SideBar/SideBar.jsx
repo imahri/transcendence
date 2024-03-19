@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Searchbar from "./Searchbar";
+import { Searchbar } from '@/app/(app)/searchBar/Searchbar';
+// import Searchbar from "../../../searchBar/Searchbar";
 import Separator from "./Separator";
 import ConversationType from "./ConversationType";
 import Conversations from "./Conversations";
