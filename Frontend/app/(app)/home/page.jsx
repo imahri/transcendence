@@ -1,5 +1,16 @@
-import React from "react";
+import NavBar from "../navBar/NavBar";
+// import Profile from "./Components/Profile";
+// import Dashboard from "./Components/Dashboard";
 
-export default function Home() {
-	return <div>Home</div>;
+function Home() {
+	return (
+		<>
+			<NavBar />
+			<div className="mt-[100px] w-[100%] flex flex-col items-center gap-[20px] max-[900px]:mb-[90px]">
+				{/* <Profile /> */}
+				{/* <Dashboard /> */}
+			</div>
+		</>
+	);
 }
+export default Home;

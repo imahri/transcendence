@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+@font-face {
+    font-family: 'mesthine';
+    src: url('../fonts/Mesthine.otf') format('opentype'),
+        url('../fonts/Mesthine.ttf') format('truetype');
+ }
+ 
+ @font-face {
+ font-family: 'chakraPetch';
+ src: url('../fonts/ChakraPetch-Regular.ttf') format('truetype');
+ }

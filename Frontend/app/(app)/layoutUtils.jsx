@@ -11,13 +11,12 @@ async function fetchUser() {
 	return response;
 }
 
-async function layoutUtils(navigate, setUser) {
-
+async function layoutUtils(navigate) {
 	const storedUser = localStorage.getItem("user");
 	if (storedUser) {
 		const user = JSON.parse(storedUser);
-		setUser(user);
-		return true;
+		// setUser(user);
+		return user;
 	}
 
 	try {
@@ -26,8 +25,7 @@ async function layoutUtils(navigate, setUser) {
 			const data = await response.json();
 			console.log(data);
 			localStorage.setItem("user", data);
-			setUser(data);
-			return true;
+			return user;
 		} else {
 			console.log(response);
 		}

@@ -21,7 +21,12 @@ module.exports = {
 			},
 		},
 		fontFamily: {
-			Chakra: ["Chakra Petch", "sans-serif"],
+			// Chakra: ["Chakra Petch", "sans-serif"],
+			Chakra: ["ChakraPetch-Regular", "sans-serif"],
+			ChakraLigh: ["ChakraPetch-Light", "sans-serif"],
+			ChakraMedium: ["ChakraPetch-Medium", "sans-serif"],
+			ChakraSemibold: ["ChakraPetch-SemiBold", "sans-serif"],
+			ChakraBold: ["ChakraPetch-Bold", "sans-serif"],
 			Mesthine: ["mesthine", "sans-serif"],
 		},
 		keyframes: {
