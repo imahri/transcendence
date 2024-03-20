@@ -164,6 +164,21 @@ class Friend(models.Model):
         "User_Management.User", related_name="friends", on_delete=models.CASCADE
     )
 
+    @staticmethod
+    def add_friend(user: User, friend: User):
+        pass
+
+
+    @staticmethod
+    def accept(user: User, friend: User)
+        pass
+
+    def block(self, friend: User):
+        pass
+
+
+
+
     def is_friend(self):
         if self.status == "F":
             return True
