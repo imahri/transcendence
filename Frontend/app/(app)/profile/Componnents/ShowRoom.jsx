@@ -12,7 +12,7 @@ function ShowRoom() {
 				<h1 className="font-Chakra font-bold text-[#BABABA] text-[24px] mt-[10px]">
 					Achievment
 				</h1>
-				<div>
+				<div className="flex">
 					<Image className="size-[79px]" src={a1} alt="" />
 					<Image className="size-[79px]" src={a2} alt="" />
 					<Image className="size-[79px]" src={a3} alt="" />

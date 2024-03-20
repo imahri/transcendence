@@ -18,7 +18,7 @@ function ProfileBanner({ user }) {
 						Id 45546464646464646464
 					</h3>
 					<Image className="size-[135px]" src={gradeTmp} alt="" />
-					<h3 className="font-normal text-[36px] text-white">
+					<h3 className="font-normal text-[36px] text-white flex items-center gap-[10px]">
 						Score 464 {ScoreSvg}{" "}
 					</h3>
 				</div>

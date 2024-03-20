@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-
-// import Badge from "../../Store/Components/Badge";
+import Image from "next/image";
+import Badge from "../../Store/Components/Badge";
 
 import BadgeBack from "/Users/okrich/Desktop/padlees/badge3.png";
 import p1 from "/Users/okrich/Desktop/padlees/1.png";
@@ -29,7 +29,7 @@ function SkinTitle(active, setActive, title) {
 function Badges({ BadgeInfo }) {
 	return (
 		<div className="min-w-[263px] w-[263px] h-[165px] relative">
-			{/* <Badge BadgeInfo={BadgeInfo} /> */}
+			<Badge BadgeInfo={BadgeInfo} />
 		</div>
 	);
 }
@@ -63,7 +63,7 @@ function Skins({ user }) {
 				{active == "Paddles" &&
 					Pps.map((Pp) => {
 						return (
-							<img
+							<Image
 								className="size-[131px] rounded-[10px]"
 								src={Pp}
 								alt=""

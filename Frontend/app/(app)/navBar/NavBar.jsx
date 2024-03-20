@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserContext } from "../layout";
 import { logout } from "../settings/Components/SettingsUtils";
+import Link from "next/link";
 
 import {
 	logoutSvg,
@@ -69,16 +70,17 @@ function ProfileBar() {
 							{user.info.wallet} {WalletLogo}
 						</span>
 					</div>
-					<div
+
+					<Link
+						href={"/profile"}
 						className="flex w-full items-center justify-start gap-2 cursor-pointer"
-						// onClick={() => navigate("/profile")}
-						//switch it to Link
 					>
-						{AccountSvg}{" "}
+						{AccountSvg}
 						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
 							View Profile
 						</h1>
-					</div>
+					</Link>
+
 					<div
 						className="flex w-full items-center justify-start gap-2 cursor-pointer "
 						onClick={() => logout(navigate)}

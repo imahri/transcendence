@@ -1,12 +1,12 @@
 import React from "react";
-
+import Image from "next/image";
 import IMG from "../../home/assets/profile.png";
 
 function Friend({ friend }) {
 	return (
 		<div className=" flex items-center gap-[20px]">
 			{
-				<img
+				<Image
 					className="size-[60px] rounded-full"
 					src={friend.image}
 					alt=""
@@ -44,7 +44,7 @@ const friends = [
 
 function Friends() {
 	return (
-		<div className="w-[90%] h-[450px] bg-[#353535] rounded-[31px] flex flex-col justify-center pl-[30px] gap-[20px]">
+		<div className="w-[100%] h-[450px] bg-[#353535] rounded-[31px] flex flex-col justify-center pl-[30px] gap-[20px]">
 			<h1 className="font-Chakra font-semibold text-[36px] text-[#BABABA]">
 				Friends
 			</h1>

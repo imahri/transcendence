@@ -18,7 +18,7 @@ function SecondSection() {
 				<ProfileInfo user={user} />
 			</div>
 
-			{/* <Skins user={user} /> */}
+			<Skins user={user} />
 			<ShowRoom />
 		</div>
 	);

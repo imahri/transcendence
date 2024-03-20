@@ -7,8 +7,8 @@ function Profile() {
 	return (
 		<>
 			<NavBar />
-			<div className="w-[90%] mt-[100px] flex items-center justify-center">
-				<div className="w-[90%] flex items-center justify-around">
+			<div className="w-[95%] mt-[100px] flex items-center justify-center">
+				<div className="w-[100%] flex items-center justify-around">
 					<FirstSection />
 
 					<SecondSection />
