@@ -37,7 +37,7 @@ export default function Login() {
 
 			<div className="flex items-center flex-col mb-0">
 				<Image src={logo} className="max-[450px]:h-[100px]" alt="" />
-				<h1 className="font-Chakra font-bold text-[60px] text-white max-[450px]:text-[40px] first-letter:text-[#0275A3]">
+				<h1 className=" font-bold text-[60px] text-white max-[450px]:text-[40px] first-letter:text-[#0275A3]">
 					Login
 				</h1>
 			</div>
@@ -49,7 +49,7 @@ export default function Login() {
 				}
 			>
 				{errorSvg}
-				<span className="p-[5px] text-white font-Chakra font-bold">
+				<span className="p-[5px] text-white  font-bold">
 					Error in Login Form!
 				</span>
 			</div>
@@ -110,7 +110,7 @@ export default function Login() {
 				<div className="my-[10px] mx-[60px]">
 					<input type="checkbox" id="rememberMe" name="rememberMe" />
 					<label
-						className="text-[#00B6FF] font-Chakra ml-[5px]"
+						className="text-[#00B6FF]  ml-[5px]"
 						htmlFor="rememberMe"
 					>
 						Remember me
@@ -130,11 +130,11 @@ export default function Login() {
 					<button className="w-[45%] rounded-[5px] bg-[#A11872] bg-contain bg-no-repeat bg-center cursor-pointer hover:bg-[#1791B2]"></button>
 				</div>
 				<div className="flex justify-center my-[20px] mx-[50px] max-[550px]:grid max-[550px]:text-center">
-					<span className="font-Chakra font-bold text-[#8C8C8C] text-[20px]">
+					<span className=" font-bold text-[#8C8C8C] text-[20px]">
 						What are you waiting For?
 					</span>
 					<Link
-						className="font-Chakra font-bold text-[#00B6FF] text-[18px] pl-[10px]"
+						className=" font-bold text-[#00B6FF] text-[18px] pl-[10px]"
 						href="/register"
 					>
 						Create your account now

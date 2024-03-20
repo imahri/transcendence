@@ -9,8 +9,27 @@
     src: url('../fonts/Mesthine.otf') format('opentype'),
         url('../fonts/Mesthine.ttf') format('truetype');
  }
- 
- @font-face {
- font-family: 'chakraPetch';
- src: url('../fonts/ChakraPetch-Regular.ttf') format('truetype');
- }
+
+
+ *{
+    margin: 0;
+    padding: 0;
+    scrollbar-color: gray transparent;
+    scrollbar-width: thin;
+
+}
+
+
+ ::-webkit-scrollbar {
+    width: 5px;
+}
+  
+ ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+ ::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 10px;
+  }
+  

@@ -29,14 +29,14 @@ function SettingsSection(props) {
 					fillOpacity="0.29"
 				/>
 			</svg>
-			<h1 className="font-Chakra mt-[10px] mb-[10px] font-bold text-white text-[20px]">
+			<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 				Settings
 			</h1>
 
 			<div className="w-[80%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do">
 				<div className="flex items-center gap-[15px] pl-[35px] max-[260px]:pl-[10px]">
 					{AccountSvg}
-					<h1 className="font-Chakra mt-[10px] mb-[10px] font-bold text-white text-[20px]">
+					<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 						Account
 					</h1>
 				</div>
@@ -52,7 +52,7 @@ function SettingsSection(props) {
 					}
 				>
 					{SecuritySvg}
-					<h1 className="font-Chakra mt-[10px] mb-[10px] font-bold text-white text-[20px]">
+					<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 						Security
 					</h1>
 				</div>
@@ -61,7 +61,7 @@ function SettingsSection(props) {
 			<div className="w-[80%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do">
 				<div className="flex items-center gap-[15px] pl-[35px] max-[260px]:pl-[10px]">
 					{AboutSvg}
-					<h1 className="font-Chakra mt-[10px] mb-[10px] font-bold text-white text-[20px]">
+					<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 						About
 					</h1>
 				</div>
@@ -72,7 +72,7 @@ function SettingsSection(props) {
 			>
 				<div className="flex items-center gap-[15px] pl-[35px] max-[260px]:pl-[10px]">
 					{LogoutSvg}
-					<h1 className="font-Chakra mt-[10px] mb-[10px] font-bold text-white text-[20px]">
+					<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 						Logout
 					</h1>
 				</div>

@@ -37,12 +37,12 @@ function ProfileBar() {
 					alt=""
 				/>
 				<div className="max-[600px]:hidden">
-					<h3 className="font-Chakra font-medium text-[20px] text-[#7D7D7D]">
+					<h3 className=" font-medium text-[20px] text-[#7D7D7D]">
 						{user.username}
 					</h3>
 					{more && (
 						<>
-							<h4 className="font-Chakra font-medium text-[13px] text-[#7D7D7D]">
+							<h4 className=" font-medium text-[13px] text-[#7D7D7D]">
 								{user.first_name} {user.last_name}
 							</h4>
 							<div className="h-[5px] w-[80px]  rounded-[50px] bg-black ">
@@ -61,11 +61,11 @@ function ProfileBar() {
 				<div className="p-[20px] gap-[20px] flex flex-col">
 					<div className="flex w-full items-center justify-between gap-2 cursor-pointer ">
 						{WalletSvg}{" "}
-						<h1 className="font-Chakra font-medium text-[18px] text-[#7D7D7D]">
+						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
 							{" "}
 							Wallet{" "}
 						</h1>{" "}
-						<span className="font-Chakra font-medium text-[18px] text-[#7D7D7D] flex items-center gap-1">
+						<span className=" font-medium text-[18px] text-[#7D7D7D] flex items-center gap-1">
 							{user.info.wallet} {WalletLogo}
 						</span>
 					</div>
@@ -75,7 +75,7 @@ function ProfileBar() {
 						//switch it to Link
 					>
 						{AccountSvg}{" "}
-						<h1 className="font-Chakra font-medium text-[18px] text-[#7D7D7D]">
+						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
 							View Profile
 						</h1>
 					</div>
@@ -84,7 +84,7 @@ function ProfileBar() {
 						onClick={() => logout(navigate)}
 					>
 						{logoutSvg}{" "}
-						<h1 className="font-Chakra font-medium text-[18px] text-[#7D7D7D]">
+						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
 							Logout
 						</h1>
 					</div>

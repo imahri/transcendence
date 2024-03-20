@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 //I need user score
 
@@ -18,18 +19,20 @@ function GameState({ user1, user2 }) {
 				<div
 					className={` ${result1_color} size-[46px] rounded-full flex justify-center items-center`}
 				>
-					<img
+					<Image
 						className="size-[95%] rounded-full"
+						height={0}
+						width={0}
 						src={user1.info.profile_img}
 						alt=""
 					/>
 				</div>
-				<h2 className="font-ChakraBold text-[10px] text-white">
+				<h2 className={`font-chakra text-[10px] text-white`}>
 					{user1.userName}
 				</h2>
 			</div>
 			<div className="bg-[#696969] size-[34px] rounded-full flex justify-center items-center">
-				<h2 className="font-ChakraBold text-[10px] text-white">
+				<h2 className={`font-chakra text-[10px] text-white`}>
 					{" "}
 					{5} : {user2.score}{" "}
 				</h2>
@@ -38,13 +41,15 @@ function GameState({ user1, user2 }) {
 				<div
 					className={`${result2_color} size-[46px] rounded-full flex justify-center items-center`}
 				>
-					<img
+					<Image
+						width={0}
+						height={0}
 						className="size-[95%] rounded-full"
 						src={user2.image}
 						alt=""
 					/>
 				</div>
-				<h2 className="font-ChakraBold text-[10px] text-white">
+				<h2 className={`font-chakra text-[10px] text-white`}>
 					{user2.userName}
 				</h2>
 			</div>

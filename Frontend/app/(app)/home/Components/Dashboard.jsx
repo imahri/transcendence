@@ -1,12 +1,9 @@
-import React from "react";
-
-import GmaeBk from "../assets/back.png";
-
 import LastGame from "./LastGame";
 import Historic from "./Historic";
 import StaffMission from "./StaffMission";
 import LastNotif from "./LastNotif";
 import Rooms from "./Rooms";
+import "./Dashboard.css";
 
 import room1 from "../assets/room1.png";
 import room2 from "../assets/room2.png";
@@ -35,10 +32,7 @@ function Dashboard() {
 				<LastNotif />
 
 				<div className="w-[45%] max-[1702px]:w-[60%] rounded-[15px] bg-[#D9D9D9] bg-opacity-[5%] max-[1500px]:order-1 max-[1500px]:w-[100%]">
-					<div
-						style={{ backgroundImage: `url("${GmaeBk}")` }}
-						className="flex rounded-[15px] bg-center bg-cover bg-no-repeat max-[720px]:flex-col max-[720px]:items-center"
-					>
+					<div className="dashboardBack flex rounded-[15px] bg-center bg-cover bg-no-repeat max-[720px]:flex-col max-[720px]:items-center">
 						<LastGame />
 						<Historic />
 					</div>

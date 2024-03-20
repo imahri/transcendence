@@ -11,7 +11,7 @@ function Security({ setShowQr }) {
 		<>
 			<div className="cursor-default">
 				<div className="flex items-center justify-around">
-					<h1 className="font-Chakra mt-[10px] mb-[10px] font-bold text-white text-[20px]">
+					<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 						{" "}
 						{!TowFa ? "Activate " : "Desactivate "} 2Fa{" "}
 					</h1>
@@ -24,7 +24,7 @@ function Security({ setShowQr }) {
 				</div>
 				{TowFa && (
 					<h2
-						className="font-Chakra mt-[10px] mb-[10px] font-semibold text-white opacity-[44%] text-[17px] text-center cursor-pointer hover:opacity-[1]"
+						className=" mt-[10px] mb-[10px] font-semibold text-white opacity-[44%] text-[17px] text-center cursor-pointer hover:opacity-[1]"
 						onClick={() => getCodeQr(setShowQr, qrCode)}
 					>
 						Show Qr Code

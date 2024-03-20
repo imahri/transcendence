@@ -5,6 +5,8 @@ import Myskin from "../assets/12.png";
 import { UserContext } from "../../layout";
 import "./Profile.css";
 
+import Image from "next/image";
+
 function State({ number, name, color }) {
 	return (
 		<div className="bg-[#7D7D7D] w-[61px] h-[47px] rounded-[15px] relative flex justify-center items-end">
@@ -13,12 +15,12 @@ function State({ number, name, color }) {
 					style={{ background: color }}
 					className="size-[80%] rounded-full flex justify-center items-center"
 				>
-					<span className="font-Chakra font-bold text-[11px] text-white">
+					<span className=" font-bold text-[11px] text-white">
 						{number}
 					</span>
 				</div>
 			</div>
-			<h2 className="font-Chakra font-bold text-[11px] text-[#150A1E] mb-[5px]">
+			<h2 className=" font-bold text-[11px] text-[#150A1E] mb-[5px]">
 				{name}
 			</h2>
 		</div>
@@ -40,10 +42,10 @@ function Profile() {
 
 				<div className="ml-[150px] max-[470px]:ml-[100px] w-auto h-[40%] flex items-center">
 					<div className="ml-10px">
-						<h1 className="font-Chakra font-semibold text-[96px] max-[800px]:text-[60px] text-[#B872FE]">
+						<h1 className=" font-semibold text-[96px] max-[800px]:text-[60px] text-[#B872FE]">
 							{user.username}
 						</h1>
-						<h2 className="font-Chakra font-semibold text-[38px] max-[800px]:text-[25px] text-white">
+						<h2 className=" font-semibold text-[38px] max-[800px]:text-[25px] text-white">
 							Player Name
 						</h2>
 					</div>
@@ -62,17 +64,17 @@ function Profile() {
 						/>
 						<State number={12} name={"games"} color={"#8710E5"} />
 						<div className="bg-[#52FF00] w-[51px] h-[47px] rounded-[5px] flex justify-center items-center">
-							<img
+							<Image
 								className="size-[90%] rounded-[4px]"
 								src={Myskin}
 								alt=""
 							/>
 						</div>
 					</div>
-					<h2 className="font-Chakra font-bold text-[25px] max-[800px]:text-[20px] text-white">
+					<h2 className=" font-bold text-[25px] max-[800px]:text-[20px] text-white">
 						{user.first_name} {user.last_name}
 					</h2>
-					<h2 className="font-Chakra font-bold text-[25px] max-[800px]:text-[20px] text-white">
+					<h2 className=" font-bold text-[25px] max-[800px]:text-[20px] text-white">
 						{user.email}
 					</h2>
 				</div>

@@ -33,7 +33,7 @@ function Register() {
 			{closeSvg(navigate)}
 			<div className="flex items-center flex-col mb-0">
 				<Image src={logo} className="max-[450px]:h-[100px]" alt="" />
-				<h1 className="font-Chakra font-bold text-[60px] text-white text-center max-[450px]:text-[40px]">
+				<h1 className=" font-bold text-[60px] text-white text-center max-[450px]:text-[40px]">
 					Create <br /> new{" "}
 					<span className="text-[#0275A3]">account</span>
 				</h1>
@@ -139,11 +139,11 @@ function Register() {
 				</button>
 
 				<div className="flex justify-center my-[20px] mx-[50px] max-[550px]:grid max-[550px]:text-center">
-					<span className="font-Chakra font-bold text-[#8C8C8C] text-[20px]">
+					<span className=" font-bold text-[#8C8C8C] text-[20px]">
 						Already Member?
 					</span>
 					<Link
-						className="font-Chakra font-bold text-[#00B6FF] text-[18px] pl-[10px]"
+						className=" font-bold text-[#00B6FF] text-[18px] pl-[10px]"
 						href="/login"
 					>
 						Log In

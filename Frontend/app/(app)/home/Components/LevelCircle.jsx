@@ -1,5 +1,5 @@
 import React from "react";
-
+import Image from "next/image";
 import starpng from "../assets/starpng.png";
 
 function LevelCircle({ level }) {
@@ -15,10 +15,10 @@ function LevelCircle({ level }) {
 					className="size-[90%] rounded-full flex justify-center items-center"
 				>
 					<div className="size-[90%] rounded-full flex flex-col justify-center items-center bg-gradient-to-r from-red-500 to-indigo-700">
-						<h1 className="font-Chakra font-bold text-[30px] text-white">
+						<h1 className=" font-bold text-[30px] text-white">
 							{level}
 						</h1>
-						<img src={starpng} alt="" />
+						<Image src={starpng} alt="" />
 					</div>
 				</div>
 			</div>

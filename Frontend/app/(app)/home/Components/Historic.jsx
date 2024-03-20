@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
+"use client";
+import { useContext } from "react";
 
-import profileImg from "../../Store/assets/profile.png";
-import UserContext from "../../Context.jsx/UserContext";
+import profileImg from "../assets/profile.png";
+import { UserContext } from "../../layout";
+import Image from "next/image";
 
 function GameState({ match }) {
 	const user1 = match.user1;
@@ -18,20 +20,22 @@ function GameState({ match }) {
 
 	return (
 		<div className="flex items-center justify-center gap-[20px] w-[100%]">
-			<h2 className="font-Chakra font-bold text-[15px] text-white">
+			<h2 className=" font-bold text-[15px] text-white">
 				{user1.username}
 			</h2>
 			<div
 				className={` ${result1_color} size-[46px] rounded-full flex justify-center items-center`}
 			>
-				<img
+				<Image
 					className="size-[95%] rounded-full"
+					width={0}
+					height={0}
 					src={user1.info.profile_img}
 					alt=""
 				/>
 			</div>
 			<div className="bg-[#696969] size-[34px] rounded-full flex justify-center items-center">
-				<h2 className="font-Chakra font-bold text-[10px] text-white">
+				<h2 className=" font-bold text-[10px] text-white">
 					{" "}
 					{5} : {user2.score}{" "}
 				</h2>
@@ -39,13 +43,15 @@ function GameState({ match }) {
 			<div
 				className={`${result2_color} size-[46px] rounded-full flex justify-center items-center`}
 			>
-				<img
+				<Image
 					className="size-[95%] rounded-full"
+					width={0}
+					height={0}
 					src={user2.image}
 					alt=""
 				/>
 			</div>
-			<h2 className="font-Chakra font-bold text-[15px] text-white">
+			<h2 className=" font-bold text-[15px] text-white">
 				{user2.username}
 			</h2>
 		</div>
@@ -84,7 +90,7 @@ function Historic() {
 
 	return (
 		<div className="h-[424px] w-[50%] max-[1990px]:w-[60%] rounded-[15px] flex flex-col items-center gap-[20px] max-[710px]:w-[90%]">
-			<h2 className="font-Chakra font-bold text-[20px] text-white mt-[20px]">
+			<h2 className=" font-bold text-[20px] text-white mt-[20px]">
 				Historic
 			</h2>
 			<div className="w-[100%] pt-[10px] mb-[15px] flex flex-col gap-[20px] overflow-y-auto">
