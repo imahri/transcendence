@@ -10,10 +10,7 @@ export default function SideBar(props) {
 			</div>
 
 			<div className="h-[30%] mt-[20px] max-[900px]:mt-0 max-[900px]:mx-[15px] max-[900px]:size-full max-[900px]:flex max-[900px]:transition max-[900px]:duration[2000ms]">
-				<Links
-					active={props.active}
-					showSettings={props.showSettings}
-				/>
+				<Links showSettings={props.showSettings} />
 			</div>
 		</div>
 	);

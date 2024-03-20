@@ -13,7 +13,6 @@ export default function Layout({ children, userData }) {
 	const [user, setUser] = useState();
 	const [isLoading, setLoading] = useState(true);
 	const [settings, setSettings] = useState();
-	const active = "home";
 
 	useEffect(() => {
 		layoutUtils(navigate).then((userData) => {
@@ -29,7 +28,7 @@ export default function Layout({ children, userData }) {
 			) : (
 				<UserContext.Provider value={{ user, setUser }}>
 					<div className="w-full h-full flex">
-						<SideBar active={active} showSettings={setSettings} />
+						<SideBar showSettings={setSettings} />
 
 						<div className="bg-[#202020] w-full h-screen ml-[80px] max-[900px]:ml-0 ">
 							{children}

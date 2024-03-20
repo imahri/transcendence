@@ -9,6 +9,7 @@ import {
 } from "./Icons";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function borderLeft() {
 	return (
@@ -17,14 +18,14 @@ function borderLeft() {
 }
 
 function Links(props) {
-	const active = props.active;
+	const active = usePathname();
 	const showSettings = props.showSettings;
 
-	const Home = active == "home";
-	const Chat = active == "chat";
-	const Game = active == "game";
-	const Store = active == "store";
-	const Rank = active == "rank";
+	const Home = active.includes("/home");
+	const Chat = active.includes("/chat");
+	const Game = active.includes("/game");
+	const Store = active.includes("/store");
+	const Rank = active.includes("/rank");
 
 	return (
 		<>
