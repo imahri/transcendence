@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles/Searchbar.module.css";
+import { BASE_URL } from "@/app/URLS";
 
 function SearchIcon() {
 	return (
@@ -17,7 +18,31 @@ function SearchIcon() {
 // TODO: handle backend
 // TODO: review code & test
 // TODO: handle responsive
+
+let timeout;
+
+async function searchForUsers(searchText) {
+	try {
+		let response = await fetch(`http://localhost:8000/user/search?search=${searchText}`);
+		if (!response.ok) console.log("User not found");
+		console.log(response);
+	} catch (error) {
+		console.error("fetch error: " + error);
+	}
+}
+
 export function Searchbar() {
+	const [input, setInput] = useState("");
+	const [result, setResult] = useState([]);
+
+	useEffect(() => {
+		if (input) {
+			console.log('==> {input}')
+			clearTimeout(timeout);
+			timeout = setTimeout(() => searchForUsers(input), 1000);
+		}
+	}, [input]);
+
 	return (
 		<div className={styles.container}>
 			<label className={styles.label}>
@@ -25,6 +50,9 @@ export function Searchbar() {
 					className={styles.search_input}
 					placeholder="Search"
 					type="text"
+					onChange={(e) => {
+						if (e.target.value !== "") setInput(e.target.value);
+					}}
 				/>
 				<SearchIcon />
 			</label>

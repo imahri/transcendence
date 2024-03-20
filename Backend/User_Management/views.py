@@ -69,7 +69,7 @@ class InfoView(APIView):
 
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([AllowAny]) # !!
 def searchView(request):
     try:
         search_text: str = request.query_params.get("search")

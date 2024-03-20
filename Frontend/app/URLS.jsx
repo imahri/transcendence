@@ -21,4 +21,5 @@ const USER_APP = `${BASE_URL}/user`;
 
 export const USER_URL = `${USER_APP}/`;
 
-export const wsChat =  `${WS}/ws/chat`
+export const chatApi =  `${BASE_URL}/chat`;
+export const wsChat = `${WS}/ws/chat`;
