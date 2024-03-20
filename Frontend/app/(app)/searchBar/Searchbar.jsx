@@ -17,7 +17,7 @@ function SearchIcon() {
 // TODO: handle backend
 // TODO: review code & test
 // TODO: handle responsive
-export default function Searchbar() {
+export function Searchbar() {
 	return (
 		<div className={styles.container}>
 			<label className={styles.label}>

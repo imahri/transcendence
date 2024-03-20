@@ -6,8 +6,8 @@
 	@apply w-[25%] h-full flex items-center;
 }
 
-.profileBar img {
-	@apply w-20 h-20 rounded-full mx-6;
+.profileBar_Image {
+	@apply w-16 h-16 rounded-full mx-4;
 }
 
 .profileInfo {
@@ -27,13 +27,13 @@
 }
 
 .options {
-	@apply w-[10%] h-full grid place-items-center;
+	@apply w-[10%] h-full flex justify-center items-center;
 }
 
 .options button {
-	@apply w-[50%] h-[35%] grid place-items-center;
+	@apply w-[50%] h-[35%] flex justify-center items-center;
 }
 
-.options img {
+.options_Image {
 	@apply h-full;
 }
