@@ -28,6 +28,7 @@ export default function ConversationType({ active_type, setActiveType }) {
 			<nav className={styles.nav}>
 				{conversation_types.map((type) => (
 					<List
+						key={Math.random()} // for now
 						Key={type}
 						isActive={active_type === type}
 						setActive={setActiveType}

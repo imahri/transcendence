@@ -1,6 +1,7 @@
+import Image from "next/image";
 import React from "react";
 import styles from "./styles/ProfileBar.module.css";
-import optionsIcon from "/Chat_assets/options_icon.svg";
+import optionsIcon from "./assets/options_icon.svg";
 
 const DummyPath =
 	"https://24ai.tech/en/wp-content/uploads/sites/3/2023/08/24ai_try_chair-1-150x150.webp";
@@ -28,7 +29,13 @@ export default function ProfileBar({ friendName }) {
 	return (
 		<div className={styles.container}>
 			<button onClick={openProfileSection} className={styles.profileBar}>
-				<img src={FriendData.profileImage} />
+				<Image
+					className={styles.profileBar_Image}
+					width={100}
+					height={100}
+					src={FriendData.profileImage}
+					alt="Profile image"
+				/>
 				<section className={styles.profileInfo}>
 					<h2>{friendName}</h2>
 					<h3>{status}</h3>
@@ -37,7 +44,13 @@ export default function ProfileBar({ friendName }) {
 			</button>
 			<div className={styles.options}>
 				<button>
-					<img src={optionsIcon} alt="options icon" />
+					<Image
+						className={styles.options_Image}
+						width={100}
+						height={100}
+						src={optionsIcon}
+						alt="options icon"
+					/>
 				</button>
 			</div>
 		</div>

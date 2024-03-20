@@ -6,9 +6,11 @@ const nextConfig = {
             protocol: 'http',
             hostname: 'localhost',
             pathname: '**',
+            hostname: '24ai.tech',
           },
         ],
         unoptimized: true,
+
       },
 };
 

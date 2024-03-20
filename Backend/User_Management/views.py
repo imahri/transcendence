@@ -1,7 +1,10 @@
-from django.shortcuts import render
-
+from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
+from rest_framework import status
 from Tools.HttpFileResponse import HttpFileResponse
 
 from .serializers import UserSerializer, InfoSerializer
@@ -63,3 +66,21 @@ class InfoView(APIView):
                 return Response(serializer.errors, status=400)
         except Exception as error:
             return Response({"error": str(error)}, status=400)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny]) # !!
+def searchView(request):
+    try:
+        search_text: str = request.query_params.get("search")
+        founded_users = User.objects.filter(username__icontains=search_text)
+        if not founded_users.exists():
+            raise ObjectDoesNotExist(f"No results found for {search_text}")
+        response = []
+        for user in founded_users:
+            response.append(UserSerializer(user).data)
+        return Response(data=response)
+    except ObjectDoesNotExist as no_found:
+        return Response({'error': str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as error:
+        return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

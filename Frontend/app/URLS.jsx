@@ -1,4 +1,5 @@
 const BASE_URL = "http://localhost:8000";
+const WS = "ws://localhost:8000";
 
 const AUTH_APP = `${BASE_URL}/auth`;
 
@@ -19,3 +20,6 @@ export const BADGES_URL = `${GAME_APP}/badge`;
 const USER_APP = `${BASE_URL}/user`;
 
 export const USER_URL = `${USER_APP}/`;
+
+export const chatApi = `${BASE_URL}/chat`;
+export const wsChat = `${WS}/ws/chat`;

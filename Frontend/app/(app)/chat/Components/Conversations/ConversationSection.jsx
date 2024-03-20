@@ -1,6 +1,7 @@
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./styles/ConversationSection.module.css";
-
+import NoConv_icon from "./assets/no_conv.svg";
 import ProfileBar from "./ProfileBar";
 import MessagesSection from "./MessagesSection";
 import TypingBar from "./TypingBar";
@@ -66,7 +67,12 @@ let DummyMessages = [
 function NoConv() {
 	return (
 		<div className={styles.noConv}>
-			<img src="/Chat_assets/no_conv.svg" alt="no conv icon" />
+			<Image
+				width={500}
+				height={500}
+				src={NoConv_icon}
+				alt="no conv icon"
+			/>
 			<p>With great power comes great responsibility</p>
 		</div>
 	);

@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useState } from "react";
 
@@ -84,7 +85,7 @@ function Unseen({ count }) {
 		<div
 			className="
             h-6 w-6
-			mb-3 pb-0.5
+			mb-3 pb-0.3
             bg-gradient-to-r from-[#7D46F2] to-[#CB3737]
             flex justify-center items-center
             rounded-full
@@ -98,7 +99,13 @@ function Unseen({ count }) {
 function ProfileImage() {
 	return (
 		<div className={styles.image}>
-			<img className={styles.img} src={DummyPath} alt="Profile" />
+			<Image
+				width={100}
+				height={100}
+				className={styles.img}
+				src={DummyPath}
+				alt="Profile"
+			/>
 		</div>
 	);
 }
