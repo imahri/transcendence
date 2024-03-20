@@ -7,7 +7,7 @@
 }
 
 .profileBar_Image {
-	@apply w-16 h-16 rounded-full mx-4;
+	@apply w-[4.4rem] h-[4.4rem] rounded-full mx-4;
 }
 
 .profileInfo {
