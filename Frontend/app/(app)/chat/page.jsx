@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useContext, useState, createContext } from "react";
+import { useEffect, useState } from "react";
 import ConversationSection from "./Components/Conversations/ConversationSection";
 import SideBar from "./Components/SideBar/SideBar";
 import Separator from "./Components/SideBar/Separator";
 import { wsChat } from "../../URLS";
 import { getToken } from "../../(auth)/AuthTools/tokenManagment";
-import {WsChatContext} from './context/context'
+import { WsChatContext } from "./context/context";
 
 function Separators() {
 	return (
