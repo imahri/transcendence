@@ -42,6 +42,23 @@ class UserView(APIView):
         except Exception as error:
             return Response({"error": str(error)}, status=400)
 
+        
+
+    @staticmethod
+    @api_view(["GET"])
+    def get_user(request):
+        try:
+            username = request.query_params.get("username")
+            user = User.objects.get(username=username);
+            userObj = dict(UserSerializer(user).data)
+            userObj["info"] = InfoSerializer(
+                Info.objects.get(user=user.pk)
+            ).data
+            return Response({"user": userObj})
+        except Exception as error:
+            return Response({"error": str(error)}, status=400)
+
+
     def delete(self, request):
         try:
 
@@ -69,7 +86,6 @@ class InfoView(APIView):
 
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # !!
 def searchView(request):
     try:
         search_text: str = request.query_params.get("search")
