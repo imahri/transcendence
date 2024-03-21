@@ -1,4 +1,4 @@
-import NavBar from "../navBar/NavBar";
+import NavBar from "../navBar/NavBar.jsx";
 import Profile from "./Components/Profile";
 import Dashboard from "./Components/Dashboard";
 

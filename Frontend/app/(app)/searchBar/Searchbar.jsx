@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/Searchbar.module.css";
-import { BASE_URL } from "@/app/URLS";
 
-import Result from "./SearchBarUtils";
+import { Result, searchForUsers, UserNotFound } from "./SearchBarUtils";
 
 function SearchIcon() {
 	return (
@@ -23,37 +22,18 @@ function SearchIcon() {
 
 let timeout;
 
-async function searchForUsers(searchText, setResult) {
-	try {
-		let response = await fetch(
-			`http://localhost:8000/user/search?search=${searchText}`,
-		);
-		if (response.ok) {
-			const data = await response.json();
-			console.log("data : ", data);
-			setResult(data);
-		} else {
-			setResult(404);
-		}
-		console.log(response);
-	} catch (error) {
-		console.error("fetch error: " + error);
-	}
-}
-
 export function Searchbar() {
 	const [input, setInput] = useState();
 	const [result, setResult] = useState();
 
 	useEffect(() => {
 		if (input) {
+			setResult();
 			console.log("==> {input}");
 			clearTimeout(timeout);
 			timeout = setTimeout(() => searchForUsers(input, setResult), 1000);
 		}
 	}, [input]);
-
-	result ? console.log(result) : "";
 
 	return (
 		<div className={styles.container}>
@@ -66,7 +46,7 @@ export function Searchbar() {
 						setInput(e.target.value);
 					}}
 					onBlur={() => {
-						setResult();
+						setTimeout(() => setResult(), 200);
 					}}
 				/>
 				<SearchIcon />
@@ -76,14 +56,7 @@ export function Searchbar() {
 				className={`bg-[#303030] rounded-xl w-full top-[55px] absolute ${!result || !input ? "hidden" : ""}`}
 			>
 				<div className="m-[20px] flex flex-col gap-[10px] max-h-[280px] overflow-y-auto">
-					{result == 404 && (
-						<h1 class="text-white font-semibold truncate max-w-[250px] overflow-x-hidden">
-							No result for :{" "}
-							<span className="font-normal text-[14px]">
-								{input}
-							</span>
-						</h1>
-					)}
+					{result == 404 && <UserNotFound input={input} />}
 
 					{result &&
 						result != 404 &&

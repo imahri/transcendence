@@ -4,7 +4,7 @@ import Title from "./assets/title.png";
 import Padlles from "./Components/Padlles";
 import Boards from "./Components/Boards";
 import Badges from "./Components/Badges";
-import NavBar from "../navBar/NavBar";
+import NavBar from "../navBar/NavBar.jsx";
 
 import Image from "next/image";
 

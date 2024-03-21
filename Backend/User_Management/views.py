@@ -78,7 +78,9 @@ def searchView(request):
             raise ObjectDoesNotExist(f"No results found for {search_text}")
         response = []
         for user in founded_users:
-            response.append(UserSerializer(user).data | dict(user.get_info())['profile_img'])
+            userData = dict(UserSerializer(user).data)
+            userData['img'] = dict(user.get_info())['profile_img']
+            response.append(userData)
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
         return Response({'error': str(no_found)}, status=status.HTTP_404_NOT_FOUND)
