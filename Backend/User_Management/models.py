@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
+from Chat.models import Conversation
+import requests as api_request
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -37,7 +39,7 @@ class User(AbstractUser):
         else:
             for key, value in kwargs.items():
                 valid_data[key] = value
-        serializer = UserSerializer(valid_data)
+        serializer = UserSerializer(data=valid_data)
         serializer.save()
         return serializer.instance
 
@@ -74,13 +76,17 @@ class User(AbstractUser):
     def set_info(self):
         Info.create(self)
 
+    @property
+    def info(self):
+        return Info.objects.get(user=self)
+
     def get_info(self):
         """
         level, energy, wallet, gender, exp
         """
         from User_Management.serializers import InfoSerializer
 
-        serializer = InfoSerializer(Info.objects.get(user=self))
+        serializer = InfoSerializer(self.info)
         return serializer.data
 
     def get_friends(self):
@@ -163,6 +169,28 @@ class Friend(models.Model):
     user = models.ForeignKey(
         "User_Management.User", related_name="friends", on_delete=models.CASCADE
     )
+
+    @staticmethod
+    def add_friend(user: User, friend: User):
+        info = user.asdasdasdas
+        conversation = Conversation.create(type="D")
+        friend_instance = Friend(
+            user=user, friend=friend, conversation=conversation, status="I"
+        )
+        friend_instance.save()
+
+    @staticmethod
+    def accept(user: User, friend: User):
+        # user.friends
+        # user.friends
+        pass
+
+    def block(self, friend: User):
+        pass
+
+    @staticmethod
+    def getFriends(user: User):
+        pass
 
     def is_friend(self):
         if self.status == "F":
