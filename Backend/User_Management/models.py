@@ -39,7 +39,7 @@ class User(AbstractUser):
         else:
             for key, value in kwargs.items():
                 valid_data[key] = value
-        serializer = UserSerializer(valid_data)
+        serializer = UserSerializer(data=valid_data)
         serializer.save()
         return serializer.instance
 
@@ -76,13 +76,17 @@ class User(AbstractUser):
     def set_info(self):
         Info.create(self)
 
+    @property
+    def info(self):
+        return Info.objects.get(user=self)
+
     def get_info(self):
         """
         level, energy, wallet, gender, exp
         """
         from User_Management.serializers import InfoSerializer
 
-        serializer = InfoSerializer(Info.objects.get(user=self))
+        serializer = InfoSerializer(self.info)
         return serializer.data
 
     def get_friends(self):
