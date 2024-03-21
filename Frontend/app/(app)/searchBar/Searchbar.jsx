@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles/Searchbar.module.css";
 import { BASE_URL } from "@/app/URLS";
 
+import Result from "./SearchBarUtils";
+
 function SearchIcon() {
 	return (
 		<span className={styles.search_icon}>
@@ -21,12 +23,18 @@ function SearchIcon() {
 
 let timeout;
 
-async function searchForUsers(searchText) {
+async function searchForUsers(searchText, setResult) {
 	try {
 		let response = await fetch(
 			`http://localhost:8000/user/search?search=${searchText}`,
 		);
-		if (!response.ok) console.log("User not found");
+		if (response.ok) {
+			const data = await response.json();
+			console.log("data : ", data);
+			setResult(data);
+		} else {
+			setResult(404);
+		}
 		console.log(response);
 	} catch (error) {
 		console.error("fetch error: " + error);
@@ -34,16 +42,18 @@ async function searchForUsers(searchText) {
 }
 
 export function Searchbar() {
-	const [input, setInput] = useState("");
-	const [result, setResult] = useState([]);
+	const [input, setInput] = useState();
+	const [result, setResult] = useState();
 
 	useEffect(() => {
 		if (input) {
 			console.log("==> {input}");
 			clearTimeout(timeout);
-			timeout = setTimeout(() => searchForUsers(input), 1000);
+			timeout = setTimeout(() => searchForUsers(input, setResult), 1000);
 		}
 	}, [input]);
+
+	result ? console.log(result) : "";
 
 	return (
 		<div className={styles.container}>
@@ -53,11 +63,35 @@ export function Searchbar() {
 					placeholder="Search"
 					type="text"
 					onChange={(e) => {
-						if (e.target.value !== "") setInput(e.target.value);
+						setInput(e.target.value);
+					}}
+					onBlur={() => {
+						setResult();
 					}}
 				/>
 				<SearchIcon />
 			</label>
+
+			<div
+				className={`bg-[#303030] rounded-xl w-full top-[55px] absolute ${!result || !input ? "hidden" : ""}`}
+			>
+				<div className="m-[20px] flex flex-col gap-[10px] max-h-[280px] overflow-y-auto">
+					{result == 404 && (
+						<h1 class="text-white font-semibold truncate max-w-[250px] overflow-x-hidden">
+							No result for :{" "}
+							<span className="font-normal text-[14px]">
+								{input}
+							</span>
+						</h1>
+					)}
+
+					{result &&
+						result != 404 &&
+						result.map((res) => {
+							return <Result data={res} />;
+						})}
+				</div>
+			</div>
 		</div>
 	);
 }

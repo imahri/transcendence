@@ -1,9 +1,9 @@
 .container {
-	@apply w-full h-[10%] flex justify-center items-center;
+	@apply w-full h-full flex justify-center items-center relative;
 }
 
 .label {
-	@apply bg-[#303030] rounded-xl w-3/4 h-3/5 pl-6 flex flex-row;
+	@apply bg-[#303030] rounded-xl w-full h-full pl-6 flex flex-row;
 }
 
 .search_input {

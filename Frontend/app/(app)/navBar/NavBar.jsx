@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { UserContext } from "../layout";
 import { logout } from "../settings/Components/SettingsUtils";
 import Link from "next/link";
+import { Searchbar } from "../searchBar/Searchbar";
 
 import {
 	logoutSvg,
@@ -99,7 +100,9 @@ function ProfileBar() {
 function NavBar() {
 	return (
 		<nav className="fixed z-10 flex justify-between mx-px-20 items-center h-[100px] w-[95%] mx-[20px] max-[500px]:mx-0">
-			<div className="bg-black max-md:w-[290px] w-[430px] h-[56px] rounded-[10px]"></div>
+			<div className="w-[300px] h-[50px]">
+				<Searchbar />
+			</div>
 			<ProfileBar />
 		</nav>
 	);
