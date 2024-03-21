@@ -2,17 +2,18 @@
 import React, { useContext, useState } from "react";
 import styles from "./styles/ConversationType.module.css";
 import { useRouter, usePathname } from "next/navigation";
-import { ConvChatContext } from "../../context/context";
+import { ConvTypeChatContext } from "../../context/context";
 const conversation_types = ["Friends", "Groups"];
 
 function List({ children, type, isActive }) {
 	const router = useRouter();
-	const [convType, setConvType] = useContext(ConvChatContext);
+	const [convType, setConvType] = useContext(ConvTypeChatContext);
 
 	const handleActive = () => {
 		if (!isActive) {
-			setConvType(type);}
-			router.push(`/chat/${type}`);
+			setConvType(type);
+		}
+		router.push(`/chat/${type}`);
 	};
 
 	return (

@@ -5,7 +5,7 @@ import SideBar from "./Components/SideBar/SideBar";
 import Separator from "./Components/SideBar/Separator";
 import { wsChat } from "../../URLS";
 import { getToken } from "../../(auth)/AuthTools/tokenManagment";
-import { WsChatContext } from "./context/context";
+import { WsChatContext, ConvChatContext } from "./context/context";
 
 function Separators() {
 	return (
@@ -16,9 +16,9 @@ function Separators() {
 	);
 }
 
-export default function ChatLayout({children}) {
+export default function ChatLayout({ children }) {
 	const [socket, setSocket] = useState(null);
-	const [activeConv, setActiveConv] = useState(null);
+	const [Conv, setConv] = useState(null);
 
 	useEffect(() => {
 		if (!socket) {
@@ -40,12 +40,14 @@ export default function ChatLayout({children}) {
 
 	return (
 		<WsChatContext.Provider value={socket}>
-			<div className="h-screen w-full m-0 flex flex-row bg-[#202020]">
-				<SideBar convState={[activeConv, setActiveConv]} />
-				<Separators />
-				<ConversationSection convState={[activeConv, setActiveConv]} />
-                {children}
-			</div>
+			<ConvChatContext.Provider value={[Conv, setConv]}>
+				<div className="h-screen w-full m-0 flex flex-row bg-[#202020]">
+					<SideBar />
+					<Separators />
+					<ConversationSection />
+					{children}
+				</div>
+			</ConvChatContext.Provider>
 		</WsChatContext.Provider>
 	);
 }

@@ -5,24 +5,24 @@ import Separator from "./Separator";
 import ConversationType from "./ConversationType";
 import Conversations from "./Conversations";
 import styles from "./styles/SideBar.module.css";
-import { ConvChatContext } from "../../context/context";
+import { ConvTypeChatContext } from "../../context/context";
 
 const conversation_types = ["Friends", "Groups"];
 
-export default function SideBar({ convState }) {
+export default function SideBar() {
 	const [convType, setConvType] = useState(conversation_types[0]);
 
 	// set lastMsgTime for all users
 
 	return (
-		<ConvChatContext.Provider value={[convType, setConvType]}>
+		<ConvTypeChatContext.Provider value={[convType, setConvType]}>
 			<aside className={styles.sidebar}>
 				<Searchbar />
 				<Separator />
 				<ConversationType />
-				<Conversations type={convType} convState={convState} />
+				<Conversations type={convType} />
 				{/* <div className="bg-red-800 w-full h-[10%]"></div> */}
 			</aside>
-		</ConvChatContext.Provider>
+		</ConvTypeChatContext.Provider>
 	);
 }
