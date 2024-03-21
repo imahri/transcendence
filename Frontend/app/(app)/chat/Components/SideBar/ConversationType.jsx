@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+"use client";
+import React, { useContext, useState } from "react";
 import styles from "./styles/ConversationType.module.css";
-
+import { useRouter, usePathname } from "next/navigation";
+import { ConvChatContext } from "../../context/context";
 const conversation_types = ["Friends", "Groups"];
 
-function List({ children, Key, isActive, setActive }) {
-	function handleActive() {
+function List({ children, type, isActive }) {
+	const router = useRouter();
+	const [convType, setConvType] = useContext(ConvChatContext);
+
+	const handleActive = () => {
 		if (!isActive) {
-			setActive(Key);
-		}
-	}
+			setConvType(type);}
+			router.push(`/chat/${type}`);
+	};
 
 	return (
 		<button
@@ -22,17 +27,14 @@ function List({ children, Key, isActive, setActive }) {
 	);
 }
 
-export default function ConversationType({ active_type, setActiveType }) {
+export default function ConversationType() {
+	const conv_type = usePathname().replace("/chat/", "");
+
 	return (
 		<div className={styles.container}>
 			<nav className={styles.nav}>
-				{conversation_types.map((type) => (
-					<List
-						key={Math.random()} // for now
-						Key={type}
-						isActive={active_type === type}
-						setActive={setActiveType}
-					>
+				{conversation_types.map((type, idx) => (
+					<List key={idx} type={type} isActive={conv_type === type}>
 						{type}
 					</List>
 				))}
