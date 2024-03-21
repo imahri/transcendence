@@ -15,6 +15,7 @@ qrcode = "*"
 channels = "*"
 django-channels-jwt-auth-middleware = "*"
 daphne = "*"
+requests = "*"
 
 [dev-packages]
 

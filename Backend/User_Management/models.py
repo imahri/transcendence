@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
+from Chat.models import Conversation
+import requests as api_request
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -166,18 +168,24 @@ class Friend(models.Model):
 
     @staticmethod
     def add_friend(user: User, friend: User):
-        pass
-
+        conversation = Conversation.create(type="D")
+        friend_instance = Friend(
+            user=user, friend=friend, conversation=conversation, status="I"
+        )
+        friend_instance.save()
 
     @staticmethod
-    def accept(user: User, friend: User)
+    def accept(user: User, friend: User):
         pass
+        # here
+        # user.friends
 
     def block(self, friend: User):
         pass
 
-
-
+    @staticmethod
+    def getFriends(user: User):
+        pass
 
     def is_friend(self):
         if self.status == "F":
