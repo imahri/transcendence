@@ -168,6 +168,7 @@ class Friend(models.Model):
 
     @staticmethod
     def add_friend(user: User, friend: User):
+        info = user.asdasdasdas
         conversation = Conversation.create(type="D")
         friend_instance = Friend(
             user=user, friend=friend, conversation=conversation, status="I"
@@ -176,9 +177,9 @@ class Friend(models.Model):
 
     @staticmethod
     def accept(user: User, friend: User):
-        pass
-        # here
         # user.friends
+        # user.friends
+        pass
 
     def block(self, friend: User):
         pass
