@@ -8,6 +8,7 @@ from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from core.settings import DEFAULT_BANNER_IMG, DEFAULT_PROFILE_IMG
+from django.db.models.manager import BaseManager
 
 
 class User(AbstractUser):
@@ -89,13 +90,25 @@ class User(AbstractUser):
         serializer = InfoSerializer(self.info)
         return serializer.data
 
-    def get_friends(self):
-        pass
+    @property
+    def friends(self) -> BaseManager:
+        return Friend.objects.filter(user=self)
 
-    def get_friend(self, friend_name):
-        friend = User.get_by_identifier(friend_name)
-        friendShip = Friend.objects.get(user=self, friend=friend)
-        return friendShip
+    def get_friendship(self, friend):
+        return Friend.objects.get(user=self, friend=friend)
+
+    def add_friend(self, friend):
+        Friend.add_friend(self, friend)
+
+    def accept_friend(self, friend):
+        self.get_friendship(friend).accept()
+
+    def block_friend(self, friend):
+        self.get_friendship(friend).block()
+
+    def delete_friend(self, friend):
+        self.get_friendship(friend).delete()
+        friend.get_friendship(self).delete()
 
     class TwoFactorAuth:
 
@@ -161,7 +174,12 @@ class Friend(models.Model):
     Define the relation between two Users
     """
 
-    Friendship = (("F", "friend"), ("B", "blocked"), ("I", "invited"))
+    Friendship = (
+        ("F", "friend"),
+        ("B", "blocked"),
+        ("W", "wait_for_accept"),
+        ("I", "invited"),
+    )
 
     status = models.CharField(max_length=1, choices=Friendship)
     friend = models.OneToOneField("User_Management.User", on_delete=models.CASCADE)
@@ -172,32 +190,39 @@ class Friend(models.Model):
 
     @staticmethod
     def add_friend(user: User, friend: User):
-        info = user.asdasdasdas
-        conversation = Conversation.create(type="D")
-        friend_instance = Friend(
-            user=user, friend=friend, conversation=conversation, status="I"
-        )
-        friend_instance.save()
+        if user.friends.filter(friend=friend).first() is None:
+            conversation = Conversation.create(type="D")
+            Friend(
+                user=user, friend=friend, conversation=conversation, status="W"
+            ).save()
+            Friend(
+                user=friend, friend=user, conversation=conversation, status="I"
+            ).save()
+        else:
+            raise Exception("Already Friend")
 
-    @staticmethod
-    def accept(user: User, friend: User):
-        # user.friends
-        # user.friends
-        pass
+    def accept(self):
+        if not self.is_invite:
+            raise Exception("No invite")
+        self.status = "F"
+        self.save()
+        friend_obj = self.friend.get_friendship(self)
+        friend_obj.status = "F"
+        friend_obj.save()
 
-    def block(self, friend: User):
-        pass
+    def block(self):
+        if self.is_block:
+            raise Exception("Already Blocked")
+        self.status = "B"
 
-    @staticmethod
-    def getFriends(user: User):
-        pass
+    @property
+    def is_invite(self):
+        return self.status == "I"
 
+    @property
     def is_friend(self):
-        if self.status == "F":
-            return True
-        return False
+        return self.status == "F"
 
-    def is_blocked(self):
-        if self.status == "B":
-            return True
-        return False
+    @property
+    def is_block(self):
+        return self.status == "B"

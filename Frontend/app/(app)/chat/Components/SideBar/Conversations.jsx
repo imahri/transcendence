@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useState } from "react";
+import { useContext } from "react";
+import { ConvChatContext } from "../../context/context";
 
 const DummyData = [
 	{
@@ -166,8 +167,8 @@ function Conversation({ data, setter, isActive }) {
 	);
 }
 
-export default function Conversations({ type, convState }) {
-	const [activeConv, setActiveConv] = convState;
+export default function Conversations({ type }) {
+	const [activeConv, setActiveConv] = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
 			{DummyData.map(
