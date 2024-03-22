@@ -42,9 +42,10 @@ export default function ChatLayout({ children }) {
 		<WsChatContext.Provider value={socket}>
 			<ConvChatContext.Provider value={[Conv, setConv]}>
 				<div className="h-screen w-full m-0 flex flex-row bg-[#202020]">
-					<SideBar>{children}</SideBar>
+					<SideBar />
 					<Separators />
 					<ConversationSection />
+					{children}
 				</div>
 			</ConvChatContext.Provider>
 		</WsChatContext.Provider>
