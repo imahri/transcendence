@@ -21,7 +21,9 @@ function SkinTitle(active, setActive, title) {
 			onClick={() => setActive(title)}
 		>
 			{title}
-			{active && <div className="w-[40px] h-[2px] bg-[#DB00FF]"></div>}
+			<div
+				className={`${!active ? "hidden" : ""} w-[40px] h-[2px] bg-[#DB00FF]`}
+			></div>
 		</h1>
 	);
 }
@@ -49,13 +51,13 @@ function Skins({ user }) {
 	const [active, setActive] = useState("Badges");
 
 	return (
-		<div className="w-full  bg-[#2B2B2B] rounded-[20px] flex  flex-col gap-[20px]">
+		<div className="w-full h-[350px]  bg-[#2B2B2B] rounded-[20px] flex  flex-col justify-center gap-[20px]">
 			<div className="flex gap-[30px] mt-[30px] ml-[30px]">
 				{SkinTitle(active == "Badges", setActive, "Badges")}
 				{SkinTitle(active == "Paddles", setActive, "Paddles")}
 			</div>
 
-			<div className="w-[80%] h-[226px]   flex gap-[30px] overflow-x-auto mx-[40px] py-[25px]">
+			<div className="w-[1550px] max-[2314px]:w-[80%] h-[226px] flex items-center gap-[130px] overflow-x-auto ml-[100px]">
 				{active == "Badges" &&
 					Bbs.map((Bb) => {
 						return <Badges BadgeInfo={Bb} />;
@@ -74,7 +76,5 @@ function Skins({ user }) {
 		</div>
 	);
 }
-
-//change the methode of rendring S.O.S
 
 export default Skins;

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BASE_URL } from "@/app/URLS";
+import { USER_SEARCH_URL } from "@/app/URLS";
+import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
 export function Result({ data }) {
 	return (
@@ -37,10 +38,13 @@ export function UserNotFound({ input }) {
 }
 
 export async function searchForUsers(searchText, setResult) {
+	const url = `${USER_SEARCH_URL}?search=${searchText}`;
+	const accessToken = getToken();
+
 	try {
-		let response = await fetch(
-			`http://localhost:8000/user/search?search=${searchText}`,
-		);
+		let response = await fetch(url, {
+			headers: { Authorization: `Bearer  ${accessToken}` },
+		});
 		if (response.ok) {
 			const data = await response.json();
 			console.log("data : ", data);

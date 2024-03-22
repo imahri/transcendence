@@ -1,3 +1,5 @@
+// "use client";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import a1 from "../assets/Ache1.png";
 import a2 from "../assets/Ache2.png";
@@ -6,6 +8,8 @@ import a3 from "../assets/Ache3.png";
 import noTrophy from "../assets/notrophy.png";
 
 function ShowRoom() {
+	const router = useRouter();
+
 	return (
 		<div className="w-full flex gap-[20px] relative  ">
 			<div className="w-[406px] h-[178px] bg-[#2B2B2B] rounded-[20px] flex flex-col items-center gap-[20px]">
@@ -26,9 +30,13 @@ function ShowRoom() {
 					<Image src={noTrophy} alt="" />
 				</div>
 			</div>
-			<div className="w-[106px] h-[38px] bg-greatBlue rounded-[7px] flex justify-center items-center cursor-pointer absolute right-0 bottom-0 font-Chakra font-normal text-[#222222] text-[16px]">
+
+			<button
+				className="w-[106px] h-[38px] bg-greatBlue rounded-[7px] cursor-pointer absolute right-0 bottom-0 font-normal text-[#222222] hover:text-white text-[16px]"
+				onClick={() => router.back()}
+			>
 				Back
-			</div>
+			</button>
 		</div>
 	);
 }

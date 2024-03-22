@@ -28,7 +28,7 @@ function GameState({ user1, user2 }) {
 					/>
 				</div>
 				<h2 className={`font-chakra text-[10px] text-white`}>
-					{user1.userName}
+					{user1.username}
 				</h2>
 			</div>
 			<div className="bg-[#696969] size-[34px] rounded-full flex justify-center items-center">

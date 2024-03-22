@@ -20,6 +20,8 @@ export const BADGES_URL = `${GAME_APP}/badge`;
 const USER_APP = `${BASE_URL}/user`;
 
 export const USER_URL = `${USER_APP}/`;
+export const USER_SEARCH_URL = `${USER_APP}/search`;
+export const GET_USER_URL = `${USER_APP}/user`;
 
 export const chatApi = `${BASE_URL}/chat`;
 export const wsChat = `${WS}/ws/chat`;
