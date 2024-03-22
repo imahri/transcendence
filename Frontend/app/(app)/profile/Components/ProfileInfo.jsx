@@ -5,7 +5,7 @@ import { UserContext } from "../../layout";
 function Button({ callBack, action, color }) {
 	return (
 		<button
-			className={`border-none rounded-[6px] w-[161px] h-[40px] bg-[${color}] font-semibold text-[16px] text-white cursor-pointer`}
+			className={`border-none rounded-[6px] w-[161px] h-[40px] bg-[#3D9D5E] font-semibold text-[16px] text-white cursor-pointer`}
 		>
 			{action}
 		</button>
@@ -23,8 +23,6 @@ function Buttons({ profileUser }) {
 			{status == "other" && (
 				<Button action={"Add Friend"} color={"#3D6F9D"} />
 			)}
-			{/* <Button action={'Block'} color={'#3D9D5E'} />				 */}
-			{/* <Button action={'Remove'} color={'#3D6F9D'} />				 */}
 		</div>
 	);
 }
