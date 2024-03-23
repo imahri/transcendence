@@ -152,8 +152,7 @@ function Conversation({ data, setter, type, isActive }) {
 		/* get data */
 		setter(data.friend_name);
 		data.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-		console.log(`/chat/${type}/${data.friend_name}`);
-		route.replace(`/chat/${type}/${data.friend_name}`);
+		route.push(`/chat/${type}/${data.friend_name}`);
 	};
 
 	return (
