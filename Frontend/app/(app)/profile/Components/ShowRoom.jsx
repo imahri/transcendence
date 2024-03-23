@@ -17,9 +17,27 @@ function ShowRoom() {
 					Achievment
 				</h1>
 				<div className="flex">
-					<Image className="size-[79px]" src={a1} alt="" />
-					<Image className="size-[79px]" src={a2} alt="" />
-					<Image className="size-[79px]" src={a3} alt="" />
+					<Image
+						className="size-[79px]"
+						width={0}
+						height={0}
+						src={a1}
+						alt=""
+					/>
+					<Image
+						className="size-[79px]"
+						width={0}
+						height={0}
+						src={a2}
+						alt=""
+					/>
+					<Image
+						className="size-[79px]"
+						width={0}
+						height={0}
+						src={a3}
+						alt=""
+					/>
 				</div>
 			</div>
 			<div className="w-[406px] h-[178px] bg-[#2B2B2B] rounded-[20px] flex flex-col items-center gap-[20px]">

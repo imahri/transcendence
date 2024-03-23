@@ -1,27 +1,154 @@
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../layout";
+import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
-function Button({ callBack, action, color }) {
+function updateStatus(e, setStatus) {
+	const data = JSON.parse(e.data);
+	console.log("Received message:", data);
+	setStatus(data.status);
+}
+
+function getStatus(socket, setStatus, friend_id) {
+	socket.send(
+		JSON.stringify({
+			action: "check",
+			friend_id: friend_id,
+		}),
+	);
+}
+
+function callBack(socket, action, friend_id) {
+	let update;
+	if (action == "edit") {
+		return;
+	} else if (action == "Add Friend")
+		update = { action: "add", friend_id: friend_id };
+	else if (action == "Accept")
+		update = { action: "accept", friend_id: friend_id };
+	else if (action == "Reject")
+		update = { action: "reject", friend_id: friend_id };
+	else if (action == "Remove Friend")
+		update = { action: "remove", friend_id: friend_id };
+	else return;
+	socket.send(JSON.stringify(update));
+}
+
+function Button({ action, color, socket, friend_id }) {
 	return (
 		<button
-			className={`border-none rounded-[6px] w-[161px] h-[40px] bg-[#3D9D5E] font-semibold text-[16px] text-white cursor-pointer`}
+			className={`border-none rounded-[6px] w-[161px] h-[40px] ${color} font-semibold text-[16px] text-white cursor-pointer`}
+			onClick={() => callBack(socket, action, friend_id)}
 		>
 			{action}
 		</button>
 	);
 }
 
-//edit is my // is not friend Add Friend is Friend block or remove
 function Buttons({ profileUser }) {
-	const { user } = useContext(UserContext);
-	const status = profileUser.id == user.id ? "owner" : "other";
+	const [status, setStatus] = useState();
+	const [socket, setSocket] = useState();
+
+	useEffect(() => {
+		try {
+			const token = getToken();
+			const ws = new WebSocket(
+				`ws://localhost:8000/ws/user?token=${token}`,
+			);
+			setSocket(ws);
+
+			ws.onopen = () => {
+				getStatus(ws, setStatus, profileUser.id);
+			};
+
+			ws.onmessage = (e) => {
+				updateStatus(e, setStatus);
+			};
+
+			ws.onerror = (error) => {
+				console.error("WebSocket error:", error);
+			};
+			ws.onclose = (event) => {
+				console.log("WebSocket connection closed:", event.reason);
+			};
+		} catch (error) {
+			console.error("Error creating WebSocket:", error);
+		}
+		return () => {
+			if (socket) socket.close();
+		};
+	}, []);
 
 	return (
 		<div className="flex flex-col gap-[10px] ">
 			{status == "owner" && <Button action={"Edit"} color={"#3D9D5E"} />}
-			{status == "other" && (
-				<Button action={"Add Friend"} color={"#3D6F9D"} />
+			{status == "not friend" && (
+				<Button
+					action={"Add Friend"}
+					socket={socket}
+					friend_id={profileUser.id}
+					color={"bg-green-600"}
+				/>
+			)}
+
+			{status == "B" && (
+				<>
+					<Button
+						action={"Blocked"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-gray-600"}
+					/>
+					<Button
+						action={"Unblock"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-green-600"}
+					/>
+				</>
+			)}
+
+			{status == "W" && (
+				<>
+					<Button
+						action={"remove Request"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-red-600"}
+					/>
+				</>
+			)}
+			{status == "I" && (
+				<>
+					<Button
+						action={"Accept"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-green-600"}
+					/>
+					<Button
+						action={"Reject"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-red-600"}
+					/>
+				</>
+			)}
+			{status == "F" && (
+				<>
+					<Button
+						action={"Remove Friend"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-red-600"}
+					/>
+					<Button
+						action={"block"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-gray-600"}
+					/>
+				</>
 			)}
 		</div>
 	);

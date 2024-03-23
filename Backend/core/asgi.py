@@ -16,10 +16,11 @@ from django_channels_jwt_auth_middleware.auth import JWTAuthMiddlewareStack
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
 import Chat.ws_urls
+import User_Management.routing
 
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
-        "websocket": JWTAuthMiddlewareStack(URLRouter(Chat.ws_urls.ws_urlpatterns)),
+        "websocket": JWTAuthMiddlewareStack(URLRouter(Chat.ws_urls.ws_urlpatterns + User_Management.routing.ws_urlpatterns)),
     }
 )

@@ -1,21 +1,23 @@
 from django.db import models
 from core.settings import IMAGES_ROOT_
-
+import datetime
 
 class Conversation(models.Model):
 
     Modes = (("G", "GROUP"), ("D", "DM"))
     mode = models.CharField(max_length=1, choices=Modes)
-    last_msg_time = models.TimeField(auto_now=True)
+    last_msg_time = models.TimeField(auto_now=True, null=True)
 
     @staticmethod
     def create(type):
         instance = Conversation(mode=type)
         instance.save()
-        return instance.pk
+        return instance # kan instance.pk daba returni nichan instance
+    
 
     def set_lastMsgTime(self):
-        self.last_msg_time.strftime
+        self.last_msg_time = datetime.datetime.now()
+        self.save()
 
 
 class Message(models.Model):

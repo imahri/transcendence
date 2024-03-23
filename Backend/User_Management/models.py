@@ -183,7 +183,7 @@ class Friend(models.Model):
 
     status = models.CharField(max_length=1, choices=Friendship)
     friend = models.OneToOneField("User_Management.User", on_delete=models.CASCADE)
-    conversation = models.OneToOneField("Chat.Conversation", on_delete=models.CASCADE)
+    conversation = models.ForeignKey("Chat.Conversation", on_delete=models.CASCADE)
     user = models.ForeignKey(
         "User_Management.User", related_name="friends", on_delete=models.CASCADE
     )
@@ -206,7 +206,7 @@ class Friend(models.Model):
             raise Exception("No invite")
         self.status = "F"
         self.save()
-        friend_obj = self.friend.get_friendship(self)
+        friend_obj = self.friend.get_friendship(self.user)
         friend_obj.status = "F"
         friend_obj.save()
 
