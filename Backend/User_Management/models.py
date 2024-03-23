@@ -177,12 +177,13 @@ class Friend(models.Model):
     Friendship = (
         ("F", "friend"),
         ("B", "blocked"),
+        ("BY", "blocked you"),
         ("W", "wait_for_accept"),
         ("I", "invited"),
     )
 
-    status = models.CharField(max_length=1, choices=Friendship)
-    friend = models.OneToOneField("User_Management.User", on_delete=models.CASCADE)
+    status = models.CharField(max_length=2, choices=Friendship)
+    friend = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
     conversation = models.ForeignKey("Chat.Conversation", on_delete=models.CASCADE)
     user = models.ForeignKey(
         "User_Management.User", related_name="friends", on_delete=models.CASCADE
@@ -214,6 +215,11 @@ class Friend(models.Model):
         if self.is_block:
             raise Exception("Already Blocked")
         self.status = "B"
+        self.save()
+        friend_obj = self.friend.get_friendship(self.user)
+        friend_obj.status = "BY"
+        friend_obj.save()
+
 
     @property
     def is_invite(self):

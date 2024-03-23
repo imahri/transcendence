@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { useContext, useState, useEffect } from "react";
-import { UserContext } from "../../layout";
+import { useState, useEffect } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
 function updateStatus(e, setStatus) {
@@ -26,11 +25,17 @@ function callBack(socket, action, friend_id) {
 		update = { action: "add", friend_id: friend_id };
 	else if (action == "Accept")
 		update = { action: "accept", friend_id: friend_id };
-	else if (action == "Reject")
-		update = { action: "reject", friend_id: friend_id };
-	else if (action == "Remove Friend")
+	else if (action == "block")
+		update = { action: "block", friend_id: friend_id };
+	else if (
+		action == "Reject" ||
+		action == "Remove Friend" ||
+		action == "Unblock" ||
+		action == "remove Request"
+	)
 		update = { action: "remove", friend_id: friend_id };
 	else return;
+
 	socket.send(JSON.stringify(update));
 }
 
@@ -147,6 +152,16 @@ function Buttons({ profileUser }) {
 						socket={socket}
 						friend_id={profileUser.id}
 						color={"bg-gray-600"}
+					/>
+				</>
+			)}
+			{status == "BY" && (
+				<>
+					<Button
+						action={"User Blocked You"}
+						socket={socket}
+						friend_id={profileUser.id}
+						color={"bg-red-600"}
 					/>
 				</>
 			)}

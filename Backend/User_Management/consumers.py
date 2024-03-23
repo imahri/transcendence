@@ -51,17 +51,17 @@ class FriendShipConsumer(WebsocketConsumer):
             except Exception as error:
                 print('error accept: ', error)
 
-        elif action == 'reject' or action == 'remove':
+        elif action == 'remove':
             try:
-                print('remove')
                 self.user.delete_friend(friend=friend)
             except Exception as error:
-                print('error reject :  ', error)
+                print('error remove :  ', error)
 
-        elif action == 'delete':
-            pass 
         elif action == 'block':
-            pass
+            try:
+                self.user.block_friend(friend=friend)
+            except Exception as error:
+                print('error block :  ', error)
         
         self.check_friendship(friend)
         
