@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import ConversationSection from "./Components/Conversations/ConversationSection";
 import Separator from "./Components/SideBar/Separator";
 import { wsChat } from "../../URLS";
 import { getToken } from "../../(auth)/AuthTools/tokenManagment";
@@ -72,8 +71,7 @@ export default function ChatLayout({ children }) {
 						</ConvTypeChatContext.Provider>
 					</SideBar>
 					<Separators />
-					<ConversationSection />
-					{children}
+					<main className={styles.main}>{children}</main>
 				</div>
 			</ConvChatContext.Provider>
 		</WsChatContext.Provider>

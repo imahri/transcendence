@@ -1,3 +1,7 @@
 .sidebar {
 	@apply bg-inherit flex basis-[35%] justify-start  items-center flex-col;
 }
+
+.main {
+	@apply bg-inherit grow w-full h-full flex flex-row justify-center items-center;
+}

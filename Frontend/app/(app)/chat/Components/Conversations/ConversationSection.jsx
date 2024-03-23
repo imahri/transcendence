@@ -1,11 +1,7 @@
-import Image from "next/image";
-import { useContext, useEffect, useRef, useState } from "react";
-import styles from "./styles/ConversationSection.module.css";
-import NoConv_icon from "./assets/no_conv.svg";
+import { useEffect, useState } from "react";
 import ProfileBar from "./ProfileBar";
 import MessagesSection from "./MessagesSection";
 import TypingBar from "./TypingBar";
-import { ConvChatContext } from "../../context/context";
 
 export const messageTypes = Object.freeze({
 	Sent: "sent",
@@ -65,21 +61,7 @@ let DummyMessages = [
 	},
 ];
 
-function NoConv() {
-	return (
-		<div className={styles.noConv}>
-			<Image
-				width={500}
-				height={500}
-				src={NoConv_icon}
-				alt="no conv icon"
-			/>
-			<p>With great power comes great responsibility</p>
-		</div>
-	);
-}
-
-function Converstation({ friendName }) {
+export function Converstation({ friendName }) {
 	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
@@ -114,15 +96,15 @@ function Converstation({ friendName }) {
 	);
 }
 
-export default function ConversationSection() {
-	const [activeConv, setActiveConv] = useContext(ConvChatContext);
-	return (
-		<main className={styles.main}>
-			{activeConv === null ? (
-				<NoConv />
-			) : (
-				<Converstation friendName={activeConv} />
-			)}
-		</main>
-	);
-}
+// export default function ConversationSection() {
+// 	// const [activeConv, setActiveConv] = useContext(ConvChatContext);
+// 	return (
+// 		<main className={styles.main}>
+// 			{activeConv === null ? (
+// 				<NoConv />
+// 			) : (
+// 				<Converstation friendName={'Emily'} />
+// 			)}
+// 		</main>
+// 	);
+// }

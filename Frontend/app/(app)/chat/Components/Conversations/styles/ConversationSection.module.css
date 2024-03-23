@@ -1,14 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Iceland&display=swap");
 
 .main {
 	@apply bg-inherit grow w-full h-full flex flex-row justify-center items-center;
 }
 
-.noConv {
-	@apply select-none w-2/3 h-2/3 flex flex-col justify-center items-center mb-56;
-}
-
-.noConv p {
-	font-family: "Iceland", sans-serif;
-	@apply text-[#7D7D7D] text-3xl;
-}
