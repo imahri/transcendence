@@ -3,7 +3,6 @@ import React, { useContext, useState } from "react";
 import styles from "./styles/ConversationType.module.css";
 import { useRouter, usePathname } from "next/navigation";
 import { ConvTypeChatContext } from "../../context/context";
-const conversation_types = ["Friends", "Groups"];
 
 function List({ children, type, isActive }) {
 	const router = useRouter();
@@ -29,16 +28,23 @@ function List({ children, type, isActive }) {
 }
 
 export default function ConversationType() {
-	const conv_type = usePathname().replace("/chat/", "");
+	const conv_type = usePathname();
 
 	return (
 		<div className={styles.container}>
 			<nav className={styles.nav}>
-				{conversation_types.map((type, idx) => (
-					<List key={idx} type={type} isActive={conv_type === type}>
-						{type}
-					</List>
-				))}
+				<List
+					type="Friends"
+					isActive={conv_type.includes("/chat/Friends")}
+				>
+					Friends
+				</List>
+				<List
+					type="Groups"
+					isActive={conv_type.includes("/chat/Groups")}
+				>
+					Groups
+				</List>
 			</nav>
 		</div>
 	);

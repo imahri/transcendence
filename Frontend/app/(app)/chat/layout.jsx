@@ -13,12 +13,16 @@ import Conversations from "./Components/SideBar/Conversations";
 import styles from "./styles/layout.module.css";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
 
-function SideBar({ children }) {
+function SideBar() {
+	const [convType, setConvType] = useState(conversation_types[0]);
 	return (
 		<aside className={styles.sidebar}>
 			<Searchbar />
 			<Separator />
-			{children}
+			<ConvTypeChatContext.Provider value={[convType, setConvType]}>
+				<ConversationType />
+				<Conversations type={convType} />
+			</ConvTypeChatContext.Provider>
 			{/* <div className="bg-red-800 w-full h-[10%]"></div> */}
 		</aside>
 	);
@@ -38,7 +42,6 @@ const conversation_types = ["Friends", "Groups"];
 export default function ChatLayout({ children }) {
 	const [socket, setSocket] = useState(null);
 	const [Conv, setConv] = useState(null);
-	const [convType, setConvType] = useState(conversation_types[0]);
 
 	useEffect(() => {
 		if (!socket) {
@@ -62,14 +65,7 @@ export default function ChatLayout({ children }) {
 		<WsChatContext.Provider value={socket}>
 			<ConvChatContext.Provider value={[Conv, setConv]}>
 				<div className="h-screen w-full m-0 flex flex-row bg-[#202020]">
-					<SideBar>
-						<ConvTypeChatContext.Provider
-							value={[convType, setConvType]}
-						>
-							<ConversationType />
-							<Conversations type={convType} />
-						</ConvTypeChatContext.Provider>
-					</SideBar>
+					<SideBar />
 					<Separators />
 					<main className={styles.main}>{children}</main>
 				</div>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useContext } from "react";
 import { ConvChatContext } from "../../context/context";
+import { useRouter } from "next/navigation";
 
 const DummyData = [
 	{
@@ -143,13 +144,16 @@ function TimeNotification({ last_msg_time, unseen_message_count }) {
 	);
 }
 
-function Conversation({ data, setter, isActive }) {
+function Conversation({ data, setter, type, isActive }) {
 	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
+	const route = useRouter();
 
 	const handleClick = () => {
 		/* get data */
 		setter(data.friend_name);
 		data.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
+		console.log(`/chat/${type}/${data.friend_name}`);
+		route.replace(`/chat/${type}/${data.friend_name}`);
 	};
 
 	return (
@@ -172,12 +176,13 @@ export default function Conversations({ type }) {
 	return (
 		<div className={styles.container}>
 			{DummyData.map(
-				(conversation) =>
+				(conversation, idx) =>
 					type === conversation.type_of_conversation && (
 						<Conversation
-							key={conversation.friend_name}
+							key={idx}
 							data={conversation}
 							setter={setActiveConv}
+							type={type}
 							isActive={activeConv === conversation.friend_name}
 						/>
 					),
