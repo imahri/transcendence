@@ -97,7 +97,7 @@ export function Converstation({ friendName }) {
 }
 
 // export default function ConversationSection() {
-// 	// const [activeConv, setActiveConv] = useContext(ConvChatContext);
+
 // 	return (
 // 		<main className={styles.main}>
 // 			{activeConv === null ? (

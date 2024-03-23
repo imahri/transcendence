@@ -144,15 +144,17 @@ function TimeNotification({ last_msg_time, unseen_message_count }) {
 	);
 }
 
-function Conversation({ data, setter, type, isActive }) {
+function Conversation({ data, dispatchConvState, type, isActive }) {
 	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
 	const route = useRouter();
 
 	const handleClick = () => {
 		/* get data */
-		setter(data.friend_name);
 		data.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-		route.push(`/chat/${type}/${data.friend_name}`);
+		dispatchConvState({
+			friend: data.friend_name,
+			url: `/chat/${type}/${data.friend_name}`,
+		});
 	};
 
 	return (
@@ -171,7 +173,7 @@ function Conversation({ data, setter, type, isActive }) {
 }
 
 export default function Conversations({ type }) {
-	const [activeConv, setActiveConv] = useContext(ConvChatContext);
+	const [convState, dispatchConvState] = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
 			{DummyData.map(
@@ -180,9 +182,9 @@ export default function Conversations({ type }) {
 						<Conversation
 							key={idx}
 							data={conversation}
-							setter={setActiveConv}
+							dispatchConvState={dispatchConvState}
 							type={type}
-							isActive={activeConv === conversation.friend_name}
+							isActive={convState === conversation.friend_name}
 						/>
 					),
 			)}
