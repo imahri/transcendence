@@ -144,17 +144,23 @@ function TimeNotification({ last_msg_time, unseen_message_count }) {
 	);
 }
 
-function Conversation({ data, dispatchConvState, type, isActive }) {
+function Conversation({ info, ConvState, isActive }) {
+	// Here update Conversation ??
+	const [convState, setConvState] = ConvState;
+
 	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
 	const route = useRouter();
 
 	const handleClick = () => {
 		/* get data */
-		data.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-		dispatchConvState({
-			friend: data.friend_name,
-			url: `/chat/${type}/${data.friend_name}`,
-		});
+		info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
+		// setConvState(
+
+		// 	{
+		// 		type: ,
+		// 		current_conv:
+		// 	}
+		// );
 	};
 
 	return (
@@ -163,17 +169,17 @@ function Conversation({ data, dispatchConvState, type, isActive }) {
 			className={`${styles.section} ${isActive ? styles.focus_section : ""}`}
 		>
 			<ProfileImage />
-			<FriendInfo friend_name={data.friend_name} last_msg={last_msg} />
+			<FriendInfo friend_name={info.friend_name} last_msg={last_msg} />
 			<TimeNotification
-				last_msg_time={data.last_msg_time}
-				unseen_message_count={data.unseen_message_count}
+				last_msg_time={info.last_msg_time}
+				unseen_message_count={info.unseen_message_count}
 			/>
 		</button>
 	);
 }
 
 export default function Conversations({ type }) {
-	const [convState, dispatchConvState] = useContext(ConvChatContext);
+	const ConvState = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
 			{DummyData.map(
@@ -181,10 +187,8 @@ export default function Conversations({ type }) {
 					type === conversation.type_of_conversation && (
 						<Conversation
 							key={idx}
-							data={conversation}
-							dispatchConvState={dispatchConvState}
-							type={type}
-							isActive={convState === conversation.friend_name}
+							info={conversation}
+							ConvState={ConvState}
 						/>
 					),
 			)}

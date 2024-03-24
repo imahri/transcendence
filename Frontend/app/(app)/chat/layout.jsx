@@ -25,7 +25,7 @@ function SideBar() {
 				<Searchbar />
 				<Separator />
 				<ConversationType />
-				{/* <Conversations type={convState.type} /> */}
+				<Conversations type={convState.type} />
 				{/* <div className="bg-red-800 w-full h-[10%]"></div> */}
 			</aside>
 			<Separators />
