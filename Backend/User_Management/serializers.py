@@ -68,8 +68,6 @@ class InfoSerializer(ModelSerializer):
             representation["banner_img"] = banner_path
         return representation
 
-        return data
-
     def save(self, **kwargs):
         self.is_valid(raise_exception=True)
         return super().save(**kwargs)

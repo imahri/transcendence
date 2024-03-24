@@ -1,27 +1,42 @@
 import json
 
 from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync
+
 from .models import User
 
 
 
 class FriendShipConsumer(WebsocketConsumer):
+    channels: dict = {}
+
+    @classmethod
+    def register_channel(cls, username: str, channel_name: str):
+        cls.channels[username] = channel_name
+
+    @classmethod
+    def get_channel_by_user(cls, user: str):
+        return cls.channels[user]
+
     def connect(self):
         try:
            self.user: User = self.scope["user"]
            if self.user.is_anonymous:
                raise Exception("Not Authorizer")
            else:
-               self.accept()
+            self.register_channel(self.user.username, self.channel_name)
+            self.accept()
         
-        except Exception:
-           print('exept');
+        except Exception as error:
+           print('ws connect : ', error);
            self.close();
 
 
     
     def disconnect(self, close_code):
-        pass
+        username : str = self.user.username
+        if username in self.channels:
+            del self.channels[username]
 
     
     def receive(self, text_data):
@@ -63,17 +78,23 @@ class FriendShipConsumer(WebsocketConsumer):
             except Exception as error:
                 print('error block :  ', error)
         
+        try:
+            target_friend = self.get_channel_by_user(friend.username)
+            async_to_sync(self.channel_layer.send)(target_friend, {"type": "update"})
+        except Exception as error:
+            print('channel key not found :', error)
+
         self.check_friendship(friend)
         
 
+    def update(self, event):
+        self.send(text_data=json.dumps({'status': 'update'}))
         
 
 
     def check_friendship(self ,friend):
         
-
-
-        if self.user.pk == friend:
+        if self.user.pk == friend.pk:
             self.send(text_data=json.dumps({'status': 'owner'}))
 
         else :

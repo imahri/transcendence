@@ -2,13 +2,17 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
-function updateStatus(e, setStatus) {
+function updateStatus(e, setStatus, socket, friend_id) {
 	const data = JSON.parse(e.data);
 	console.log("Received message:", data);
+	if (data.status == "update") {
+		getStatus(socket, friend_id);
+		return;
+	}
 	setStatus(data.status);
 }
 
-function getStatus(socket, setStatus, friend_id) {
+function getStatus(socket, friend_id) {
 	socket.send(
 		JSON.stringify({
 			action: "check",
@@ -63,11 +67,11 @@ function Buttons({ profileUser }) {
 			setSocket(ws);
 
 			ws.onopen = () => {
-				getStatus(ws, setStatus, profileUser.id);
+				getStatus(ws, profileUser.id);
 			};
 
 			ws.onmessage = (e) => {
-				updateStatus(e, setStatus);
+				updateStatus(e, setStatus, ws, profileUser.id);
 			};
 
 			ws.onerror = (error) => {
@@ -86,7 +90,9 @@ function Buttons({ profileUser }) {
 
 	return (
 		<div className="flex flex-col gap-[10px] ">
-			{status == "owner" && <Button action={"Edit"} color={"#3D9D5E"} />}
+			{status == "owner" && (
+				<Button action={"Edit"} color={"bg-blue-600"} />
+			)}
 			{status == "not friend" && (
 				<Button
 					action={"Add Friend"}
