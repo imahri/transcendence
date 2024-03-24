@@ -12,11 +12,15 @@ import ConversationType from "./Components/SideBar/ConversationType";
 import Conversations from "./Components/SideBar/Conversations";
 import styles from "./styles/layout.module.css";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
+import { usePathname } from "next/navigation";
 
 function SideBar() {
-	const [convState, setConvState] = useState({
-		type: "Friends",
-		current_conv: null,
+	const [convState, setConvState] = useState(() => {
+		const [type, current_conv] = usePathname().split("/").slice(2, 4);
+		return {
+			type: type,
+			current_conv: current_conv === undefined ? null : current_conv,
+		};
 	});
 
 	return (
