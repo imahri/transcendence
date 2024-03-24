@@ -1,25 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
-
-function updateStatus(e, setStatus, socket, friend_id) {
-	const data = JSON.parse(e.data);
-	console.log("Received message:", data);
-	if (data.status == "update") {
-		getStatus(socket, friend_id);
-		return;
-	}
-	setStatus(data.status);
-}
-
-function getStatus(socket, friend_id) {
-	socket.send(
-		JSON.stringify({
-			action: "check",
-			friend_id: friend_id,
-		}),
-	);
-}
+import { initSocket } from "./FriendShipsocket";
 
 function callBack(socket, action, friend_id) {
 	let update;
@@ -43,6 +24,22 @@ function callBack(socket, action, friend_id) {
 	socket.send(JSON.stringify(update));
 }
 
+const createButton = (status, color, action) => {
+	return { status: status, color: color, action: action };
+};
+const Allbuttons = [
+	createButton("owner", "bg-blue-600", "Edit"),
+	createButton("not friend", "bg-green-600", "Add Friend"),
+	createButton("B", "bg-gray-600", "Blocked"),
+	createButton("B", "bg-green-600", "Unblock"),
+	createButton("W", "bg-red-600", "remove Request"),
+	createButton("I", "bg-green-600", "Accept"),
+	createButton("I", "bg-red-600", "Reject"),
+	createButton("F", "bg-gray-600", "block"),
+	createButton("F", "bg-red-600", "Remove Friend"),
+	createButton("BY", "bg-red-600", "User Blocked You"),
+];
+
 function Button({ action, color, socket, friend_id }) {
 	return (
 		<button
@@ -59,30 +56,8 @@ function Buttons({ profileUser }) {
 	const [socket, setSocket] = useState();
 
 	useEffect(() => {
-		try {
-			const token = getToken();
-			const ws = new WebSocket(
-				`ws://localhost:8000/ws/user?token=${token}`,
-			);
-			setSocket(ws);
+		initSocket(setSocket, setStatus, profileUser);
 
-			ws.onopen = () => {
-				getStatus(ws, profileUser.id);
-			};
-
-			ws.onmessage = (e) => {
-				updateStatus(e, setStatus, ws, profileUser.id);
-			};
-
-			ws.onerror = (error) => {
-				console.error("WebSocket error:", error);
-			};
-			ws.onclose = (event) => {
-				console.log("WebSocket connection closed:", event.reason);
-			};
-		} catch (error) {
-			console.error("Error creating WebSocket:", error);
-		}
 		return () => {
 			if (socket) socket.close();
 		};
@@ -90,86 +65,17 @@ function Buttons({ profileUser }) {
 
 	return (
 		<div className="flex flex-col gap-[10px] ">
-			{status == "owner" && (
-				<Button action={"Edit"} color={"bg-blue-600"} />
-			)}
-			{status == "not friend" && (
-				<Button
-					action={"Add Friend"}
-					socket={socket}
-					friend_id={profileUser.id}
-					color={"bg-green-600"}
-				/>
-			)}
-
-			{status == "B" && (
-				<>
-					<Button
-						action={"Blocked"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-gray-600"}
-					/>
-					<Button
-						action={"Unblock"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-green-600"}
-					/>
-				</>
-			)}
-
-			{status == "W" && (
-				<>
-					<Button
-						action={"remove Request"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-red-600"}
-					/>
-				</>
-			)}
-			{status == "I" && (
-				<>
-					<Button
-						action={"Accept"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-green-600"}
-					/>
-					<Button
-						action={"Reject"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-red-600"}
-					/>
-				</>
-			)}
-			{status == "F" && (
-				<>
-					<Button
-						action={"Remove Friend"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-red-600"}
-					/>
-					<Button
-						action={"block"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-gray-600"}
-					/>
-				</>
-			)}
-			{status == "BY" && (
-				<>
-					<Button
-						action={"User Blocked You"}
-						socket={socket}
-						friend_id={profileUser.id}
-						color={"bg-red-600"}
-					/>
-				</>
+			{Allbuttons.filter((element) => element.status === status).map(
+				(element) => {
+					return (
+						<Button
+							action={element.action}
+							socket={socket}
+							friend_id={profileUser.id}
+							color={element.color}
+						/>
+					);
+				},
 			)}
 		</div>
 	);
