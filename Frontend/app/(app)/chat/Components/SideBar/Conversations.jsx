@@ -149,24 +149,24 @@ function Conversation({ info, ConvState, isActive }) {
 	const [convState, setConvState] = ConvState;
 
 	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
-	const route = useRouter();
+	const router = useRouter();
 
 	const handleClick = () => {
 		/* get data */
-		info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-		// setConvState(
-
-		// 	{
-		// 		type: ,
-		// 		current_conv:
-		// 	}
-		// );
+		if (convState.current_conv != info.friend_name) {
+			info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
+			setConvState({
+				type: convState.type,
+				current_conv: info.friend_name,
+			});
+			router.push(`/chat/${convState.type}/${info.friend_name}`);
+		}
 	};
 
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${isActive ? styles.focus_section : ""}`}
+			className={`${styles.section} ${convState.current_conv == info.friend_name ? styles.focus_section : ""}`}
 		>
 			<ProfileImage />
 			<FriendInfo friend_name={info.friend_name} last_msg={last_msg} />
