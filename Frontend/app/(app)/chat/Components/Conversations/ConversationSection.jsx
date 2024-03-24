@@ -70,7 +70,7 @@ export function Converstation({ friendName }) {
 		setMessages(...messages, DummyMessages);
 	}, []);
 
-	const addMessage = (new_msg) => {
+	const onSend = (new_msg) => {
 		let date = new Date();
 
 		setMessages([
@@ -91,20 +91,7 @@ export function Converstation({ friendName }) {
 		<div className="w-full h-full">
 			<ProfileBar friendName={friendName} />
 			<MessagesSection friendName={friendName} messageList={messages} />
-			<TypingBar addMessage={addMessage} />
+			<TypingBar onSend={onSend} />
 		</div>
 	);
 }
-
-// export default function ConversationSection() {
-
-// 	return (
-// 		<main className={styles.main}>
-// 			{activeConv === null ? (
-// 				<NoConv />
-// 			) : (
-// 				<Converstation friendName={'Emily'} />
-// 			)}
-// 		</main>
-// 	);
-// }

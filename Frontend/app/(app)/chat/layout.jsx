@@ -13,15 +13,10 @@ import Conversations from "./Components/SideBar/Conversations";
 import styles from "./styles/layout.module.css";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
 import { usePathname } from "next/navigation";
+import { useConvState } from "./Hooks/useConvState";
 
 function SideBar() {
-	const [convState, setConvState] = useState(() => {
-		const [type, current_conv] = usePathname().split("/").slice(2, 4);
-		return {
-			type: type,
-			current_conv: current_conv === undefined ? null : current_conv,
-		};
-	});
+	const [convState, setConvState] = useConvState();
 
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
