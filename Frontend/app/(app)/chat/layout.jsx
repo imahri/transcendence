@@ -12,23 +12,24 @@ import ConversationType from "./Components/SideBar/ConversationType";
 import Conversations from "./Components/SideBar/Conversations";
 import styles from "./styles/layout.module.css";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
-import { redirect, RedirectType, usePathname } from "next/navigation";
 
 function SideBar() {
-	const [convType, setConvType] = useState(() => usePathname().split("/")[2]);
+	const [convState, setConvState] = useState({
+		type: "Friends",
+		current_conv: null,
+	});
+
 	return (
-		<>
+		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<aside className={styles.sidebar}>
 				<Searchbar />
 				<Separator />
-				<ConvTypeChatContext.Provider value={[convType, setConvType]}>
-					<ConversationType />
-				</ConvTypeChatContext.Provider>
-				<Conversations type={convType} />
+				<ConversationType />
+				{/* <Conversations type={convState.type} /> */}
 				{/* <div className="bg-red-800 w-full h-[10%]"></div> */}
 			</aside>
 			<Separators />
-		</>
+		</ConvChatContext.Provider>
 	);
 }
 
@@ -41,15 +42,8 @@ function Separators() {
 	);
 }
 
-function updateConvState(state, action) {
-	if (action.url.split("/").length == 4) state = action.friend;
-	else state = null;
-	// redirect(action.url, RedirectType.push);
-}
-
 export default function ChatLayout({ children }) {
 	const [socket, setSocket] = useState(null);
-	const [convState, dispatchConvState] = useReducer(updateConvState, null);
 
 	useEffect(() => {
 		if (!socket) {
@@ -72,12 +66,8 @@ export default function ChatLayout({ children }) {
 	return (
 		<WsChatContext.Provider value={socket}>
 			<div className="h-screen w-full m-0 flex flex-row bg-[#202020]">
-				<ConvChatContext.Provider
-					value={[convState, dispatchConvState]}
-				>
-					<SideBar />
-					<main className={styles.main}>{children}</main>
-				</ConvChatContext.Provider>
+				<SideBar />
+				<main className={styles.main}>{children}</main>
 			</div>
 		</WsChatContext.Provider>
 	);
