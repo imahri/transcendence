@@ -37,7 +37,7 @@ function Links(props) {
 				</ul>
 
 				<ul className="relative m-[20px] flex justify-center cursor-pointer">
-					<Link href="/chat">
+					<Link href="/chat/Friends">
 						{Chat && borderLeft()}
 						{LinkSvg(ChatPath(Chat), 20, 21)}
 					</Link>
