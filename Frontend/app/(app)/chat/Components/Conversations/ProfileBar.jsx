@@ -3,27 +3,25 @@ import React from "react";
 import styles from "./styles/ProfileBar.module.css";
 import optionsIcon from "./assets/options_icon.svg";
 
-const DummyPath =
-	"https://24ai.tech/en/wp-content/uploads/sites/3/2023/08/24ai_try_chair-1-150x150.webp";
+export const ActiveStatusTypes = Object.freeze({
+	Active: "Active Now",
+	Offline: "Offline",
+});
 
-const FriendData = {
-	name: "David red",
-	isActive: true,
-	profileImage: DummyPath,
-};
-
-function Status({ isActive }) {
+function Status({ status }) {
 	return (
 		<div
-			className={`${styles.status} ${isActive ? "bg-green-400" : "bg-red-700"}`}
+			className={`${styles.status} ${status === ActiveStatusTypes.Active ? "bg-green-400" : "bg-red-700"}`}
 		></div>
 	);
 }
 
-// TODO: using Name and type to get data
-export default function ProfileBar({ type, name, profileOpenFunc }) {
-	const status = FriendData.isActive ? "Active Now" : "Machi Active Now";
-
+/**
+ * @param name
+ * @param profileImg
+ * @param activeStatus
+ * */
+export default function ProfileBar({ name, profileImg, activeStatus }) {
 	const openProfileSection =
 		profileOpenFunc !== undefined
 			? profileOpenFunc
@@ -36,14 +34,14 @@ export default function ProfileBar({ type, name, profileOpenFunc }) {
 					className={styles.profileBar_Image}
 					width={100}
 					height={100}
-					src={FriendData.profileImage}
+					src={profileImg}
 					alt="Profile image"
 				/>
 				<section className={styles.profileInfo}>
 					<h2>{name}</h2>
-					<h3>{status}</h3>
+					<h3>{activeStatus}</h3>
 				</section>
-				<Status isActive={true} /> {/* get status from FriendData */}
+				<Status status={activeStatus} />
 			</button>
 			<div className={styles.options}>
 				<button>
@@ -59,3 +57,14 @@ export default function ProfileBar({ type, name, profileOpenFunc }) {
 		</div>
 	);
 }
+
+// For test
+
+export const DummyPath =
+	"https://24ai.tech/en/wp-content/uploads/sites/3/2023/08/24ai_try_chair-1-150x150.webp";
+
+export const FriendData = {
+	name: "David red",
+	isActive: true,
+	profileImage: DummyPath,
+};
