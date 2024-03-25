@@ -16,11 +16,6 @@ function Status({ status }) {
 	);
 }
 
-/**
- * @param name
- * @param profileImg
- * @param activeStatus
- * */
 export default function ProfileBar({ name, profileImg, activeStatus }) {
 	const openProfileSection =
 		profileOpenFunc !== undefined
