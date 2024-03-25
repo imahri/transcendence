@@ -35,31 +35,18 @@ class ConversationView(APIView):
     @catch_view_exception
     def get(self, request):
         user: User = request.user
-        type = request.query_params.get("type")
         limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
+        type = "D" if request.query_params.get("type") == "Friend" else "G"
 
-        mode = "D" if type == "Friend" else "G"
-
-        conversations = Conversation.objects.filter(mode=mode).order_by(
-            "last_msg_time"
+        conversations = Conversation.objects.filter(type=type).order_by(
+            "-last_msg_time"
         )[offset : offset + limit]
         # check the order
 
         conversations_arr = []
 
-        # for conversation in conversations:
-        #     conversations_arr.append({
-        #         'id': conversation.pk,
-        #         'type': type,
-        #         'name': conversation.,
-        #         # 'img_url': <url to friend profile img>,
-        #         # 'last_msg': {
-        #         #     'message': <text>,
-        #         #     'sent_time': <00:00 AM>
-        #         # },
-        #         # 'unseen_msg': <number>,
-        #     })
+
         """
         {
             'size': <how many conversations>,
@@ -81,8 +68,13 @@ class ConversationView(APIView):
             ]
         }
         """
-        # TODO: return jsonresponse
-        # return JsonResponse()
+
+        for conversation in conversations:
+            conversations_arr.append({})
+
+        return Response(
+            {"size": len(conversations_arr), "conversations": conversations_arr}
+        )
 
     def delete(self, request):
         pass

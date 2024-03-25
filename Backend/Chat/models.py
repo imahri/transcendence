@@ -1,5 +1,6 @@
 from django.db import models
 from core.settings import IMAGES_ROOT_
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Conversation(models.Model):
@@ -12,6 +13,26 @@ class Conversation(models.Model):
         instance = Conversation(type=type)
         instance.save()
         return instance.pk
+
+    @property
+    def messages(self):
+        return Message.objects.filter(conversation=self)
+
+    @property
+    def last_msg_time(self):
+
+        time = self.messages.order_by("-sended_at").first()
+        if time is None:
+            raise ObjectDoesNotExist
+        return time
+
+    # TODO: Convert this to property
+    # name
+    # img_url
+    # last_msg
+    # message
+    # sent_time
+    # unseen_msg
 
 
 class Message(models.Model):
