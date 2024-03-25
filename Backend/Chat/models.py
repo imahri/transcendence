@@ -4,18 +4,14 @@ from core.settings import IMAGES_ROOT_
 
 class Conversation(models.Model):
 
-    Modes = (("G", "GROUP"), ("D", "DM"))
-    mode = models.CharField(max_length=1, choices=Modes)
-    last_msg_time = models.TimeField(auto_now=True)
+    Types = (("G", "GROUP"), ("D", "DM"))
+    type = models.CharField(max_length=1, choices=Types)
 
     @staticmethod
     def create(type):
-        instance = Conversation(mode=type)
+        instance = Conversation(type=type)
         instance.save()
         return instance.pk
-
-    def set_lastMsgTime(self):
-        self.last_msg_time.strftime
 
 
 class Message(models.Model):

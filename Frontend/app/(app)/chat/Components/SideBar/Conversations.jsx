@@ -101,6 +101,19 @@ function Conversation({ info, ConvState }) {
 	);
 }
 
+// Conversation:
+// {
+//		id: <id>,
+//		type: <Friend or Group>,
+//		name: <name of Friend or group>,
+//		img_url: <url to friend profile img>,
+//		last_msg: {
+//			message: <text>,
+//			sent_time: <00:00 AM>
+//		},
+//		unseen_msg: <number>,
+// }
+
 export default function Conversations({ type }) {
 	const ConvState = useContext(ConvChatContext);
 	return (
