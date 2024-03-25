@@ -37,7 +37,7 @@ function Message({ messageInfo, send_by, isSent }) {
 	);
 }
 
-export default function MessagesSection({ send_by, messageList }) {
+export function MessagesSection({ send_by, messageList }) {
 	const scrollRef = useRef();
 
 	useEffect(() => {

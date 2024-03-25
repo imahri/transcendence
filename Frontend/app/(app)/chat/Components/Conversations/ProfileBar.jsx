@@ -16,7 +16,7 @@ function Status({ status }) {
 	);
 }
 
-export default function ProfileBar({ name, profileImg, activeStatus }) {
+export function ProfileBar({ name, profileImg, activeStatus }) {
 	const openProfileSection =
 		profileOpenFunc !== undefined
 			? profileOpenFunc
