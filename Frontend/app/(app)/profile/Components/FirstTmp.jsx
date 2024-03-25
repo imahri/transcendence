@@ -3,7 +3,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import Friends from "./Friends";
 import starpng from "../../Home/assets/starpng.png";
-import { UserContext } from "../../layout";
+// import { UserContext } from "../../layout";
 
 function ShowBox(title, nb) {
 	return (
@@ -42,11 +42,13 @@ function BigBox({ user }) {
 }
 
 function FirstSection() {
-	const { user } = useContext(UserContext);
+	// const { user } = useContext(UserContext);
 
 	return (
-		<div className="w-[20%] h-full  flex flex-col items-center gap-[20px]">
+		<div className="w-[20%] h-full  flex flex-col items-center gap-[20px] max-[1530px]:order-2 max-[1530px]:w-[95%] max-[1530px]:flex-row ">
 			<Friends />
+
+			<div className="w-[90%] max-[1530px]:w-[50%] bg-[#353535] h-[50%]  rounded-[31px]"></div>
 			{/*<div className="w-full  flex justify-between">
 				{ShowBox("Friends", 5)}
 				{ShowBox("Groups", 3)}

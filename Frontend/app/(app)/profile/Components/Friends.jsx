@@ -44,7 +44,7 @@ const friends = [
 
 function Friends() {
 	return (
-		<div className="w-[90%] h-[450px] bg-[#353535] rounded-[31px] flex flex-col justify-center pl-[30px] gap-[20px]">
+		<div className="w-[90%] max-[1530px]:w-[50%] h-[450px] bg-[#353535] rounded-[31px] flex flex-col justify-center pl-[30px] gap-[20px]">
 			<h1 className="font-Chakra font-semibold text-[36px] text-[#BABABA]">
 				Friends
 			</h1>

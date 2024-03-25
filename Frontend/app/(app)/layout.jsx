@@ -30,7 +30,7 @@ export default function Layout({ children, userData }) {
 					<div className="w-full h-full flex">
 						<SideBar showSettings={setSettings} />
 
-						<div className="bg-[#202020] w-full h-screen ml-[80px] max-[900px]:ml-0 ">
+						<div className="bg-[#202020] w-full min-h-screen ml-[80px] max-[900px]:ml-0 max-[900px]:mb-[60px] max-[900px]:pb-[20px]">
 							{children}
 						</div>
 						{settings && <Settings showSettings={setSettings} />}

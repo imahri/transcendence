@@ -12,8 +12,8 @@ function SecondSection({ otherUser }) {
 	const { user } = !otherUser ? useContext(UserContext) : otherUser;
 
 	return (
-		<div className="w-[80%] h-full  flex  flex-col gap-[30px]">
-			<div className="w-full  ">
+		<div className="w-[80%] flex flex-col gap-[30px] max-[1530px]:w-[95%] max-[1530px]:order-1">
+			<div className="w-full">
 				<ProfileBanner user={user} />
 				<ProfileInfo user={user} />
 			</div>

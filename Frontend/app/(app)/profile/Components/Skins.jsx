@@ -30,7 +30,7 @@ function SkinTitle(active, setActive, title) {
 
 function Badges({ BadgeInfo }) {
 	return (
-		<div className="min-w-[263px] w-[263px] h-[165px] relative">
+		<div className="w-[263px] h-[165px] relative">
 			<Badge BadgeInfo={BadgeInfo} />
 		</div>
 	);
@@ -57,11 +57,14 @@ function Skins({ user }) {
 				{SkinTitle(active == "Paddles", setActive, "Paddles")}
 			</div>
 
-			<div className="w-[1550px] max-[2314px]:w-[80%] h-[226px] flex items-center gap-[130px] overflow-x-auto ml-[100px]">
-				{active == "Badges" &&
+			{/* <div className="w-[1550px] max-[2314px]:ml-[20px] max-[2314px]:w-[1200px]  max-[1710px]:w-[1100px] max-[1590px]:w-[900px] max-[1330px]:w-[800px]h-[226px] flex items-center gap-[130px] overflow-x-auto ml-[100px]"> */}
+			{/* <div className=" max-w-[90%] bg-red-600 h-[226px] space-x-20 flex items-center overflow-x-auto ml-[100px]"> */}
+			<div className=" w-[80%] h-[226px] flex items-center gap-[130px] overflow-x-auto ml-[100px]">
+				{/* {active == "Badges" &&
 					Bbs.map((Bb) => {
-						return <Badges BadgeInfo={Bb} />;
-					})}
+
+						return  <div><Badges BadgeInfo={Bb} /></div>;
+					})} */}
 				{active == "Paddles" &&
 					Pps.map((Pp) => {
 						return (

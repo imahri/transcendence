@@ -26,9 +26,7 @@ function page({ params }) {
 				{isLoading ? (
 					<div className="text-white">is Loading.......</div>
 				) : (
-					<div className="w-[95%] flex items-center gap-[20px]">
-						{/* <div className='bg-gray-600 w-[20%] h-full rounded-[31px]'>
-						</div> */}
+					<div className="w-[95%] max-[1700px]:w-[98%]  flex max-[1530px]:flex-col max-[1530px]:items-center gap-[20px]">
 						<FirstSection />
 						<SecondSection otherUser={user} />
 					</div>

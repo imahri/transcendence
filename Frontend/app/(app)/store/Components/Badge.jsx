@@ -32,7 +32,7 @@ function Badge(props) {
 						alt=""
 					/>
 					<div className="h-[20%]">
-						<h1 className="text-[#F3F3F3] text-[13px] font-bold pl-[25px]">
+						<h1 className="text-[#F3F3F3] flex text-[13px] font-bold pl-[25px]">
 							XXXX Profile
 						</h1>
 					</div>
