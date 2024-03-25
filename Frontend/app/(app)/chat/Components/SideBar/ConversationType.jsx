@@ -12,7 +12,7 @@ function List({ type }) {
 		if (type !== convState.type) {
 			setConvState({
 				type: type,
-				current_conv: convState.current_conv,
+				current_conv: null,
 			});
 			router.push(`/chat/${type}`);
 		}

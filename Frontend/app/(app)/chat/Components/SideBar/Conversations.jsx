@@ -144,12 +144,11 @@ function TimeNotification({ last_msg_time, unseen_message_count }) {
 	);
 }
 
-function Conversation({ info, ConvState, isActive }) {
+function Conversation({ info, ConvState }) {
 	// Here update Conversation ??
-	const [convState, setConvState] = ConvState;
-
-	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
 	const router = useRouter();
+	const [convState, setConvState] = ConvState;
+	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
 
 	const handleClick = () => {
 		/* get data */

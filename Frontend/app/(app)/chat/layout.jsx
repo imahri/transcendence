@@ -17,7 +17,7 @@ import { useConvState } from "./Hooks/useConvState";
 
 function SideBar() {
 	const [convState, setConvState] = useConvState();
-
+	console.log(convState);
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<aside className={styles.sidebar}>
