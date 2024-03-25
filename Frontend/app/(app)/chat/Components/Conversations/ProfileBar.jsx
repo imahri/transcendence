@@ -17,10 +17,7 @@ function Status({ status }) {
 }
 
 export function ProfileBar({ name, profileImg, activeStatus }) {
-	const openProfileSection =
-		profileOpenFunc !== undefined
-			? profileOpenFunc
-			: () => alert("Profile Section not implemented");
+	const openProfileSection = () => alert("Profile Section not implemented");
 
 	return (
 		<div className={styles.container}>

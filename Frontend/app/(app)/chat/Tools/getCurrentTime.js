@@ -1,4 +1,4 @@
-function getCurrentTime() {
+export function getCurrentTime() {
 	let date = new Date();
 	return date.toLocaleTimeString([], {
 		hour: "numeric",
