@@ -2,13 +2,33 @@
 import MessagesSection from "../../Components/Conversations/MessagesSection";
 import ProfileBar from "../../Components/Conversations/ProfileBar";
 import TypingBar from "../../Components/Conversations/TypingBar";
-
-// TODO: extract Converstation
+import { DummyMessages } from "../../DummyData";
 
 export default function directMessage({ params }) {
+	const [messages, setMessages] = useState([]);
+
+	useEffect(() => {
+		// Load Messages from db
+		// Ex
+		setMessages(...messages, DummyMessages);
+	}, []);
+
+	const onSend = (new_msg) => {
+		setMessages([
+			...messages,
+			{
+				message: new_msg,
+				time: getCurrentTime(),
+				type: "sent",
+			},
+		]);
+	};
+
 	return (
-		<div>
-			<h1>{params.friendName}</h1>
+		<div className="w-full h-full">
+			<ProfileBar friendName={friendName} />
+			<MessagesSection friendName={friendName} messageList={messages} />
+			<TypingBar onSend={onSend} />
 		</div>
 	);
 }

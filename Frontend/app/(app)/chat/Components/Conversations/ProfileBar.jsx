@@ -52,14 +52,3 @@ export default function ProfileBar({ name, profileImg, activeStatus }) {
 		</div>
 	);
 }
-
-// For test
-
-export const DummyPath =
-	"https://24ai.tech/en/wp-content/uploads/sites/3/2023/08/24ai_try_chair-1-150x150.webp";
-
-export const FriendData = {
-	name: "David red",
-	isActive: true,
-	profileImage: DummyPath,
-};

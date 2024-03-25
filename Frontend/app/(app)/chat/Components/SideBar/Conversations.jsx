@@ -4,83 +4,7 @@ import styles from "./styles/Conversations.module.css";
 import { useContext } from "react";
 import { ConvChatContext } from "../../context/context";
 import { useRouter } from "next/navigation";
-
-const DummyData = [
-	{
-		friend_name: "Alice",
-		last_message: "Hey there!",
-		unseen_message_count: 3,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Bob",
-		last_message: "What's up?",
-		unseen_message_count: 1,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Charlie",
-		last_message: "How's it going?",
-		unseen_message_count: 5,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-	{
-		friend_name: "David",
-		last_message: "Long time no see!",
-		unseen_message_count: 0,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-	{
-		friend_name: "Emily",
-		last_message: "Up for a chat?",
-		unseen_message_count: 7,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Finn",
-		last_message: "Just checking in",
-		unseen_message_count: 2,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-	{
-		friend_name: "Grace",
-		last_message: "Miss you!",
-		unseen_message_count: 4,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Henry",
-		last_message: "Hope you're doing well!",
-		unseen_message_count: 8,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Isla",
-		last_message: "Let's catch up soon!",
-		unseen_message_count: 6,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Jack",
-		last_message: "Thinking of you!",
-		unseen_message_count: 9,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-];
-
-const DummyPath =
-	"https://24ai.tech/en/wp-content/uploads/sites/3/2023/08/24ai_try_chair-1-150x150.webp";
-// const DummyPath = "/home/reben-ha/Documents/transcendence/Frontend/public/logo.svg";
+import { DummyConversation, DummyPath } from "../../DummyData";
 
 function Unseen({ count }) {
 	return (
@@ -181,7 +105,7 @@ export default function Conversations({ type }) {
 	const ConvState = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
-			{DummyData.map(
+			{DummyConversation.map(
 				(conversation, idx) =>
 					type === conversation.type_of_conversation && (
 						<Conversation
