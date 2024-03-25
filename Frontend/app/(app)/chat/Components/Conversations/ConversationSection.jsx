@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import ProfileBar from "./ProfileBar";
-import MessagesSection from "./MessagesSection";
+import MessagesSection, { MessageTypes } from "./MessagesSection";
 import TypingBar from "./TypingBar";
-
-export const messageTypes = Object.freeze({
-	Sent: "sent",
-	Received: "received",
-});
 
 let DummyMessages = [
 	{
