@@ -4,7 +4,10 @@ import {
 	MessagesSection,
 	MessageTypes,
 } from "../../Components/Conversations/MessagesSection";
-import { ProfileBar } from "../../Components/Conversations/ProfileBar";
+import {
+	ActiveStatusTypes,
+	ProfileBar,
+} from "../../Components/Conversations/ProfileBar";
 import { TypingBar } from "../../Components/Conversations/TypingBar";
 import { DummyMessages, DummyPath } from "../../DummyData";
 import { getCurrentTime } from "../../Tools/getCurrentTime";
@@ -35,7 +38,7 @@ export default function DM_Conversation({ params }) {
 			<ProfileBar
 				name={FriendName}
 				profileImg={DummyPath}
-				activeStatus={true}
+				activeStatus={ActiveStatusTypes.Active}
 			/>
 			<MessagesSection send_by={FriendName} messageList={messages} />
 			<TypingBar onSend={onSend} />
