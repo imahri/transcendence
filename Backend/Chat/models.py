@@ -19,20 +19,55 @@ class Conversation(models.Model):
         return Message.objects.filter(conversation=self)
 
     @property
-    def last_msg_time(self):
+    def last_message(self):
+        class LastMessage:
+            def __init__(self, sent_time, message) -> None:
+                self.sent_time: str = sent_time
+                self.message: str = message
 
-        time = self.messages.order_by("-sended_at").first()
-        if time is None:
-            raise ObjectDoesNotExist
-        return time
+        message = self.messages.order_by("-sended_at").first()
+        if message is None:
+            raise ObjectDoesNotExist("no messages")
+        return {"sended_at": message.sended_at, "message": message.message}
 
-    # TODO: Convert this to property
-    # name
-    # img_url
-    # last_msg
-    # message
-    # sent_time
-    # unseen_msg
+    @property
+    def owner_by_friends(self):
+        from User_Management.models import Friend
+
+        friends = Friend.objects.filter(conversation=self)
+        users = [friends[0].user, friends[1].user]
+        return users
+
+    @property
+    def owner_by_group(self):
+        if self.type is not "G":
+            raise ObjectDoesNotExist("The type of conversation is not Group")
+        return Group.objects.get(conversation=self)
+
+    @property
+    def name(self):
+        if self.type is "F":
+            return [
+                self.owner_by_friends[0].username,
+                self.owner_by_friends[1].username,
+            ]
+        elif self.type is "G":
+            return self.owner_by_group.name
+
+    @property
+    def image(self):
+        if self.type is "F":
+            return [
+                self.owner_by_friends[0].info.profile_img,
+                self.owner_by_friends[1].info.profile_img,
+            ]
+        elif self.type is "G":
+            return self.owner_by_group.image
+
+    @property
+    def unseen_msg(self):
+        ''' Currently '''
+        return 0
 
 
 class Message(models.Model):
