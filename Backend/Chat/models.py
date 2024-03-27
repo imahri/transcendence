@@ -1,6 +1,6 @@
 from rest_framework.utils.serializer_helpers import ReturnDict
 from django.db import models
-from Backend.User_Management.models import User
+from User_Management.models import User
 from core.settings import IMAGES_ROOT_
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -90,7 +90,7 @@ class Conversation(models.Model):
 
 class Message(models.Model):
 
-    sender_id = models.IntegerField()
+    sender = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
     message = models.TextField(max_length=100)
     sended_at = models.TimeField(auto_now=True)
     conversation = models.ForeignKey(

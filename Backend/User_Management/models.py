@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
-from Chat.models import Conversation
 import requests as api_request
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
@@ -190,6 +189,8 @@ class Friend(models.Model):
 
     @staticmethod
     def add_friend(user: User, friend: User):
+        from Chat.models import Conversation
+
         if user.friends.filter(friend=friend).first() is None:
             conversation = Conversation.create(type="D")
             Friend(
