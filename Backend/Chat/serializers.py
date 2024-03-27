@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Conversation
+from .models import Conversation, Message
 
 
 class ConversationSerializer(ModelSerializer):
@@ -16,4 +16,7 @@ class ConversationSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
-    pass
+
+    class Meta:
+        model = Message
+        fields = ["id", "sender", "message", "sended_at"]

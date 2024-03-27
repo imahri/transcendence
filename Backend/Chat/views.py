@@ -1,8 +1,5 @@
-import imp
-import json
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from User_Management.models import User, Friend
@@ -24,6 +21,7 @@ class ConversationView(APIView):
 
     @catch_view_exception
     def post(self, request):
+        "[ deprecated ]"
         user = request.user
         type = request.data["type"]
         mode = "D"
@@ -80,4 +78,40 @@ class ConversationView(APIView):
 
 
 class MessageView(APIView):
-    pass
+
+    @catch_view_exception
+    def get(self, request):
+        user: User = request.user
+        conversation: Conversation = Conversation.objects.get(
+            pk=request.query_params.get("conversation")
+        )
+        limit = int(request.query_params.get("limit"))
+        offset = int(request.query_params.get("offset"))
+
+        messages = Message.objects.filter(conversation=conversation).order_by(
+            "-sended_at"
+        )[offset : offset + limit]
+
+        """
+            {
+                size: <how many messages>,
+                messages: [
+                    {
+                        message: <text>,
+                        sent_time: <00:00 AM>,
+                        sender: <username>
+                        type: <sent or received>
+                    },
+                ]
+                .
+                .
+                .
+                <limit>
+            }
+        """
+
+        messages_arr = []
+        for message in messages:
+            messages_arr.append(message.as_serialized(user))
+
+    # need response 

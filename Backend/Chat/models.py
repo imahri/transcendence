@@ -74,7 +74,7 @@ class Conversation(models.Model):
         """Currently"""
         return 0
 
-    def as_serialized(self, user: User | None):
+    def as_serialized(self, user: User):
         from .serializers import ConversationSerializer
 
         def opts_v(arr, value):
@@ -82,7 +82,7 @@ class Conversation(models.Model):
 
         data = dict(ConversationSerializer(self).data)
         if self.type == "D":
-            assert user != None, "user required if Conversation type 'DM'"
+            # assert user != None, "user required if Conversation type 'DM'"
             data["name"] = opts_v(data.pop("name"), user.username)
             data["image"] = opts_v(data.pop("image"), user.info.profile_img)
         return ReturnDict(data)
@@ -96,6 +96,13 @@ class Message(models.Model):
     conversation = models.ForeignKey(
         Conversation, related_name="messages", on_delete=models.CASCADE
     )
+
+    def as_serialized(self, user: User):
+        from .serializers import MessageSerializer
+
+        data = dict(MessageSerializer(self).data)
+        data["type"] = "sent" if data["sender"] == user.username else "received"
+        return ReturnDict(data)
 
 
 class Group(models.Model):
