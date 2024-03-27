@@ -114,4 +114,4 @@ class MessageView(APIView):
         for message in messages:
             messages_arr.append(message.as_serialized(user))
 
-    # need response 
+        Response({"size": len(messages_arr), "messages": messages_arr})
