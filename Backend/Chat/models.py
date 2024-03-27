@@ -1,4 +1,6 @@
+from rest_framework.utils.serializer_helpers import ReturnDict
 from django.db import models
+from Backend.User_Management.models import User
 from core.settings import IMAGES_ROOT_
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -20,15 +22,18 @@ class Conversation(models.Model):
 
     @property
     def last_message(self):
-        class LastMessage:
-            def __init__(self, sent_time, message) -> None:
-                self.sent_time: str = sent_time
-                self.message: str = message
-
         message = self.messages.order_by("-sended_at").first()
         if message is None:
-            raise ObjectDoesNotExist("no messages")
+            return None
         return {"sended_at": message.sended_at, "message": message.message}
+
+    @property
+    def last_msg_time(self):
+        return (
+            self.last_message["sended_at"]
+            if self.last_message is not None
+            else "Wed May 22 2004 00:00:00 GMT+0000 (GMT)"
+        )
 
     @property
     def owner_by_friends(self):
@@ -40,34 +45,47 @@ class Conversation(models.Model):
 
     @property
     def owner_by_group(self):
-        if self.type is not "G":
+        if self.type != "G":
             raise ObjectDoesNotExist("The type of conversation is not Group")
         return Group.objects.get(conversation=self)
 
     @property
     def name(self):
-        if self.type is "F":
+        if self.type == "F":
             return [
                 self.owner_by_friends[0].username,
                 self.owner_by_friends[1].username,
             ]
-        elif self.type is "G":
+        elif self.type == "G":
             return self.owner_by_group.name
 
     @property
     def image(self):
-        if self.type is "F":
+        if self.type == "F":
             return [
                 self.owner_by_friends[0].info.profile_img,
                 self.owner_by_friends[1].info.profile_img,
             ]
-        elif self.type is "G":
+        elif self.type == "G":
             return self.owner_by_group.image
 
     @property
     def unseen_msg(self):
-        ''' Currently '''
+        """Currently"""
         return 0
+
+    def as_serialized(self, user: User | None):
+        from .serializers import ConversationSerializer
+
+        def opts_v(arr, value):
+            return arr[1] if arr[0] == value else arr[0]
+
+        data = dict(ConversationSerializer(self).data)
+        if self.type == "D":
+            assert user != None, "user required if Conversation type 'DM'"
+            data["name"] = opts_v(data.pop("name"), user.username)
+            data["image"] = opts_v(data.pop("image"), user.info.profile_img)
+        return ReturnDict(data)
 
 
 class Message(models.Model):

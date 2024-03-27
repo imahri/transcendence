@@ -14,11 +14,6 @@ class ConversationSerializer(ModelSerializer):
             "unseen_msg",
         ]
 
-    def to_representation(self, instance: Meta.model):
-        # need test and find right name & image (in friend case) to send
-        data = super().to_representation(instance)
-        return data
-
 
 class MessageSerializer(ModelSerializer):
     pass

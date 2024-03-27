@@ -46,7 +46,6 @@ class ConversationView(APIView):
 
         conversations_arr = []
 
-
         """
         {
             'size': <how many conversations>,
@@ -70,7 +69,7 @@ class ConversationView(APIView):
         """
 
         for conversation in conversations:
-            conversations_arr.append({})
+            conversations_arr.append(conversation.as_serialized(user))
 
         return Response(
             {"size": len(conversations_arr), "conversations": conversations_arr}
