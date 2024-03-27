@@ -215,6 +215,7 @@ class Friend(models.Model):
         if self.is_block:
             raise Exception("Already Blocked")
         self.status = "B"
+        self.save()
 
     @property
     def is_invite(self):
@@ -226,4 +227,4 @@ class Friend(models.Model):
 
     @property
     def is_block(self):
-        return self.status == "B"
+        return self.status == "B" or self.friend.get_friendship(self).status == "B"
