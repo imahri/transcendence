@@ -109,7 +109,10 @@ function page({ params }) {
 					<div className="text-white">is Loading.......</div>
 				) : (
 					<div className="w-[95%] max-[1700px]:w-[98%]  flex max-[1530px]:flex-col max-[1530px]:items-center gap-[20px]">
-						<SecondSection otherUser={user} />
+						<SecondSection
+							otherUser={user}
+							displayFriends={setDisplayFriends}
+						/>
 						<FirstSection />
 					</div>
 				)}

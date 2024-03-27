@@ -13,7 +13,7 @@ function Store() {
 		<>
 			<NavBar />
 
-			<div className="size-full mt-[100px] flex flex-col items-center gap-[30px]">
+			<div className="w-full mt-[100px] flex flex-col items-center gap-[30px]">
 				<div className="w-[90%] bg-[#353535] opacity-[63%] p-[10px] rounded-[10px] flex flex-col items-center justify-between gap-[10px] relative">
 					<div className="bg-[#190019] flex justify-around w-[50%] rounded-[22px] max-[1155px]:w-full">
 						<Image

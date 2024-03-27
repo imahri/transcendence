@@ -101,9 +101,9 @@ const friends = [
 	friend,
 ];
 
-function Friend() {
+function Friend({ displayFriends }) {
 	return (
-		<div className="flex gap-[-1px]">
+		<div className="flex gap-[-1px]" onClick={() => displayFriends(true)}>
 			{friends.slice(0, 5).map((fr) => {
 				return (
 					<Image
@@ -120,7 +120,7 @@ function Friend() {
 	);
 }
 
-function ProfileInfo({ user }) {
+function ProfileInfo({ user, displayFriends }) {
 	return (
 		<div className="w-full h-[130px]  flex items-center justify-between relative">
 			<Image
@@ -135,11 +135,11 @@ function ProfileInfo({ user }) {
 					{user.first_name} {user.last_name}
 				</h1>
 				<div className="flex gap-[30px]">
-					<h2 className="font-semibold text-[24px] text-[#ABABAB] ">
+					{/* <h2 className="font-semibold text-[24px] text-[#ABABAB] ">
 						{" "}
 						Level {user.info.level}
-					</h2>
-					<Friend />
+					</h2> */}
+					<Friend displayFriends={displayFriends} />
 				</div>
 			</div>
 			<Buttons profileUser={user} />

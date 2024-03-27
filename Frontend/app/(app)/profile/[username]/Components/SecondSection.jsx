@@ -8,14 +8,14 @@ import ShowRoom from "./ShowRoom";
 
 import { UserContext } from "../../../layout";
 
-function SecondSection({ otherUser }) {
+function SecondSection({ otherUser, displayFriends }) {
 	const { user } = !otherUser ? useContext(UserContext) : otherUser;
 
 	return (
 		<div className="w-[80%] flex flex-col gap-[30px] max-[1530px]:w-[95%] max-[1530px]:order-1">
 			<div className="w-full">
 				<ProfileBanner user={user} />
-				<ProfileInfo user={user} />
+				<ProfileInfo user={user} displayFriends={displayFriends} />
 			</div>
 			<Skins user={user} />
 			<ShowRoom />
