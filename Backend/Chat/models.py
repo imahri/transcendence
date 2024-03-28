@@ -36,7 +36,7 @@ class Conversation(models.Model):
         )
 
     @property
-    def owner_by_friends(self):
+    def owned_by_friends(self):
         from User_Management.models import Friend
 
         friends = Friend.objects.filter(conversation=self)
@@ -44,7 +44,7 @@ class Conversation(models.Model):
         return users
 
     @property
-    def owner_by_group(self):
+    def owned_by_group(self):
         if self.type != "G":
             raise ObjectDoesNotExist("The type of conversation is not Group")
         return Group.objects.get(conversation=self)
@@ -53,21 +53,21 @@ class Conversation(models.Model):
     def name(self):
         if self.type == "F":
             return [
-                self.owner_by_friends[0].username,
-                self.owner_by_friends[1].username,
+                self.owned_by_friends[0].username,
+                self.owned_by_friends[1].username,
             ]
         elif self.type == "G":
-            return self.owner_by_group.name
+            return self.owned_by_group.name
 
     @property
     def image(self):
         if self.type == "F":
             return [
-                self.owner_by_friends[0].info.profile_img,
-                self.owner_by_friends[1].info.profile_img,
+                self.owned_by_friends[0].info.profile_img,
+                self.owned_by_friends[1].info.profile_img,
             ]
         elif self.type == "G":
-            return self.owner_by_group.image
+            return self.owned_by_group.image
 
     @property
     def unseen_msg(self):

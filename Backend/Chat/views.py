@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from User_Management.models import User, Friend
 from .models import Conversation, Message, Group, Member
+from django.db.models import Q
 
 
 def catch_view_exception(func):
@@ -37,12 +38,13 @@ class ConversationView(APIView):
         offset = int(request.query_params.get("offset"))
         type = "D" if request.query_params.get("type") == "Friend" else "G"
 
-        conversations = Conversation.objects.filter(type=type).order_by(
+        queryset = Conversation.objects.annotate(
+            isExist=Q(owned_by_friends__contains=user)
+        )
+        conversations = queryset.filter(type=type, isExist=True).order_by(
             "-last_msg_time"
         )[offset : offset + limit]
         # check the order
-
-        conversations_arr = []
 
         """
         {
@@ -66,8 +68,9 @@ class ConversationView(APIView):
         }
         """
 
-        for conversation in conversations:
-            conversations_arr.append(conversation.as_serialized(user))
+        conversations_arr = [
+            conversation.as_serialized(user) for conversation in conversations
+        ]
 
         return Response(
             {"size": len(conversations_arr), "conversations": conversations_arr}
@@ -110,8 +113,6 @@ class MessageView(APIView):
             }
         """
 
-        messages_arr = []
-        for message in messages:
-            messages_arr.append(message.as_serialized(user))
+        messages_arr = [message.as_serialized(user) for message in messages]
 
         Response({"size": len(messages_arr), "messages": messages_arr})
