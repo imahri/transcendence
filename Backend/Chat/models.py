@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class Conversation(models.Model):
 
     Types = (("G", "GROUP"), ("D", "DM"))
+    EmptyConversation = "Wed May 22 2004 00:00:00 GMT+0000 (GMT)"
     type = models.CharField(max_length=1, choices=Types)
 
     @staticmethod
@@ -32,7 +33,7 @@ class Conversation(models.Model):
         return (
             self.last_message["sended_at"]
             if self.last_message is not None
-            else "Wed May 22 2004 00:00:00 GMT+0000 (GMT)"
+            else Conversation.EmptyConversation
         )
 
     @property
