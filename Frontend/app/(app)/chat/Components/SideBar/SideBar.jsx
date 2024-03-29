@@ -13,7 +13,7 @@ export function SideBar() {
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<aside className={styles.sidebar}>
-				<Searchbar />
+				<Searchbar style_ops="chat" />
 				<Separator />
 				<ConversationType />
 				<Conversations type={convState.type} />

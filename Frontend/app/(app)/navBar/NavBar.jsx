@@ -101,7 +101,7 @@ function NavBar() {
 	return (
 		<nav className="fixed z-10 flex justify-between mx-px-20 items-center h-[100px] w-[95%] mx-[20px] max-[500px]:mx-0">
 			<div className="w-[300px] h-[50px]">
-				<Searchbar />
+				<Searchbar style_ops="user" />
 			</div>
 			<ProfileBar />
 		</nav>

@@ -228,4 +228,4 @@ class Friend(models.Model):
 
     @property
     def is_block(self):
-        return self.status == "B" or self.friend.get_friendship(self).status == "B"
+        return self.status == "B" or self.friend.get_friendship(self.user).status == "B"

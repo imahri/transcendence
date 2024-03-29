@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styles from "./styles/Searchbar.module.css";
+import React, { lazy, useEffect, useState } from "react";
+import style_chat from "./styles/Searchbar.chat.module.css";
+import style_user from "./styles/Searchbar.user.module.css";
 
 import { Result, searchForUsers, UserNotFound } from "./SearchBarUtils";
 
-function SearchIcon() {
+function SearchIcon({ styles }) {
 	return (
 		<span className={styles.search_icon}>
 			<svg className={styles.icon} viewBox="0 0 20 20">
@@ -22,21 +23,10 @@ function SearchIcon() {
 
 let timeout;
 
-async function searchForUsers(searchText) {
-	try {
-		let response = await fetch(
-			`http://localhost:8000/user/search?search=${searchText}`,
-		);
-		if (!response.ok) console.log("User not found");
-		console.log(response);
-	} catch (error) {
-		console.error("fetch error: " + error);
-	}
-}
-
-export function Searchbar() {
+export function Searchbar({ style_ops }) {
 	const [input, setInput] = useState();
 	const [result, setResult] = useState();
+	const styles = style_ops == "user" ? style_user : style_chat;
 
 	useEffect(() => {
 		if (input) {
@@ -60,7 +50,7 @@ export function Searchbar() {
 						setTimeout(() => setResult(), 200);
 					}}
 				/>
-				<SearchIcon />
+				<SearchIcon styles={styles} />
 			</label>
 
 			<div
