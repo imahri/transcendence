@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./styles/Searchbar.module.css";
+import styles from "./styles/Searchbar.chat.module.css";
 import { BASE_URL } from "@/app/URLS";
 
 function SearchIcon() {
@@ -23,7 +23,9 @@ let timeout;
 
 async function searchForUsers(searchText) {
 	try {
-		let response = await fetch(`http://localhost:8000/user/search?search=${searchText}`);
+		let response = await fetch(
+			`http://localhost:8000/user/search?search=${searchText}`,
+		);
 		if (!response.ok) console.log("User not found");
 		console.log(response);
 	} catch (error) {
@@ -37,7 +39,7 @@ export function Searchbar() {
 
 	useEffect(() => {
 		if (input) {
-			console.log('==> {input}')
+			console.log("==> {input}");
 			clearTimeout(timeout);
 			timeout = setTimeout(() => searchForUsers(input), 1000);
 		}
