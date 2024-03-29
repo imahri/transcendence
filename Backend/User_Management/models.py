@@ -109,6 +109,12 @@ class User(AbstractUser):
     def delete_friend(self, friend):
         self.get_friendship(friend).delete()
         friend.get_friendship(self).delete()
+    
+    def get_new_Notification(self):
+        return Notification.objects.filter(user=self, is_read=False)
+    
+    def get_all_notif(self):
+        return Notification.objects.filter(user=self)
 
     class TwoFactorAuth:
 
@@ -232,3 +238,19 @@ class Friend(models.Model):
     @property
     def is_block(self):
         return self.status == "B"
+
+
+class Notification(models.Model):
+
+    NotifType = (
+        ('Msg', 'Message'),
+        ('friendShip', 'Friendship'),
+        ('GameInvit', 'Game Invitation')
+    )
+
+    user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE, related_name="notification_reciver")
+    notifier = models.ForeignKey("User_Management.User", on_delete=models.CASCADE,related_name="notification_sender")
+    type = models.CharField(choices=NotifType, max_length=20)
+    time = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+    is_read = models.BooleanField(default=False)

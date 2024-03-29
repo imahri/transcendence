@@ -11,6 +11,7 @@ export default function Layout({ children, userData }) {
 	const navigate = useRouter();
 
 	const [user, setUser] = useState();
+	const [notif, setToastNotif] = useState();
 	const [isLoading, setLoading] = useState(true);
 	const [settings, setSettings] = useState();
 
@@ -21,12 +22,13 @@ export default function Layout({ children, userData }) {
 		});
 	}, []);
 
+	notif ? console.log("notif : ", notif) : "";
 	return (
 		<>
 			{isLoading ? (
 				<div>is Loading .......</div>
 			) : (
-				<UserContext.Provider value={{ user, setUser }}>
+				<UserContext.Provider value={{ user, setUser, setToastNotif }}>
 					<div className="w-full h-full flex">
 						<SideBar showSettings={setSettings} />
 

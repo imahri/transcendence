@@ -1,5 +1,7 @@
+from re import L
+from attr import fields
 from rest_framework.serializers import ModelSerializer
-from .models import User, Info
+from .models import User, Info, Notification
 from rest_framework import serializers
 
 
@@ -71,3 +73,13 @@ class InfoSerializer(ModelSerializer):
     def save(self, **kwargs):
         self.is_valid(raise_exception=True)
         return super().save(**kwargs)
+
+
+class NotifSerializer(ModelSerializer):
+
+    user = UserSerializer()
+    notifier = UserSerializer()
+
+    class Meta:
+        model = Notification
+        fields = ["user", "notifier", "type", "time", "content", "is_read"]

@@ -5,6 +5,7 @@ import { UserContext } from "../layout";
 import { logout } from "../settings/Components/SettingsUtils";
 import Link from "next/link";
 import { Searchbar } from "../searchBar/Searchbar";
+import Notification from "./Components/Notification";
 
 import {
 	logoutSvg,
@@ -26,73 +27,76 @@ function ProfileBar() {
 	levelPercent = Math.floor(levelPercent);
 
 	return (
-		<div
-			className={`w-auto  p-[5px] bg-[#303030] fixed top-[20px] right-[50px] rounded-[10px] max-[550px]:right-[2px] ${!more ? "max-[600px]:bg-transparent" : ""}`}
-		>
+		<div className="flex gap-[10px]  items-center fixed top-[20px] right-[50px] max-[550px]:right-[2px] ">
+			<Notification />
 			<div
-				className="flex items-center justify-around cursor-pointer gap-[10px] "
-				onClick={() => setMore(!more)}
+				className={`w-auto  p-[5px] bg-[#303030] rounded-[10px] ${!more ? "max-[600px]:bg-transparent" : ""}  `}
 			>
-				<img
-					className="w-[48px] h-[48px] rounded-[5px] max-[600px]:rounded-full"
-					src={user.info.profile_img}
-					alt=""
-				/>
-				<div className="max-[600px]:hidden">
-					<h3 className=" font-medium text-[20px] text-[#7D7D7D]">
-						{user.username}
-					</h3>
-					{more && (
-						<>
-							<h4 className=" font-medium text-[13px] text-[#7D7D7D]">
-								{user.first_name} {user.last_name}
-							</h4>
-							<div className="h-[5px] w-[80px]  rounded-[50px] bg-black ">
-								<div
-									className={`h-full w-[${levelPercent}%] bg-[#FF7A00] rounded-[50px]  `}
-								>
-									{" "}
+				<div
+					className="flex items-center justify-around cursor-pointer gap-[10px] "
+					onClick={() => setMore(!more)}
+				>
+					<img
+						className="w-[48px] h-[48px] rounded-[5px] max-[600px]:rounded-full"
+						src={user.info.profile_img}
+						alt=""
+					/>
+					<div className="max-[600px]:hidden">
+						<h3 className=" font-medium text-[20px] text-[#7D7D7D]">
+							{user.username}
+						</h3>
+						{more && (
+							<>
+								<h4 className=" font-medium text-[13px] text-[#7D7D7D]">
+									{user.first_name} {user.last_name}
+								</h4>
+								<div className="h-[5px] w-[80px]  rounded-[50px] bg-black ">
+									<div
+										className={`h-full w-[${levelPercent}%] bg-[#FF7A00] rounded-[50px]  `}
+									>
+										{" "}
+									</div>
 								</div>
-							</div>
-						</>
-					)}
+							</>
+						)}
+					</div>
+					{more ? dropUpSvg : dropDownSvg}
 				</div>
-				{more ? dropUpSvg : dropDownSvg}
+				{more && (
+					<div className="p-[20px] gap-[20px] flex flex-col">
+						<div className="flex w-full items-center justify-between gap-2 cursor-pointer ">
+							{WalletSvg}{" "}
+							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
+								{" "}
+								Wallet{" "}
+							</h1>{" "}
+							<span className=" font-medium text-[18px] text-[#7D7D7D] flex items-center gap-1">
+								{user.info.wallet} {WalletLogo}
+							</span>
+						</div>
+
+						<Link
+							href={"/profile"}
+							className="flex w-full items-center justify-start gap-2 cursor-pointer"
+						>
+							{AccountSvg}
+							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
+								View Profile
+							</h1>
+						</Link>
+
+						<div
+							className="flex w-full items-center justify-start gap-2 cursor-pointer "
+							onClick={() => logout(navigate)}
+						>
+							{logoutSvg}{" "}
+							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
+								Logout
+							</h1>
+						</div>
+					</div>
+				)}
 			</div>
-			{more && (
-				<div className="p-[20px] gap-[20px] flex flex-col">
-					<div className="flex w-full items-center justify-between gap-2 cursor-pointer ">
-						{WalletSvg}{" "}
-						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
-							{" "}
-							Wallet{" "}
-						</h1>{" "}
-						<span className=" font-medium text-[18px] text-[#7D7D7D] flex items-center gap-1">
-							{user.info.wallet} {WalletLogo}
-						</span>
-					</div>
-
-					<Link
-						href={"/profile"}
-						className="flex w-full items-center justify-start gap-2 cursor-pointer"
-					>
-						{AccountSvg}
-						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
-							View Profile
-						</h1>
-					</Link>
-
-					<div
-						className="flex w-full items-center justify-start gap-2 cursor-pointer "
-						onClick={() => logout(navigate)}
-					>
-						{logoutSvg}{" "}
-						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
-							Logout
-						</h1>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 }
