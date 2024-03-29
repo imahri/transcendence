@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 from User_Management.models import User, Friend
-from .models import Conversation, Message, Group, Member
+from .models import Conversation, Message
 from django.db.models import Q
 
 
@@ -23,12 +23,7 @@ class ConversationView(APIView):
     @catch_view_exception
     def post(self, request):
         "[ deprecated ]"
-        user = request.user
-        type = request.data["type"]
-        mode = "D"
-        if type == "Group":
-            mode = "G"
-        id = Conversation.create(mode)
+        id = Conversation.create().pk
         return JsonResponse({"id": id})
 
     @catch_view_exception
@@ -53,8 +48,7 @@ class ConversationView(APIView):
             conversations: [
                 {
                     'id': <id>,
-                    'type': <Friend or Group>,
-                    'name': <name of Friend or group>,
+                    'name': <name of Friend>,
                     'img_url': <url to friend profile img>,
                     'last_msg': {
                         'message': <text>,

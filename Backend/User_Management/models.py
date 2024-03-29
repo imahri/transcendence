@@ -182,10 +182,14 @@ class Friend(models.Model):
     )
 
     status = models.CharField(max_length=2, choices=Friendship)
-    friend = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
-    conversation = models.ForeignKey("Chat.Conversation", on_delete=models.CASCADE)
+    friend = models.ForeignKey(
+        "User_Management.User", related_name="followers_set", on_delete=models.CASCADE
+    )
+    conversation = models.ForeignKey(
+        "Chat.Conversation", related_name="friend_set", on_delete=models.CASCADE
+    )
     user = models.ForeignKey(
-        "User_Management.User", related_name="friends", on_delete=models.CASCADE
+        "User_Management.User", related_name="friends_set", on_delete=models.CASCADE
     )
 
     @staticmethod
@@ -193,7 +197,7 @@ class Friend(models.Model):
         from Chat.models import Conversation
 
         if user.friends.filter(friend=friend).first() is None:
-            conversation = Conversation.create(type="D")
+            conversation = Conversation.create()
             Friend(
                 user=user, friend=friend, conversation=conversation, status="W"
             ).save()
