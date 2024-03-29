@@ -204,6 +204,11 @@ function Notification() {
 						notif.map((notif) => {
 							return <NotifSection notif={notif} />;
 						})}
+					{notif?.length == 0 && (
+						<h1 className="text-white text-center">
+							Not Notification yet
+						</h1>
+					)}
 				</div>
 			</div>
 		</div>
