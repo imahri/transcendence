@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import {
 	MessagesSection,
 	MessageTypes,
-} from "../../../Components/Conversations/MessagesSection";
+} from "../Components/Conversations/MessagesSection";
 import {
 	ActiveStatusTypes,
 	ProfileBar,
-} from "../../../Components/Conversations/ProfileBar";
-import { TypingBar } from "../../../Components/Conversations/TypingBar";
-import { DummyMessages, DummyPath } from "../../../DummyData";
-import { getCurrentTime } from "../../../Tools/getCurrentTime";
+} from "../Components/Conversations/ProfileBar";
+import { TypingBar } from "../Components/Conversations/TypingBar";
+import { DummyMessages, DummyPath } from "../DummyData";
+import { getCurrentTime } from "../Tools/getCurrentTime";
 
 export default function DM_Conversation({ params }) {
 	const [messages, setMessages] = useState([]);

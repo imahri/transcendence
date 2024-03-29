@@ -1,5 +1,5 @@
 .container {
-	@apply w-full h-[46.96rem] flex flex-col space-y-4 items-center justify-start;
+	@apply w-full h-[46.96rem] mt-[22px] flex-grow flex flex-col space-y-4 items-center justify-start;
 	@apply overflow-y-scroll scrollbar-hide;
 }
 

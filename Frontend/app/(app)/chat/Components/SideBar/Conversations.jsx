@@ -78,11 +78,8 @@ function Conversation({ info, ConvState }) {
 		/* get data */
 		if (convState.current_conv != info.friend_name) {
 			info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-			setConvState({
-				type: convState.type,
-				current_conv: info.friend_name,
-			});
-			router.push(`/chat/${convState.type}/${info.friend_name}`);
+			setConvState(info.friend_name);
+			router.push(`/chat/${info.friend_name}`);
 		}
 	};
 
@@ -101,33 +98,17 @@ function Conversation({ info, ConvState }) {
 	);
 }
 
-// Conversation:
-// {
-//		id: <id>,
-//		type: <Friend or Group>,
-//		name: <name of Friend or group>,
-//		img_url: <url to friend profile img>,
-//		last_msg: {
-//			message: <text>,
-//			sent_time: <00:00 AM>
-//		},
-//		unseen_msg: <number>,
-// }
-
-export default function Conversations({ type }) {
+export default function Conversations() {
 	const ConvState = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
-			{DummyConversation.map(
-				(conversation, idx) =>
-					type === conversation.type_of_conversation && (
-						<Conversation
-							key={idx}
-							info={conversation}
-							ConvState={ConvState}
-						/>
-					),
-			)}
+			{DummyConversation.map((conversation, idx) => (
+				<Conversation
+					key={idx}
+					info={conversation}
+					ConvState={ConvState}
+				/>
+			))}
 		</div>
 	);
 }

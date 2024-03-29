@@ -33,5 +33,4 @@ export const WsChatProvider = ({ children }) => {
 	);
 };
 
-export const ConvTypeChatContext = createContext();
 export const ConvChatContext = createContext();

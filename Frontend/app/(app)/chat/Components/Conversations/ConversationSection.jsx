@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProfileBar from "./ProfileBar";
-import MessagesSection, { MessageTypes } from "./MessagesSection";
+import MessagesSection from "./MessagesSection";
 import TypingBar from "./TypingBar";
 import { DummyMessages } from "../../DummyData";
 

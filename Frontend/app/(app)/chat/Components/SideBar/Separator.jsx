@@ -4,7 +4,7 @@ import styles from "./styles/Separator.module.css";
 
 export function Separator({ className }) {
 	const classes = [styles.separator, className];
-	return <hr className={classes.join(" ")} />;
+	return <div className={classes.join(" ")} />;
 }
 
 export function Separators() {
