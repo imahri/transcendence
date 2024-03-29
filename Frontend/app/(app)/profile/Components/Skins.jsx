@@ -3,14 +3,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Badge from "../../Store/Components/Badge";
 
-import BadgeBack from "/Users/okrich/Desktop/padlees/badge3.png";
-import p1 from "/Users/okrich/Desktop/padlees/1.png";
-import p2 from "/Users/okrich/Desktop/padlees/2.png";
-import p3 from "/Users/okrich/Desktop/padlees/3.png";
-import p4 from "/Users/okrich/Desktop/padlees/4.png";
-import p5 from "/Users/okrich/Desktop/padlees/5.png";
-import p6 from "/Users/okrich/Desktop/padlees/6.png";
-import p7 from "/Users/okrich/Desktop/padlees/7.png";
+import BadgeBack from "../assets/Grade.png";
+import p1 from "../assets/Grade.png";
+import p2 from "../assets/Grade.png";
+import p3 from "../assets/Grade.png";
+import p4 from "../assets/Grade.png";
+import p5 from "../assets/Grade.png";
+import p6 from "../assets/Grade.png";
+import p7 from "../assets/Grade.png";
 
 function SkinTitle(active, setActive, title) {
 	const color = active ? "text-white" : "text-[#979797]";
