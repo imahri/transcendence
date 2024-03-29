@@ -68,15 +68,15 @@ function TimeNotification({ last_msg_time, unseen_message_count }) {
 	);
 }
 
-function Conversation({ info, ConvState }) {
+function Conversation({ info }) {
 	// Here update Conversation ??
 	const router = useRouter();
-	const [convState, setConvState] = ConvState;
+	const [convState, setConvState] = useContext(ConvChatContext);
 	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
 
 	const handleClick = () => {
 		/* get data */
-		if (convState.current_conv != info.friend_name) {
+		if (convState != info.friend_name) {
 			info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
 			setConvState(info.friend_name);
 			router.push(`/chat/${info.friend_name}`);
@@ -86,7 +86,7 @@ function Conversation({ info, ConvState }) {
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${convState.current_conv == info.friend_name ? styles.focus_section : ""}`}
+			className={`${styles.section} ${convState == info.friend_name ? styles.focus_section : ""}`}
 		>
 			<ProfileImage />
 			<FriendInfo friend_name={info.friend_name} last_msg={last_msg} />
@@ -99,15 +99,10 @@ function Conversation({ info, ConvState }) {
 }
 
 export default function Conversations() {
-	const ConvState = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
 			{DummyConversation.map((conversation, idx) => (
-				<Conversation
-					key={idx}
-					info={conversation}
-					ConvState={ConvState}
-				/>
+				<Conversation key={idx} info={conversation} />
 			))}
 		</div>
 	);

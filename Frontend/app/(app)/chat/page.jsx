@@ -1,6 +1,5 @@
-"use client";
-import { redirect } from "next/navigation";
+import { NoConv } from "./Components/Conversations/NoConv";
 
 export default function Chat() {
-	redirect("/chat/Friends");
+	return <NoConv />;
 }
