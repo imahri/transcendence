@@ -1,12 +1,10 @@
-import imp
-import json
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from User_Management.models import User, Friend
 from .models import Conversation, Message, Group, Member
+from django.db.models import Q
 
 
 def catch_view_exception(func):
@@ -24,6 +22,7 @@ class ConversationView(APIView):
 
     @catch_view_exception
     def post(self, request):
+        "[ deprecated ]"
         user = request.user
         type = request.data["type"]
         mode = "D"
@@ -35,31 +34,19 @@ class ConversationView(APIView):
     @catch_view_exception
     def get(self, request):
         user: User = request.user
-        type = request.query_params.get("type")
         limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
+        type = "D" if request.query_params.get("type") == "Friend" else "G"
 
-        mode = "D" if type == "Friend" else "G"
-
-        conversations = Conversation.objects.filter(mode=mode).order_by(
-            "last_msg_time"
-        )[offset : offset + limit]
+        queryset = Conversation.objects.annotate(
+            isExist=Q(owned_by_friends__contains=user),
+            NoMessage=~Q(last_msg_time=Conversation.EmptyConversation),
+        )
+        conversations = queryset.filter(
+            type=type, isExist=True, NoMessage=False
+        ).order_by("-last_msg_time")[offset : offset + limit]
         # check the order
 
-        conversations_arr = []
-
-        # for conversation in conversations:
-        #     conversations_arr.append({
-        #         'id': conversation.pk,
-        #         'type': type,
-        #         'name': conversation.,
-        #         # 'img_url': <url to friend profile img>,
-        #         # 'last_msg': {
-        #         #     'message': <text>,
-        #         #     'sent_time': <00:00 AM>
-        #         # },
-        #         # 'unseen_msg': <number>,
-        #     })
         """
         {
             'size': <how many conversations>,
@@ -81,12 +68,52 @@ class ConversationView(APIView):
             ]
         }
         """
-        # TODO: return jsonresponse
-        # return JsonResponse()
+
+        conversations_arr = [
+            conversation.as_serialized(user) for conversation in conversations
+        ]
+
+        return Response(
+            {"size": len(conversations_arr), "conversations": conversations_arr}
+        )
 
     def delete(self, request):
         pass
 
 
 class MessageView(APIView):
-    pass
+
+    @catch_view_exception
+    def get(self, request):
+        user: User = request.user
+        conversation: Conversation = Conversation.objects.get(
+            pk=request.query_params.get("conversation")
+        )
+        limit = int(request.query_params.get("limit"))
+        offset = int(request.query_params.get("offset"))
+
+        messages = Message.objects.filter(conversation=conversation).order_by(
+            "-sended_at"
+        )[offset : offset + limit]
+
+        """
+            {
+                size: <how many messages>,
+                messages: [
+                    {
+                        message: <text>,
+                        sent_time: <00:00 AM>,
+                        sender: <username>
+                        type: <sent or received>
+                    },
+                ]
+                .
+                .
+                .
+                <limit>
+            }
+        """
+
+        messages_arr = [message.as_serialized(user) for message in messages]
+
+        Response({"size": len(messages_arr), "messages": messages_arr})

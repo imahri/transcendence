@@ -22,13 +22,24 @@ function SearchIcon() {
 
 let timeout;
 
+async function searchForUsers(searchText) {
+	try {
+		let response = await fetch(
+			`http://localhost:8000/user/search?search=${searchText}`,
+		);
+		if (!response.ok) console.log("User not found");
+		console.log(response);
+	} catch (error) {
+		console.error("fetch error: " + error);
+	}
+}
+
 export function Searchbar() {
 	const [input, setInput] = useState();
 	const [result, setResult] = useState();
 
 	useEffect(() => {
 		if (input) {
-			setResult();
 			console.log("==> {input}");
 			clearTimeout(timeout);
 			timeout = setTimeout(() => searchForUsers(input, setResult), 1000);

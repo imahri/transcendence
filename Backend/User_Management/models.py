@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
-from Chat.models import Conversation
 import requests as api_request
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
@@ -191,6 +190,8 @@ class Friend(models.Model):
 
     @staticmethod
     def add_friend(user: User, friend: User):
+        from Chat.models import Conversation
+
         if user.friends.filter(friend=friend).first() is None:
             conversation = Conversation.create(type="D")
             Friend(
@@ -216,10 +217,6 @@ class Friend(models.Model):
             raise Exception("Already Blocked")
         self.status = "B"
         self.save()
-        friend_obj = self.friend.get_friendship(self.user)
-        friend_obj.status = "BY"
-        friend_obj.save()
-
 
     @property
     def is_invite(self):
@@ -231,4 +228,4 @@ class Friend(models.Model):
 
     @property
     def is_block(self):
-        return self.status == "B"
+        return self.status == "B" or self.friend.get_friendship(self).status == "B"

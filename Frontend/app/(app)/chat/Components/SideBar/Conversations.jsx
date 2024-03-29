@@ -3,83 +3,8 @@ import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useContext } from "react";
 import { ConvChatContext } from "../../context/context";
-
-const DummyData = [
-	{
-		friend_name: "Alice",
-		last_message: "Hey there!",
-		unseen_message_count: 3,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Bob",
-		last_message: "What's up?",
-		unseen_message_count: 1,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Charlie",
-		last_message: "How's it going?",
-		unseen_message_count: 5,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-	{
-		friend_name: "David",
-		last_message: "Long time no see!",
-		unseen_message_count: 0,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-	{
-		friend_name: "Emily",
-		last_message: "Up for a chat?",
-		unseen_message_count: 7,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Finn",
-		last_message: "Just checking in",
-		unseen_message_count: 2,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-	{
-		friend_name: "Grace",
-		last_message: "Miss you!",
-		unseen_message_count: 4,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Henry",
-		last_message: "Hope you're doing well!",
-		unseen_message_count: 8,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Isla",
-		last_message: "Let's catch up soon!",
-		unseen_message_count: 6,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Friends",
-	},
-	{
-		friend_name: "Jack",
-		last_message: "Thinking of you!",
-		unseen_message_count: 9,
-		last_msg_time: "23:45 PM",
-		type_of_conversation: "Groups",
-	},
-];
-
-const DummyPath =
-	"https://24ai.tech/en/wp-content/uploads/sites/3/2023/08/24ai_try_chair-1-150x150.webp";
-// const DummyPath = "/home/reben-ha/Documents/transcendence/Frontend/public/logo.svg";
+import { useRouter } from "next/navigation";
+import { DummyConversation, DummyPath } from "../../DummyData";
 
 function Unseen({ count }) {
 	return (
@@ -143,42 +68,63 @@ function TimeNotification({ last_msg_time, unseen_message_count }) {
 	);
 }
 
-function Conversation({ data, setter, isActive }) {
+function Conversation({ info, ConvState }) {
+	// Here update Conversation ??
+	const router = useRouter();
+	const [convState, setConvState] = ConvState;
 	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
 
 	const handleClick = () => {
 		/* get data */
-		setter(data.friend_name);
-		data.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
+		if (convState.current_conv != info.friend_name) {
+			info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
+			setConvState({
+				type: convState.type,
+				current_conv: info.friend_name,
+			});
+			router.push(`/chat/${convState.type}/${info.friend_name}`);
+		}
 	};
 
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${isActive ? styles.focus_section : ""}`}
+			className={`${styles.section} ${convState.current_conv == info.friend_name ? styles.focus_section : ""}`}
 		>
 			<ProfileImage />
-			<FriendInfo friend_name={data.friend_name} last_msg={last_msg} />
+			<FriendInfo friend_name={info.friend_name} last_msg={last_msg} />
 			<TimeNotification
-				last_msg_time={data.last_msg_time}
-				unseen_message_count={data.unseen_message_count}
+				last_msg_time={info.last_msg_time}
+				unseen_message_count={info.unseen_message_count}
 			/>
 		</button>
 	);
 }
 
+// Conversation:
+// {
+//		id: <id>,
+//		type: <Friend or Group>,
+//		name: <name of Friend or group>,
+//		img_url: <url to friend profile img>,
+//		last_msg: {
+//			message: <text>,
+//			sent_time: <00:00 AM>
+//		},
+//		unseen_msg: <number>,
+// }
+
 export default function Conversations({ type }) {
-	const [activeConv, setActiveConv] = useContext(ConvChatContext);
+	const ConvState = useContext(ConvChatContext);
 	return (
 		<div className={styles.container}>
-			{DummyData.map(
-				(conversation) =>
+			{DummyConversation.map(
+				(conversation, idx) =>
 					type === conversation.type_of_conversation && (
 						<Conversation
-							key={conversation.friend_name}
-							data={conversation}
-							setter={setActiveConv}
-							isActive={activeConv === conversation.friend_name}
+							key={idx}
+							info={conversation}
+							ConvState={ConvState}
 						/>
 					),
 			)}

@@ -1,16 +1,23 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useRef } from "react";
 import styles from "./styles/MessagesSection.module.css";
-import { messageTypes } from "./ConversationSection";
 
-function Message({ messageInfo, friendName, isSent }) {
-	const messageSection_style = isSent
-		? "justify-end pr-9"
-		: "justify-start pl-9";
-	const message_style = isSent
-		? "rounded-s-2xl rounded-br-2xl"
-		: "rounded-e-2xl rounded-bl-2xl";
-	const message_time_style = isSent ? "self-start" : "self-end";
+export const MessageTypes = Object.freeze({
+	Sent: "sent",
+	Received: "received",
+});
+
+function genStyles(bool) {
+	return [
+		bool ? "justify-end pr-9" : "justify-start pl-9",
+		bool ? "rounded-s-2xl rounded-br-2xl" : "rounded-e-2xl rounded-bl-2xl",
+		bool ? "self-start" : "self-end",
+	];
+}
+
+function Message({ messageInfo, send_by, isSent }) {
+	const [messageSection_style, message_style, message_time_style] =
+		genStyles(isSent);
 
 	return (
 		<div className={`${styles.messageSection} ${messageSection_style}`}>
@@ -18,9 +25,7 @@ function Message({ messageInfo, friendName, isSent }) {
 				key={messageInfo.time}
 				className={`${styles.message} ${message_style}`}
 			>
-				{!isSent && (
-					<h3 className={styles.message_name}>{friendName}</h3>
-				)}
+				{!isSent && <h3 className={styles.message_name}>{send_by}</h3>}
 				<p className={styles.message_text}>{messageInfo.message}</p>
 				<small
 					className={`${styles.message_time} ${message_time_style}`}
@@ -32,7 +37,7 @@ function Message({ messageInfo, friendName, isSent }) {
 	);
 }
 
-export default function MessagesSection({ friendName, messageList }) {
+export function MessagesSection({ send_by, messageList }) {
 	const scrollRef = useRef();
 
 	useEffect(() => {
@@ -46,9 +51,9 @@ export default function MessagesSection({ friendName, messageList }) {
 					return (
 						<Message
 							key={idx}
-							friendName={friendName}
+							send_by={send_by}
 							messageInfo={messageInfo}
-							isSent={messageInfo.type === messageTypes.Sent}
+							isSent={messageInfo.type === MessageTypes.Sent}
 						/>
 					);
 				})}

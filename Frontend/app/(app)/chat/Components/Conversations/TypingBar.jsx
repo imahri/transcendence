@@ -3,17 +3,12 @@ import React, { useRef } from "react";
 import SendLogo from "./assets/send_icon.svg";
 import styles from "./styles/TypingBar.module.css";
 
-function send(message) {
-	// console.log(message);
-}
-
-export default function TypingBar({ addMessage }) {
+export function TypingBar({ onSend }) {
 	const inputMessage = useRef();
 
 	const handleClick = () => {
 		if (inputMessage.current.value.length === 0) return;
-		send(inputMessage.current.value);
-		addMessage(inputMessage.current.value);
+		onSend(inputMessage.current.value);
 		inputMessage.current.value = "";
 	};
 

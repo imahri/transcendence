@@ -1,24 +1,25 @@
-import { useState } from "react";
+"use client";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
-import Separator from "./Separator";
+import { ConvChatContext } from "../../context/context";
+import { useConvState } from "../../Hooks/useConvState";
+import { Separator, Separators } from "./Separator";
 import ConversationType from "./ConversationType";
+import Conversations from "./Conversations";
 import styles from "./styles/SideBar.module.css";
-import { ConvTypeChatContext } from "../../context/context";
 
-const conversation_types = ["Friends", "Groups"];
-
-export default function SideBar({ children }) {
-	const [convType, setConvType] = useState(conversation_types[0]);
-
+export function SideBar() {
+	const [convState, setConvState] = useConvState();
+	console.log(convState);
 	return (
-		<ConvTypeChatContext.Provider value={[convType, setConvType]}>
+		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<aside className={styles.sidebar}>
 				<Searchbar />
 				<Separator />
 				<ConversationType />
-				{children}
+				<Conversations type={convState.type} />
 				{/* <div className="bg-red-800 w-full h-[10%]"></div> */}
 			</aside>
-		</ConvTypeChatContext.Provider>
+			<Separators />
+		</ConvChatContext.Provider>
 	);
 }
