@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useRef } from "react";
 import styles from "./styles/MessagesSection.module.css";
-import { ToHour12Time } from "../../Tools/getCurrentTime";
+import { ToHour12Time } from "@/Tools/getCurrentTime";
 
 export const MessageTypes = Object.freeze({
 	Sent: "sent",

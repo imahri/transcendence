@@ -4,7 +4,7 @@ import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
 import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
 import { TypingBar } from "./Components/TypingBar";
 import { DummyMessages, DummyPath } from "../DummyData";
-import { getCurrentTime } from "../Tools/getCurrentTime";
+import { getCurrentTime } from "@/Tools/getCurrentTime";
 
 export default function DM_Conversation({ params }) {
 	const [messages, setMessages] = useState([]);
