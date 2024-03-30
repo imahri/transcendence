@@ -1,4 +1,4 @@
-import { NoConv } from "./Components/Conversations/NoConv";
+import { NoConv } from "./Components/NoConv";
 
 export default function Chat() {
 	return <NoConv />;

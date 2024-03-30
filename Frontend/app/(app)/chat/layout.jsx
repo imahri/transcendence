@@ -1,6 +1,6 @@
 import { WsChatProvider } from "./context/context";
 import styles from "./styles/layout.module.css";
-import { SideBar } from "./Components/SideBar/SideBar";
+import { SideBar } from "./Components/SideBar";
 import { Inter } from "next/font/google";
 import { authInit } from "@/app/(auth)/AuthTools/tokenManagment";
 import { chatApi } from "@/app/URLS";

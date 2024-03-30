@@ -1,14 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-	MessagesSection,
-	MessageTypes,
-} from "../Components/Conversations/MessagesSection";
-import {
-	ActiveStatusTypes,
-	ProfileBar,
-} from "../Components/Conversations/ProfileBar";
-import { TypingBar } from "../Components/Conversations/TypingBar";
+import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
+import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
+import { TypingBar } from "./Components/TypingBar";
 import { DummyMessages, DummyPath } from "../DummyData";
 import { getCurrentTime } from "../Tools/getCurrentTime";
 

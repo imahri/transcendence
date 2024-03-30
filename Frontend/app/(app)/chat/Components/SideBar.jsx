@@ -1,7 +1,7 @@
 "use client";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
-import { ConvChatContext } from "../../context/context";
-import { useConvState } from "../../Hooks/useConvState";
+import { ConvChatContext } from "../context/context";
+import { useConvState } from "../Hooks/useConvState";
 import { Separator, Separators } from "./Separator";
 import Conversations from "./Conversations";
 import styles from "./styles/SideBar.module.css";

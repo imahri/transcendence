@@ -2,9 +2,9 @@
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useContext } from "react";
-import { ConvChatContext } from "../../context/context";
+import { ConvChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
-import { DummyConversation, DummyPath } from "../../DummyData";
+import { DummyConversation, DummyPath } from "../DummyData";
 
 function Unseen({ count }) {
 	return (
