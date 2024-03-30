@@ -76,10 +76,10 @@ function Conversation({ info }) {
 
 	const handleClick = () => {
 		/* get data */
-		if (convState != info.friend_name) {
+		if (convState !== info.friend_name) {
 			info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-			setConvState(info.friend_name);
 			router.push(`/chat/${info.friend_name}`);
+			setConvState(info.friend_name);
 		}
 	};
 
