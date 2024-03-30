@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./styles/ProfileBar.module.css";
 import optionsIcon from "./assets/options_icon.svg";
 import exitArrow from "./assets/exit_arrow.svg";
+import { useRouter } from "next/navigation";
 
 export const ActiveStatusTypes = Object.freeze({
 	Active: "Active Now",
@@ -17,12 +18,16 @@ function Status({ status }) {
 	);
 }
 
-export function ProfileBar({ name, profileImg, activeStatus, onExit }) {
+export function ProfileBar({ name, profileImg, activeStatus }) {
+	const route = useRouter();
 	const openProfileSection = () => alert("Profile Section not implemented");
 
 	return (
 		<div className={styles.container}>
-			<button className={styles.exitArrow} onClick={onExit}>
+			<button
+				className={styles.exitArrow}
+				onClick={() => route.push("/chat")}
+			>
 				<Image
 					className={styles.exitArrow_Image}
 					width={100}
