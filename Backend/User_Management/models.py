@@ -204,6 +204,7 @@ class Friend(models.Model):
             Friend(
                 user=friend, friend=user, conversation=conversation, status="I"
             ).save()
+            conversation.owners.add(friend, user)
         else:
             raise Exception("Already Friend")
 

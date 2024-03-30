@@ -23,7 +23,8 @@ async function getConversations() {
 }
 
 export default async function ChatLayout({ children }) {
-	const data = getConversations();
+	const data = await getConversations();
+	console.log(data);
 	return (
 		<WsChatProvider data={data}>
 			<div

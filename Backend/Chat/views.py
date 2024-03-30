@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from User_Management.models import User, Friend
 from .models import Conversation, Message
-from django.db.models import Q
+from django.db.models import Q, Count, Max
 
 
 def catch_view_exception(func):
@@ -33,10 +33,11 @@ class ConversationView(APIView):
         offset = int(request.query_params.get("offset"))
 
         queryset = Conversation.objects.annotate(
-            isExist=Q(friends__contains=user),
-            NoMessage=~Q(last_msg_time=Conversation.EmptyConversation),
+            isExist=Q(owners__pk=user.pk),
+            num_messages=Count("messages"),
+            last_msg_time=Max("messages__sended_at"),
         )
-        conversations = queryset.filter(isExist=True, NoMessage=False).order_by(
+        conversations = queryset.filter(isExist=True, num_messages__gt=0).order_by(
             "-last_msg_time"
         )[offset : offset + limit]
         # check the order

@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class Conversation(models.Model):
 
     EmptyConversation = "Wed May 22 2004 00:00:00 GMT+0000 (GMT)"
+    owners = models.ManyToManyField("User_Management.User")
 
     @staticmethod
     def create():
@@ -18,7 +19,7 @@ class Conversation(models.Model):
 
     @property
     def messages(self):
-        return Message.objects.filter(conversation=self)
+        return self.message_set
 
     @property
     def last_message(self):
@@ -30,14 +31,6 @@ class Conversation(models.Model):
     @property
     def friends(self) -> BaseManager[Friend]:
         return self.friends_set
-
-    @property
-    def last_msg_time(self):
-        return (
-            self.last_message["sended_at"]
-            if self.last_message is not None
-            else Conversation.EmptyConversation
-        )
 
     @property
     def name(self):
