@@ -18,6 +18,8 @@ export function getRefreshToken() {
 	return getCookie("refresh_token");
 }
 
+export const authInit = { headers: { Authorization: `Bearer ${getToken()}` } };
+
 // export async function refreshToken() {
 // 	console.log("refresh hhhhh");
 // 	const refresh_token = cookies().get("refresh_token");

@@ -31,15 +31,14 @@ class ConversationView(APIView):
         user: User = request.user
         limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
-        type = "D" if request.query_params.get("type") == "Friend" else "G"
 
         queryset = Conversation.objects.annotate(
-            isExist=Q(owned_by_friends__contains=user),
+            isExist=Q(friends__contains=user),
             NoMessage=~Q(last_msg_time=Conversation.EmptyConversation),
         )
-        conversations = queryset.filter(
-            type=type, isExist=True, NoMessage=False
-        ).order_by("-last_msg_time")[offset : offset + limit]
+        conversations = queryset.filter(isExist=True, NoMessage=False).order_by(
+            "-last_msg_time"
+        )[offset : offset + limit]
         # check the order
 
         """
