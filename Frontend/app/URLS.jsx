@@ -26,5 +26,5 @@ export const GET_USER_URL = `${USER_APP}/user`;
 export const chatApi = (uri, query_params) =>
 	query_params == undefined
 		? `${BASE_URL}/chat${uri}`
-		: `${BASE_URL}/chat${uri}${query_params.toString()}`;
+		: `${BASE_URL}/chat${uri}?${query_params.toString()}`;
 export const wsChat = `${WS}/ws/chat`;
