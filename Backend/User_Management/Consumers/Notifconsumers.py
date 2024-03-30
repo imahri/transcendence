@@ -39,35 +39,28 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, text_data):
         try:
             action = text_data["action"]
-            if action == 'check_nb_notif':
-                await self.getNbNotif()
-            else:
+            if action == 'all_notif':
                 await self.getAllNotif()
             
         except Exception as error:
             print('error : ', error)
 
-
-    async def getNbNotif(self):
-        new_notif = await database_sync_to_async(self.user.get_new_Notification)()
-        nb_notif = await database_sync_to_async(len)(new_notif)
-        await self.send_json(content={'type': 'nb_notif' ,'nb_notif': nb_notif})
-    
+ 
     async def getAllNotif(self):
         
         allNotification = await database_sync_to_async(self.user.get_all_notif)()
-
         response = await database_sync_to_async(convertNotification)(allNotification)
-
         await self.send_json(content={'type': 'all_notif' ,'all_notif': response})
 
+    
     async def update(self, event):
-        await self.send_json(content={'type': 'update'})
+        await self.send_json(content={'type': 'update', 'last_notif' : event['lastNotif']})
 
-    async def send_notif_user(self, user, channel_layer):
+    async def send_notif_user(self, user, channel_layer, lastNotif):
         try:
             target_channel = self.get_channel_by_user(user.username)
-            await channel_layer.send(target_channel, {"type": "update"})
+            NotifSerialized = NotifSerializer(lastNotif).data;
+            await channel_layer.send(target_channel, {"type": "update", 'lastNotif' : NotifSerialized})
 
         except Exception as error:
             print('user key not found : ', error)

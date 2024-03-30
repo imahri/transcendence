@@ -85,8 +85,8 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
         except Exception as error:
             print('channel key not found :', error)
 
-        await NotificationConsumer().send_notif_user(friend, self.channel_layer)
-        await self.setNotification(friend=friend, action=action)
+        if action == 'add' or action == 'accept':
+            await self.setNotification(friend=friend, action=action)
 
 
         await self.check_friendship(friend)
@@ -96,6 +96,9 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
         try:
             notif = Notification(user=friend, notifier=self.user, content=action, type='friendShip')
             await database_sync_to_async(notif.save)()
+
+            await NotificationConsumer().send_notif_user(friend, self.channel_layer, notif)
+
         except Exception as error:
             print('error: ', error)
 
