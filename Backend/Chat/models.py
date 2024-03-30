@@ -10,6 +10,7 @@ class Conversation(models.Model):
 
     EmptyConversation = "Wed May 22 2004 00:00:00 GMT+0000 (GMT)"
     owners = models.ManyToManyField("User_Management.User")
+    last_modified = models.DateTimeField(auto_now=True)
 
     @staticmethod
     def create():
@@ -30,20 +31,20 @@ class Conversation(models.Model):
 
     @property
     def friends(self) -> BaseManager[Friend]:
-        return self.friends_set
+        return self.friend_set
 
     @property
     def name(self):
         return [
-            self.friends[0].user.username,
-            self.friends[1].user.username,
+            self.friends.first().user.username,
+            self.friends.last().user.username,
         ]
 
     @property
     def image(self):
         return [
-            self.friends[0].user.info.profile_img,
-            self.friends[1].user.info.profile_img,
+            self.friends.first().user.info.profile_img.url,
+            self.friends.last().user.info.profile_img.url,
         ]
 
     @property
@@ -58,16 +59,16 @@ class Conversation(models.Model):
             return arr[1] if arr[0] == value else arr[0]
 
         data = dict(ConversationSerializer(self).data)
-        data["name"] = opts_v(data.pop("name"), user.username)
-        data["image"] = opts_v(data.pop("image"), user.info.profile_img)
-        return ReturnDict(data)
+        data["name"] = opts_v(data.pop("name_arr"), user.username)
+        data["image"] = opts_v(data.pop("image_arr"), user.info.profile_img.url)
+        return data
 
 
 class Message(models.Model):
 
     sender = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
     message = models.TextField(max_length=100)
-    sended_at = models.TimeField(auto_now=True)
+    sended_at = models.DateTimeField(auto_now_add=True)
     conversation = models.ForeignKey(
         Conversation, related_name="messages", on_delete=models.CASCADE
     )

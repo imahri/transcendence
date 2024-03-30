@@ -7,12 +7,20 @@ class ConversationSerializer(ModelSerializer):
         model = Conversation
         fields = [
             "id",
-            "type",
             "name",
             "image",
             "last_message",
             "unseen_msg",
         ]
+
+    def to_representation(self, instance: Meta.model):
+        return {
+            "id": instance.pk,
+            "name_arr": instance.name,
+            "image_arr": instance.image,
+            "last_message": instance.last_message,
+            "unseen_msg": instance.unseen_msg,
+        }
 
 
 class MessageSerializer(ModelSerializer):
