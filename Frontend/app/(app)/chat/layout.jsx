@@ -2,8 +2,7 @@ import { WsChatProvider } from "./context/context";
 import styles from "./styles/layout.module.css";
 import { SideBar } from "./Components/SideBar";
 import { Inter } from "next/font/google";
-import { authInit } from "@/app/(auth)/AuthTools/tokenManagment";
-import { chatApi } from "@/app/URLS";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,17 +12,10 @@ export const metadata = {
 
 async function getConversations() {
 	try {
-		const query_params = new URLSearchParams({
+		const data = fetch_jwt(APIs.chat.conversations, {
 			limit: 7,
 			offset: 0,
 		});
-		const res = await fetch(
-			chatApi("/conversation", query_params),
-			authInit,
-		);
-		if (!res.ok) throw `${res.status} ${res.statusText}`;
-		let data = await res.json();
-		console.log(data);
 		return data;
 	} catch (error) {
 		console.error("Fetch Error:", error);

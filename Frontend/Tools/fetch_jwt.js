@@ -15,7 +15,7 @@ export const APIs = {
  */
 export const fetch_jwt = async (endpoint, query_params, init) => {
 	const token = cookies().get("access_token")?.value;
-	const headers = new Headers(init.headers);
+	const headers = new Headers(init?.headers);
 	if (token) headers.set("Authorization", `Bearer ${token}`);
 
 	const url =
