@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useRef } from "react";
 import styles from "./styles/MessagesSection.module.css";
+import { ToHour12Time } from "../../Tools/getCurrentTime";
 
 export const MessageTypes = Object.freeze({
 	Sent: "sent",
@@ -21,16 +22,13 @@ function Message({ messageInfo, send_by, isSent }) {
 
 	return (
 		<div className={`${styles.messageSection} ${messageSection_style}`}>
-			<section
-				key={messageInfo.time}
-				className={`${styles.message} ${message_style}`}
-			>
+			<section className={`${styles.message} ${message_style}`}>
 				{!isSent && <h3 className={styles.message_name}>{send_by}</h3>}
 				<p className={styles.message_text}>{messageInfo.message}</p>
 				<small
 					className={`${styles.message_time} ${message_time_style}`}
 				>
-					{messageInfo.time}
+					{ToHour12Time(messageInfo.time)}
 				</small>
 			</section>
 		</div>
