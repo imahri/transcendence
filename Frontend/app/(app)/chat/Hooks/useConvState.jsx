@@ -7,9 +7,7 @@ export const useConvState = () => {
 	const [convState, setConvState] = useState(
 		current_conv === undefined ? null : current_conv,
 	);
-	if (path === "/chat" && convState !== null) {
-		console.log("----->", current_conv, path);
-		setConvState(null);
-	} // TODO: Fix this state when click first time in conv the state not change
+	if (path === "/chat" && convState !== null) setConvState(null);
+	else if (path !== "/chat" && convState === null) setConvState(current_conv); // ?? WTF
 	return [convState, setConvState];
 };
