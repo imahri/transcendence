@@ -3,7 +3,11 @@
 }
 
 .profileBar {
-	@apply w-[25%] h-full flex items-center;
+	@apply flex-grow h-full flex items-center;
+}
+
+.profileBar button {
+	@apply w-[20%] h-full flex items-center;
 }
 
 .profileBar_Image {
@@ -36,4 +40,12 @@
 
 .options_Image {
 	@apply h-full;
+}
+
+.exitArrow {
+	@apply w-[5%] h-full flex justify-center items-center;
+}
+
+.exitArrow_Image {
+	@apply w-[50%] h-[35%];
 }

@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import styles from "./styles/ProfileBar.module.css";
 import optionsIcon from "./assets/options_icon.svg";
+import exitArrow from "./assets/exit_arrow.svg";
 
 export const ActiveStatusTypes = Object.freeze({
 	Active: "Active Now",
@@ -16,25 +17,36 @@ function Status({ status }) {
 	);
 }
 
-export function ProfileBar({ name, profileImg, activeStatus }) {
+export function ProfileBar({ name, profileImg, activeStatus, onExit }) {
 	const openProfileSection = () => alert("Profile Section not implemented");
 
 	return (
 		<div className={styles.container}>
-			<button onClick={openProfileSection} className={styles.profileBar}>
+			<button className={styles.exitArrow} onClick={onExit}>
 				<Image
-					className={styles.profileBar_Image}
+					className={styles.exitArrow_Image}
 					width={100}
 					height={100}
-					src={profileImg}
-					alt="Profile image"
+					src={exitArrow}
+					alt="exit arrow"
 				/>
-				<section className={styles.profileInfo}>
-					<h2>{name}</h2>
-					<h3>{activeStatus}</h3>
-				</section>
-				<Status status={activeStatus} />
 			</button>
+			<div className={styles.profileBar}>
+				<button onClick={openProfileSection}>
+					<Image
+						className={styles.profileBar_Image}
+						width={100}
+						height={100}
+						src={profileImg}
+						alt="Profile image"
+					/>
+					<section className={styles.profileInfo}>
+						<h2>{name}</h2>
+						<h3>{activeStatus}</h3>
+					</section>
+					<Status status={activeStatus} />
+				</button>
+			</div>
 			<div className={styles.options}>
 				<button>
 					<Image
