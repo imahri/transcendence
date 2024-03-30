@@ -10,6 +10,6 @@ export const useConvState = () => {
 	if (path === "/chat" && convState !== null) {
 		console.log("----->", current_conv, path);
 		setConvState(null);
-	} // Fix this state when click first time in conv the state not change
+	} // TODO: Fix this state when click first time in conv the state not change
 	return [convState, setConvState];
 };
