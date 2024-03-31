@@ -10,10 +10,17 @@ function updateStatus(e, setNotif, setnbNotif) {
 	console.log("Received message:", data);
 
 	if (data.type == "all_notif") {
-		setNotif({ type: "replace", allNotif: data.all_notif });
+		setNotif(data.all_notif);
 		setnbNotif(data.all_notif.length);
 	} else {
-		setNotif({ type: "add", newNotif: data.last_notif });
+		setNotif((prev) => {
+			if (prev) {
+				prev.unshift(data.last_notif);
+				return prev;
+			} else {
+				return data.last_notif;
+			}
+		});
 		setnbNotif((prev) => prev + 1);
 	}
 }
@@ -88,18 +95,8 @@ function NotifSection({ notif }) {
 	);
 }
 
-function NotifyHandler(state, action) {
-	if (action.type == "add") {
-		state.unshift(action.newNotif);
-		return state;
-	}
-	if (action.type == "replace") {
-		return action.allNotif;
-	}
-}
-
 function Notification() {
-	const [notif, setNotif] = useReducer(NotifyHandler, false);
+	const [notif, setNotif] = useState(false);
 
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
