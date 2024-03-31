@@ -5,7 +5,7 @@ import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
 import { ChatSvg, GmaeSvg, FriendSvg } from "./NotifSvg";
 
-function updateStatus(e, setNotif, setnbNotif, notif) {
+function updateStatus(e, setNotif, setnbNotif) {
 	const data = JSON.parse(e.data);
 	console.log("Received message:", data);
 
@@ -14,7 +14,7 @@ function updateStatus(e, setNotif, setnbNotif, notif) {
 		setnbNotif(data.all_notif.length);
 	} else {
 		setNotif({ type: "add", newNotif: data.last_notif });
-		// setnbNotif(newNotif.length);
+		setnbNotif((prev) => prev + 1);
 	}
 }
 
@@ -26,7 +26,7 @@ function getAllNotif(socket) {
 	);
 }
 
-export function initSocket(setSocket, setnbNotif, setNotif, notif) {
+export function initSocket(setSocket, setnbNotif, setNotif) {
 	try {
 		const token = getToken();
 		const ws = new WebSocket(`ws://localhost:8000/ws/notif?token=${token}`);
@@ -37,7 +37,7 @@ export function initSocket(setSocket, setnbNotif, setNotif, notif) {
 		};
 
 		ws.onmessage = (e) => {
-			updateStatus(e, setNotif, setnbNotif, notif);
+			updateStatus(e, setNotif, setnbNotif);
 		};
 
 		ws.onerror = (error) => {
@@ -106,7 +106,7 @@ function Notification() {
 	const [socket, setSocket] = useState();
 
 	useEffect(() => {
-		initSocket(setSocket, setnbNotif, setNotif, notif);
+		initSocket(setSocket, setnbNotif, setNotif);
 
 		return () => {
 			if (socket) socket.close();
