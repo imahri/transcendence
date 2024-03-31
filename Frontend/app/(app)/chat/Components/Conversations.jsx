@@ -1,10 +1,11 @@
-/* eslint-disable react/prop-types */
+"use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useContext } from "react";
 import { ConvChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { DummyConversation, DummyPath } from "../DummyData";
+import { useConvState } from "../Hooks/useConvState";
 
 function Unseen({ count }) {
 	return (
@@ -99,11 +100,15 @@ function Conversation({ info }) {
 }
 
 export default function Conversations() {
+	const [convState, setConvState] = useConvState();
+
 	return (
-		<div className={styles.container}>
-			{DummyConversation.map((conversation, idx) => (
-				<Conversation key={idx} info={conversation} />
-			))}
-		</div>
+		<ConvChatContext.Provider value={[convState, setConvState]}>
+			<div className={styles.container}>
+				{DummyConversation.map((conversation, idx) => (
+					<Conversation key={idx} info={conversation} />
+				))}
+			</div>
+		</ConvChatContext.Provider>
 	);
 }

@@ -1,4 +1,5 @@
-import React, { lazy, useEffect, useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import style_chat from "./styles/Searchbar.chat.module.css";
 import style_user from "./styles/Searchbar.user.module.css";
 
