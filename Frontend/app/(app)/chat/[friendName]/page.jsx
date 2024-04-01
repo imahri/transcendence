@@ -6,9 +6,8 @@ import { TypingBar } from "./Components/TypingBar";
 import { DummyMessages, DummyPath } from "../DummyData";
 import { getCurrentTime } from "@/Tools/getCurrentTime";
 
-export default function DM_Conversation({ params }) {
+export default function DM_Conversation({ params: { FriendName } }) {
 	const [messages, setMessages] = useState([]);
-	const FriendName = params.friendName;
 
 	useEffect(() => {
 		// Load Messages from db

@@ -24,9 +24,8 @@ async function getConversations() {
 
 export default async function ChatLayout({ children }) {
 	const data = await getConversations();
-	console.log(data);
 	return (
-		<WsChatProvider data={data}>
+		<WsChatProvider conversations={data}>
 			<div
 				className={`h-screen w-full m-0 flex flex-row bg-[#202020] ${inter.className}`}
 			>

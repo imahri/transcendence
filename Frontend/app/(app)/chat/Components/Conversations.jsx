@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useContext } from "react";
-import { ConvChatContext } from "../context/context";
+import { useContext, useState } from "react";
+import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { DummyConversation, DummyPath } from "../DummyData";
 import { useConvState } from "../Hooks/useConvState";
+import { ToHour12Time } from "@/Tools/getCurrentTime";
 
 function Unseen({ count }) {
 	return (
@@ -23,14 +24,14 @@ function Unseen({ count }) {
 	);
 }
 
-function ProfileImage() {
+function ProfileImage({ src }) {
 	return (
 		<div className={styles.image}>
 			<Image
 				width={100}
 				height={100}
 				className={styles.img}
-				src={DummyPath}
+				src={src}
 				alt="Profile"
 			/>
 		</div>
@@ -52,48 +53,42 @@ function FriendInfo({ friend_name, last_msg }) {
 	);
 }
 
-function TimeNotification({ last_msg_time, unseen_message_count }) {
+function TimeNotification({ time, unseen_msg }) {
 	return (
 		<div className="h-full w-[17%] rounded-r-sm flex justify-center items-center flex-col">
 			<small className="mr-2 mt-2 font-light text-[#7D7D7D]">
-				{last_msg_time}
+				{ToHour12Time(time)}
 			</small>
 			<div className="flex-grow w-full flex justify-center items-center">
-				{unseen_message_count > 0 ? (
-					<Unseen count={unseen_message_count} />
-				) : (
-					""
-				)}
+				{unseen_msg > 0 && <Unseen count={unseen_msg} />}
 			</div>
 		</div>
 	);
 }
 
-function Conversation({ info }) {
-	// Here update Conversation ??
+function Conversation({ info: { name, image, last_message, unseen_msg } }) {
 	const router = useRouter();
 	const [convState, setConvState] = useContext(ConvChatContext);
-	const last_msg = "OOOOOOOOOOOOOOOOOOOO000000000000000";
+	const profileImage = DummyPath; // image in info: it's just a path
 
 	const handleClick = () => {
-		/* get data */
-		if (convState !== info.friend_name) {
-			info.unseen_message_count = 0; // set unseen_message_count to 0 because you see message XD
-			router.push(`/chat/${info.friend_name}`);
-			setConvState(info.friend_name);
+		if (convState !== name) {
+			// TODO : set unseen_message_count to 0 because you see message XD
+			router.push(`/chat/${name}`);
+			setConvState(name);
 		}
 	};
 
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${convState == info.friend_name ? styles.focus_section : ""}`}
+			className={`${styles.section} ${convState == name ? styles.focus_section : ""}`}
 		>
-			<ProfileImage />
-			<FriendInfo friend_name={info.friend_name} last_msg={last_msg} />
+			<ProfileImage src={profileImage} />
+			<FriendInfo friend_name={name} last_msg={last_message.message} />
 			<TimeNotification
-				last_msg_time={info.last_msg_time}
-				unseen_message_count={info.unseen_message_count}
+				time={last_message.sended_at}
+				unseen_msg={unseen_msg}
 			/>
 		</button>
 	);
@@ -101,11 +96,14 @@ function Conversation({ info }) {
 
 export default function Conversations() {
 	const [convState, setConvState] = useConvState();
+	const { socket, data } = useContext(WsChatContext);
+	const [convList, setConvList] = useState(data.conversations);
+	const [convListSize, setConvListSize] = useState(data.size);
 
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<div className={styles.container}>
-				{DummyConversation.map((conversation, idx) => (
+				{convList.map((conversation, idx) => (
 					<Conversation key={idx} info={conversation} />
 				))}
 			</div>

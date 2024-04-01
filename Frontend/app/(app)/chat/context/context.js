@@ -5,7 +5,7 @@ import { createContext, useEffect, useState } from "react";
 
 export const WsChatContext = createContext();
 
-export const WsChatProvider = ({ children, data }) => {
+export const WsChatProvider = ({ children, conversations }) => {
 	const [socket, setSocket] = useState(null);
 
 	useEffect(() => {
@@ -27,7 +27,7 @@ export const WsChatProvider = ({ children, data }) => {
 	}, [socket]);
 
 	return (
-		<WsChatContext.Provider value={{ socket: socket, data: data }}>
+		<WsChatContext.Provider value={{ socket: socket, data: conversations }}>
 			{children}
 		</WsChatContext.Provider>
 	);
