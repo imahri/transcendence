@@ -7,6 +7,8 @@ from rest_framework import serializers
 
 class UserSerializer(ModelSerializer):
 
+    img = serializers.SerializerMethodField();
+
     class Meta:
         model = User
         fields = [
@@ -16,6 +18,7 @@ class UserSerializer(ModelSerializer):
             "first_name",
             "last_name",
             "password",
+            "img",
         ]
         extra_kwargs = {"password": {"write_only": True}}
 
@@ -34,6 +37,9 @@ class UserSerializer(ModelSerializer):
     def save(self, **kwargs):
         self.is_valid(raise_exception=True)
         return super().save(**kwargs)
+    
+    def get_img(self, obj):
+        return obj.get_info()['profile_img']
 
 
 class InfoSerializer(ModelSerializer):
