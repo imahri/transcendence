@@ -32,13 +32,14 @@ class ConversationView(APIView):
         limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
 
-        conversations = (
-            Conversation.objects.annotate(
-                isExist=Q(owners__pk=user.pk), num_messages=Count("messages")
-            )
-            .filter(isExist=True, num_messages__gt=0)
-            .order_by("-last_modified")[offset : offset + limit]  # ?? check this later
-        )  # !! check the order
+        queryset = Conversation.objects.annotate(
+            isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
+        )
+        conversations = queryset.filter(isExist=True, num_messages__gt=0).order_by(
+            "-last_modified"
+        )[
+            offset : offset + limit
+        ]  # ?? check this later  # !! check the order
         conversations_arr = [
             conversation.as_serialized(user) for conversation in conversations
         ]

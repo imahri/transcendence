@@ -69,6 +69,10 @@ class Message(models.Model):
         Conversation, related_name="messages", on_delete=models.CASCADE
     )
 
+    @staticmethod
+    def new_message(conversation, sender, message):
+        return Message(conversation=conversation, sender=sender, message=message).save()
+
     def as_serialized(self, user: User):
         from .serializers import MessageSerializer
 
