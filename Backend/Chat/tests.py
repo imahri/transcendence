@@ -20,10 +20,17 @@ while i < N:
             "username": f"{_name}",
             "first_name": f"{_name}",
             "last_name": f"{_name}",
-            "password": f"{_name}",
+            "password": f"{_name}{_name}",
         }
     )
     friend = User.objects.get(username=f"{_name}")
     friend.add_friend(main_user)
     main_user.accept_friend(friend)
+    
+    
+    
+    
+    
+    
+    
     i += 1

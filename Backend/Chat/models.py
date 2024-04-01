@@ -19,10 +19,6 @@ class Conversation(models.Model):
         return instance
 
     @property
-    def messages(self):
-        return self.message_set
-
-    @property
     def last_message(self):
         message = self.messages.order_by("-sended_at").first()
         if message is None:
@@ -78,4 +74,4 @@ class Message(models.Model):
 
         data = dict(MessageSerializer(self).data)
         data["type"] = "sent" if data["sender"] == user.username else "received"
-        return ReturnDict(data)
+        return data
