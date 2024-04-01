@@ -48,9 +48,12 @@ const friends = [
 	friend,
 ];
 
-function Friend({ friend }) {
+function Friend({ friend, index }) {
 	return (
-		<div className=" flex items-center gap-[20px] cursor-pointer">
+		<div
+			className=" flex items-center gap-[20px] cursor-pointer"
+			key={index}
+		>
 			{
 				<Image
 					className="size-[50px] rounded-full"
@@ -79,8 +82,8 @@ function Friendspopup({ DisplayFriends }) {
 					Friends
 				</h1>
 				<div className="w-[90%] h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">
-					{friends.map((friend) => (
-						<Friend friend={friend} />
+					{friends.map((friend, index) => (
+						<Friend friend={friend} index={index} />
 					))}
 				</div>
 			</div>

@@ -5,7 +5,7 @@ import { UserContext } from "../layout";
 import { logout } from "../settings/Components/SettingsUtils";
 import Link from "next/link";
 import { Searchbar } from "../searchBar/Searchbar";
-import Notification from "./Components/tmpNotif";
+import Notification from "./Components/Notification";
 
 import {
 	logoutSvg,

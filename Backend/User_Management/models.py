@@ -11,6 +11,7 @@ from core.settings import DEFAULT_BANNER_IMG, DEFAULT_PROFILE_IMG
 from django.db.models.manager import BaseManager
 
 
+
 class User(AbstractUser):
     """
     Username and Email are required. Other fields are optional.
@@ -254,3 +255,25 @@ class Notification(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
     is_read = models.BooleanField(default=False)
+
+
+
+    @staticmethod
+    def getNBUnreadedNotif(user : User):
+        unreadedNotif = user.get_new_Notification()
+        return len(unreadedNotif);
+
+
+    @staticmethod
+    def allNotifSerialised(user):
+        from .serializers import NotifSerializer
+
+        response = []
+        allNotification =  Notification.objects.filter(user=user)
+
+        if allNotification.exists():
+                for notif in allNotification:
+                    notifData = dict(NotifSerializer(notif).data)
+                    response.append(notifData)
+
+        return response

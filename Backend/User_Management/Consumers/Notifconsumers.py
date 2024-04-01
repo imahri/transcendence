@@ -1,7 +1,8 @@
+from cgitb import text
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 
-from ..models import  User
+from ..models import  Notification, User
 from ..serializers import NotifSerializer
 
 class NotificationConsumer(AsyncJsonWebsocketConsumer):
@@ -41,6 +42,8 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             action = text_data["action"]
             if action == 'all_notif':
                 await self.getAllNotif()
+            elif action == 'read':
+                await self.markAsRead(text_data['id'])
             
         except Exception as error:
             print('error : ', error)
@@ -48,9 +51,14 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
  
     async def getAllNotif(self):
         
-        allNotification = await database_sync_to_async(self.user.get_all_notif)()
-        response = await database_sync_to_async(convertNotification)(allNotification)
-        await self.send_json(content={'type': 'all_notif' ,'all_notif': response})
+        response = await database_sync_to_async(Notification.allNotifSerialised)(self.user)
+        nbUnreadedNotif = await database_sync_to_async(Notification.getNBUnreadedNotif)(self.user);
+        await self.send_json(content={'type': 'all_notif' ,'all_notif': response, 'unreaded': nbUnreadedNotif})
+
+    async def markAsRead(self, id):
+        obj =  await database_sync_to_async(Notification.objects.get)(id=id)
+        obj.is_read = True
+        await database_sync_to_async(obj.save)()
 
     
     async def update(self, event):
@@ -65,15 +73,3 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         except Exception as error:
             print('user key not found : ', error)
 
-
-
-def convertNotification(allNotification):
-
-    response = []
-
-    if allNotification.exists():
-            for notif in allNotification:
-                notifData = dict(NotifSerializer(notif).data)
-                response.append(notifData)
-    
-    return response

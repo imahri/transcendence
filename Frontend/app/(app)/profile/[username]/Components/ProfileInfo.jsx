@@ -68,9 +68,10 @@ function Buttons({ profileUser }) {
 	return (
 		<div className="flex flex-col gap-[10px] ">
 			{Allbuttons.filter((element) => element.status === status).map(
-				(element) => {
+				(element, index) => {
 					return (
 						<Button
+							key={index}
 							action={element.action}
 							socket={socket}
 							friend_id={profileUser.id}
@@ -104,9 +105,10 @@ const friends = [
 function Friend({ displayFriends }) {
 	return (
 		<div className="flex gap-[-1px]" onClick={() => displayFriends(true)}>
-			{friends.slice(0, 5).map((fr) => {
+			{friends.slice(0, 5).map((fr, index) => {
 				return (
 					<Image
+						key={index}
 						className="size-[35px] cursor-pointer rounded-full mr-[-10px]"
 						src={fr.image}
 						alt=""
