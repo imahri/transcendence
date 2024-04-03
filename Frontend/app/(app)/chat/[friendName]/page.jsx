@@ -8,29 +8,28 @@ import { getCurrentTime } from "@/Tools/getCurrentTime";
 import { WsChatContext } from "../context/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 
-async function getMessages(FriendName, conversations) {
-	const query_params = { conversation: -1, limit: 7, offset: 0 };
-
-	conversations.forEach((conversation) => {
-		console.log(typeof conversation);
-		if (conversation.name == FriendName)
-			query_params.conversation = conversation.id;
+async function getMessages(conversation_id) {
+	const data = await fetch_jwt(APIs.chat.messages, {
+		conversation: conversation_id,
+		limit: 7,
+		offset: 0,
 	});
-	return await fetch_jwt(APIs.chat.messages, query_params);
+	return data;
 }
 
 export default function DM_Conversation({ params: { FriendName } }) {
 	const { socket, data } = useContext(WsChatContext);
+	const [conversation_id] = useState(() => {
+		data.conversations.forEach((conversation) => {
+			if (conversation.name == FriendName) return conversation.id;
+		});
+	});
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
 
 	useEffect(() => {
 		const _getMessages = async () => {
-			const new_messages = await getMessages(
-				FriendName,
-				data.conversations,
-			);
-			console.log("new_messages ==> ", new_messages);
+			const new_messages = await getMessages(conversation_id);
 			setMessages([...messages, ...new_messages.messages]);
 			setMessagesOffset(new_messages.size);
 		};
