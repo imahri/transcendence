@@ -86,4 +86,4 @@ class MessageView(APIView):
 
         messages_arr = [message.as_serialized(user) for message in messages]
 
-        Response({"size": len(messages_arr), "messages": messages_arr})
+        return Response({"size": len(messages_arr), "messages": messages_arr})

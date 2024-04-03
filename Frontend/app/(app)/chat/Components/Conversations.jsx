@@ -98,7 +98,7 @@ export default function Conversations() {
 	const [convState, setConvState] = useConvState();
 	const { socket, data } = useContext(WsChatContext);
 	const [convList, setConvList] = useState(data.conversations);
-	const [convListSize, setConvListSize] = useState(data.size);
+	const [convListOffset, setConvListOffset] = useState(data.size);
 
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>

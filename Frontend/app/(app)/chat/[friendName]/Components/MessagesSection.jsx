@@ -28,7 +28,7 @@ function Message({ messageInfo, send_by, isSent }) {
 				<small
 					className={`${styles.message_time} ${message_time_style}`}
 				>
-					{ToHour12Time(messageInfo.time)}
+					{ToHour12Time(messageInfo.sended_at)}
 				</small>
 			</section>
 		</div>
