@@ -4,9 +4,9 @@ import styles from "./styles/Conversations.module.css";
 import { useContext, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
-import { DummyConversation, DummyPath } from "../DummyData";
 import { useConvState } from "../Hooks/useConvState";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
+import { USER_APP } from "@/app/URLS";
 
 function Unseen({ count }) {
 	return (
@@ -69,7 +69,7 @@ function TimeNotification({ time, unseen_msg }) {
 function Conversation({ info: { name, image, last_message, unseen_msg } }) {
 	const router = useRouter();
 	const [convState, setConvState] = useContext(ConvChatContext);
-	const profileImage = DummyPath; // image in info: it's just a path
+	const profileImage = USER_APP + "/image?path=" + image; // !! For security: Change it to Image object
 
 	const handleClick = () => {
 		if (convState !== name) {

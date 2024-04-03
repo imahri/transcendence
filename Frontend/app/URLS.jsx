@@ -17,7 +17,7 @@ export const PADDLES_URL = `${GAME_APP}/padle`;
 export const BOARDES_URL = `${GAME_APP}/board`;
 export const BADGES_URL = `${GAME_APP}/badge`;
 
-const USER_APP = `${BASE_URL}/user`;
+export const USER_APP = `${BASE_URL}/user`;
 
 export const USER_URL = `${USER_APP}/`;
 export const USER_SEARCH_URL = `${USER_APP}/search`;
