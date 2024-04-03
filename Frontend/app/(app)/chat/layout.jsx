@@ -2,7 +2,8 @@ import { WsChatProvider } from "./context/context";
 import styles from "./styles/layout.module.css";
 import { SideBar } from "./Components/SideBar";
 import { Inter } from "next/font/google";
-import { APIs, fetch_jwt } from "@/Tools/fetch_jwt";
+import { fetch_jwt } from "@/Tools/fetch_jwt_server";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,5 +1,5 @@
+import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { BASE_URL } from "@/app/URLS";
-import { cookies } from "next/headers";
 
 export const APIs = {
 	chat: {
@@ -18,7 +18,7 @@ export const fetch_jwt = async (endpoint, query_params, init) => {
 		query_params === undefined
 			? endpoint
 			: `${endpoint}?${new URLSearchParams(query_params)}`;
-	const token = cookies().get("access_token")?.value;
+	const token = getToken();
 	const headers = new Headers(init?.headers);
 	if (token) headers.set("Authorization", `Bearer ${token}`);
 
