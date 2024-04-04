@@ -96,7 +96,7 @@ function Conversation({ info: { name, image, last_message, unseen_msg } }) {
 
 export default function Conversations() {
 	const [convState, setConvState] = useConvState();
-	const { socket, data } = useContext(WsChatContext);
+	const { user, socket, data } = useContext(WsChatContext);
 	const [convList, setConvList] = useState(data.conversations);
 	const [convListOffset, setConvListOffset] = useState(data.size);
 

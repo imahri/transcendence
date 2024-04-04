@@ -1,12 +1,14 @@
 "use client";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { wsChat } from "@/app/URLS";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { UserContext } from "../../layout";
 
 export const WsChatContext = createContext();
 
 export const WsChatProvider = ({ children, conversations }) => {
 	const [socket, setSocket] = useState(null);
+	const { user, setUser } = useContext(UserContext);
 
 	useEffect(() => {
 		if (!socket) {
@@ -27,7 +29,9 @@ export const WsChatProvider = ({ children, conversations }) => {
 	}, [socket]);
 
 	return (
-		<WsChatContext.Provider value={{ socket: socket, data: conversations }}>
+		<WsChatContext.Provider
+			value={{ user: user, socket: socket, data: conversations }}
+		>
 			{children}
 		</WsChatContext.Provider>
 	);

@@ -26,7 +26,7 @@ function get_conversation_id(data, FriendName) {
 }
 
 export default function DM_Conversation({ params: { FriendName } }) {
-	const { socket, data } = useContext(WsChatContext);
+	const { user, socket, data } = useContext(WsChatContext);
 	const [conversation_id] = useState(get_conversation_id(data, FriendName));
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
@@ -42,16 +42,17 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	}, []);
 
 	const onSend = (new_msg) => {
-		setMessages([
-			...messages,
-			{
-				message: new_msg,
-				time: getCurrentTime(),
-				type: MessageTypes.Sent,
-			},
-		]);
+		let message = {
+			conversation_id: conversation_id,
+			status: MessageTypes.Sent,
+			send_to: FriendName,
+			message: new_msg,
+			sended_at: getCurrentTime(),
+		};
+		socket.send(JSON.stringify(message));
+		setMessages([...messages, message]);
 	};
-
+	// Here
 	return (
 		<div className="w-full h-full">
 			<ProfileBar
@@ -59,7 +60,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 				profileImg={DummyPath}
 				activeStatus={ActiveStatusTypes.Active}
 			/>
-			<MessagesSection send_by={FriendName} messageList={messages} />
+			<MessagesSection FriendName={FriendName} messageList={messages} />
 			<TypingBar onSend={onSend} />
 		</div>
 	);

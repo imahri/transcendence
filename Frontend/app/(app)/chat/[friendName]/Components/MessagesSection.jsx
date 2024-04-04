@@ -16,14 +16,16 @@ function genStyles(bool) {
 	];
 }
 
-function Message({ messageInfo, send_by, isSent }) {
+function Message({ messageInfo, FriendName, isSent }) {
 	const [messageSection_style, message_style, message_time_style] =
 		genStyles(isSent);
 
 	return (
 		<div className={`${styles.messageSection} ${messageSection_style}`}>
 			<section className={`${styles.message} ${message_style}`}>
-				{!isSent && <h3 className={styles.message_name}>{send_by}</h3>}
+				{!isSent && (
+					<h3 className={styles.message_name}>{FriendName}</h3>
+				)}
 				<p className={styles.message_text}>{messageInfo.message}</p>
 				<small
 					className={`${styles.message_time} ${message_time_style}`}
@@ -35,7 +37,7 @@ function Message({ messageInfo, send_by, isSent }) {
 	);
 }
 
-export function MessagesSection({ send_by, messageList }) {
+export function MessagesSection({ FriendName, messageList }) {
 	const scrollRef = useRef();
 
 	useEffect(() => {
@@ -49,7 +51,7 @@ export function MessagesSection({ send_by, messageList }) {
 					return (
 						<Message
 							key={idx}
-							send_by={send_by}
+							FriendName={FriendName}
 							messageInfo={messageInfo}
 							isSent={messageInfo.type === MessageTypes.Sent}
 						/>

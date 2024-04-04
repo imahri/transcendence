@@ -1,7 +1,6 @@
-import json
-from math import exp
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
+from Chat.models import Conversation, Message
 from User_Management.models import User
 
 
@@ -31,13 +30,13 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content):
         try:
-            type = content["type"]
-            if type == "DM":
-                await self.directMessage(content)
+            # type = content["type"]
+            # if type == "DM":               Currently there is Just DM Event
+            await self.directMessage(content)
         except Exception as error:
             await self.send_error(str(error) + " receive_json()")
 
-    async def message(self, content):
+    async def receive_message(self, content):
         """
         {
             type: 'message',
@@ -51,6 +50,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         }
         """
         try:
+            content["status"] = ("received",)
             await self.send_json(content=content)
         except Exception as error:
             await self.send_error(str(error) + " message()")
@@ -58,7 +58,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def directMessage(self, content):
         """
         {
-            type: 'DM',
             send_to: <friend_username>,
             message: <text>,
             time: <current_time>
@@ -67,26 +66,33 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         try:
             send_to = content["send_to"]
             message = content["message"]
-            time = content["time"]
+            sended_at = content["sended_at"]
+            conversation = await database_sync_to_async(Conversation.objects.get)(
+                pk=content["conversation_id"]
+            )
             receiver = self.get_channel_by_user(send_to)
+
+            # ? for handle waiting state
+            # await self.send_json(
+            #     {
+            #         "status": "sent",
+            #         "send_to": send_to,
+            #         "message": message,
+            #         "sended_at": sended_at,
+            #     },
+            # )
+
             await self.channel_layer.send(
                 receiver,
                 {
-                    "type": "message",
-                    "status": "received",
-                    "sender": {"type": "DM", "name": self.user.username},
+                    "type": "receive_message",
+                    "sender": self.user.pk,
                     "message": message,
-                    "time": time,
+                    "sended_at": sended_at,
                 },
             )
-            await self.send_json(
-                {
-                    "type": "message",
-                    "status": "sent",
-                    "receiver": {"type": "DM", "name": send_to},
-                    "message": message,
-                    "time": time,
-                },
+            await database_sync_to_async(Message.new_message)(
+                conversation, self.user, message
             )
         except Exception as error:
             await self.send_error(str(error) + " directMessage()")
