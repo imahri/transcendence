@@ -17,13 +17,17 @@ async function getMessages(conversation_id) {
 	return data;
 }
 
+function get_conversation_id(data, FriendName) {
+	let id;
+	data.conversations.forEach((conversation) => {
+		if (conversation.name == FriendName) id = conversation.id;
+	});
+	return id;
+}
+
 export default function DM_Conversation({ params: { FriendName } }) {
 	const { socket, data } = useContext(WsChatContext);
-	const [conversation_id] = useState(() => {
-		data.conversations.forEach((conversation) => {
-			if (conversation.name == FriendName) return conversation.id;
-		});
-	});
+	const [conversation_id] = useState(get_conversation_id(data, FriendName));
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
 
