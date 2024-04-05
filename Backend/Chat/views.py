@@ -36,7 +36,7 @@ class ConversationView(APIView):
             isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
         )
         conversations = queryset.filter(isExist=True, num_messages__gt=0).order_by(
-            "last_modified"
+            "-last_modified"
         )[
             offset : offset + limit
         ]  # ?? check this later  # !! check the order

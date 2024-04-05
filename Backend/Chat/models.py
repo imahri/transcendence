@@ -70,8 +70,12 @@ class Message(models.Model):
     )
 
     @staticmethod
-    def new_message(conversation, sender, message):
-        return Message(conversation=conversation, sender=sender, message=message).save()
+    def new_message(conversation: Conversation, sender, message):
+        message = Message(
+            conversation=conversation, sender=sender, message=message
+        ).save()
+        conversation.save()
+        return message
 
     def as_serialized(self, user: User):
         from .serializers import MessageSerializer
