@@ -41,8 +41,10 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		_getMessages();
 	}, []);
 
+	// useEffect(() => console.log(messages), [messages]);
+
 	const onSend = (new_msg) => {
-		let message = {
+		const message = {
 			conversation_id: conversation_id,
 			status: MessageTypes.Sent,
 			send_to: FriendName,
@@ -50,14 +52,27 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			sended_at: getCurrentTime(),
 		};
 		socket.send(JSON.stringify(message));
+		console.log("onSend ===>", messages, message);
 		setMessages([...messages, message]);
 	};
-	// Here
+
+	const onReceive = (new_msg) => {
+		const message = JSON.parse(new_msg);
+		console.log("onReceive ===>", messages, message);
+		setMessages([...messages, message]); // Somthing wrong in set state
+	};
+
+	useEffect(() => {
+		if (!socket) return;
+		socket.onmessage = (e) => onReceive(e.data);
+		console.log("===> ", socket);
+	}, [socket]);
+
 	return (
 		<div className="w-full h-full">
 			<ProfileBar
 				name={FriendName}
-				profileImg={DummyPath}
+				profileImg={user.info.profile_img}
 				activeStatus={ActiveStatusTypes.Active}
 			/>
 			<MessagesSection FriendName={FriendName} messageList={messages} />

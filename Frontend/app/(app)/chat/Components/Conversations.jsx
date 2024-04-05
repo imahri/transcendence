@@ -44,11 +44,13 @@ function FriendInfo({ friend_name, last_msg }) {
 			<h3 className="pt-4 text-start text-xl font-semibold text-white">
 				{friend_name}
 			</h3>
-			<small className="mt-2 text-start font-medium text-[#7D7D7D]">
-				{last_msg.length > 20
-					? `${last_msg.substring(0, 20)}...`
-					: last_msg}
-			</small>
+			{last_msg && (
+				<small className="mt-2 text-start font-medium text-[#7D7D7D]">
+					{last_msg.length > 20
+						? `${last_msg.substring(0, 20)}...`
+						: last_msg}
+				</small>
+			)}
 		</div>
 	);
 }
@@ -66,10 +68,13 @@ function TimeNotification({ time, unseen_msg }) {
 	);
 }
 
-function Conversation({ info: { name, image, last_message, unseen_msg } }) {
+function Conversation({
+	user,
+	info: { name, image, last_message, unseen_msg },
+}) {
 	const router = useRouter();
 	const [convState, setConvState] = useContext(ConvChatContext);
-	const profileImage = USER_APP + "/image?path=" + image; // !! For security: Change it to Image object
+	// !! For security: Change it to Image object
 
 	const handleClick = () => {
 		if (convState !== name) {
@@ -82,10 +87,13 @@ function Conversation({ info: { name, image, last_message, unseen_msg } }) {
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${convState == name ? styles.focus_section : ""}`}
+			className={`${styles.section} ${convState == name && styles.focus_section}`}
 		>
-			<ProfileImage src={profileImage} />
-			<FriendInfo friend_name={name} last_msg={last_message.message} />
+			<ProfileImage src={user.info.profile_img} />
+			<FriendInfo
+				friend_name={name}
+				last_msg={convState != name && last_message.message}
+			/>
 			<TimeNotification
 				time={last_message.sended_at}
 				unseen_msg={unseen_msg}
@@ -104,7 +112,7 @@ export default function Conversations() {
 		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<div className={styles.container}>
 				{convList.map((conversation, idx) => (
-					<Conversation key={idx} info={conversation} />
+					<Conversation key={idx} user={user} info={conversation} />
 				))}
 			</div>
 		</ConvChatContext.Provider>

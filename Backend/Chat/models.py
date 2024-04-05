@@ -77,5 +77,5 @@ class Message(models.Model):
         from .serializers import MessageSerializer
 
         data = dict(MessageSerializer(self).data)
-        data["type"] = "sent" if data["sender"] == user.pk else "received"
+        data["status"] = "sent" if data["sender"] == user.pk else "received"
         return data

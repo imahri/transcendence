@@ -40,23 +40,21 @@ function Message({ messageInfo, FriendName, isSent }) {
 export function MessagesSection({ FriendName, messageList }) {
 	const scrollRef = useRef();
 
-	useEffect(() => {
-		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-	}, [messageList]);
+	// useEffect(() => {
+	// 	scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+	// }, [messageList]);
 
 	return (
 		<div ref={scrollRef} className={styles.container}>
 			{messageList &&
-				messageList.map((messageInfo, idx) => {
-					return (
-						<Message
-							key={idx}
-							FriendName={FriendName}
-							messageInfo={messageInfo}
-							isSent={messageInfo.type === MessageTypes.Sent}
-						/>
-					);
-				})}
+				messageList.map((messageInfo, idx) => (
+					<Message
+						key={idx}
+						FriendName={FriendName}
+						messageInfo={messageInfo}
+						isSent={messageInfo.status === MessageTypes.Sent}
+					/>
+				))}
 		</div>
 	);
 }

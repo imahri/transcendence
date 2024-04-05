@@ -7,7 +7,7 @@ export function TypingBar({ onSend }) {
 	const inputMessage = useRef();
 
 	const handleClick = () => {
-		if (inputMessage.current.value.length === 0) return;
+		if (inputMessage.current.value.trim().length === 0) return;
 		onSend(inputMessage.current.value);
 		inputMessage.current.value = "";
 	};
