@@ -40,9 +40,9 @@ function Message({ messageInfo, FriendName, isSent }) {
 export function MessagesSection({ FriendName, messageList }) {
 	const scrollRef = useRef();
 
-	// useEffect(() => {
-	// 	scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-	// }, [messageList]);
+	useEffect(() => {
+		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+	}, [messageList]);
 
 	return (
 		<div ref={scrollRef} className={styles.container}>

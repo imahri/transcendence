@@ -41,7 +41,15 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		_getMessages();
 	}, []);
 
-	// useEffect(() => console.log(messages), [messages]);
+	useEffect(() => {
+		if (!socket) return;
+		console.log(messages);
+		console.log("===> ", socket);
+	}, [socket]);
+
+	useEffect(() => {
+		if (socket) socket.onmessage = (e) => onReceive(messages, e.data);
+	}, [messages, FriendName]);
 
 	const onSend = (new_msg) => {
 		const message = {
@@ -52,21 +60,15 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			sended_at: getCurrentTime(),
 		};
 		socket.send(JSON.stringify(message));
-		console.log("onSend ===>", messages, message);
+		console.log(messages);
 		setMessages([...messages, message]);
 	};
 
-	const onReceive = (new_msg) => {
+	const onReceive = (messages, new_msg) => {
 		const message = JSON.parse(new_msg);
-		console.log("onReceive ===>", messages, message);
+		console.log(messages);
 		setMessages([...messages, message]); // Somthing wrong in set state
 	};
-
-	useEffect(() => {
-		if (!socket) return;
-		socket.onmessage = (e) => onReceive(e.data);
-		console.log("===> ", socket);
-	}, [socket]);
 
 	return (
 		<div className="w-full h-full">
