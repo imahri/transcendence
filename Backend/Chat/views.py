@@ -63,7 +63,7 @@ class MessageView(APIView):
         offset = int(request.query_params.get("offset"))
 
         messages = Message.objects.filter(conversation=conversation).order_by(
-            "sended_at"
+            "-sended_at"
         )[offset : offset + limit]
 
         """

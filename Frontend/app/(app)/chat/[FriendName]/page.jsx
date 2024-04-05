@@ -11,9 +11,12 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 async function getMessages(conversation_id) {
 	const data = await fetch_jwt(APIs.chat.messages, {
 		conversation: conversation_id,
-		limit: 7,
+		limit: 10,
 		offset: 0,
 	});
+	data.messages.sort((a, b) =>
+		a.sended_at > b.sended_at ? 1 : a.sended_at < b.sended_at ? -1 : 0,
+	);
 	return data;
 }
 
@@ -34,18 +37,12 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	useEffect(() => {
 		const _getMessages = async () => {
 			const new_messages = await getMessages(conversation_id);
-			setMessages([...messages, ...new_messages.messages]);
+			setMessages(new_messages.messages);
 			setMessagesOffset(new_messages.size);
 		};
 
 		_getMessages();
-	}, []);
-
-	useEffect(() => {
-		if (!socket) return;
-		console.log(messages);
-		console.log("===> ", socket);
-	}, [socket]);
+	}, [FriendName]);
 
 	useEffect(() => {
 		if (socket) socket.onmessage = (e) => onReceive(messages, e.data);
@@ -60,14 +57,14 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			sended_at: getCurrentTime(),
 		};
 		socket.send(JSON.stringify(message));
-		console.log(messages);
+		console.log(message);
 		setMessages([...messages, message]);
 	};
 
 	const onReceive = (messages, new_msg) => {
 		const message = JSON.parse(new_msg);
-		console.log(messages);
-		setMessages([...messages, message]); // Somthing wrong in set state
+		if (FriendName == message.sender) setMessages([...messages, message]);
+		console.log(message);
 	};
 
 	return (

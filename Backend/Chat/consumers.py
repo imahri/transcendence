@@ -81,12 +81,13 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             # )
 
             receiver = self.get_channel_by_user(send_to)
+            print("receive a new message ", receiver)
             if receiver is not None:  # is online
                 await self.channel_layer.send(
                     receiver,
                     {
                         "type": "receive_message",
-                        "sender": self.user.pk,
+                        "sender": self.user.username,
                         "message": message,
                         "sended_at": sended_at,
                     },
@@ -103,5 +104,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"type": "error", "error": error_msg})
 
     async def disconnect(self, code):
+        print(self.channels)
         self.channels.pop(self.user.username)
+        print(self.channels)
         await self.close(code)
