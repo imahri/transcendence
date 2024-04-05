@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import styles from "./styles/ProfileBar.module.css";
@@ -21,6 +22,8 @@ function Status({ status }) {
 export function ProfileBar({ name, profileImg, activeStatus }) {
 	const route = useRouter();
 	const openProfileSection = () => alert("Profile Section not implemented");
+
+	console.log(activeStatus);
 
 	return (
 		<div className={styles.container}>

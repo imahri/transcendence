@@ -7,7 +7,7 @@
 }
 
 .profileBar button {
-	@apply w-[20%] h-full flex items-center;
+	@apply w-72 h-full flex items-center;
 }
 
 .profileBar_Image {
@@ -23,7 +23,7 @@
 }
 
 .profileBar h3 {
-	@apply text-[#B4B4B4] font-light;
+	@apply text-start text-[#B4B4B4] font-light;
 }
 
 .status {
