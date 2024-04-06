@@ -8,7 +8,7 @@ export function SideBar() {
 		<>
 			<aside className={styles.sidebar}>
 				<Searchbar style_ops="chat" />
-				<Separator />
+				<Separator className={"w-72 h-1"} />
 				<Conversations />
 				<div className="bg-inherit w-full h-[10%]"></div>
 			</aside>
