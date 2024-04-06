@@ -14,7 +14,7 @@
 }
 
 .message_name {
-	@apply text-[#A0A0A0] font-semibold;
+	@apply text-[#A0A0A0] font-medium text-sm;
 }
 
 .message_text {

@@ -13,17 +13,20 @@ export const ActiveStatusTypes = Object.freeze({
 
 function Status({ status }) {
 	return (
-		<div
-			className={`${styles.status} ${status === ActiveStatusTypes.Active ? "bg-green-400" : "bg-red-700"}`}
-		></div>
+		<div className="flex">
+			<div className="flex justify-center items-center mr-2">
+				<div
+					className={`${styles.status} ${status === ActiveStatusTypes.Active ? "bg-green-400" : "bg-red-700"}`}
+				></div>
+			</div>
+			<h3>{status}</h3>
+		</div>
 	);
 }
 
 export function ProfileBar({ name, profileImg, activeStatus }) {
 	const route = useRouter();
 	const openProfileSection = () => alert("Profile Section not implemented");
-
-	console.log(activeStatus);
 
 	return (
 		<div className={styles.container}>
@@ -50,9 +53,8 @@ export function ProfileBar({ name, profileImg, activeStatus }) {
 					/>
 					<section className={styles.profileInfo}>
 						<h2>{name}</h2>
-						<h3>{activeStatus}</h3>
+						<Status status={activeStatus} />
 					</section>
-					<Status status={activeStatus} />
 				</button>
 			</div>
 			<div className={styles.options}>
