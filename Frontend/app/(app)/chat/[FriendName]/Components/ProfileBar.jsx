@@ -24,9 +24,8 @@ function Status({ status }) {
 	);
 }
 
-export function ProfileBar({ name, profileImg, activeStatus }) {
+export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
 	const route = useRouter();
-	const openProfileSection = () => alert("Profile Section not implemented");
 
 	return (
 		<div className={styles.container}>
@@ -43,7 +42,7 @@ export function ProfileBar({ name, profileImg, activeStatus }) {
 				/>
 			</button>
 			<div className={styles.profileBar}>
-				<button onClick={openProfileSection}>
+				<button onClick={onOpenProfile}>
 					<Image
 						className={styles.profileBar_Image}
 						width={100}

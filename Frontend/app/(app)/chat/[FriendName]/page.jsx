@@ -7,6 +7,7 @@ import { DummyMessages, DummyPath } from "../DummyData";
 import { getCurrentTime } from "@/Tools/getCurrentTime";
 import { WsChatContext } from "../context/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
 
 async function getMessages(conversation_id) {
 	const data = await fetch_jwt(APIs.chat.messages, {
@@ -33,6 +34,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	const [conversation_id] = useState(get_conversation_id(data, FriendName));
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
+	const [showProfile, setShowProfile] = useState(true); // !! change it to false
 
 	useEffect(() => {
 		const _getMessages = async () => {
@@ -68,14 +70,33 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	};
 
 	return (
-		<div className="w-full h-full">
-			<ProfileBar
-				name={FriendName}
-				profileImg={user.info.profile_img}
-				activeStatus={ActiveStatusTypes.Active}
-			/>
-			<MessagesSection FriendName={FriendName} messageList={messages} />
-			<TypingBar onSend={onSend} />
-		</div>
+		<>
+			<div className="flex-grow h-screen">
+				<ProfileBar
+					name={FriendName}
+					profileImg={user.info.profile_img}
+					activeStatus={ActiveStatusTypes.Active}
+					onOpenProfile={() =>
+						showProfile
+							? setShowProfile(false)
+							: setShowProfile(true)
+					}
+				/>
+				<MessagesSection
+					FriendName={FriendName}
+					messageList={messages}
+				/>
+				<TypingBar onSend={onSend} />
+			</div>
+			{showProfile == true && (
+				<ProfileSection
+					FriendInfo={{
+						name: FriendName,
+						status: ActiveStatusTypes.Active,
+					}}
+					setShowProfile={setShowProfile}
+				/>
+			)}
+		</>
 	);
 }
