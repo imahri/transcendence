@@ -12,14 +12,11 @@ export function TypingBar({ onSend }) {
 		inputMessage.current.value = "";
 	};
 
-	const handleEnterKey = (e) => {
-		if (e.key === "Enter") handleClick();
-	};
 	return (
 		<div className={styles.container}>
 			<label className={styles.label}>
 				<input
-					onKeyDown={handleEnterKey}
+					onKeyDown={(e) => e.key === "Enter" && handleClick()}
 					ref={inputMessage}
 					className={styles.input}
 					type="text"

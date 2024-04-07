@@ -1,11 +1,11 @@
 .container {
 	@apply h-screen basis-[35%] bg-[#313131];
-	@apply flex flex-col  items-center justify-start;
+	@apply flex flex-col  items-center justify-between;
 	@apply rounded-l-[3rem];
 }
 
 .profile {
-	@apply w-full mt-10 flex flex-col justify-end items-center;
+	@apply w-full pt-10 flex flex-col justify-end items-center;
 }
 
 .profile_img_container {
@@ -40,8 +40,13 @@
 	@apply w-56 h-56;
 }
 
+.badge_section_list {
+	@apply w-full min-h-10 flex flex-row justify-evenly pt-3;
+}
+
+
 .footer {
-	@apply h-10 grid place-items-center;
+	@apply w-full grid place-items-center pb-5;
 	@apply text-[#A0A0A0] text-xl;
 }
 
