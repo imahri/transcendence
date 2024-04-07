@@ -14,15 +14,14 @@ export function TypingBar({ onSend }) {
 
 	return (
 		<div className={styles.container}>
-			<label className={styles.label}>
+			<label>
 				<input
 					onKeyDown={(e) => e.key === "Enter" && handleClick()}
 					ref={inputMessage}
-					className={styles.input}
 					type="text"
 					placeholder="Type a message..."
 				/>
-				<button className={styles.button} onClick={handleClick}>
+				<button onClick={handleClick}>
 					<Image
 						width={500}
 						height={500}

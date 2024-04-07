@@ -2,20 +2,20 @@
 	@apply h-[10%] w-full flex justify-center pt-4;
 }
 
-.label {
+.container label {
 	@apply w-[95%] h-[75%] pl-14 flex justify-start items-center rounded-2xl bg-[#303030];
 }
 
-.input {
-	@apply grow h-[70%] bg-inherit pb-1;
+.container input {
+	@apply w-full h-[70%] bg-inherit pb-1;
 	@apply font-normal text-2xl text-[#d6d6d6];
 	@apply focus:outline-none placeholder:cursor-default placeholder:font-normal placeholder:text-2xl placeholder:text-[#B4B4B4];
 }
 
-.button {
-	@apply h-full w-[5%] grid place-items-center;
+.container button {
+	@apply h-full grid place-items-center;
 }
 
 .img {
-	@apply w-[40%] h-[40%];
+	@apply w-8 h-8 mx-6;
 }

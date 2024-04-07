@@ -43,7 +43,7 @@
 }
 
 .exitArrow {
-	@apply w-[5%] h-full flex justify-center items-center;
+	@apply ml-5 w-16 h-full flex justify-center items-center;
 }
 
 .exitArrow_Image {
