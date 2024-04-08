@@ -28,7 +28,7 @@ export default async function ChatLayout({ children }) {
 	return (
 		<WsChatProvider conversations={data}>
 			<div
-				className={`h-screen w-full m-0 flex flex-row bg-[#202020] ${inter.className}`}
+				className={`h-screen w-full flex bg-[#202020] ${inter.className}`}
 			>
 				<SideBar />
 				<main className={styles.main}>{children}</main>
