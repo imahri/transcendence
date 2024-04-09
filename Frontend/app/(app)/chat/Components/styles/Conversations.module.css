@@ -17,5 +17,5 @@
 }
 
 .img {
-	@apply h-2/3 w-2/3 rounded-full;
+	@apply h-14 w-14 rounded-full;
 }

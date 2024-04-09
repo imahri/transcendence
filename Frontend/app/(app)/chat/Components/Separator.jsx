@@ -3,7 +3,7 @@ import React from "react";
 export function Separator({ className }) {
 	return (
 		<div
-			className={`m-0 border-none rounded bg-[#303030] ${className}`}
+			className={`m-0 min-h-1 border-none rounded bg-[#303030] ${className}`}
 		></div>
 	);
 }

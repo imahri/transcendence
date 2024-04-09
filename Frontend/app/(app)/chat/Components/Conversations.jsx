@@ -57,8 +57,8 @@ function FriendInfo({ friend_name, last_msg }) {
 
 function TimeNotification({ time, unseen_msg }) {
 	return (
-		<div className="h-full w-[17%] rounded-r-sm flex justify-center items-center flex-col">
-			<small className="mr-2 mt-2 font-light text-[#7D7D7D]">
+		<div className="h-full w-[18%] rounded-r-sm flex justify-center items-center flex-col">
+			<small className="mr-2 mt-2 font-light text-xs text-[#7D7D7D]">
 				{ToHour12Time(time)}
 			</small>
 			<div className="flex-grow w-full flex justify-center items-center">

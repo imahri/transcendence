@@ -1,5 +1,5 @@
 .container {
-	@apply h-screen basis-[35%] bg-[#313131];
+	@apply h-full w-[40rem] bg-[#313131];
 	@apply flex flex-col  items-center justify-between;
 	@apply rounded-l-[3rem];
 }

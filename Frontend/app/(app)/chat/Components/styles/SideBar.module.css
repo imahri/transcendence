@@ -1,3 +1,4 @@
 .sidebar {
-	@apply bg-inherit flex basis-[35%] justify-start  items-center flex-col;
+	@apply bg-inherit flex h-full w-[40rem] justify-start  items-center flex-col;
+	@apply xs:hidden sm:hidden md:hidden lg:hidden xl:hidden;
 }
