@@ -1,12 +1,17 @@
+"use client";
 import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
 import { Separator, Separators } from "./Separator";
 import Conversations from "./Conversations";
 import styles from "./styles/SideBar.module.css";
+import { usePathname } from "next/navigation";
 
 export function SideBar() {
+	const showSideBar = usePathname() === "/chat";
 	return (
 		<>
-			<aside className={styles.sidebar}>
+			<aside
+				className={`${showSideBar ? styles.sidebar : styles.sidebar_h}`}
+			>
 				<Searchbar style_ops="chat" />
 				<Separator className={"w-72 h-1"} />
 				<Conversations />
