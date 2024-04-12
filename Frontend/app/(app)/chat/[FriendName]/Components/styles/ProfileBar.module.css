@@ -30,17 +30,23 @@
 	@apply w-2.5 h-2.5 rounded-full;
 }
 
-.options {
-	@apply w-[10%] h-full flex justify-center items-center;
-}
+/* .options {
+	@apply w-[15%] h-full flex justify-center items-center;
+} */
 
-.options button {
+
+
+/* .options {
+	@apply w-[15%] h-full flex justify-center items-center;
+} */
+
+/* .options button {
 	@apply w-72 h-9 flex justify-center items-center;
 }
 
 .options_Image {
 	@apply h-full;
-}
+} */
 
 .exitArrow {
 	@apply ml-5 w-16 h-full flex justify-center items-center;

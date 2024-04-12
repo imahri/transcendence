@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import styles from "./styles/ProfileBar.module.css";
-import optionsIcon from "./assets/options_icon.svg";
+// import optionsIcon from "./assets/options_icon.svg";
 import exitArrow from "./assets/exit_arrow.svg";
 import { useRouter } from "next/navigation";
 
@@ -24,23 +24,32 @@ function Status({ status }) {
 	);
 }
 
+const ExitArrow = () => (
+	<button className={styles.exitArrow} onClick={() => route.push("/chat")}>
+		<Image
+			className={styles.exitArrow_Image}
+			width={100}
+			height={100}
+			src={exitArrow}
+			alt="exit arrow"
+		/>
+	</button>
+);
+
+const InviteToPlay = () => (
+	<div className="w-52 h-full grid place-content-center">
+		<button className="bg-[#E1E1E1] w-40 h-10 rounded-3xl">
+			<span className="text-black font-bold text-lg">Invite To Play</span>
+		</button>
+	</div>
+);
+
 export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
 	const route = useRouter();
 
 	return (
 		<div className={styles.container}>
-			<button
-				className={styles.exitArrow}
-				onClick={() => route.push("/chat")}
-			>
-				<Image
-					className={styles.exitArrow_Image}
-					width={100}
-					height={100}
-					src={exitArrow}
-					alt="exit arrow"
-				/>
-			</button>
+			<ExitArrow />
 			<div className={styles.profileBar}>
 				<button onClick={onOpenProfile}>
 					<Image
@@ -56,17 +65,7 @@ export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
 					</section>
 				</button>
 			</div>
-			<div className={styles.options}>
-				<button>
-					<Image
-						className={styles.options_Image}
-						width={100}
-						height={100}
-						src={optionsIcon}
-						alt="options icon"
-					/>
-				</button>
-			</div>
+			<InviteToPlay />
 		</div>
 	);
 }
