@@ -1,6 +1,6 @@
 .container {
 	@apply h-full w-[30rem] bg-[#313131];
-	@apply flex flex-col  items-center justify-between;
+	@apply flex flex-col  items-center justify-end space-y-16;
 	@apply rounded-l-[3rem];
 }
 
@@ -33,17 +33,24 @@
 }
 
 .badge_section {
-	@apply w-full flex flex-col justify-center items-center;
+	@apply w-full flex flex-col justify-center items-center mb-7;
 }
 
 .badge_section_img {
-	@apply w-56 h-56;
+	@apply w-56 h-56 mb-5;
 }
 
 .badge_section_list {
 	@apply w-full min-h-10 flex flex-row justify-evenly pt-3;
 }
 
+.flex_col_container {
+	@apply flex flex-col justify-center items-center;
+}
+
+.svg_container {
+	@apply flex justify-center items-center w-10 h-10;
+}
 
 .footer {
 	@apply w-full grid place-items-center pb-5;
