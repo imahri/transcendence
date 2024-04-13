@@ -6,7 +6,7 @@ import styles from "./styles/SideBar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { WsChatContext } from "../context/context";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 
 function MicroProfile({ user }) {
 	const router = useRouter();
@@ -48,9 +48,19 @@ const Add_icon = () => (
 );
 
 function StartConversation() {
+	const _ref = useRef();
+	const handleScale = () =>
+		_ref.current.classList.value.match("scale-100") === null
+			? _ref.current.classList.add("scale-100")
+			: _ref.current.classList.remove("scale-100");
+
 	return (
-		<button>
+		<button className="group" onClick={handleScale}>
 			<Add_icon />
+			<div
+				ref={_ref}
+				className="absolute bottom-20 w-[20rem] h-[33rem] bg-[#434343] rounded-3xl  transition-all duration-75 scale-0 origin-bottom-left"
+			></div>
 		</button>
 	);
 }
