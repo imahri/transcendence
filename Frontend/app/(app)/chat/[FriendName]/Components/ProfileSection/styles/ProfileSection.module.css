@@ -1,7 +1,7 @@
 .container {
-	@apply h-full w-[25rem] bg-[#313131];
+	@apply h-full w-96 bg-[#313131];
 	@apply flex flex-col  items-center justify-end space-y-16;
-	@apply rounded-l-[3rem];
+	@apply absolute right-0 rounded-l-[3rem];
 }
 
 .profile {
