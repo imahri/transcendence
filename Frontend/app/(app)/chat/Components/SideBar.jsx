@@ -3,14 +3,18 @@ import { Searchbar } from "@/app/(app)/searchBar/Searchbar";
 import { Separator, Separators } from "./Separator";
 import Conversations from "./Conversations";
 import styles from "./styles/SideBar.module.css";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { WsChatContext } from "../context/context";
 import { useContext } from "react";
 
 function MicroProfile({ user }) {
+	const router = useRouter();
 	return (
-		<div className="w-full h-20 flex justify-start items-center text-white">
+		<button
+			className="w-52 h-20 flex justify-start items-center text-slate-200"
+			onClick={() => router.push("/profile")}
+		>
 			<Image
 				className={"h-12 w-12 rounded-full mr-3"}
 				src={user.info.profile_img}
@@ -18,13 +22,13 @@ function MicroProfile({ user }) {
 				height={200}
 				alt="profile image"
 			/>
-			<div className="flex flex-col">
-				<span className="font-semibold text-xl">
+			<div className="flex flex-col items-start">
+				<span className="font-semibold text-lg">
 					{user.username.toUpperCase()}
 				</span>
-				<span className="font-light text-sm">{`${user.first_name} ${user.last_name}`}</span>
+				<span className="font-normal text-gray-300 text-xs">{`${user.first_name} ${user.last_name}`}</span>
 			</div>
-		</div>
+		</button>
 	);
 }
 
@@ -62,7 +66,7 @@ export function SideBar() {
 				<Searchbar style_ops="chat" />
 				<Separator className={"w-72 h-1"} />
 				<Conversations />
-				<div className="w-full h-[7rem] flex py-4 px-12 ">
+				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
 					<MicroProfile user={user} />
 					<StartConversation />
 				</div>
