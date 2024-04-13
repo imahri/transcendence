@@ -14,7 +14,7 @@ export const metadata = {
 async function getConversations() {
 	try {
 		const data = await fetch_jwt(APIs.chat.conversations, {
-			limit: 7,
+			limit: 12,
 			offset: 0,
 		});
 		return data;
