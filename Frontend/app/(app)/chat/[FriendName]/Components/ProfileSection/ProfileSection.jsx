@@ -10,6 +10,7 @@ import g_gold from "./assets/g_gold.svg";
 import g_platinum from "./assets/g_platinum.svg";
 import g_master from "./assets/g_master.svg";
 import g_grandmaster from "./assets/g_grandmaster.svg";
+import { useRouter } from "next/navigation";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -103,6 +104,7 @@ const Block_Icon = () => (
 );
 
 export function ProfileSection({ FriendInfo }) {
+	const router = useRouter();
 	const profile_img = DummyPath;
 	const Nickname = "obmium";
 	const Wallet = "150 $";
@@ -124,10 +126,16 @@ export function ProfileSection({ FriendInfo }) {
 				<h1>{FriendInfo.name}</h1>
 				<small>{FriendInfo.status}</small>
 				<div className="w-full flex justify-evenly items-center text-white font-medium text-xs mt-5">
-					<button className={styles.flex_col_container}>
+					<button
+						onClick={() =>
+							router.push(`/profile/${FriendInfo.name}`)
+						}
+						className={styles.flex_col_container}
+					>
 						<Profile_Icon />
 						<span>View Profile</span>
 					</button>
+					{/* TODO: add block */}
 					<button className={styles.flex_col_container}>
 						<Block_Icon />
 						<span>Block</span>
