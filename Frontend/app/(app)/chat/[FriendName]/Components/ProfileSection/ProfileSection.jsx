@@ -56,6 +56,7 @@ const BadgeSection = ({ Grade }) => (
 const Profile_Icon = () => (
 	<div className={styles.svg_container}>
 		<svg
+			className="w-[30px] h-[30px]"
 			width="22"
 			height="22"
 			viewBox="0 0 22 22"
@@ -80,6 +81,7 @@ const Profile_Icon = () => (
 const Block_Icon = () => (
 	<div className={styles.svg_container}>
 		<svg
+			className="w-[33px] h-[34px]"
 			width="28"
 			height="29"
 			viewBox="0 0 28 29"
