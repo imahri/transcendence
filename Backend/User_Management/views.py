@@ -102,3 +102,16 @@ def searchView(request):
         return Response({'error': str(no_found)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as error:
         return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+# Here
+# @api_view(["GET"])
+# def getFriendView(request):
+#     user: User = request.user
+#     for friend_rl in user.friends:
+#         pass
+#     response = []
+#     for user in founded_users:
+#         userData = dict(UserSerializer(user).data)
+#         userData['img'] = dict(user.get_info())['profile_img']
+#         response.append(userData)
+#     return Response(data=response)
