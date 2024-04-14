@@ -6,31 +6,57 @@ import styles from "./styles/SideBar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { WsChatContext } from "../context/context";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 
-function MicroProfile({ user }) {
-	const router = useRouter();
-	return (
-		<button
-			className="w-52 h-20 flex justify-start items-center text-slate-200"
-			onClick={() => router.push("/profile")}
-		>
-			<Image
-				className={"h-12 w-12 rounded-full mr-3"}
-				src={user.info.profile_img}
-				width={200}
-				height={200}
-				alt="profile image"
-			/>
-			<div className="flex flex-col items-start">
-				<span className="font-semibold text-lg">
-					{user.username.toUpperCase()}
-				</span>
-				<span className="font-normal text-gray-300 text-xs">{`${user.first_name} ${user.last_name}`}</span>
-			</div>
-		</button>
-	);
-}
+const MicroProfile = ({ router, user }) => (
+	<button
+		className="w-52 h-20 flex justify-start items-center text-slate-200"
+		onClick={() => router.push("/profile")}
+	>
+		<Image
+			className={"h-12 w-12 rounded-full mr-3"}
+			src={user.info.profile_img}
+			width={200}
+			height={200}
+			alt="profile image"
+		/>
+		<div className="flex flex-col items-start">
+			<span className="font-semibold text-lg">
+				{user.username.toUpperCase()}
+			</span>
+			<span className="font-normal text-gray-300 text-xs">{`${user.first_name} ${user.last_name}`}</span>
+		</div>
+	</button>
+);
+
+// {
+//     "id": 2,
+//     "email": "testuser@gmail.com",
+//     "username": "testuser",
+//     "first_name": "testuser",
+//     "last_name": "testuser",
+//     "img": "http://localhost:8000/user/image?path=/default/default.png"
+// }
+
+const MicroProfileFriend = ({ router, friend }) => (
+	<button
+		className="w-52 h-20 flex justify-center items-center text-slate-200 my-3"
+		onClick={() => router.push("/profile")}
+	>
+		<Image
+			className={"h-10 w-10 rounded-full mr-3"}
+			src={friend.img}
+			width={200}
+			height={200}
+			alt="profile image"
+		/>
+		<div className="flex flex-col items-start">
+			<span className="font-semibold text-md">{friend.username}</span>
+			<span className="font-normal text-gray-300 text-xs">{`${friend.first_name} ${friend.last_name}`}</span>
+		</div>
+	</button>
+);
 
 const Add_icon = () => (
 	<svg
@@ -47,20 +73,45 @@ const Add_icon = () => (
 	</svg>
 );
 
-function StartConversation() {
+function StartConversation({ router }) {
+	const [friendList, setFriendList] = useState([]);
+	const [visible, setVisible] = useState(false);
 	const _ref = useRef();
-	const handleScale = () =>
-		_ref.current.classList.value.match("scale-100") === null
-			? _ref.current.classList.add("scale-100")
-			: _ref.current.classList.remove("scale-100");
+	const handleScale = () => {
+		visible
+			? _ref.current.classList.remove("scale-100")
+			: _ref.current.classList.add("scale-100");
+		setVisible(!visible);
+	};
+
+	useEffect(() => {
+		if (visible) {
+			const get_friends = async () => {
+				const data = await fetch_jwt(APIs.user.friends);
+				setFriendList(data);
+				console.log(data);
+			};
+			get_friends();
+		}
+	}, [visible]);
 
 	return (
 		<button className="group" onClick={handleScale}>
 			<Add_icon />
 			<div
 				ref={_ref}
-				className="absolute bottom-20 w-[20rem] h-[33rem] bg-[#434343] rounded-3xl  transition-all duration-75 scale-0 origin-bottom-left"
-			></div>
+				className="absolute left-[22rem] bottom-20 w-[15rem] h-[33rem] bg-[#222222] rounded-3xl  transition-all duration-75 scale-0 origin-bottom
+				flex flex-col items-center justify-start overflow-y-scroll scrollbar-hide
+				"
+			>
+				{friendList.map((friend, idx) => (
+					<MicroProfileFriend
+						key={idx}
+						router={router}
+						friend={friend}
+					/>
+				))}
+			</div>
 		</button>
 	);
 }
@@ -68,6 +119,7 @@ function StartConversation() {
 export function SideBar() {
 	const showSideBar = usePathname() === "/chat";
 	const { user, socket, data } = useContext(WsChatContext);
+	const router = useRouter();
 	return (
 		<>
 			<aside
@@ -77,8 +129,8 @@ export function SideBar() {
 				<Separator className={"w-72 h-1"} />
 				<Conversations />
 				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
-					<MicroProfile user={user} />
-					<StartConversation />
+					<MicroProfile router={router} user={user} />
+					<StartConversation router={router} />
 				</div>
 			</aside>
 			<Separators />

@@ -6,6 +6,9 @@ export const APIs = {
 		conversations: `${BASE_URL}/chat/conversations`,
 		messages: `${BASE_URL}/chat/messages`,
 	},
+	user: {
+		friends: `${BASE_URL}/user/friends`,
+	},
 	// ....
 };
 
