@@ -42,22 +42,17 @@ class UserView(APIView):
         except Exception as error:
             return Response({"error": str(error)}, status=400)
 
-        
-
     @staticmethod
     @api_view(["GET"])
     def get_user(request):
         try:
             username = request.query_params.get("username")
-            user = User.objects.get(username=username);
+            user = User.objects.get(username=username)
             userObj = dict(UserSerializer(user).data)
-            userObj["info"] = InfoSerializer(
-                Info.objects.get(user=user.pk)
-            ).data
+            userObj["info"] = InfoSerializer(Info.objects.get(user=user.pk)).data
             return Response({"user": userObj})
         except Exception as error:
             return Response({"error": str(error)}, status=400)
-
 
     def delete(self, request):
         try:
@@ -95,23 +90,29 @@ def searchView(request):
         response = []
         for user in founded_users:
             userData = dict(UserSerializer(user).data)
-            userData['img'] = dict(user.get_info())['profile_img']
+            userData["img"] = dict(user.get_info())["profile_img"]
             response.append(userData)
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
-        return Response({'error': str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as error:
-        return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
 
-# Here
-# @api_view(["GET"])
-# def getFriendView(request):
-#     user: User = request.user
-#     for friend_rl in user.friends:
-#         pass
-#     response = []
-#     for user in founded_users:
-#         userData = dict(UserSerializer(user).data)
-#         userData['img'] = dict(user.get_info())['profile_img']
-#         response.append(userData)
-#     return Response(data=response)
+
+@api_view(["GET"])
+def getFriendView(request):
+    try:
+        user: User = request.user
+        if not user.friends.exists():
+            raise ObjectDoesNotExist("No results")
+        founded_users = [friend_rl.friend for friend_rl in user.friends]
+        response = []
+        for user in founded_users:
+            userData = dict(UserSerializer(user).data)
+            userData["img"] = dict(user.get_info())["profile_img"]
+            response.append(userData)
+        return Response(data=response)
+    except ObjectDoesNotExist as no_found:
+        return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)

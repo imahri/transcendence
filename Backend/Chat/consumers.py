@@ -104,7 +104,5 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"type": "error", "error": error_msg})
 
     async def disconnect(self, code):
-        print(self.channels)
-        self.channels.pop(self.user.username)
-        print(self.channels)
+        del self.channels[self.user.username]
         await self.close(code)

@@ -91,7 +91,7 @@ class User(AbstractUser):
 
     @property
     def friends(self) -> BaseManager:
-        return Friend.objects.filter(user=self)
+        return self.friends_set.all()
 
     def get_friendship(self, friend):
         return Friend.objects.get(user=self, friend=friend)
