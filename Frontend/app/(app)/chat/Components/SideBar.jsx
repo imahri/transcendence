@@ -87,7 +87,11 @@ function StartConversation({ router }) {
 	useEffect(() => {
 		if (visible) {
 			const get_friends = async () => {
-				const data = await fetch_jwt(APIs.user.friends);
+				const [isOk, status, data] = await fetch_jwt(APIs.user.friends);
+				if (!isOk) {
+					console.log("==> ", status);
+					return;
+				}
 				setFriendList(data);
 				console.log(data);
 			};

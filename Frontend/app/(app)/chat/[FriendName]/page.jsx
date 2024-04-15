@@ -10,15 +10,22 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
 
 async function getMessages(conversation_id) {
-	const data = await fetch_jwt(APIs.chat.messages, {
-		conversation: conversation_id,
-		limit: 10,
-		offset: 0,
-	});
-	data.messages.sort((a, b) =>
-		a.sended_at > b.sended_at ? 1 : a.sended_at < b.sended_at ? -1 : 0,
-	);
-	return data;
+	if (conversation_id) {
+		const [isOk, status, data] = await fetch_jwt(APIs.chat.messages, {
+			conversation: conversation_id,
+			limit: 10,
+			offset: 0,
+		});
+		if (!isOk) {
+			console.log("==> ", status);
+			return { messages: [], size: 0 };
+		}
+		data.messages.sort((a, b) =>
+			a.sended_at > b.sended_at ? 1 : a.sended_at < b.sended_at ? -1 : 0,
+		);
+		return data;
+	}
+	return { messages: [], size: 0 };
 }
 
 function get_conversation_id(data, FriendName) {

@@ -1,8 +1,11 @@
 import { cookies } from "next/headers";
 
 /**
- * @param endpoint use {@link APIs}
- * @param query_params passed as object
+ * Fetches data from the server using JWT authentication.
+ * @param {string} endpoint - The endpoint URL.
+ * @param {Object} query_params - The query parameters to be appended to the URL.
+ * @param {Object} init - The optional initialization options for the fetch request.
+ * @returns {Promise<[boolean, number, any]>} - A promise that resolves to an array containing the success status, response status code, and the data returned from the server.
  */
 export const fetch_jwt = async (endpoint, query_params, init) => {
 	const url =
@@ -12,13 +15,7 @@ export const fetch_jwt = async (endpoint, query_params, init) => {
 	const token = cookies().get("access_token")?.value;
 	const headers = new Headers(init?.headers);
 	if (token) headers.set("Authorization", `Bearer ${token}`);
-
 	const response = await fetch(url, { ...init, headers });
-	if (!response.ok)
-		throw {
-			error: response.statusText,
-			status: response.status,
-		};
 	const data = await response.json();
-	return data;
+	return [response.ok, response.status, data];
 };
