@@ -3,14 +3,14 @@ import { useContext, useEffect, useState } from "react";
 import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
 import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
 import { TypingBar } from "./Components/TypingBar";
-import { DummyMessages, DummyPath } from "../DummyData";
 import { getCurrentTime } from "@/Tools/getCurrentTime";
 import { WsChatContext } from "../context/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
+import useConversationID from "../Hooks/useConversationID";
 
 async function getMessages(conversation_id) {
-	if (conversation_id) {
+	if (conversation_id != 0) {
 		const [isOk, status, data] = await fetch_jwt(APIs.chat.messages, {
 			conversation: conversation_id,
 			limit: 10,
@@ -28,20 +28,13 @@ async function getMessages(conversation_id) {
 	return { messages: [], size: 0 };
 }
 
-function get_conversation_id(data, FriendName) {
-	let id;
-	data.conversations.forEach((conversation) => {
-		if (conversation.name == FriendName) id = conversation.id;
-	});
-	return id;
-}
 
 export default function DM_Conversation({ params: { FriendName } }) {
 	const { user, socket, data } = useContext(WsChatContext);
-	const [conversation_id] = useState(get_conversation_id(data, FriendName));
+	const [conversation_id] = useConversationID(FriendName);
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
-	const [showProfile, setShowProfile] = useState(true); // !! change it to false
+	const [showProfile, setShowProfile] = useState(false);
 
 	useEffect(() => {
 		const _getMessages = async () => {
@@ -51,7 +44,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		};
 
 		_getMessages();
-	}, [FriendName]);
+	}, [conversation_id, FriendName]);
 
 	useEffect(() => {
 		if (socket) socket.onmessage = (e) => onReceive(messages, e.data);

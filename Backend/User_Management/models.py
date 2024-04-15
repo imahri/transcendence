@@ -61,7 +61,7 @@ class User(AbstractUser):
         """
         user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
         if user is None:
-            raise ObjectDoesNotExist()
+            raise ObjectDoesNotExist("user not found")
         return user
 
     def get(self, include_info=False):
