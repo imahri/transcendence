@@ -43,7 +43,7 @@ class ConversationView(APIView):
         )
         conversations = queryset.filter(isExist=True, num_messages__gt=0).order_by(
             "-last_modified"
-        )[
+        ).distinct()[
             offset : offset + limit
         ]  # ?? check this later  # !! check the order
         conversations_arr = [
