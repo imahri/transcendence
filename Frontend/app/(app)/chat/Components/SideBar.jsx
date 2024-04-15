@@ -8,6 +8,7 @@ import Image from "next/image";
 import { WsChatContext } from "../context/context";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { useConvState } from "../Hooks/useConvState";
 
 const MicroProfile = ({ onClick, user }) => (
 	<button
@@ -64,7 +65,7 @@ const Add_icon = () => (
 	</svg>
 );
 
-function StartConversation({ router }) {
+function StartConversation({ router, setConvState }) {
 	const [friendList, setFriendList] = useState([]);
 	const [visible, setVisible] = useState(false);
 	const _ref = useRef();
@@ -104,6 +105,7 @@ function StartConversation({ router }) {
 						key={idx}
 						onClick={() => {
 							router.push(`/chat/${friend.username}`);
+							setConvState(friend.username);
 						}}
 						friend={friend}
 					/>
@@ -114,9 +116,12 @@ function StartConversation({ router }) {
 }
 
 export function SideBar() {
-	const showSideBar = usePathname() === "/chat";
 	const { user, socket, data } = useContext(WsChatContext);
+	const [convState, setConvState] = useConvState();
+	const [convList, setConvList] = useState(data.conversations);
+	const [convListOffset, setConvListOffset] = useState(data.size);
 	const router = useRouter();
+	const showSideBar = usePathname() === "/chat";
 
 	return (
 		<>
@@ -125,13 +130,20 @@ export function SideBar() {
 			>
 				<Searchbar style_ops="chat" />
 				<Separator className={"w-72 h-1"} />
-				<Conversations />
+				<Conversations
+					_convState={[convState, setConvState]}
+					_convList={[convList, setConvList]}
+					_convListOffset={[convListOffset, setConvListOffset]}
+				/>
 				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
 					<MicroProfile
 						onClick={() => router.push("/profile")}
 						user={user}
 					/>
-					<StartConversation router={router} />
+					<StartConversation
+						setConvState={setConvState}
+						router={router}
+					/>
 				</div>
 			</aside>
 			<Separators />
