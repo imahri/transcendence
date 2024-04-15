@@ -9,10 +9,10 @@ import { WsChatContext } from "../context/context";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 
-const MicroProfile = ({ router, user }) => (
+const MicroProfile = ({ onClick, user }) => (
 	<button
 		className="w-52 h-20 flex justify-start items-center text-slate-200"
-		onClick={() => router.push("/profile")}
+		onClick={onClick}
 	>
 		<Image
 			className={"h-12 w-12 rounded-full mr-3"}
@@ -30,19 +30,10 @@ const MicroProfile = ({ router, user }) => (
 	</button>
 );
 
-// {
-//     "id": 2,
-//     "email": "testuser@gmail.com",
-//     "username": "testuser",
-//     "first_name": "testuser",
-//     "last_name": "testuser",
-//     "img": "http://localhost:8000/user/image?path=/default/default.png"
-// }
-
-const MicroProfileFriend = ({ router, friend }) => (
+const MicroProfileFriend = ({ onClick, friend }) => (
 	<button
 		className="w-52 h-20 flex justify-center items-center text-slate-200 my-3"
-		onClick={() => router.push("/profile")}
+		onClick={onClick}
 	>
 		<Image
 			className={"h-10 w-10 rounded-full mr-3"}
@@ -111,7 +102,9 @@ function StartConversation({ router }) {
 				{friendList.map((friend, idx) => (
 					<MicroProfileFriend
 						key={idx}
-						router={router}
+						onClick={() => {
+							router.push(`/chat/${friend.username}`);
+						}}
 						friend={friend}
 					/>
 				))}
@@ -124,6 +117,7 @@ export function SideBar() {
 	const showSideBar = usePathname() === "/chat";
 	const { user, socket, data } = useContext(WsChatContext);
 	const router = useRouter();
+
 	return (
 		<>
 			<aside
@@ -133,7 +127,10 @@ export function SideBar() {
 				<Separator className={"w-72 h-1"} />
 				<Conversations />
 				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
-					<MicroProfile router={router} user={user} />
+					<MicroProfile
+						onClick={() => router.push("/profile")}
+						user={user}
+					/>
 					<StartConversation router={router} />
 				</div>
 			</aside>
