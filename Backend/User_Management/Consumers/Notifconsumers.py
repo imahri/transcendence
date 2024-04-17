@@ -64,12 +64,18 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
     async def update(self, event):
         await self.send_json(content={'type': 'update', 'last_notif' : event['lastNotif']})
 
+    @classmethod
+    def serilaizeLastNotif(cls, lastNotif):
+        NotifSerialized = NotifSerializer(lastNotif).data
+        return NotifSerialized
+
     async def send_notif_user(self, user, channel_layer, lastNotif):
         try:
+
             target_channel = self.get_channel_by_user(user.username)
-            NotifSerialized = NotifSerializer(lastNotif).data;
-            await channel_layer.send(target_channel, {"type": "update", 'lastNotif' : NotifSerialized})
+
+            Notifdata = await database_sync_to_async(self.serilaizeLastNotif)(lastNotif=lastNotif);
+            await channel_layer.send(target_channel, {"type": "update", 'lastNotif' : Notifdata})
 
         except Exception as error:
-            print('user key not found : ', error)
-
+            print('update notification: ', error)
