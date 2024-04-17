@@ -65,7 +65,14 @@ const Add_icon = () => (
 	</svg>
 );
 
-function StartConversation({ router, setConvState }) {
+function StartConversation({
+	user,
+	router,
+	setStates: {
+		setConvState,
+		convListState: [convList, setConvList],
+	},
+}) {
 	const [friendList, setFriendList] = useState([]);
 	const [visible, setVisible] = useState(false);
 	const _ref = useRef();
@@ -91,6 +98,17 @@ function StartConversation({ router, setConvState }) {
 		}
 	}, [visible]);
 
+	const onStartConv = (friend) => {
+		router.push(`/chat/${friend.username}`);
+		setConvState(friend.username);
+		if (!convList.some((conv) => conv.name === friend.username)) {
+			// getConversation get conv HERE 
+			getConversation(user.usern, friend.username).then((conv) => // 
+			setConvList([...convList, conv]),
+			);
+		}
+	};
+
 	return (
 		<button className="group" onClick={handleScale}>
 			<Add_icon />
@@ -103,11 +121,8 @@ function StartConversation({ router, setConvState }) {
 				{friendList.map((friend, idx) => (
 					<MicroProfileFriend
 						key={idx}
-						onClick={() => {
-							router.push(`/chat/${friend.username}`);
-							setConvState(friend.username);
-						}}
 						friend={friend}
+						onClick={() => onStartConv(friend)}
 					/>
 				))}
 			</div>
@@ -141,8 +156,12 @@ export function SideBar() {
 						user={user}
 					/>
 					<StartConversation
-						setConvState={setConvState}
+						user={user}
 						router={router}
+						setStates={{
+							setConvState,
+							convListState: [convList, setConvList],
+						}}
 					/>
 				</div>
 			</aside>
