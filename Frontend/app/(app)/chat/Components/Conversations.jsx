@@ -92,12 +92,14 @@ function Conversation({
 			<ProfileImage src={user.info.profile_img} />
 			<FriendInfo
 				friend_name={name}
-				last_msg={convState != name && last_message.message}
+				last_msg={convState != name && last_message?.message}
 			/>
-			<TimeNotification
-				time={last_message.sended_at}
-				unseen_msg={unseen_msg}
-			/>
+			{last_message && (
+				<TimeNotification
+					time={last_message.sended_at}
+					unseen_msg={unseen_msg}
+				/>
+			)}
 		</button>
 	);
 }

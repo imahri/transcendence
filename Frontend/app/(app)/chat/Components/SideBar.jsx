@@ -98,13 +98,20 @@ function StartConversation({
 		}
 	}, [visible]);
 
+	const getConversation = async (friend) => {
+		const [isOk, status, data] = await fetch_jwt(
+			`${APIs.chat.conversations}/${friend}`,
+		);
+		if (!isOk) router.push("/chat");
+		return data;
+	};
+
 	const onStartConv = (friend) => {
 		router.push(`/chat/${friend.username}`);
 		setConvState(friend.username);
 		if (!convList.some((conv) => conv.name === friend.username)) {
-			// getConversation get conv HERE 
-			getConversation(user.usern, friend.username).then((conv) => // 
-			setConvList([...convList, conv]),
+			getConversation(friend.username).then((conv) =>
+				setConvList([conv, ...convList]),
 			);
 		}
 	};
