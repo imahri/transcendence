@@ -21,14 +21,20 @@ function setType(notifType, notifContent) {
 	}
 }
 
-function readNotif(socket, notif, setnbNotif) {
+function readNotif(socket, notif) {
 	socket.send(
 		JSON.stringify({
 			action: "read",
 			id: notif.id,
 		}),
 	);
-	setnbNotif((prev) => prev - 1);
+	console.log("mark notif as readed");
+	socket.send(
+		JSON.stringify({
+			action: "nb_notif",
+		}),
+	);
+	notif.is_read = true;
 }
 
 function NotifSection({ notif }) {
@@ -116,9 +122,7 @@ function Notification() {
 						notif.map((notif, index) => {
 							return (
 								<div
-									onClick={() =>
-										readNotif(socket, notif, setnbNotif)
-									}
+									onClick={() => readNotif(socket, notif)}
 									key={index}
 								>
 									<NotifSection notif={notif} />

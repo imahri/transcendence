@@ -7,6 +7,9 @@ function updateStatus(e, setNotif, setnbNotif) {
 	if (data.type == "all_notif") {
 		setNotif(data.all_notif);
 		setnbNotif(data.unreaded);
+	} else if (data.type == "nb_notif") {
+		console.log("recive nb readed notif", data.unreaded);
+		setnbNotif(data.unreaded);
 	} else {
 		setNotif((prev) => {
 			if (prev) {

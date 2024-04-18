@@ -44,11 +44,17 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 await self.getAllNotif()
             elif action == 'read':
                 await self.markAsRead(text_data['id'])
+            elif action == 'nb_notif':
+                await self.getNbUnreaded()
             
         except Exception as error:
             print('error : ', error)
 
- 
+    async def getNbUnreaded(self):
+        nbUnreadedNotif = await database_sync_to_async(Notification.getNBUnreadedNotif)(self.user);
+        await self.send_json(content={'type': 'nb_notif' ,'unreaded': nbUnreadedNotif})
+
+
     async def getAllNotif(self):
         
         response = await database_sync_to_async(Notification.allNotifSerialised)(self.user)
