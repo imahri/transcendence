@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { useConvState } from "../Hooks/useConvState";
@@ -74,25 +74,33 @@ function Conversation({
 }) {
 	const router = useRouter();
 	const [convState, setConvState] = useContext(ConvChatContext);
+	const isActive = convState === name;
 	// !! For security: Change it to Image object
 
 	const handleClick = () => {
-		if (convState !== name) {
+		if (!isActive) {
 			// TODO : set unseen_message_count to 0 because you see message XD
 			router.push(`/chat/${name}`);
 			setConvState(name);
 		}
 	};
 
+	useEffect(() => {
+
+// HERE
+
+
+	}, [convState]);
+
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${convState == name && styles.focus_section}`}
+			className={`${styles.section} ${isActive && styles.focus_section}`}
 		>
 			<ProfileImage src={user.info.profile_img} />
 			<FriendInfo
 				friend_name={name}
-				last_msg={convState != name && last_message?.message}
+				last_msg={!isActive && last_message?.message}
 			/>
 			{last_message && (
 				<TimeNotification
