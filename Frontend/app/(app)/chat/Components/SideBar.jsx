@@ -66,7 +66,6 @@ const Add_icon = () => (
 );
 
 function StartConversation({
-	user,
 	router,
 	setStates: {
 		setConvState,

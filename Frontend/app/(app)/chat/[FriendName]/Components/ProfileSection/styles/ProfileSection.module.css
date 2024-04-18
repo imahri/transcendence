@@ -1,5 +1,5 @@
 .container {
-	@apply h-full w-96 bg-[#313131];
+	@apply h-full w-[25rem] bg-[#282828] border-l-[1rem] border-[#202020];
 	@apply flex flex-col  items-center justify-end space-y-16;
 	@apply absolute right-0 rounded-l-[3rem];
 }
