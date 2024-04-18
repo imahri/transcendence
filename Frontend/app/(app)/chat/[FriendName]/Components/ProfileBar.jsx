@@ -24,8 +24,8 @@ function Status({ status }) {
 	);
 }
 
-const ExitArrow = ({ route }) => (
-	<button className={styles.exitArrow} onClick={() => route.push("/chat")}>
+const ExitArrow = ({ onExit }) => (
+	<button className={styles.exitArrow} onClick={onExit}>
 		<Image
 			className={styles.exitArrow_Image}
 			width={100}
@@ -49,7 +49,7 @@ export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
 
 	return (
 		<div className={styles.container}>
-			<ExitArrow route={route} />
+			<ExitArrow onExit={() => route.push("/chat")} />
 			<div className={styles.profileBar}>
 				<button onClick={onOpenProfile}>
 					<Image
