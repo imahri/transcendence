@@ -118,51 +118,42 @@ export default function Conversations({
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
 	const [convState, setConvState] = _convState;
-	const [prevConv, setPrevConv] = useState(null);
 	const [convList, setConvList] = _convList;
 	const [convListOffset, setConvListOffset] = _convListOffset;
-
-	const _setConvState = (newState) => {
-		setPrevConv(convState);
-		setConvState(newState);
-	};
 
 	useEffect(() => {
 		if (messageUpdated) {
 			const update = async () => {
 				let _convList = [...convList];
-				let idx;
-				let id;
-i
-				const [isOk, status, data] = await fetch_jwt(
-					`${APIs.chat.last_message}${id}`,
-				);
-				if (isOk) {
-					_convList[idx].last_message = data;
-					_convList.sort((f, s) => {
-						console.log(
-							f.last_message.sended_at,
-							s.last_message.sended_at,
-						);
-						if (
+				let idx, id;
+				_convList.forEach((conv, _idx) => {
+					if (conv.name === convState) {
+						idx = _idx;
+						id = conv.id;
+					}
+				});
+				if (idx && id) {
+					const [isOk, status, data] = await fetch_jwt(
+						`${APIs.chat.last_message}${id}`,
+					);
+					if (isOk) {
+						_convList[idx].last_message = data;
+						_convList.sort((f, s) =>
 							f.last_message.sended_at > s.last_message.sended_at
-						) {
-							return -1;
-						}
-						if (f.last_message.sended_at < s.last_message.sended_at)
-							return 1;
-					});
-					console.log(_convList);
-					setConvList(_convList);
+								? -1
+								: 1,
+						);
+						setConvList(_convList);
+					}
 				}
 			};
 			update();
 			setMessageUpdated(false);
 		}
-	}, [prevConv, messageUpdated]);
+	}, [convState, messageUpdated]);
 
 	return (
-		<ConvChatContext.Provider value={[convState, _setConvState]}>
+		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<div className={styles.container}>
 				{convList.map((conversation, idx) => (
 					<Conversation key={idx} user={user} info={conversation} />
