@@ -65,6 +65,16 @@ class ConversationView(APIView):
         ).conversation
         return Response(conversation.as_serialized(user))
 
+    @staticmethod
+    @api_view(["GET"])
+    @catch_view_exception
+    def get_last_message(request, id: int):
+        conversation: Conversation = Conversation.objects.get(pk=id)
+        last_message = conversation.last_message
+        if last_message is None:
+            return Response({"error": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(last_message)
+
     def delete(self, request):
         pass
 
