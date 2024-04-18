@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useConvState } from "../Hooks/useConvState";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
 import { USER_APP } from "@/app/URLS";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 
 function Unseen({ count }) {
 	return (
@@ -85,13 +86,6 @@ function Conversation({
 		}
 	};
 
-	useEffect(() => {
-
-// HERE
-
-
-	}, [convState]);
-
 	return (
 		<button
 			onClick={handleClick}
@@ -117,14 +111,58 @@ export default function Conversations({
 	_convList,
 	_convListOffset,
 }) {
-	const { user, socket, data } = useContext(WsChatContext);
-
+	const {
+		user,
+		socket,
+		data,
+		messageUpdatedState: [messageUpdated, setMessageUpdated],
+	} = useContext(WsChatContext);
 	const [convState, setConvState] = _convState;
+	const [prevConv, setPrevConv] = useState(null);
 	const [convList, setConvList] = _convList;
 	const [convListOffset, setConvListOffset] = _convListOffset;
 
+	const _setConvState = (newState) => {
+		setPrevConv(convState);
+		setConvState(newState);
+	};
+
+	useEffect(() => {
+		if (messageUpdated) {
+			const update = async () => {
+				let _convList = [...convList];
+				let idx;
+				let id;
+i
+				const [isOk, status, data] = await fetch_jwt(
+					`${APIs.chat.last_message}${id}`,
+				);
+				if (isOk) {
+					_convList[idx].last_message = data;
+					_convList.sort((f, s) => {
+						console.log(
+							f.last_message.sended_at,
+							s.last_message.sended_at,
+						);
+						if (
+							f.last_message.sended_at > s.last_message.sended_at
+						) {
+							return -1;
+						}
+						if (f.last_message.sended_at < s.last_message.sended_at)
+							return 1;
+					});
+					console.log(_convList);
+					setConvList(_convList);
+				}
+			};
+			update();
+			setMessageUpdated(false);
+		}
+	}, [prevConv, messageUpdated]);
+
 	return (
-		<ConvChatContext.Provider value={[convState, setConvState]}>
+		<ConvChatContext.Provider value={[convState, _setConvState]}>
 			<div className={styles.container}>
 				{convList.map((conversation, idx) => (
 					<Conversation key={idx} user={user} info={conversation} />

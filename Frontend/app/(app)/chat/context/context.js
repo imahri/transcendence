@@ -7,6 +7,8 @@ import { UserContext } from "../../layout";
 export const WsChatContext = createContext();
 
 export const WsChatProvider = ({ children, conversations }) => {
+	// [messageUpdated, setMessageUpdated]
+	const messageUpdatedState = useState(false);
 	const [socket, setSocket] = useState(null);
 	const { user, setUser } = useContext(UserContext);
 
@@ -24,7 +26,12 @@ export const WsChatProvider = ({ children, conversations }) => {
 
 	return (
 		<WsChatContext.Provider
-			value={{ user: user, socket: socket, data: conversations }}
+			value={{
+				user: user,
+				socket: socket,
+				data: conversations,
+				messageUpdatedState: messageUpdatedState,
+			}}
 		>
 			{children}
 		</WsChatContext.Provider>
