@@ -91,7 +91,7 @@ function Notification() {
 	}, []);
 
 	return (
-		<div>
+		<div className="relative">
 			<svg
 				onClick={() => {
 					setactive(!active);
@@ -108,11 +108,11 @@ function Notification() {
 					fill="#B7B7B7"
 				/>
 			</svg>
-			<div className="size-5 bg-greatBlue rounded-full absolute top-0 left-4 flex justify-center items-center">
+			<div className="size-5 bg-greatBlue rounded-full absolute top-[-2px] left-4 flex justify-center items-center">
 				<span className="text-white text-[13px]">{nbNotif}</span>
 			</div>
 			<div
-				className={`w-[300px] bg-[#303030] absolute right-[150px] top-[50px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
+				className={`w-[300px] bg-[#303030] absolute right-[5px] top-[35px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
 			>
 				<div className="flex justify-center items-center h-[50px] bg-greatBlue">
 					<h1 className="text-white font-semibold"> Notification</h1>
