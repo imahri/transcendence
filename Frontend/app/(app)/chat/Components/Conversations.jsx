@@ -132,19 +132,17 @@ export default function Conversations({
 						id = conv.id;
 					}
 				});
-				if (idx && id) {
-					const [isOk, status, data] = await fetch_jwt(
-						`${APIs.chat.last_message}${id}`,
+				const [isOk, status, data] = await fetch_jwt(
+					`${APIs.chat.last_message}${id}`,
+				);
+				if (isOk) {
+					_convList[idx].last_message = data;
+					_convList.sort((f, s) =>
+						f.last_message.sended_at > s.last_message.sended_at
+							? -1
+							: 1,
 					);
-					if (isOk) {
-						_convList[idx].last_message = data;
-						_convList.sort((f, s) =>
-							f.last_message.sended_at > s.last_message.sended_at
-								? -1
-								: 1,
-						);
-						setConvList(_convList);
-					}
+					setConvList(_convList);
 				}
 			};
 			update();
