@@ -68,7 +68,7 @@ class Items(models.Model):
         ("boards", "Boards"),
     )
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         "User_Management.User",
         related_name="items",
         null=True,
