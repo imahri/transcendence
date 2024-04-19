@@ -116,17 +116,19 @@ export function ProfileSection({ _ref, className, FriendInfo }) {
 	return (
 		<div ref={_ref} className={`${styles.container} ${className}`}>
 			<section className={styles.profile}>
-				<div className={styles.profile_img_container}>
-					<Image
-						className={styles.profile_img}
-						src={profile_img}
-						width={200}
-						height={200}
-						alt="profile_img"
-					/>
+				<div className="flex justify-center items-center flex-col space-y-4">
+					<div className={styles.profile_img_container}>
+						<Image
+							className={styles.profile_img}
+							src={profile_img}
+							width={200}
+							height={200}
+							alt="profile_img"
+						/>
+					</div>
+					<h1>{FriendInfo.name}</h1>
+					<small>{FriendInfo.status}</small>
 				</div>
-				<h1>{FriendInfo.name}</h1>
-				<small>{FriendInfo.status}</small>
 				<div className="w-full flex justify-evenly items-center text-white font-medium text-xs mt-5">
 					<button
 						onClick={() =>

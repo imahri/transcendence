@@ -1,11 +1,11 @@
 .container {
 	@apply h-full w-[25rem] bg-[#282828] border-l-[1rem] border-[#202020];
-	@apply flex flex-col  items-center justify-end space-y-16;
+	@apply flex flex-col  items-center justify-end space-y-24;
 	@apply absolute right-0 rounded-l-[3rem];
 }
 
 .profile {
-	@apply w-full pt-10 flex flex-col justify-end items-center;
+	@apply w-full pt-10 flex flex-col justify-end items-center space-y-10;
 }
 
 .profile_img_container {
