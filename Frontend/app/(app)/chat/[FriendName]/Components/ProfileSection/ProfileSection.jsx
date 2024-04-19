@@ -105,7 +105,7 @@ const Block_Icon = () => (
 	</div>
 );
 
-export function ProfileSection({ FriendInfo }) {
+export function ProfileSection({ _ref, className, FriendInfo }) {
 	const router = useRouter();
 	const profile_img = DummyPath;
 	const Nickname = "obmium";
@@ -114,7 +114,7 @@ export function ProfileSection({ FriendInfo }) {
 	const Grade = 2;
 
 	return (
-		<div className={styles.container}>
+		<div ref={_ref} className={`${styles.container} ${className}`}>
 			<section className={styles.profile}>
 				<div className={styles.profile_img_container}>
 					<Image
