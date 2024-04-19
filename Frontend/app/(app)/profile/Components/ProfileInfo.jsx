@@ -66,9 +66,10 @@ function Buttons({ profileUser }) {
 	return (
 		<div className="flex flex-col gap-[10px] ">
 			{Allbuttons.filter((element) => element.status === status).map(
-				(element) => {
+				(element, index) => {
 					return (
 						<Button
+							key={index}
 							action={element.action}
 							socket={socket}
 							friend_id={profileUser.id}

@@ -1,11 +1,8 @@
-import json
-
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 
-from .models import User
-
-
+from ..models import Notification, User
+from .Notifconsumers import NotificationConsumer
 
 class FriendShipConsumer(AsyncJsonWebsocketConsumer):
     channels: dict = {}
@@ -83,11 +80,27 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
         try:
             target_friend = self.get_channel_by_user(friend.username)
             await self.channel_layer.send(target_friend, {"type": "update"})
+
+            
         except Exception as error:
             print('channel key not found :', error)
 
+        if action == 'add' or action == 'accept':
+            await self.setNotification(friend=friend, action=action)
+
+
         await self.check_friendship(friend)
         
+    async def setNotification(self, friend, action):
+        
+        try:
+            notif = Notification(user=friend, notifier=self.user, content=action, type='friendShip')
+            await database_sync_to_async(notif.save)()
+
+            await NotificationConsumer().send_notif_user(friend, self.channel_layer, notif)
+
+        except Exception as error:
+            print('error: ', error)
 
     async def update(self, event):
         await self.send_json(content={'status': 'update'})
@@ -108,3 +121,5 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
             except Exception:
                 await self.send_json(content={'status': 'not friend'})
             
+
+

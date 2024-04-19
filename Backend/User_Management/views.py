@@ -90,7 +90,7 @@ def searchView(request):
         response = []
         for user in founded_users:
             userData = dict(UserSerializer(user).data)
-            userData["img"] = dict(user.get_info())["profile_img"]
+            # userData["img"] = dict(user.get_info())["profile_img"]
             response.append(userData)
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
@@ -109,7 +109,7 @@ def getFriendView(request):
         response = []
         for user in founded_users:
             userData = dict(UserSerializer(user).data)
-            userData["img"] = dict(user.get_info())["profile_img"]
+            # userData["img"] = dict(user.get_info())["profile_img"]
             response.append(userData)
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
