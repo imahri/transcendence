@@ -100,7 +100,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			</div>
 			<ProfileSection
 				_ref={_ref}
-				className="transition-all duration-[40ms] scale-0 origin-right"
+				className="transition-all duration-300 scale-0 origin-right"
 				FriendInfo={{
 					name: FriendName,
 					status: ActiveStatusTypes.Active,
