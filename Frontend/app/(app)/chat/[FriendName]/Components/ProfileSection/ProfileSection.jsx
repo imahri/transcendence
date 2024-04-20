@@ -138,7 +138,10 @@ export function ProfileSection({ FriendInfo }) {
 						<span>View Profile</span>
 					</button>
 					{/* TODO: add block */}
-					<button className={styles.flex_col_container}>
+					<button
+						className={styles.flex_col_container}
+						onClick={() => console.log("blockkkkiiiii")}
+					>
 						<Block_Icon />
 						<span>Block</span>
 					</button>

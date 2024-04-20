@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { initSocket } from "./FriendShipsocket";
 
 import IMG from "../../../home/assets/profile.png";
+import { UserContext } from "@/app/(app)/layout";
 
 function callBack(socket, action, friend_id) {
 	let update;
@@ -57,12 +58,23 @@ function Buttons({ profileUser }) {
 	const [status, setStatus] = useState();
 	const [socket, setSocket] = useState();
 
-	useEffect(() => {
-		initSocket(setSocket, setStatus, profileUser);
+	// useEffect(() => {
+	// 	initSocket(setSocket, setStatus, profileUser);
 
-		return () => {
-			if (socket) socket.close();
-		};
+	// 	return () => {
+	// 		if (socket) socket.close();
+	// 	};
+	// }, []);
+	const { ws } = useContext(UserContext);
+	// console.log('ws : ', ws);
+
+	useEffect(() => {
+		initSocket(ws, setStatus, profileUser);
+		setSocket(ws);
+
+		// return () => {
+		// 	if (socket) socket.close();
+		// };
 	}, []);
 
 	return (

@@ -4,16 +4,19 @@ import SideBar from "./sideBar/SideBar.jsx";
 import Settings from "./settings/Settings.jsx";
 import layoutUtils from "./layoutUtils.jsx";
 import { useRouter } from "next/navigation";
+import { getToken } from "../(auth)/AuthTools/tokenManagment.jsx";
 
 export const UserContext = createContext();
 
-export default function Layout({ children, userData }) {
+export default function Layout({ children }) {
 	const navigate = useRouter();
 
 	const [user, setUser] = useState();
-	const [notif, setToastNotif] = useState();
 	const [isLoading, setLoading] = useState(true);
 	const [settings, setSettings] = useState();
+
+	const token = getToken();
+	const ws = new WebSocket(`ws://localhost:8000/ws/user?token=${token}`);
 
 	useEffect(() => {
 		layoutUtils(navigate).then((userData) => {
@@ -22,13 +25,12 @@ export default function Layout({ children, userData }) {
 		});
 	}, []);
 
-	notif ? console.log("notif : ", notif) : "";
 	return (
 		<>
 			{isLoading ? (
 				<div>is Loading .......</div>
 			) : (
-				<UserContext.Provider value={{ user, setUser, setToastNotif }}>
+				<UserContext.Provider value={{ user, setUser, ws }}>
 					<div className="w-full h-full flex">
 						<SideBar showSettings={setSettings} />
 

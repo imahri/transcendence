@@ -19,25 +19,54 @@ function getStatus(socket, friend_id) {
 	);
 }
 
-export function initSocket(setSocket, setStatus, profileUser) {
+// export function initSocket(setSocket, setStatus, profileUser) {
+// 	try {
+// 		const token = getToken();
+// 		const ws = new WebSocket(`ws://localhost:8000/ws/user?token=${token}`);
+// 		setSocket(ws);
+
+// 		ws.onopen = () => {
+// 			getStatus(ws, profileUser.id);
+// 		};
+
+// 		ws.onmessage = (e) => {
+// 			updateStatus(e, setStatus, ws, profileUser.id);
+// 		};
+
+// 		ws.onerror = (error) => {
+// 			console.error("WebSocket error:", error);
+// 		};
+// 		ws.onclose = (event) => {
+// 			console.log("WebSocket connection closed:", event.reason);
+// 		};
+// 	} catch (error) {
+// 		console.error("Error creating WebSocket:", error);
+// 	}
+// }
+
+export function initSocket(ws, setStatus, profileUser) {
 	try {
-		const token = getToken();
-		const ws = new WebSocket(`ws://localhost:8000/ws/user?token=${token}`);
-		setSocket(ws);
+		// const token = getToken();
+		// const ws = new WebSocket(`ws://localhost:8000/ws/user?token=${token}`);
+		// setSocket(ws);
 
 		ws.onopen = () => {
+			console.log("opeeen");
 			getStatus(ws, profileUser.id);
 		};
 
 		ws.onmessage = (e) => {
+			console.log("mssg");
+
 			updateStatus(e, setStatus, ws, profileUser.id);
 		};
 
 		ws.onerror = (error) => {
+			console.log("error");
 			console.error("WebSocket error:", error);
 		};
 		ws.onclose = (event) => {
-			console.log("WebSocket connection closed:", event.reason);
+			console.log("friendship WebSocket closed:", event.reason);
 		};
 	} catch (error) {
 		console.error("Error creating WebSocket:", error);
