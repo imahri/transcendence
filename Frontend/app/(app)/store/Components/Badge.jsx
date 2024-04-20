@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import Image from "next/image";
 import logo from "../../../logo.png";
-import { UserContext } from "../../layout";
+import { UserContext } from "../../context";
 
 function Badge(props) {
 	const { user } = useContext(UserContext);

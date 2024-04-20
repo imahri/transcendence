@@ -9,5 +9,4 @@ urlpatterns = [
     path("info", InfoView.as_view(), name="info"),
     path("search", searchView, name="search"),
     path("friends", getFriendView, name="friends"),
-    path("user", searchView, name="search"),  # ??
 ]

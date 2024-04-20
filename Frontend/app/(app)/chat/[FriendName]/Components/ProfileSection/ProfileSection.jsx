@@ -11,6 +11,10 @@ import g_platinum from "./assets/g_platinum.svg";
 import g_master from "./assets/g_master.svg";
 import g_grandmaster from "./assets/g_grandmaster.svg";
 import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "@/app/(app)/context";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { GET_USER_URL } from "@/app/URLS";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -105,6 +109,12 @@ const Block_Icon = () => (
 	</div>
 );
 
+function blockUser(socket, friend) {
+	if (friend) {
+		socket.send(JSON.stringify({ action: "block", friend_id: friend.id }));
+	}
+}
+
 export function ProfileSection({ FriendInfo }) {
 	const router = useRouter();
 	const profile_img = DummyPath;
@@ -112,6 +122,23 @@ export function ProfileSection({ FriendInfo }) {
 	const Wallet = "150 $";
 	const Email = "walid.obm95@gmail.com";
 	const Grade = 2;
+	const [friend, setFriend] = useState(null);
+
+	useEffect(() => {
+		if (!friend) {
+			fetch_jwt(GET_USER_URL, { username: FriendInfo.name }).then(
+				([isOk, status, data]) => {
+					if (isOk) {
+						setFriend(data.user);
+					} else {
+						console.log("error fetch");
+					}
+				},
+			);
+		}
+	}, [friend]);
+
+	const { ws } = useContext(UserContext);
 
 	return (
 		<div className={styles.container}>
@@ -140,7 +167,7 @@ export function ProfileSection({ FriendInfo }) {
 					{/* TODO: add block */}
 					<button
 						className={styles.flex_col_container}
-						onClick={() => console.log("blockkkkiiiii")}
+						onClick={() => blockUser(ws, friend)}
 					>
 						<Block_Icon />
 						<span>Block</span>

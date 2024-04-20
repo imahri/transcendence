@@ -3,7 +3,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import Friends from "./Friends";
 import starpng from "../../Home/assets/starpng.png";
-import { UserContext } from "../../layout";
+import { UserContext } from "../../context";
 
 function ShowBox(title, nb) {
 	return (

@@ -116,7 +116,7 @@ export default function Conversations({
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
 			<div className={styles.container}>
-				{convList.map((conversation, idx) => (
+				{convList?.map((conversation, idx) => (
 					<Conversation key={idx} user={user} info={conversation} />
 				))}
 			</div>

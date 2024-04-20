@@ -49,7 +49,7 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
                 await self.set_friendship(friend, action)
         
         except Exception as error:
-            print('error : ', error)
+            print('error ', action , ' : ', error)
 
 
     async def set_friendship(self, friend, action):

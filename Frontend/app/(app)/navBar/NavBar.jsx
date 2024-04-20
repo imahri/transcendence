@@ -1,7 +1,6 @@
 "use client";
 import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserContext } from "../layout";
 import { logout } from "../settings/Components/SettingsUtils";
 import Link from "next/link";
 import { Searchbar } from "../searchBar/Searchbar";
@@ -15,14 +14,18 @@ import {
 	dropDownSvg,
 	dropUpSvg,
 } from "./Components/AllSvg";
+import { UserContext } from "../context";
 
 function ProfileBar() {
 	const { user } = useContext(UserContext);
+
+	// console.log("===> ", user.user.info);
 
 	const [more, setMore] = useState();
 	const navigate = useRouter();
 
 	let levelPercent = (user.info.level - Math.floor(user.info.level)) * 100;
+	// let levelPercent = (user.info.level - Math.floor(user.info.level)) * 100;
 
 	levelPercent = Math.floor(levelPercent);
 

@@ -2,10 +2,10 @@
 import { useContext } from "react";
 import LevelCircle from "./LevelCircle";
 import Myskin from "../assets/12.png";
-import { UserContext } from "../../layout";
 import "./Profile.css";
 
 import Image from "next/image";
+import { UserContext } from "../../context";
 
 function State({ number, name, color }) {
 	return (

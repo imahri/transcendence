@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { useState, useEffect, useContext } from "react";
-import { initSocket } from "./FriendShipsocket";
+import { useState, useEffect, useContext, useLayoutEffect } from "react";
+import { getStatus, updateStatus } from "./FriendShipsocket";
 
 import IMG from "../../../home/assets/profile.png";
-import { UserContext } from "@/app/(app)/layout";
+import { UserContext } from "@/app/(app)/context";
 
 function callBack(socket, action, friend_id) {
 	let update;
@@ -56,36 +56,54 @@ function Button({ action, color, socket, friend_id }) {
 
 function Buttons({ profileUser }) {
 	const [status, setStatus] = useState();
-	const [socket, setSocket] = useState();
 
-	// useEffect(() => {
-	// 	initSocket(setSocket, setStatus, profileUser);
-
-	// 	return () => {
-	// 		if (socket) socket.close();
-	// 	};
-	// }, []);
 	const { ws } = useContext(UserContext);
-	// console.log('ws : ', ws);
 
-	useEffect(() => {
-		initSocket(ws, setStatus, profileUser);
-		setSocket(ws);
+	useLayoutEffect(() => {
+		if (ws) {
+			if (ws.readyState == true) {
+				ws.send(
+					JSON.stringify({
+						action: "check",
+						friend_id: profileUser.id,
+					}),
+				);
+			}
 
-		// return () => {
-		// 	if (socket) socket.close();
-		// };
-	}, []);
+			ws.onopen = () => {
+				ws.send(
+					JSON.stringify({
+						action: "check",
+						friend_id: profileUser.id,
+					}),
+				);
+			};
+
+			ws.onmessage = (e) => {
+				console.log("mssg");
+				updateStatus(e, setStatus, ws, profileUser.id);
+			};
+
+			ws.onerror = (error) => {
+				console.log("error");
+				console.error("WebSocket error:", error);
+			};
+			ws.onclose = (event) => {
+				console.log("friendship WebSocket closed:", event.reason);
+			};
+		}
+	}, [ws]);
 
 	return (
 		<div className="flex flex-col gap-[10px] ">
+			{console.log(status)}
 			{Allbuttons.filter((element) => element.status === status).map(
 				(element, index) => {
 					return (
 						<Button
 							key={index}
 							action={element.action}
-							socket={socket}
+							socket={ws}
 							friend_id={profileUser.id}
 							color={element.color}
 						/>

@@ -16,7 +16,7 @@ async function getConversations() {
 		limit: 12,
 		offset: 0,
 	});
-	if (!isOk) console.error("Fetch Error:", error);
+	if (!isOk) console.error("Fetch Error:");
 	return data;
 }
 

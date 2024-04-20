@@ -5,8 +5,7 @@ import ProfileBanner from "./ProfileBanner";
 import ProfileInfo from "./ProfileInfo";
 import Skins from "./Skins";
 import ShowRoom from "./ShowRoom";
-
-import { UserContext } from "../../../layout";
+import { UserContext } from "@/app/(app)/context";
 
 function SecondSection({ otherUser, displayFriends }) {
 	const { user } = !otherUser ? useContext(UserContext) : otherUser;

@@ -1,12 +1,11 @@
 "use client";
 import React, { useContext } from "react";
 
-import { UserContext } from "../../layout";
-
 import gameTable from "../assets/game_table.png";
 import profileImg from "../assets/profile.png";
 import GameState from "./GameState";
 import Image from "next/image";
+import { UserContext } from "../../context";
 
 const user2 = { score: 5, userName: "chafi9", image: profileImg };
 

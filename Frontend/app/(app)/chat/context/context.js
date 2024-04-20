@@ -2,7 +2,7 @@
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { wsChat } from "@/app/URLS";
 import { createContext, useContext, useEffect, useState } from "react";
-import { UserContext } from "../../layout";
+import { UserContext } from "../../context";
 
 export const WsChatContext = createContext();
 

@@ -11,13 +11,12 @@ async function fetchUser() {
 	return response;
 }
 
-async function layoutUtils(navigate) {
-	const storedUser = localStorage.getItem("user");
-	if (storedUser) {
-		const user = JSON.parse(storedUser);
-		// setUser(user);
-		return user;
-	}
+export async function layoutUtils() {
+	// const storedUser = localStorage.getItem("user");
+	// if (storedUser) {
+	// 	const user = JSON.parse(storedUser);
+	// 	return user;
+	// }
 
 	try {
 		const response = await fetchUser();
@@ -32,7 +31,7 @@ async function layoutUtils(navigate) {
 	} catch (error) {
 		console.error("fetch Error :", error);
 	}
-	logout(navigate);
+	// logout(navigate);
 }
 
-export default layoutUtils;
+// export default layoutUtils;

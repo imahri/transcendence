@@ -2,8 +2,8 @@
 import { useContext } from "react";
 
 import profileImg from "../assets/profile.png";
-import { UserContext } from "../../layout";
 import Image from "next/image";
+import { UserContext } from "../../context";
 
 function GameState({ match }) {
 	const user1 = match.user1;
