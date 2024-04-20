@@ -116,8 +116,10 @@ function StartConversation({
 	};
 
 	return (
-		<button className="group" onClick={handleScale}>
-			<Add_icon />
+		<>
+			<button onClick={handleScale}>
+				<Add_icon />
+			</button>
 			<div
 				ref={_ref}
 				className="absolute left-[22rem] bottom-20 w-[15rem] h-[33rem] bg-[#222222] rounded-3xl  transition-all duration-75 scale-0 origin-bottom
@@ -132,7 +134,7 @@ function StartConversation({
 					/>
 				))}
 			</div>
-		</button>
+		</>
 	);
 }
 

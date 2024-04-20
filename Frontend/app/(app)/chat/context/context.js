@@ -18,10 +18,7 @@ export const WsChatProvider = ({ children, conversations }) => {
 			console.log("connect with ws/chat");
 			return;
 		}
-		return () => {
-			socket.close();
-			console.log("Disconnect with ws/chat");
-		};
+		return () => socket.close();
 	}, [socket]);
 
 	return (
