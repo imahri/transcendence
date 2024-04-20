@@ -17,7 +17,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
-			<body className={chakra.className}>{children}</body>
+			<body className={`scrollbar-hide ${chakra.className}`}>
+				{children}
+			</body>
 		</html>
 	);
 }
