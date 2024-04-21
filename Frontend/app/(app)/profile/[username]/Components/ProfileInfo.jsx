@@ -3,6 +3,7 @@ import { useState, useContext, useLayoutEffect } from "react";
 
 import IMG from "../../../home/assets/profile.png";
 import { UserContext } from "@/app/(app)/context";
+import { updateStatus } from "@/app/(app)/profiletmp/[username]/Components/FriendShipsocket";
 
 function callBack(socket, action, friend_id) {
 	let update;
@@ -54,31 +55,27 @@ function Button({ action, color, socket, friend_id }) {
 }
 
 function Buttons({ profileUser }) {
-	const [status, setStatus] = useState();
-
+	const [status, setStatus] = useState(profileUser.friendship);
 	const { ws } = useContext(UserContext);
 
-	// useLayoutEffect(() => {
-	// 	if (ws) {
-
-	// 		ws.onmessage = (e) => {
-	// 			console.log("mssg");
-	// 			updateStatus(e, setStatus, ws, profileUser.id);
-	// 		};
-
-	// 		ws.onerror = (error) => {
-	// 			console.log("error");
-	// 			console.error("WebSocket error:", error);
-	// 		};
-	// 		ws.onclose = (event) => {
-	// 			console.log("friendship WebSocket closed:", event.reason);
-	// 		};
-	// 	}
-	// }, [ws]);
+	useLayoutEffect(() => {
+		if (ws) {
+			ws.onmessage = (e) => {
+				console.log("mssg");
+				updateStatus(e, setStatus, ws, profileUser.id);
+			};
+			ws.onerror = (error) => {
+				console.log("error");
+				console.error("WebSocket error:", error);
+			};
+			ws.onclose = (event) => {
+				console.log("friendship WebSocket closed:", event.reason);
+			};
+		}
+	}, [ws]);
 
 	return (
 		<div className="flex flex-col gap-[10px] mr-[50px]">
-			{console.log(status)}
 			{Allbuttons.filter((element) => element.status === status).map(
 				(element, index) => {
 					return (
@@ -115,6 +112,8 @@ const friends = [
 ];
 
 function Friend({ displayFriends }) {
+	//fetch all friends
+
 	return (
 		<div className="flex gap-[-1px]" onClick={() => displayFriends(true)}>
 			{friends.slice(0, 5).map((fr, index) => {

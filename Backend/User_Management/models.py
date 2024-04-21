@@ -229,6 +229,9 @@ class Friend(models.Model):
             raise Exception("Already Blocked")
         self.status = "B"
         self.save()
+        friend_obj = self.friend.get_friendship(self.user)
+        friend_obj.status = "BY"
+        friend_obj.save()
 
     @property
     def is_invite(self):
@@ -241,7 +244,6 @@ class Friend(models.Model):
     @property
     def is_block(self):
         return self.status == "B" or self.friend.get_friendship(self.user).status == "B"
-        # return self.status == "B"
 
 
 class Notification(models.Model):

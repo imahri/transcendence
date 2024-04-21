@@ -48,6 +48,10 @@ export async function searchForUsers(searchText, setResult) {
 		if (response.ok) {
 			const data = await response.json();
 			console.log("data : ", data);
+			if (data.length == 0) {
+				setResult(404);
+				return;
+			}
 			setResult(data);
 		} else {
 			setResult(404);

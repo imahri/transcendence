@@ -47,9 +47,18 @@ class UserView(APIView):
     def get_user(request):
         try:
             username = request.query_params.get("username")
-            user = User.objects.get(username=username)
-            userObj = dict(UserSerializer(user).data)
-            userObj["info"] = InfoSerializer(Info.objects.get(user=user.pk)).data
+            friend = User.objects.get(username=username)
+            userObj = dict(UserSerializer(friend).data)
+            userObj["info"] = InfoSerializer(Info.objects.get(user=friend.pk)).data
+            # get the friendship betwen me and the user
+            if request.user.pk == friend.pk:
+                userObj['friendship'] = 'owner'
+            else :
+                try :
+                    userObj['friendship'] = request.user.get_friendship(friend=friend).status
+                except:
+                    userObj['friendship'] = 'not friend'
+
             return Response({"user": userObj})
         except Exception as error:
             return Response({"error": str(error)}, status=400)
@@ -89,9 +98,15 @@ def searchView(request):
             raise ObjectDoesNotExist(f"No results found for {search_text}")
         response = []
         for user in founded_users:
+            try :
+                isBlocked = request.user.get_friendship(friend=user).is_block
+                if isBlocked:
+                    continue
+            except Exception as error:
+                print(error)
             userData = dict(UserSerializer(user).data)
-            # userData["img"] = dict(user.get_info())["profile_img"]
             response.append(userData)
+
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
         return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
@@ -109,7 +124,6 @@ def getFriendView(request):
         response = []
         for user in founded_users:
             userData = dict(UserSerializer(user).data)
-            # userData["img"] = dict(user.get_info())["profile_img"]
             response.append(userData)
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
