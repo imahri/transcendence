@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { useState, useContext, useLayoutEffect } from "react";
+import { useState, useEffect, useContext, useLayoutEffect } from "react";
+import { getStatus, updateStatus } from "./FriendShipsocket";
 
 import IMG from "../../../home/assets/profile.png";
 import { UserContext } from "@/app/(app)/context";
@@ -58,26 +59,43 @@ function Buttons({ profileUser }) {
 
 	const { ws } = useContext(UserContext);
 
-	// useLayoutEffect(() => {
-	// 	if (ws) {
+	useLayoutEffect(() => {
+		if (ws) {
+			if (ws.readyState == true) {
+				ws.send(
+					JSON.stringify({
+						action: "check",
+						friend_id: profileUser.id,
+					}),
+				);
+			}
 
-	// 		ws.onmessage = (e) => {
-	// 			console.log("mssg");
-	// 			updateStatus(e, setStatus, ws, profileUser.id);
-	// 		};
+			ws.onopen = () => {
+				ws.send(
+					JSON.stringify({
+						action: "check",
+						friend_id: profileUser.id,
+					}),
+				);
+			};
 
-	// 		ws.onerror = (error) => {
-	// 			console.log("error");
-	// 			console.error("WebSocket error:", error);
-	// 		};
-	// 		ws.onclose = (event) => {
-	// 			console.log("friendship WebSocket closed:", event.reason);
-	// 		};
-	// 	}
-	// }, [ws]);
+			ws.onmessage = (e) => {
+				console.log("mssg");
+				updateStatus(e, setStatus, ws, profileUser.id);
+			};
+
+			ws.onerror = (error) => {
+				console.log("error");
+				console.error("WebSocket error:", error);
+			};
+			ws.onclose = (event) => {
+				console.log("friendship WebSocket closed:", event.reason);
+			};
+		}
+	}, [ws]);
 
 	return (
-		<div className="flex flex-col gap-[10px] mr-[50px]">
+		<div className="flex flex-col gap-[10px] ">
 			{console.log(status)}
 			{Allbuttons.filter((element) => element.status === status).map(
 				(element, index) => {
@@ -137,26 +155,19 @@ function Friend({ displayFriends }) {
 function ProfileInfo({ user, displayFriends }) {
 	return (
 		<div className="w-full h-[130px]  flex items-center justify-between relative">
-			<div className="rounded-full size-[160px]  absolute left-[50px] top-[-30px] flex justify-center items-center bg-[#353535]">
-				<Image
-					className="rounded-full size-[90%]"
-					src={user.info.profile_img}
-					width={0}
-					height={0}
-					alt=""
-				/>
-			</div>
-			<div className="ml-[220px]">
-				<h1 className="font-semibold text-[32px] text-white">
+			<Image
+				className="rounded-[31px] w-[138px] h-[126px] absolute top-[-20px] left-[50px]"
+				src={user.info.profile_img}
+				width={0}
+				height={0}
+				alt=""
+			/>
+			<div className="ml-[200px]">
+				<h1 className="font-semibold text-[40px] text-white">
 					{user.first_name} {user.last_name}
 				</h1>
-				<div className="flex  gap-[20px] items-center">
-					<h2 className="font-semibold text-[24px] text-white opacity-[54%]">
-						@{user.username}
-					</h2>
-					<div className="flex gap-[30px]">
-						<Friend displayFriends={displayFriends} />
-					</div>
+				<div className="flex gap-[30px]">
+					<Friend displayFriends={displayFriends} />
 				</div>
 			</div>
 			<Buttons profileUser={user} />

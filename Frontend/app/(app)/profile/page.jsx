@@ -1,22 +1,8 @@
-import NavBar from "../NavBar/NavBar";
+import React from "react";
+import Profile from "./[username]/page";
 
-import FirstSection from "./Components/FirstSection";
-import SecondSection from "./Components/SecondSection";
-
-function Profile() {
-	return (
-		<>
-			<NavBar />
-
-			<main className="w-full mt-[150px] flex justify-center">
-				<div className="w-[95%] flex items-center gap-[20px]">
-					<FirstSection />
-
-					<SecondSection />
-				</div>
-			</main>
-		</>
-	);
+function page() {
+	return <Profile />;
 }
 
-export default Profile;
+export default page;
