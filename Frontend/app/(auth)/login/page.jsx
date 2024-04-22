@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import logo from "../../logo.png";
+import logo from "@/app/logo.svg";
 
 import { PopupEnternumber } from "../2Fa/Popup.jsx";
 import { showPassword } from "../AuthTools/LoginRegisterTools";
