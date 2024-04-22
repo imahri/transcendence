@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ImageView, UserView, InfoView, searchView, getFriendView
+from .views import ImageView, UserView, InfoView, searchView, getFriendView, getFewFriend, getUserFriends
 
 urlpatterns = [
     path("", UserView.as_view(), name="user"),
@@ -9,4 +9,6 @@ urlpatterns = [
     path("info", InfoView.as_view(), name="info"),
     path("search", searchView, name="search"),
     path("friends", getFriendView, name="friends"),
+    path("somefriends", getFewFriend, name="fewfriends"),
+    path("userfriends", getUserFriends, name="userfriends"),
 ]

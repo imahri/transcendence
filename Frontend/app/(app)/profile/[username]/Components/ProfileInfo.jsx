@@ -1,9 +1,28 @@
 import Image from "next/image";
-import { useState, useContext, useLayoutEffect } from "react";
+import { useState, useContext, useLayoutEffect, useEffect } from "react";
 
-import IMG from "../../../home/assets/profile.png";
 import { UserContext } from "@/app/(app)/context";
-import { updateStatus } from "@/app/(app)/profiletmp/[username]/Components/FriendShipsocket";
+import { GET_5Friends_URL } from "@/app/URLS";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+
+function updateStatus(e, setStatus, socket, friend_id) {
+	const data = JSON.parse(e.data);
+	console.log("Received message:", data);
+	if (data.status == "update") {
+		getStatus(socket, friend_id);
+		return;
+	}
+	setStatus(data.status);
+}
+
+function getStatus(socket, friend_id) {
+	socket.send(
+		JSON.stringify({
+			action: "check",
+			friend_id: friend_id,
+		}),
+	);
+}
 
 function callBack(socket, action, friend_id) {
 	let update;
@@ -61,7 +80,6 @@ function Buttons({ profileUser }) {
 	useLayoutEffect(() => {
 		if (ws) {
 			ws.onmessage = (e) => {
-				console.log("mssg");
 				updateStatus(e, setStatus, ws, profileUser.id);
 			};
 			ws.onerror = (error) => {
@@ -93,42 +111,46 @@ function Buttons({ profileUser }) {
 	);
 }
 
-const friend = {
-	image: IMG,
-	name: "Sakawi",
-	firstName: "oussama",
-	lastName: "krich",
-};
+function Friend({ displayFriends, username }) {
+	//fetch only 5 friends
+	const [friends, setFriends] = useState();
+	const [nbFriend, setnbFriend] = useState(0);
 
-const friends = [
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-];
-
-function Friend({ displayFriends }) {
-	//fetch all friends
+	useEffect(() => {
+		fetch_jwt(GET_5Friends_URL, { username: username }).then(
+			([isOk, status, data]) => {
+				if (!isOk) {
+					setError(true);
+					return;
+				}
+				setFriends(data.friends);
+				setnbFriend(data.nb - data.friends.length);
+			},
+		);
+	}, []);
 
 	return (
 		<div className="flex gap-[-1px]" onClick={() => displayFriends(true)}>
-			{friends.slice(0, 5).map((fr, index) => {
-				return (
-					<Image
-						key={index}
-						className="size-[35px] cursor-pointer rounded-full mr-[-10px]"
-						src={fr.image}
-						alt=""
-					/>
-				);
-			})}
-			<div className="size-[35px] bg-[#353535] rounded-full flex items-center justify-center">
-				<span className="text-white text-[13px] font-bold">+15</span>
-			</div>
+			{friends &&
+				friends.map((fr, index) => {
+					return (
+						<Image
+							key={index}
+							className="size-[35px] cursor-pointer rounded-full mr-[-10px]"
+							src={fr.img}
+							width={35}
+							height={35}
+							alt=""
+						/>
+					);
+				})}
+			{
+				<div className="size-[35px] bg-[#353535] rounded-full flex items-center justify-center">
+					<span className="text-white text-[13px] font-bold">
+						+{nbFriend}
+					</span>
+				</div>
+			}
 		</div>
 	);
 }
@@ -154,7 +176,10 @@ function ProfileInfo({ user, displayFriends }) {
 						@{user.username}
 					</h2>
 					<div className="flex gap-[30px]">
-						<Friend displayFriends={displayFriends} />
+						<Friend
+							displayFriends={displayFriends}
+							username={user.username}
+						/>
 					</div>
 				</div>
 			</div>

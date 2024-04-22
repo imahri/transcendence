@@ -8,7 +8,7 @@ from rest_framework import status
 from Tools.HttpFileResponse import HttpFileResponse
 
 from .serializers import UserSerializer, InfoSerializer
-from .models import Info, User
+from .models import Info, User, Friend
 
 
 # Create your views here.
@@ -120,12 +120,64 @@ def getFriendView(request):
         user: User = request.user
         if not user.friends.exists():
             raise ObjectDoesNotExist("No results")
-        founded_users = [friend_rl.friend for friend_rl in user.friends]
+        # founded_users = [friend_rl.friend for friend_rl in user.friends]
+        founded_users = [friend_rl.friend for friend_rl in user.friends if not friend_rl.is_block]
+        if not founded_users:
+            raise ObjectDoesNotExist("No results")
         response = []
         for user in founded_users:
             userData = dict(UserSerializer(user).data)
             response.append(userData)
         return Response(data=response)
+    except ObjectDoesNotExist as no_found:
+        return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def getUserFriends(request):
+    try:
+        username : str = request.query_params.get("username")
+        user : User = User.objects.get(username=username)
+        if not user.friends.exists():
+            raise ObjectDoesNotExist("No results")
+      
+        founded_users = user.friends.exclude(status='B')
+        if not founded_users:
+            raise ObjectDoesNotExist("No results")
+        response = []
+        for user in founded_users:
+            userData = dict(UserSerializer(user.friend).data)
+            response.append(userData)
+        return Response(data=response)
+    except ObjectDoesNotExist as no_found:
+        return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def getFewFriend(request):
+    try:
+        username : str = request.query_params.get("username")
+        user : User = User.objects.get(username=username)
+
+        if not user.friends.exists():
+            raise ObjectDoesNotExist("No results")
+
+
+        nb_friends = user.friends.exclude(status='B').count()
+
+        if nb_friends == 0:
+            raise ObjectDoesNotExist("No results")
+
+        friends = user.friends.exclude(status='B')[:5]
+        response = []
+        for user in friends:
+            userData = dict(UserSerializer(user.friend).data)
+            response.append(userData)
+        return Response({"friends": response, "nb" : nb_friends})
     except ObjectDoesNotExist as no_found:
         return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as error:

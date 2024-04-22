@@ -42,6 +42,7 @@ function Profile({ params }) {
 						setisLoading(false);
 					} else {
 						console.log("error fetch");
+						navigate.replace("/home");
 					}
 				},
 			);
@@ -56,21 +57,24 @@ function Profile({ params }) {
 					<div>Is Loding ...</div>
 				) : (
 					<div className="w-full flex flex-col items-center gap-[20px]">
-						<div className="w-[90%] bg-[#353535] rounded-[25px]">
+						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
 							<Banner />
 							<ProfileInfo
 								user={userProfile}
 								displayFriends={setDisplayFriends}
 							/>
 						</div>
-						<div className="w-[90%] bg-[#353535] rounded-[25px]">
+						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
 							<Dashboard />
 						</div>
 					</div>
 				)}
 			</main>
 			{displayFriends && (
-				<Friendspopup DisplayFriends={setDisplayFriends} />
+				<Friendspopup
+					DisplayFriends={setDisplayFriends}
+					username={userProfile.username}
+				/>
 			)}
 		</>
 	);

@@ -1,6 +1,8 @@
 "use client";
-import IMG from "../assets/profile.png";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { GET_Friends_URL } from "@/app/URLS";
 
 function closeSvg(DisplayFriends) {
 	return (
@@ -22,24 +24,6 @@ function closeSvg(DisplayFriends) {
 	);
 }
 
-const friend = {
-	image: IMG,
-	name: "Sakawi",
-	firstName: "oussama",
-	lastName: "krich",
-};
-
-const friends = [
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-	friend,
-];
-
 function Friend({ friend, index }) {
 	return (
 		<div
@@ -49,23 +33,41 @@ function Friend({ friend, index }) {
 			{
 				<Image
 					className="size-[50px] rounded-full"
-					src={friend.image}
+					src={friend.img}
+					width={50}
+					height={50}
 					alt=""
 				/>
 			}
 			<div>
 				<h2 className="font-Chakra font-semibold text-[20px] text-white">
-					{friend.name}
+					{friend.username}
 				</h2>
 				<h3 className="font-Chakra font-bold text-[14px] text-[#C8C8C8]">
-					{friend.firstName} {friend.lastName}{" "}
+					{friend.first_name} {friend.last_name}{" "}
 				</h3>
 			</div>
 		</div>
 	);
 }
 
-export default function Friendspopup({ DisplayFriends }) {
+export default function Friendspopup({ DisplayFriends, username }) {
+	const [friends, setFriends] = useState();
+	const [error, setError] = useState();
+
+	useEffect(() => {
+		fetch_jwt(GET_Friends_URL, { username: username }).then(
+			([isOk, status, data]) => {
+				if (!isOk) {
+					setError(true);
+					return;
+				}
+				setFriends(data);
+				console.log(data);
+			},
+		);
+	}, []);
+
 	return (
 		<div className="size-full fixed z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]">
 			<div className="w-[500px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col gap-[20px] items-center">
@@ -73,10 +75,15 @@ export default function Friendspopup({ DisplayFriends }) {
 				<h1 className="font-Chakra font-semibold text-[36px] text-[#BABABA]">
 					Friends
 				</h1>
-				<div className="w-[90%] h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">
-					{friends.map((friend, index) => (
-						<Friend friend={friend} index={index} />
-					))}
+				<div className="w-[90%] max-h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">
+					{friends &&
+						friends.map((friend, index) => (
+							<Friend friend={friend} index={index} />
+						))}
+					{
+						//style it later
+						error && <h1>No Friends</h1>
+					}
 				</div>
 			</div>
 		</div>
