@@ -47,9 +47,15 @@ class ConversationView(APIView):
             .order_by("-last_modified")
             .distinct()[offset : offset + limit]
         )  # ?? check this later  # !! check the order
-        conversations_arr = [
-            conversation.as_serialized(user) for conversation in conversations
-        ]
+        conversations_arr = []
+        for conversation in conversations:
+            friend_rl_first, friend_rl_last = (
+                conversation.friends.first(),
+                conversation.friends.last(),
+            )
+            if friend_rl_first is not None and friend_rl_last is not None:
+                if friend_rl_first.is_friend and friend_rl_last.is_friend:
+                    conversations_arr.append(conversation.as_serialized(user))
         return Response(
             {"size": len(conversations_arr), "conversations": conversations_arr}
         )
