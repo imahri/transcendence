@@ -106,9 +106,12 @@ function StartConversation({
 	};
 
 	const onStartConv = (friend) => {
-		router.push(`/chat/${friend.username}`);
-		setConvState(friend.username);
-		if (!convList.some((conv) => conv.name === friend.username)) {
+		if (
+			convList &&
+			!convList.some((conv) => conv.name === friend.username)
+		) {
+			router.push(`/chat/${friend.username}`);
+			setConvState(friend.username);
 			getConversation(friend.username).then((conv) =>
 				setConvList([conv, ...convList]),
 			);
