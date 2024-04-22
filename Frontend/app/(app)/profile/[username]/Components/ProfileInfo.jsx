@@ -144,13 +144,13 @@ function Friend({ displayFriends, username }) {
 						/>
 					);
 				})}
-			{
+			{nbFriend > 0 && (
 				<div className="size-[35px] bg-[#353535] rounded-full flex items-center justify-center">
 					<span className="text-white text-[13px] font-bold">
 						+{nbFriend}
 					</span>
 				</div>
-			}
+			)}
 		</div>
 	);
 }
