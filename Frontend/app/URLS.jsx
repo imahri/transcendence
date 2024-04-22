@@ -25,5 +25,6 @@ export const GET_USER_URL = `${USER_APP}/user`;
 
 export const GET_5Friends_URL = `${USER_APP}/somefriends`;
 export const GET_Friends_URL = `${USER_APP}/userfriends`;
+export const GET_Blocked_URL = `${USER_APP}/getblocked`;
 
 export const wsChat = `${WS}/ws/chat`;

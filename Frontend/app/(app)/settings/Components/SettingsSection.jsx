@@ -8,6 +8,7 @@ import { AccountSvg, AboutSvg, SecuritySvg, LogoutSvg } from "./Icons";
 
 function SettingsSection(props) {
 	const showSettings = props.showSettings;
+	const showBlocked = props.showBlocked;
 	const [security, setSecurity] = useState();
 	const setShowQr = props.setShowQr;
 
@@ -59,10 +60,13 @@ function SettingsSection(props) {
 				{security && <Security setShowQr={setShowQr} />}
 			</div>
 			<div className="w-[80%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do">
-				<div className="flex items-center gap-[15px] pl-[35px] max-[260px]:pl-[10px]">
+				<div
+					className="flex items-center gap-[15px] pl-[35px] max-[260px]:pl-[10px]"
+					onClick={() => showBlocked(true)}
+				>
 					{AboutSvg}
 					<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
-						About
+						Blocked User
 					</h1>
 				</div>
 			</div>

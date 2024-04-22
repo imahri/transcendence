@@ -182,3 +182,27 @@ def getFewFriend(request):
         return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as error:
         return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(["GET"])
+def getBlockedUsers(request):
+    try:
+        user : User = request.user
+
+        if not user.friends.exists():
+            raise ObjectDoesNotExist("No results")
+
+
+        friends = user.friends.filter(status='B')
+        if not friends:
+            raise ObjectDoesNotExist("No results")
+        
+        response = []
+        for user in friends:
+            userData = dict(UserSerializer(user.friend).data)
+            response.append(userData)
+        return Response(data=response)
+    except ObjectDoesNotExist as no_found:
+        return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
