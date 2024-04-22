@@ -66,7 +66,6 @@ const Add_icon = () => (
 );
 
 function StartConversation({
-	user,
 	router,
 	setStates: {
 		setConvState,
@@ -98,20 +97,29 @@ function StartConversation({
 		}
 	}, [visible]);
 
+	const getConversation = async (friend) => {
+		const [isOk, status, data] = await fetch_jwt(
+			`${APIs.chat.conversations}/${friend}`,
+		);
+		if (!isOk) router.push("/chat");
+		return data;
+	};
+
 	const onStartConv = (friend) => {
 		router.push(`/chat/${friend.username}`);
 		setConvState(friend.username);
 		if (!convList.some((conv) => conv.name === friend.username)) {
-			// getConversation get conv HERE 
-			getConversation(user.usern, friend.username).then((conv) => // 
-			setConvList([...convList, conv]),
+			getConversation(friend.username).then((conv) =>
+				setConvList([conv, ...convList]),
 			);
 		}
 	};
 
 	return (
-		<button className="group" onClick={handleScale}>
-			<Add_icon />
+		<>
+			<button onClick={handleScale}>
+				<Add_icon />
+			</button>
 			<div
 				ref={_ref}
 				className="absolute left-[22rem] bottom-20 w-[15rem] h-[33rem] bg-[#222222] rounded-3xl  transition-all duration-75 scale-0 origin-bottom
@@ -126,7 +134,7 @@ function StartConversation({
 					/>
 				))}
 			</div>
-		</button>
+		</>
 	);
 }
 

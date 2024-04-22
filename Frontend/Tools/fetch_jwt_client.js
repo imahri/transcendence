@@ -4,6 +4,7 @@ import { BASE_URL } from "@/app/URLS";
 export const APIs = {
 	chat: {
 		conversations: `${BASE_URL}/chat/conversations`,
+		last_message: `${BASE_URL}/chat/conversations/last_message/`,
 		messages: `${BASE_URL}/chat/messages`,
 	},
 	user: {

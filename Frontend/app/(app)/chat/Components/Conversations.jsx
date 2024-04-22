@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { useConvState } from "../Hooks/useConvState";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
 import { USER_APP } from "@/app/URLS";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 
 function Unseen({ count }) {
 	return (
@@ -74,10 +75,11 @@ function Conversation({
 }) {
 	const router = useRouter();
 	const [convState, setConvState] = useContext(ConvChatContext);
+	const isActive = convState === name;
 	// !! For security: Change it to Image object
 
 	const handleClick = () => {
-		if (convState !== name) {
+		if (!isActive) {
 			// TODO : set unseen_message_count to 0 because you see message XD
 			router.push(`/chat/${name}`);
 			setConvState(name);
@@ -87,17 +89,19 @@ function Conversation({
 	return (
 		<button
 			onClick={handleClick}
-			className={`${styles.section} ${convState == name && styles.focus_section}`}
+			className={`${styles.section} ${isActive && styles.focus_section}`}
 		>
 			<ProfileImage src={user.info.profile_img} />
 			<FriendInfo
 				friend_name={name}
-				last_msg={convState != name && last_message.message}
+				last_msg={!isActive && last_message?.message}
 			/>
-			<TimeNotification
-				time={last_message.sended_at}
-				unseen_msg={unseen_msg}
-			/>
+			{last_message && (
+				<TimeNotification
+					time={last_message.sended_at}
+					unseen_msg={unseen_msg}
+				/>
+			)}
 		</button>
 	);
 }
@@ -107,11 +111,44 @@ export default function Conversations({
 	_convList,
 	_convListOffset,
 }) {
-	const { user, socket, data } = useContext(WsChatContext);
-
+	const {
+		user,
+		socket,
+		data,
+		messageUpdatedState: [messageUpdated, setMessageUpdated],
+	} = useContext(WsChatContext);
 	const [convState, setConvState] = _convState;
 	const [convList, setConvList] = _convList;
 	const [convListOffset, setConvListOffset] = _convListOffset;
+
+	useEffect(() => {
+		if (messageUpdated) {
+			const update = async () => {
+				let _convList = [...convList];
+				let idx, id;
+				_convList.forEach((conv, _idx) => {
+					if (conv.name === convState) {
+						idx = _idx;
+						id = conv.id;
+					}
+				});
+				const [isOk, status, data] = await fetch_jwt(
+					`${APIs.chat.last_message}${id}`,
+				);
+				if (isOk) {
+					_convList[idx].last_message = data;
+					_convList.sort((f, s) =>
+						f.last_message.sended_at > s.last_message.sended_at
+							? -1
+							: 1,
+					);
+					setConvList(_convList);
+				}
+			};
+			update();
+			setMessageUpdated(false);
+		}
+	}, [convState, messageUpdated]);
 
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>

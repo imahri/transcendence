@@ -2,8 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import styles from "./styles/ProfileBar.module.css";
-// import optionsIcon from "./assets/options_icon.svg";
-import exitArrow from "./assets/exit_arrow.svg";
+import ExitArrowIcon from "./assets/exit_arrow_icon";
 import { useRouter } from "next/navigation";
 
 export const ActiveStatusTypes = Object.freeze({
@@ -24,15 +23,9 @@ function Status({ status }) {
 	);
 }
 
-const ExitArrow = ({ route }) => (
-	<button className={styles.exitArrow} onClick={() => route.push("/chat")}>
-		<Image
-			className={styles.exitArrow_Image}
-			width={100}
-			height={100}
-			src={exitArrow}
-			alt="exit arrow"
-		/>
+const ExitArrow = ({ onExit }) => (
+	<button className={styles.exitArrow} onClick={onExit}>
+		<ExitArrowIcon className={styles.exitArrow_Image} />
 	</button>
 );
 
@@ -49,7 +42,7 @@ export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
 
 	return (
 		<div className={styles.container}>
-			<ExitArrow route={route} />
+			<ExitArrow onExit={() => route.push("/chat")} />
 			<div className={styles.profileBar}>
 				<button onClick={onOpenProfile}>
 					<Image

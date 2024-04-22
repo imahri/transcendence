@@ -33,7 +33,7 @@ export function Searchbar({ style_ops }) {
 		if (input) {
 			console.log("==> {input}");
 			clearTimeout(timeout);
-			timeout = setTimeout(() => searchForUsers(input, setResult), 1000);
+			timeout = setTimeout(() => searchForUsers(input, setResult), 300);
 		}
 	}, [input]);
 

@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
 import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
 import { TypingBar } from "./Components/TypingBar";
@@ -28,13 +28,18 @@ async function getMessages(conversation_id) {
 	return { messages: [], size: 0 };
 }
 
-
 export default function DM_Conversation({ params: { FriendName } }) {
-	const { user, socket, data } = useContext(WsChatContext);
+	const {
+		user,
+		socket,
+		data,
+		messageUpdatedState: [messageUpdated, setmessageUpdated],
+	} = useContext(WsChatContext);
 	const [conversation_id] = useConversationID(FriendName);
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
 	const [showProfile, setShowProfile] = useState(false);
+	const _ref = useRef();
 
 	useEffect(() => {
 		const _getMessages = async () => {
@@ -61,11 +66,15 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		socket.send(JSON.stringify(message));
 		console.log(message);
 		setMessages([...messages, message]);
+		setmessageUpdated(true);
 	};
 
 	const onReceive = (messages, new_msg) => {
 		const message = JSON.parse(new_msg);
-		if (FriendName == message.sender) setMessages([...messages, message]);
+		if (FriendName == message.sender) {
+			setMessages([...messages, message]);
+			setmessageUpdated(true);
+		}
 		console.log(message);
 	};
 
@@ -76,11 +85,12 @@ export default function DM_Conversation({ params: { FriendName } }) {
 					name={FriendName}
 					profileImg={user.info.profile_img}
 					activeStatus={ActiveStatusTypes.Active}
-					onOpenProfile={() =>
+					onOpenProfile={() => {
 						showProfile
-							? setShowProfile(false)
-							: setShowProfile(true)
-					}
+							? _ref.current.classList.remove("scale-100")
+							: _ref.current.classList.add("scale-100");
+						setShowProfile(!showProfile);
+					}}
 				/>
 				<MessagesSection
 					FriendName={FriendName}
@@ -88,15 +98,14 @@ export default function DM_Conversation({ params: { FriendName } }) {
 				/>
 				<TypingBar onSend={onSend} />
 			</div>
-			{showProfile == true && (
-				<ProfileSection
-					FriendInfo={{
-						name: FriendName,
-						status: ActiveStatusTypes.Active,
-					}}
-					setShowProfile={setShowProfile}
-				/>
-			)}
+			<ProfileSection
+				_ref={_ref}
+				className="transition-all duration-300 scale-0 origin-right"
+				FriendInfo={{
+					name: FriendName,
+					status: ActiveStatusTypes.Active,
+				}}
+			/>
 		</>
 	);
 }

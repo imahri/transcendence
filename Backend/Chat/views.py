@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.request import Request
@@ -10,9 +11,9 @@ from django.db.models import Q, Count, Max
 
 def catch_view_exception(func):
 
-    def Wrapper(self, request):
+    def Wrapper(self, *args, **kwargs):
         try:
-            return func(self, request)
+            return func(self, *args, **kwargs)
         except Exception as error:
             return Response(
                 data={"error": str(error)}, status=status.HTTP_400_BAD_REQUEST
@@ -41,17 +42,38 @@ class ConversationView(APIView):
         queryset = Conversation.objects.annotate(
             isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
         )
-        conversations = queryset.filter(isExist=True, num_messages__gt=0).order_by(
-            "-last_modified"
-        ).distinct()[
-            offset : offset + limit
-        ]  # ?? check this later  # !! check the order
+        conversations = (
+            queryset.filter(isExist=True, num_messages__gt=0)
+            .order_by("-last_modified")
+            .distinct()[offset : offset + limit]
+        )  # ?? check this later  # !! check the order
         conversations_arr = [
             conversation.as_serialized(user) for conversation in conversations
         ]
         return Response(
             {"size": len(conversations_arr), "conversations": conversations_arr}
         )
+
+    @staticmethod
+    @api_view(["GET"])
+    @catch_view_exception
+    def get_conversation(request, friend_name: str):
+        user: User = request.user
+        friend: User = User.get_by_identifier(friend_name)
+        conversation: Conversation = Friend.objects.get(
+            user=user, friend=friend
+        ).conversation
+        return Response(conversation.as_serialized(user))
+
+    @staticmethod
+    @api_view(["GET"])
+    @catch_view_exception
+    def get_last_message(request, id: int):
+        conversation: Conversation = Conversation.objects.get(pk=id)
+        last_message = conversation.last_message
+        if last_message is None:
+            return Response({"error": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(last_message)
 
     def delete(self, request):
         pass

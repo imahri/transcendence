@@ -1,6 +1,5 @@
-import Image from "next/image";
 import React, { useRef } from "react";
-import SendLogo from "./assets/send_icon.svg";
+import SendIcon from "./assets/send_icon";
 import styles from "./styles/TypingBar.module.css";
 
 export function TypingBar({ onSend }) {
@@ -22,13 +21,7 @@ export function TypingBar({ onSend }) {
 					placeholder="Type a message..."
 				/>
 				<button onClick={handleClick}>
-					<Image
-						width={500}
-						height={500}
-						className={styles.img}
-						src={SendLogo}
-						alt="Send logo"
-					/>
+					<SendIcon className={styles.img} />
 				</button>
 			</label>
 		</div>
