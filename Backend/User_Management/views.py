@@ -66,7 +66,10 @@ class UserView(APIView):
     def delete(self, request):
         try:
 
-            user = User.objects.get(pk=request.user.pk)
+            password = request.data.get('password')
+            user : User = User.objects.get(pk=request.user.pk)
+            if not user.check_password(password) :
+                return Response({"error": "wrong password"}, status=400)
             user.delete()
             return Response({"yes": "yes"})
 
@@ -182,3 +185,45 @@ def getFewFriend(request):
         return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as error:
         return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class BlockView(APIView):
+
+    def get(self, request):
+        try:
+            user : User = request.user
+
+            if not user.friends.exists():
+                raise ObjectDoesNotExist("No results")
+
+
+            friends = user.friends.filter(status='B')
+            if not friends:
+                raise ObjectDoesNotExist("No results")
+
+            response = []
+            for user in friends:
+                userData = dict(UserSerializer(user.friend).data)
+                response.append(userData)
+            return Response(data=response)
+        except ObjectDoesNotExist as no_found:
+            return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    def put(self, request):
+        try:
+            user : User = request.user
+
+            friend_id = request.data.get('friend_id')
+            friend : User = User.objects.get(id=friend_id)
+
+            friendship =  user.get_friendship(friend=friend)          
+            friendship.deblock()
+
+            return Response(data=friendship.is_block==False)
+
+        except Exception as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        

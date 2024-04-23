@@ -77,6 +77,12 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
             except Exception as error:
                 print('error block :  ', error)
         
+        elif action == 'Unblock':
+            try:
+                await database_sync_to_async(self.user.deblock_friend)(friend=friend)
+            except Exception as error:
+                print('error block :  ', error)
+              
         try:
             target_friend = self.get_channel_by_user(friend.username)
             await self.channel_layer.send(target_friend, {"type": "update"})
