@@ -1,0 +1,382 @@
+.page{
+    display:flex;
+    flex-direction: column;
+    width: 90%;
+    height: 100vh;
+    flex-wrap: wrap;
+    overflow: auto;
+    position: absolute;
+    left: 10%;
+}
+
+.rows_exac{
+    /* background: rgb(255, 132, 0); */
+    height: 10vh;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.fliko{
+    flex:1;
+    /* background: red; */
+}
+
+.content{
+    display:flex;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+
+    justify-content: center;
+    align-items: center;
+    row-gap: 50px;
+
+}
+.item{
+  /* background: green; */
+    height: 100%;
+    width: 360px;
+    /* background: rgb(71, 71, 71); */
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+}
+
+.title{
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    font-size: 45px;
+    font-weight: 700;
+    color: #7B7B7B;
+    /* background: red; */
+
+
+}
+
+.card{
+    position: absolute;
+
+    cursor: pointer;
+    height: 70%;
+    width: 75%;
+    /* background: green; */
+    border-radius: 20px;
+    /* box-shadow: 10px 10px 10px black; */
+
+    transition: 0.5s;
+}
+
+.item span{
+  position: absolute;
+    top: 50%;
+    margin-top: 25%;
+    color: #7B7B7B;
+    font-size: 30px;
+    font-weight: 700;
+    bottom: 0;
+    z-index: -1;
+    transition: 0.5s;
+}
+
+.card:hover{
+    height:85%;
+    width: 95%;
+
+}
+
+.item .card:hover + .ti_n {
+  color: #7B7B7B;
+  top:110%;
+}
+
+
+/* @media (min-width: 1301px){
+
+
+} */
+
+
+
+.first{
+    background-image: url('../images/kakashi.png');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(75%);
+    transition: 0.5s;
+}
+
+.first:hover{
+    opacity: 1;
+    filter: grayscale(0%);
+    
+}
+
+.second{
+    background-image: url('../images/classic.png');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(75%);
+    transition: 0.5s;
+}
+
+.second:hover{
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.third{
+    background-image: url('../images/chapion.png');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(75%);
+    transition: 0.5s;
+}
+
+.third:hover{
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.lastOne{
+
+    padding: 10px 10px 150px;
+    margin-bottom: 200px;
+}
+
+.shad{
+    width: 60%;
+    height: 15px;
+    background: black;
+    position: absolute;
+    top: 90%;
+    border-radius: 50%;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+.graf{
+  font-family: sans-serif;
+  position: absolute;
+  top: 105%;
+  left: 50%;
+  transform: translate(-50%,0%);
+  font-size: 30px;
+  pointer-events: none;
+  color: #7B7B7B;
+  font-weight: 600;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+.card:hover + .ti_n{
+  top: 150%;
+  opacity: 1;
+
+}
+
+.opopo{
+  position: absolute;
+}
+
+@keyframes move_it {
+    0% {
+      top: 14%;
+    }
+    25% {
+      top: 15%;
+    }
+    50% {
+      top: 16%;
+    }
+    75% {
+      top: 15%;
+    }
+    100% {
+      top: 14%;
+    }
+  }
+  
+  .card {
+    animation: move_it 3s linear infinite; /* Increase the duration to slow down */
+  }
+
+@keyframes shad_in {
+    0% {
+      width: 50%;
+    }
+    25% {
+      width: 60%;
+    }
+    50% {
+      width: 70%;
+    }
+    75% {
+      width: 60%;
+    }
+    100% {
+      width: 50%;
+    }
+  }
+  
+  .shad {
+    animation: shad_in 3s linear infinite; /* Increase the duration to slow down */
+  }
+  
+  @media (min-width: 2000px) {
+    .item .card:hover + .ti_n {
+      color: #7B7B7B;
+      top:110%;
+    }
+    
+  }
+
+  @media (min-width: 1300px) and (max-width: 2000px){
+    .item .card:hover + .ti_n {
+      color: #7B7B7B;
+      top:90%;
+    }
+    
+  }
+
+  @media (min-width: 2000px) {
+    .page{
+      overflow: hidden;
+    }
+    .content{
+
+      display:flex;
+      flex-wrap: wrap;
+      height: 100%;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      row-gap: 50px;
+  
+  }
+
+  .item{
+      height: 100%;
+      width: 360px;
+      /* background: rgb(71, 71, 71); */
+      border-radius: 25px;
+      display: flex;
+      justify-content: flex-start;
+      position: relative;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      margin: 0 100px;
+  }
+  
+  .card{
+    position: absolute;
+    cursor: pointer;
+    height: 80%;
+    width: 95%;
+    border-radius: 20px;
+    column-gap: 50px;
+    transition: 0.5s;
+  }
+  
+  .middle_it{
+    margin-left: 150px;
+    margin-right: 150px;
+  }
+
+  .item span{
+    top: 50%;
+    margin-top: 25%;
+    color: #7B7B7B;
+    font-size: 30px;
+    position: absolute;
+    font-weight: 700;
+    bottom: 0;
+
+    z-index: -1;
+    transition: 0.5s;
+  }
+  
+  .card:hover{
+
+      height:100%;
+      width: 100%;
+
+  }
+  .card:hover + .ti_n{
+      top: 150%;
+      opacity: 1;
+
+  }
+  .shad{
+    top:105%
+  }
+}
+
+
+
+
+@media (max-width: 1300px)
+{
+  .page
+  {
+    left: 0;
+    width: 100%;
+  }
+  .content{
+
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .item{
+    background-position: center;
+    background-size: cover;
+    height: 30%;
+    width: 80%;
+    gap:0;
+  }
+
+  .item span{
+    top: 0%;
+    margin-top: 25%;
+    color: #7B7B7B;
+    font-size: 30px;
+    position: absolute;
+    font-weight: 700;
+    bottom: 0;
+    visibility: visible;
+    z-index: -1;
+
+    transition: 0.5s;
+}
+.card:hover + .ti_n{
+  opacity: 1;
+  visibility: visible;
+}
+}
+
+
+@media (max-width: 1301px){
+
+  .item span{
+
+    display: none;
+  }
+
+  
+  .card:hover{
+    filter: grayscale(0);
+  }
+  .card:hover .graf{
+    visibility: visible;
+  }
+
+}
+
