@@ -66,7 +66,10 @@ class UserView(APIView):
     def delete(self, request):
         try:
 
-            user = User.objects.get(pk=request.user.pk)
+            password = request.data.get('password')
+            user : User = User.objects.get(pk=request.user.pk)
+            if not user.check_password(password) :
+                return Response({"error": "wrong password"}, status=400)
             user.delete()
             return Response({"yes": "yes"})
 
