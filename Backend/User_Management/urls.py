@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ImageView, UserView, InfoView, searchView, getFriendView, getFewFriend, getUserFriends, getBlockedUsers
+from .views import ImageView, UserView, InfoView, searchView, getFriendView, getFewFriend, getUserFriends, BlockView
 
 urlpatterns = [
     path("", UserView.as_view(), name="user"),
@@ -11,5 +11,5 @@ urlpatterns = [
     path("friends", getFriendView, name="friends"),
     path("somefriends", getFewFriend, name="fewfriends"),
     path("userfriends", getUserFriends, name="userfriends"),
-    path("getblocked", getBlockedUsers, name="getblocked"),
+    path("block", BlockView.as_view(), name="getblocked"),
 ]

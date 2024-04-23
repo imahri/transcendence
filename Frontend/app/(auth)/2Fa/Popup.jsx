@@ -7,7 +7,7 @@ export function closePopopupSvg(setPopUp) {
 	return (
 		<svg
 			onClick={() => setPopUp(false)}
-			className="absolute top-[15px] right-[10px] cursor-pointer"
+			className="absolute top-[20px] right-[20px] cursor-pointer"
 			width="20"
 			height="20"
 			viewBox="0 0 26 26"
