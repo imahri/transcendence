@@ -135,9 +135,7 @@ export default function Conversations({
 		[convList],
 	);
 
-	useEffect(() => {
-		if (ws) ws.onmessage = OnMessage;
-	}, [convList, ws]);
+	if (ws) ws.onmessage = OnMessage;
 
 	useEffect(() => {
 		if (messageUpdated) {

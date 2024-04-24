@@ -15,9 +15,11 @@ export const WsChatProvider = ({ children, conversations }) => {
 	useEffect(() => {
 		if (!socket) {
 			setSocket(new WebSocket(wsChat + `?token=${getToken()}`));
-			console.log("connect with ws/chat");
 			return;
 		}
+		socket.onopen = () => console.log("Connected with ws/chat");
+		socket.onerror = () => console.log("Error in ws/chat");
+		socket.onclose = () => console.log("Disconnected with ws/chat");
 		return () => socket.close();
 	}, [socket]);
 

@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
 import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
 import { TypingBar } from "./Components/TypingBar";
@@ -62,20 +62,18 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	const [messagesOffset, setMessagesOffset] = useState(0);
 	const [showProfile, setShowProfile] = useState(false);
 	const _ref = useRef();
-
-	useEffect(() => {
-		getFriendInfo(FriendName).then((info) => setFriendinfo(info));
-
-		getMessages(conversation_id).then((new_messages) => {
-			setMessages(new_messages.messages);
-			setMessagesOffset(new_messages.size);
-		});
-	}, [conversation_id, FriendName]);
-
-	useEffect(() => {
-		if (socket) socket.onmessage = (e) => onReceive(messages, e.data);
-	}, [messages, FriendName]);
-
+	const onReceive = useCallback(
+		(e) => {
+			const message = JSON.parse(e.data);
+			if (FriendName == message.sender) {
+				setMessages([...messages, message]);
+				setmessageUpdated(true);
+			}
+			console.log(message);
+		},
+		[FriendName, messages],
+	);
+	if (socket) socket.onmessage = onReceive;
 	const onSend = (new_msg) => {
 		const message = {
 			conversation_id: conversation_id,
@@ -90,14 +88,14 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		setmessageUpdated(true);
 	};
 
-	const onReceive = (messages, new_msg) => {
-		const message = JSON.parse(new_msg);
-		if (FriendName == message.sender) {
-			setMessages([...messages, message]);
-			setmessageUpdated(true);
-		}
-		console.log(message);
-	};
+	useEffect(() => {
+		getFriendInfo(FriendName).then((info) => setFriendinfo(info));
+
+		getMessages(conversation_id).then((new_messages) => {
+			setMessages(new_messages.messages);
+			setMessagesOffset(new_messages.size);
+		});
+	}, [conversation_id, FriendName]);
 
 	return (
 		<>
