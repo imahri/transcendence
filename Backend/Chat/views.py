@@ -7,6 +7,7 @@ from rest_framework.request import Request
 from User_Management.models import User, Friend
 from .models import Conversation, Message
 from django.db.models import Q, Count, Max
+from django.core.paginator import Paginator
 
 
 def catch_view_exception(func):
@@ -26,6 +27,7 @@ class ConversationView(APIView):
 
     @catch_view_exception
     def options(self, request):
+
         user: User = request.user
         friend: User = User.get_by_identifier(request.query_params.get("FriendName"))
         frined_rl = Friend.objects.filter(user=user, friend=friend).first()
@@ -35,19 +37,27 @@ class ConversationView(APIView):
 
     @catch_view_exception
     def get(self, request):
+        SIZE = 12
         user: User = request.user
-        limit = int(request.query_params.get("limit"))
+        # limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
 
         queryset = Conversation.objects.annotate(
             isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
         )
-        conversations = (
+        conversation_list = (
             queryset.filter(isExist=True, num_messages__gt=0)
             .order_by("-last_modified")
-            .distinct()[offset : offset + limit]
-        )  # ?? check this later  # !! check the order
+            .distinct()
+        )
+        PaginatorConv = Paginator(conversation_list, SIZE, allow_empty_first_page=False)
+        if offset <= 0 or offset > PaginatorConv.num_pages:
+            return Response(
+                {"error": "Out of range"}, status=status.HTTP_406_NOT_ACCEPTABLE
+            )
+        conversations = PaginatorConv.get_page(offset)
         conversations_arr = []
+        print(conversations)
         for conversation in conversations:
             friend_rl_first, friend_rl_last = (
                 conversation.friends.first(),

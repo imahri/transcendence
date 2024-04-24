@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
@@ -105,6 +105,18 @@ function Conversation({
 	);
 }
 
+async function getMoreConversation(offset) {
+	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
+		offset: offset,
+	});
+	if (isOk) {
+		console.log(data);
+		if (status == 406) return { size: 0, conversations: [] };
+		return data;
+	}
+	return { size: 0, conversations: [] };
+}
+
 export default function Conversations({
 	_convState,
 	_convList,
@@ -120,6 +132,7 @@ export default function Conversations({
 	const [convList, setConvList] = _convList;
 	const [convListOffset, setConvListOffset] = _convListOffset;
 	const { ws } = useContext(UserContext);
+	const ConversationsRef = useRef();
 	const router = useRouter();
 	const OnMessage = useCallback(
 		(e) => {
@@ -166,9 +179,34 @@ export default function Conversations({
 		}
 	}, [convList, convState, messageUpdated]);
 
+	const handleScroll = () => {
+		console.log(
+			ConversationsRef.current.clientHeight,
+			ConversationsRef.current.scrollTop,
+			ConversationsRef.current.scrollHeight,
+		);
+
+		if (
+			ConversationsRef.current.clientHeight +
+				ConversationsRef.current.scrollTop ===
+			ConversationsRef.current.scrollHeight
+		) {
+			getMoreConversation(convListOffset).then(
+				({ size, conversations }) => {
+					setConvList([...conversations, ...convList]);
+					setConvListOffset(convListOffset + size);
+				},
+			);
+		}
+	};
+
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
-			<div className={styles.container}>
+			<div
+				ref={ConversationsRef}
+				onScroll={handleScroll}
+				className={styles.container}
+			>
 				{convList?.map((conversation, idx) => (
 					<Conversation key={idx} user={user} info={conversation} />
 				))}
