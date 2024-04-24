@@ -37,7 +37,21 @@ class UserSerializer(ModelSerializer):
     def save(self, **kwargs):
         self.is_valid(raise_exception=True)
         return super().save(**kwargs)
-    
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        
+        # Check if password is provided before updating
+        password = validated_data.get('password', None)
+        if password:
+            instance.set_password(password)
+        
+        instance.save()
+        return instance
+
+
     def get_img(self, obj):
         return obj.get_info()['profile_img']
 

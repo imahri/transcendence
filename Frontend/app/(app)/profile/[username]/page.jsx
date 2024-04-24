@@ -9,6 +9,7 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import Friendspopup from "./Components/DisplayFreinds";
+import EditProfile from "./Components/EditProfile";
 
 function Profile({ params }) {
 	const [userProfile, setUserProfile] = useState(false);
@@ -76,6 +77,7 @@ function Profile({ params }) {
 					username={userProfile.username}
 				/>
 			)}
+			<EditProfile />
 		</>
 	);
 }

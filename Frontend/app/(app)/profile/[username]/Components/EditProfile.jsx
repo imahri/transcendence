@@ -1,0 +1,208 @@
+import { useContext, useState, useRef } from "react";
+import { UserContext } from "@/app/(app)/context";
+import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
+import Image from "next/image";
+import { PasswordSvg, errorSvg, nameInputSvg } from "@/app/(auth)/Allsvg";
+import { ChangeInfo } from "./EditUtils";
+import { showPassword } from "@/app/(auth)/AuthTools/LoginRegisterTools";
+
+function InputContainer({ type, label, id, placeHolder, error }) {
+	return (
+		<div
+			className={`w-full h-[60px] bg-[#252525] rounded-[5px] pt-[5px] flex ${error ? "animate-shake" : ""}`}
+		>
+			<label
+				className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
+				htmlFor={id}
+			>
+				{label}
+			</label>
+			<input
+				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px] placeholder:text-white"
+				required={type == "password"}
+				type={type}
+				id={id}
+				placeholder={placeHolder}
+			/>
+			{nameInputSvg}
+		</div>
+	);
+}
+
+function DoubleInput({ type, label, id, placeHolder }) {
+	return (
+		<div className="w-[47%] bg-[#252525] rounded-[5px] flex pt-[5px] max-[592px]:h-[50px] max-[592px]:mt-[30px]">
+			<label
+				className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
+				htmlFor={id}
+			>
+				{label}
+			</label>
+			<input
+				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px] placeholder:text-white"
+				type={type}
+				id={id}
+				placeholder={placeHolder}
+			/>
+
+			{nameInputSvg}
+		</div>
+	);
+}
+
+function PasswordInput({ setReady, error }) {
+	const checkPass = (e) => {
+		const password = e.target.value.trim();
+
+		setReady(password.length >= 9);
+	};
+	return (
+		<div
+			className={`w-full h-[60px] bg-[#252525] rounded-[5px] pt-[5px] flex  ${error ? "animate-shake border  border-red-600" : ""}`}
+		>
+			<label
+				className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
+				htmlFor="password"
+			>
+				Enter Your password to confirm
+			</label>
+			<input
+				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px] placeholder:text-white"
+				required
+				type="password"
+				id="password"
+				onChange={(e) => {
+					checkPass(e);
+				}}
+			/>
+			{PasswordSvg(showPassword)}
+		</div>
+	);
+}
+
+function UploadSvg() {
+	return (
+		<div className="absolute top-0 rounded-full w-full h-full flex justify-center items-center opacity-0 hover:opacity-100 hover:backdrop-brightness-50 cursor-pointer">
+			<svg
+				width="30"
+				height="40"
+				viewBox="0 0 46 42"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M4.16667 0C1.88945 0 0 1.88945 0 4.16667V29.1667C0 31.4439 1.88945 33.3333 4.16667 33.3333H20.8333V29.1667H4.16667V4.16667H37.5V16.6667H41.6667V4.16667C41.6667 1.88945 39.7772 0 37.5 0H4.16667ZM26.0417 14.5833L18.75 22.9167L13.5417 17.7083L7.86947 25H29.1667V18.75L26.0417 14.5833ZM33.3333 20.8333V29.1667H25V33.3333H33.3333V41.6667H37.5V33.3333H45.8333V29.1667H37.5V20.8333H33.3333Z"
+					fill="white"
+				/>
+			</svg>
+		</div>
+	);
+}
+
+function EditProfile() {
+	const Form = useRef(null);
+
+	const [tmp, setTmp] = useState();
+	const [ready, setReady] = useState();
+	const [error, setError] = useState();
+
+	const { user, setUser } = useContext(UserContext);
+
+	return (
+		<div className="size-full fixed z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]">
+			<div className="w-[600px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col gap-[20px] items-center">
+				{closePopopupSvg(setTmp)}
+				<h1 className="font-Chakra font-semibold text-[24px] text-[#BABABA]">
+					Edit Profile
+				</h1>
+
+				<form
+					className="w-[90%] flex flex-col items-center gap-[20px]"
+					ref={Form}
+					onSubmit={(e) => ChangeInfo(e, Form, setError, setUser)}
+				>
+					<label htmlFor="profile" className="relative">
+						<Image
+							src={user.img}
+							width={100}
+							height={100}
+							className="rounded-full size-[100px] hover:opacity-[40%]"
+							alt="profile Image"
+						/>
+						<UploadSvg />
+					</label>
+					<input
+						type="file"
+						accept="image/png, "
+						id="profile"
+						className="hidden"
+					/>
+
+					{/* </Image>/ */}
+					{/* <input type="image" src={user.img} width="100" height="100" id="profile"/> */}
+					{/* <input type="image" src="img_submit.gif" alt="Submit" width="48" height="48">  */}
+
+					<div
+						className={
+							error
+								? "animate-shake bg-red-600 mx-[50px] w-[80%] h-[40px] rounded-[5px] flex justify-center items-center"
+								: "hidden"
+						}
+					>
+						{errorSvg}
+						<span className="p-[5px] text-white">
+							Error : {error?.msg}
+						</span>
+					</div>
+
+					<InputContainer
+						type={"text"}
+						id={"username"}
+						label={"Change your username"}
+						placeHolder={user.username}
+						error={error?.type == "username"}
+					/>
+
+					<div className="w-full h-[60px] flex justify-between max-[592px]:h-auto max-[592px]:block">
+						<DoubleInput
+							type={"text"}
+							id={"firstname"}
+							label={"Change your firstname"}
+							placeHolder={user.first_name}
+							error={error?.type == "first_name"}
+						/>
+						<DoubleInput
+							type={"text"}
+							id={"lastname"}
+							label={"Change your lastname"}
+							placeHolder={user.last_name}
+							error={error?.type == "last_name"}
+						/>
+					</div>
+
+					<InputContainer
+						type={"email"}
+						id={"email"}
+						label={"Change your Email"}
+						placeHolder={user.email}
+						error={error?.type == "email"}
+					/>
+
+					{/* <InputContainer type={'password'} id={'password'} label={'Enter Your password to confirm'}  placeHolder={''}/> */}
+
+					<PasswordInput setReady={setReady} />
+
+					<button
+						className={`w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer ${ready ? "text-white" : "text-gray-300 text-opacity-60"}`}
+						type="submit"
+						disabled={!ready}
+					>
+						save
+					</button>
+				</form>
+			</div>
+		</div>
+	);
+}
+
+export default EditProfile;

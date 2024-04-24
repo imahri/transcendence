@@ -2,12 +2,14 @@ import { REGISTER_URL } from "../../URLS";
 
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools";
 
-function isValidEmail(email) {
+export function isValidEmail(email) {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	return emailRegex.test(email);
 }
 
 export const registerSubmit = async (e, Form, navigate) => {
+	e.preventDefault();
+
 	const FormField = Form.current;
 
 	const firstname = FormField["firstname"].value.trim();
@@ -16,7 +18,6 @@ export const registerSubmit = async (e, Form, navigate) => {
 	const password = FormField["password"].value.trim();
 	// const username = FormField['username'].value
 
-	e.preventDefault();
 	if (!firstname) {
 		console.log("user name is empty");
 		errorInForm(setErrorFirstname, setError);

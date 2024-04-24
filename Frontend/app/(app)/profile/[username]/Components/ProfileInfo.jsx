@@ -137,10 +137,10 @@ function Friend({ displayFriends, username }) {
 					return (
 						<Image
 							key={index}
-							className="size-[35px] cursor-pointer rounded-full mr-[-10px]"
 							src={fr.img}
 							width={35}
 							height={35}
+							className={`size-[35px] rounded-full cursor-pointer ${friends.length > 1 ? "mr-[-10px]" : ""}`}
 							alt=""
 						/>
 					);
