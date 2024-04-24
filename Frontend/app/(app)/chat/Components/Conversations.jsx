@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
@@ -121,24 +121,23 @@ export default function Conversations({
 	const [convListOffset, setConvListOffset] = _convListOffset;
 	const { ws } = useContext(UserContext);
 	const router = useRouter();
+	const OnMessage = useCallback(
+		(e) => {
+			const data = JSON.parse(e.data);
+			console.log(convList);
+			if (data.status == "B") {
+				setConvList(
+					convList.filter((conv) => conv.name !== data.friend),
+				);
+				router.replace("/chat");
+			}
+		},
+		[convList],
+	);
 
 	useEffect(() => {
-		if (ws)
-			ws.onmessage = (e) => {
-				const data = JSON.parse(e.data);
-				console.log(data);
-				if (data.status == "B") {
-					console.log(
-						convList,
-						convList.filter((conv) => conv.name !== data.friend),
-					);
-					setConvList(
-						convList.filter((conv) => conv.name !== data.friend),
-					);
-					router.replace("/chat");
-				}
-			};
-	}, [ws]);
+		if (ws) ws.onmessage = OnMessage;
+	}, [convList, ws]);
 
 	useEffect(() => {
 		if (messageUpdated) {
