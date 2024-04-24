@@ -91,7 +91,6 @@ function StartConversation({
 					return;
 				}
 				setFriendList(data);
-				console.log(data);
 			};
 			get_friends();
 		}

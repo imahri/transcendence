@@ -164,7 +164,7 @@ export default function Conversations({
 			update();
 			setMessageUpdated(false);
 		}
-	}, [convState, messageUpdated]);
+	}, [convList, convState, messageUpdated]);
 
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
