@@ -110,16 +110,16 @@ class FriendShipConsumer(AsyncJsonWebsocketConsumer):
     async def check_friendship(self ,friend):
         
         if self.user.pk == friend.pk:
-            await self.send_json(content={'status': 'owner'})
+            await self.send_json(content={"friend": friend.username, 'status': 'owner'})
 
         else :
             try:
                 friendShip = await database_sync_to_async(self.user.get_friendship)(friend=friend)
-                await self.send_json(content={'status': friendShip.status})
+                await self.send_json(content={"friend": friend.username, 'status': friendShip.status})
                 
 
             except Exception:
-                await self.send_json(content={'status': 'not friend'})
+                await self.send_json(content={"friend": friend.username, 'status': 'not friend'})
             
 
 

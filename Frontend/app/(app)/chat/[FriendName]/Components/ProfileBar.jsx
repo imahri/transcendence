@@ -37,7 +37,11 @@ const InviteToPlay = () => (
 	</div>
 );
 
-export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
+export function ProfileBar({
+	friendinfo: { name, image },
+	activeStatus,
+	onOpenProfile,
+}) {
 	const route = useRouter();
 
 	return (
@@ -45,13 +49,15 @@ export function ProfileBar({ name, profileImg, activeStatus, onOpenProfile }) {
 			<ExitArrow onExit={() => route.push("/chat")} />
 			<div className={styles.profileBar}>
 				<button onClick={onOpenProfile}>
-					<Image
-						className={styles.profileBar_Image}
-						width={100}
-						height={100}
-						src={profileImg}
-						alt="Profile image"
-					/>
+					{image && (
+						<Image
+							className={styles.profileBar_Image}
+							width={100}
+							height={100}
+							src={image}
+							alt="Profile image"
+						/>
+					)}
 					<section className={styles.profileInfo}>
 						<h2>{name}</h2>
 						<Status status={activeStatus} />

@@ -1,13 +1,12 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
-import { useConvState } from "../Hooks/useConvState";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
-import { USER_APP } from "@/app/URLS";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { UserContext } from "../../context";
 
 function Unseen({ count }) {
 	return (
@@ -120,6 +119,26 @@ export default function Conversations({
 	const [convState, setConvState] = _convState;
 	const [convList, setConvList] = _convList;
 	const [convListOffset, setConvListOffset] = _convListOffset;
+	const { ws } = useContext(UserContext);
+	const router = useRouter();
+
+	useEffect(() => {
+		if (ws)
+			ws.onmessage = (e) => {
+				const data = JSON.parse(e.data);
+				console.log(data);
+				if (data.status == "B") {
+					console.log(
+						convList,
+						convList.filter((conv) => conv.name !== data.friend),
+					);
+					setConvList(
+						convList.filter((conv) => conv.name !== data.friend),
+					);
+					router.replace("/chat");
+				}
+			};
+	}, [ws]);
 
 	useEffect(() => {
 		if (messageUpdated) {

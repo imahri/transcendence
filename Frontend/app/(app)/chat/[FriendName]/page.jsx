@@ -8,6 +8,7 @@ import { WsChatContext } from "../context/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
 import useConversationID from "../Hooks/useConversationID";
+import { GET_USER_URL } from "@/app/URLS";
 
 async function getMessages(conversation_id) {
 	if (conversation_id != 0) {
@@ -28,6 +29,22 @@ async function getMessages(conversation_id) {
 	return { messages: [], size: 0 };
 }
 
+async function getFriendInfo(FriendName) {
+	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
+		username: FriendName,
+	});
+	if (isOk) {
+		let info = {
+			id: data.user.id,
+			name: FriendName,
+			image: data.user.img,
+			level: data.user.info.level,
+		};
+		return info;
+	}
+	return null;
+}
+
 export default function DM_Conversation({ params: { FriendName } }) {
 	const {
 		user,
@@ -36,19 +53,23 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		messageUpdatedState: [messageUpdated, setmessageUpdated],
 	} = useContext(WsChatContext);
 	const [conversation_id] = useConversationID(FriendName);
+	const [friendinfo, setFriendinfo] = useState({
+		name: FriendName,
+		image: null,
+		status: true,
+	});
 	const [messages, setMessages] = useState([]);
 	const [messagesOffset, setMessagesOffset] = useState(0);
 	const [showProfile, setShowProfile] = useState(false);
 	const _ref = useRef();
 
 	useEffect(() => {
-		const _getMessages = async () => {
-			const new_messages = await getMessages(conversation_id);
+		getFriendInfo(FriendName).then((info) => setFriendinfo(info));
+
+		getMessages(conversation_id).then((new_messages) => {
 			setMessages(new_messages.messages);
 			setMessagesOffset(new_messages.size);
-		};
-
-		_getMessages();
+		});
 	}, [conversation_id, FriendName]);
 
 	useEffect(() => {
@@ -82,8 +103,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		<>
 			<div className="flex-grow h-screen">
 				<ProfileBar
-					name={FriendName}
-					profileImg={user.info.profile_img}
+					friendinfo={friendinfo}
 					activeStatus={ActiveStatusTypes.Active}
 					onOpenProfile={() => {
 						showProfile
@@ -101,10 +121,8 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			<ProfileSection
 				_ref={_ref}
 				className="transition-all duration-300 scale-0 origin-right"
-				FriendInfo={{
-					name: FriendName,
-					status: ActiveStatusTypes.Active,
-				}}
+				status={ActiveStatusTypes.Active}
+				friendinfo={friendinfo}
 			/>
 		</>
 	);
