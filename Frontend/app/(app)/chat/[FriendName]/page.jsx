@@ -99,7 +99,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 
 	return (
 		<>
-			<div className="flex-grow h-screen">
+			<div className="flex-grow h-screen flex flex-col justify-between items-center">
 				<ProfileBar
 					friendinfo={friendinfo}
 					activeStatus={ActiveStatusTypes.Active}

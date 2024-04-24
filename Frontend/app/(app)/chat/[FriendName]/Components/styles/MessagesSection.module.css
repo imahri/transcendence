@@ -1,15 +1,14 @@
 .container {
-	@apply h-[80%] w-full overflow-y-scroll scrollbar-hide flex flex-col space-y-7 pt-10 pb-5;
+	@apply h-full w-full overflow-y-scroll scrollbar-hide flex flex-col space-y-7 pt-10 pb-5;
 }
 
 .messageSection {
-	@apply min-h-24 w-full flex;
+	@apply min-h-[5rem] w-full flex;
 	@apply text-white;
 }
 
 .message {
-	/* @apply h-[80%] w-[30%]; */
-	@apply min-h-20 max-w-[70%];
+	@apply min-h-[5rem] max-w-[70%];
 	@apply bg-[#303030] flex flex-col justify-center items-start pl-4 pr-3;
 }
 

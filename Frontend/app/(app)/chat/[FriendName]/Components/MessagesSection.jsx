@@ -23,9 +23,6 @@ function Message({ messageInfo, FriendName, isSent }) {
 	return (
 		<div className={`${styles.messageSection} ${messageSection_style}`}>
 			<section className={`${styles.message} ${message_style}`}>
-				{!isSent && (
-					<h3 className={styles.message_name}>{FriendName}</h3>
-				)}
 				<p className={styles.message_text}>{messageInfo.message}</p>
 				<small
 					className={`${styles.message_time} ${message_time_style}`}

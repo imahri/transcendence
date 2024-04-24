@@ -1,13 +1,13 @@
 .container {
-	@apply h-[10%] w-full flex justify-center pt-4;
+	@apply h-28 w-full flex justify-center items-center;
 }
 
 .container label {
-	@apply w-[95%] h-[75%] pl-14 flex justify-start items-center rounded-2xl bg-[#303030];
+	@apply w-[95%] h-16 pl-14 flex justify-start items-center mb-7 rounded-2xl bg-[#303030];
 }
 
 .container input {
-	@apply w-full h-[70%] bg-inherit pb-1;
+	@apply w-full h-full bg-inherit pb-1;
 	@apply font-normal text-2xl text-[#d6d6d6];
 	@apply focus:outline-none placeholder:cursor-default placeholder:font-normal placeholder:text-2xl placeholder:text-[#B4B4B4];
 }
