@@ -6,10 +6,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
 from Tools.HttpFileResponse import HttpFileResponse
+from core.settings import DEFAULT_PROFILE_IMG
+
 
 from .serializers import UserSerializer, InfoSerializer
 from .models import Info, User, Friend
-
+import os
 
 # Create your views here.
 
@@ -54,6 +56,8 @@ class UserView(APIView):
             if password is None or UserObj.check_password(password) is False :
                 return Response({"password": "Password Incorrect"}, status=400)
 
+            ancien_img = UserObj.info.profile_img
+
             UserSerialized = UserSerializer(UserObj, data=request.data)
             infoObj = Info.objects.get(user=UserObj)
             InfoSerialized = InfoSerializer(infoObj, data=request.data)
@@ -68,6 +72,9 @@ class UserView(APIView):
                 UserData["info"] = InfoSerializer(
                     Info.objects.get(user=request.user.pk)
                 ).data
+                if FormData.get('profile_img') is not None and ancien_img != DEFAULT_PROFILE_IMG:
+                    os.remove(ancien_img.path)
+                      
                 return Response(UserData)
             else:
                 print(UserSerialized.errors)

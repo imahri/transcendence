@@ -35,6 +35,7 @@ function sent(NewInfo, setError, setUser) {
 		},
 	).then(([isOk, status, data]) => {
 		if (!isOk) {
+			console.log(data);
 			data.email
 				? errorInForm(setError, { type: "email", msg: data.email[0] })
 				: "";
@@ -92,7 +93,12 @@ export function ChangeInfo(e, Form, setError, setUser) {
 		return;
 	}
 
-	if (!NewInfo.first_name && !NewInfo.last_name && !NewInfo.email) {
+	if (
+		!NewInfo.first_name &&
+		!NewInfo.last_name &&
+		!NewInfo.email &&
+		!NewInfo.profile_img
+	) {
 		errorInForm(setError, {
 			type: "field",
 			msg: "You should change at least one field befor submit",
