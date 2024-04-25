@@ -34,10 +34,11 @@ function callBack(socket, action, friend_id) {
 		update = { action: "accept", friend_id: friend_id };
 	else if (action == "block")
 		update = { action: "block", friend_id: friend_id };
+	else if (action == "Unblock")
+		update = { action: "Unblock", friend_id: friend_id };
 	else if (
 		action == "Reject" ||
 		action == "Remove Friend" ||
-		action == "Unblock" ||
 		action == "remove Request"
 	)
 		update = { action: "remove", friend_id: friend_id };
@@ -120,7 +121,7 @@ function Friend({ displayFriends, username }) {
 		fetch_jwt(GET_5Friends_URL, { username: username }).then(
 			([isOk, status, data]) => {
 				if (!isOk) {
-					setError(true);
+					// setError(true); /// error
 					return;
 				}
 				setFriends(data.friends);

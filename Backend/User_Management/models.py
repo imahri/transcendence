@@ -105,7 +105,10 @@ class User(AbstractUser):
 
     def block_friend(self, friend):
         self.get_friendship(friend).block()
-
+        
+    def deblock_friend(self, friend):
+        self.get_friendship(friend).deblock()
+        
     def delete_friend(self, friend):
         self.get_friendship(friend).delete()
         friend.get_friendship(self).delete()
@@ -231,6 +234,16 @@ class Friend(models.Model):
         self.save()
         friend_obj = self.friend.get_friendship(self.user)
         friend_obj.status = "BY"
+        friend_obj.save()
+
+
+    def deblock(self):
+        if not self.status == 'B':
+            raise Exception("is not Blocked")
+        self.status = "F"
+        self.save()
+        friend_obj = self.friend.get_friendship(self.user)
+        friend_obj.status = "F"
         friend_obj.save()
 
     @property
