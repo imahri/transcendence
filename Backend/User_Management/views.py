@@ -45,12 +45,15 @@ class UserView(APIView):
     def post(self, request):
         try:
 
-            FormData : dict = request.data
-            password = FormData.pop('password')
-            print(password)
-            print(FormData)
-
             UserObj = User.objects.get(id=request.user.pk)
+
+            FormData : dict = request.data.copy()
+            password_list = FormData.pop('password')
+            password = password_list[0] if isinstance(password_list, list) else password_list
+
+            if password is None or UserObj.check_password(password) is False :
+                return Response({"password": "Password Incorrect"}, status=400)
+
             UserSerialized = UserSerializer(UserObj, data=request.data)
             infoObj = Info.objects.get(user=UserObj)
             InfoSerialized = InfoSerializer(infoObj, data=request.data)

@@ -74,7 +74,7 @@ function Button({ action, color, socket, friend_id }) {
 	);
 }
 
-function Buttons({ profileUser }) {
+function Buttons({ profileUser, EditProfile }) {
 	const [status, setStatus] = useState(profileUser.friendship);
 	const { ws } = useContext(UserContext);
 
@@ -94,7 +94,10 @@ function Buttons({ profileUser }) {
 	}, [ws]);
 
 	return (
-		<div className="flex flex-col gap-[10px] mr-[50px]">
+		<div
+			className="flex flex-col gap-[10px] mr-[50px]"
+			onClick={status == "owner" ? () => EditProfile(true) : null}
+		>
 			{Allbuttons.filter((element) => element.status === status).map(
 				(element, index) => {
 					return (
@@ -156,7 +159,7 @@ function Friend({ displayFriends, username }) {
 	);
 }
 
-function ProfileInfo({ user, displayFriends }) {
+function ProfileInfo({ user, displayFriends, EditProfile }) {
 	return (
 		<div className="w-full h-[130px]  flex items-center justify-between relative">
 			<div className="rounded-full size-[160px]  absolute left-[50px] top-[-30px] flex justify-center items-center bg-[#353535]">
@@ -184,7 +187,7 @@ function ProfileInfo({ user, displayFriends }) {
 					</div>
 				</div>
 			</div>
-			<Buttons profileUser={user} />
+			<Buttons profileUser={user} EditProfile={EditProfile} />
 		</div>
 	);
 }

@@ -13,6 +13,7 @@ import EditProfile from "./Components/EditProfile";
 
 function Profile({ params }) {
 	const [userProfile, setUserProfile] = useState(false);
+	const [Edit, setEditProfile] = useState(false);
 	const [isLoading, setisLoading] = useState(true);
 	const navigate = useRouter();
 
@@ -63,6 +64,7 @@ function Profile({ params }) {
 							<ProfileInfo
 								user={userProfile}
 								displayFriends={setDisplayFriends}
+								EditProfile={setEditProfile}
 							/>
 						</div>
 						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
@@ -77,7 +79,7 @@ function Profile({ params }) {
 					username={userProfile.username}
 				/>
 			)}
-			<EditProfile />
+			{Edit && <EditProfile closePopup={setEditProfile} />}
 		</>
 	);
 }

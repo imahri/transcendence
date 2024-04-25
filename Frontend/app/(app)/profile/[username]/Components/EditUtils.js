@@ -2,6 +2,10 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { isValidEmail } from "@/app/(auth)/register/registerUtils";
 import { POST_INFO_URL, USER_URL } from "@/app/URLS";
 
+function onlySpace(str) {
+	return str.trim().length == 0;
+}
+
 function errorInForm(setError, error) {
 	//I change the state to true to re-render the componnents and disply the eroor section
 	setError(error);
@@ -17,7 +21,6 @@ function sent(NewInfo, setError, setUser) {
 	NewInfo.profile_img
 		? formData.append("profile_img", NewInfo.profile_img)
 		: "";
-	NewInfo.username ? formData.append("username", NewInfo.username) : "";
 	NewInfo.last_name ? formData.append("last_name", NewInfo.last_name) : "";
 	NewInfo.first_name ? formData.append("first_name", NewInfo.first_name) : "";
 	NewInfo.email ? formData.append("email", NewInfo.email) : "";
@@ -32,14 +35,6 @@ function sent(NewInfo, setError, setUser) {
 		},
 	).then(([isOk, status, data]) => {
 		if (!isOk) {
-			console.log(data);
-			const error = "an error has been accured";
-			data.username
-				? errorInForm(setError, {
-						type: "username",
-						msg: data.username[0],
-					})
-				: "";
 			data.email
 				? errorInForm(setError, { type: "email", msg: data.email[0] })
 				: "";
@@ -61,7 +56,12 @@ function sent(NewInfo, setError, setUser) {
 						msg: data.profile_img,
 					})
 				: "";
-
+			data.password
+				? errorInForm(setError, {
+						type: "password",
+						msg: data.password,
+					})
+				: "";
 			return;
 		}
 		setUser(data);
@@ -74,19 +74,36 @@ export function ChangeInfo(e, Form, setError, setUser) {
 	const FormField = Form.current;
 
 	const NewInfo = {
-		username: FormField["username"].value.trim(),
-		first_name: FormField["firstname"].value.trim(),
-		last_name: FormField["lastname"].value.trim(),
 		profile_img: FormField["profile"].files[0],
-		email: FormField["email"].value.trim(),
-		password: FormField["password"].value.trim(),
+		first_name: FormField["firstname"].value,
+		last_name: FormField["lastname"].value,
+		email: FormField["email"].value,
+		password: FormField["password"].value,
 	};
+
+	NewInfo.last_name = onlySpace(NewInfo.last_name) ? "" : NewInfo.last_name;
+	NewInfo.first_name = onlySpace(NewInfo.first_name)
+		? ""
+		: NewInfo.first_name;
+	NewInfo.password = onlySpace(NewInfo.password) ? "" : NewInfo.password;
+
+	if (!NewInfo.password) {
+		errorInForm(setError, { type: "password", msg: "password Invalid" });
+		return;
+	}
+
+	if (!NewInfo.first_name && !NewInfo.last_name && !NewInfo.email) {
+		errorInForm(setError, {
+			type: "field",
+			msg: "You should change at least one field befor submit",
+		});
+		return;
+	}
 
 	if (NewInfo.email && !isValidEmail(NewInfo.email)) {
 		errorInForm(setError, { type: "email", msg: "email is invalid" });
+		return;
 	}
 
 	sent(NewInfo, setError, setUser);
-
-	// setError(NewInfo.profile_img)
 }

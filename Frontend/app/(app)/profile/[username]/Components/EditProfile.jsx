@@ -52,7 +52,7 @@ function DoubleInput({ type, label, id, placeHolder }) {
 
 function PasswordInput({ setReady, error }) {
 	const checkPass = (e) => {
-		const password = e.target.value.trim();
+		const password = e.target.value;
 
 		setReady(password.length >= 9);
 	};
@@ -99,10 +99,9 @@ function UploadSvg() {
 	);
 }
 
-function EditProfile() {
+function EditProfile({ closePopup }) {
 	const Form = useRef(null);
 
-	const [tmp, setTmp] = useState();
 	const [ready, setReady] = useState();
 	const [error, setError] = useState();
 
@@ -111,7 +110,7 @@ function EditProfile() {
 	return (
 		<div className="size-full fixed z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]">
 			<div className="w-[600px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col gap-[20px] items-center">
-				{closePopopupSvg(setTmp)}
+				{closePopopupSvg(closePopup)}
 				<h1 className="font-Chakra font-semibold text-[24px] text-[#BABABA]">
 					Edit Profile
 				</h1>
@@ -138,14 +137,10 @@ function EditProfile() {
 						className="hidden"
 					/>
 
-					{/* </Image>/ */}
-					{/* <input type="image" src={user.img} width="100" height="100" id="profile"/> */}
-					{/* <input type="image" src="img_submit.gif" alt="Submit" width="48" height="48">  */}
-
 					<div
 						className={
 							error
-								? "animate-shake bg-red-600 mx-[50px] w-[80%] h-[40px] rounded-[5px] flex justify-center items-center"
+								? "animate-shake bg-red-600 mx-[50px] w-[90%]  h-[40px] rounded-[5px] flex justify-center items-center"
 								: "hidden"
 						}
 					>
@@ -154,14 +149,6 @@ function EditProfile() {
 							Error : {error?.msg}
 						</span>
 					</div>
-
-					<InputContainer
-						type={"text"}
-						id={"username"}
-						label={"Change your username"}
-						placeHolder={user.username}
-						error={error?.type == "username"}
-					/>
 
 					<div className="w-full h-[60px] flex justify-between max-[592px]:h-auto max-[592px]:block">
 						<DoubleInput
@@ -187,8 +174,6 @@ function EditProfile() {
 						placeHolder={user.email}
 						error={error?.type == "email"}
 					/>
-
-					{/* <InputContainer type={'password'} id={'password'} label={'Enter Your password to confirm'}  placeHolder={''}/> */}
 
 					<PasswordInput setReady={setReady} />
 
