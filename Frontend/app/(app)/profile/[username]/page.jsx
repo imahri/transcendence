@@ -9,9 +9,11 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import Friendspopup from "./Components/DisplayFreinds";
+import EditProfile from "./Components/EditProfile";
 
 function Profile({ params }) {
 	const [userProfile, setUserProfile] = useState(false);
+	const [Edit, setEditProfile] = useState(false);
 	const [isLoading, setisLoading] = useState(true);
 	const navigate = useRouter();
 
@@ -62,6 +64,7 @@ function Profile({ params }) {
 							<ProfileInfo
 								user={userProfile}
 								displayFriends={setDisplayFriends}
+								EditProfile={setEditProfile}
 							/>
 						</div>
 						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
@@ -76,6 +79,7 @@ function Profile({ params }) {
 					username={userProfile.username}
 				/>
 			)}
+			{Edit && <EditProfile closePopup={setEditProfile} />}
 		</>
 	);
 }

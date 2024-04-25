@@ -6,10 +6,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
 from Tools.HttpFileResponse import HttpFileResponse
+from core.settings import DEFAULT_PROFILE_IMG
+
 
 from .serializers import UserSerializer, InfoSerializer
 from .models import Info, User, Friend
-
+import os
 
 # Create your views here.
 
@@ -39,6 +41,44 @@ class UserView(APIView):
                 Info.objects.get(user=request.user.pk)
             ).data
             return Response(userObj)
+        except Exception as error:
+            return Response({"error": str(error)}, status=400)
+        
+    def post(self, request):
+        try:
+
+            UserObj = User.objects.get(id=request.user.pk)
+
+            FormData : dict = request.data.copy()
+            password_list = FormData.pop('password')
+            password = password_list[0] if isinstance(password_list, list) else password_list
+
+            if password is None or UserObj.check_password(password) is False :
+                return Response({"password": "Password Incorrect"}, status=400)
+
+            ancien_img = UserObj.info.profile_img
+
+            UserSerialized = UserSerializer(UserObj, data=request.data)
+            infoObj = Info.objects.get(user=UserObj)
+            InfoSerialized = InfoSerializer(infoObj, data=request.data)
+            if InfoSerialized.is_valid():
+                InfoSerialized.save()
+            else:
+                return Response(InfoSerialized.errors, status=400)
+            UserSerialized = UserSerializer(UserObj, data=request.data, partial=True)
+            if UserSerialized.is_valid():
+                UserSerialized.save()
+                UserData = UserSerialized.data
+                UserData["info"] = InfoSerializer(
+                    Info.objects.get(user=request.user.pk)
+                ).data
+                if FormData.get('profile_img') is not None and ancien_img != DEFAULT_PROFILE_IMG:
+                    os.remove(ancien_img.path)
+                      
+                return Response(UserData)
+            else:
+                print(UserSerialized.errors)
+                return Response(UserSerialized.errors, status=400)
         except Exception as error:
             return Response({"error": str(error)}, status=400)
 
