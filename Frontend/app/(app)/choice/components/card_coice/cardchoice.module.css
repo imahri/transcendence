@@ -7,6 +7,7 @@
     overflow: auto;
     position: absolute;
     left: 10%;
+    overflow: hidden;
 }
 
 .rows_exac{
@@ -68,7 +69,7 @@
     /* background: green; */
     border-radius: 20px;
     /* box-shadow: 10px 10px 10px black; */
-
+    z-index: 1;
     transition: 0.5s;
 }
 
@@ -157,7 +158,8 @@
     top: 90%;
     border-radius: 50%;
     filter: blur(5px);
-    z-index: -1;
+    z-index: 0;
+
 }
 
 .graf{
@@ -374,9 +376,13 @@
   .card:hover{
     filter: grayscale(0);
   }
-  .card:hover .graf{
-    visibility: visible;
-  }
-
+  
 }
 
+.card:hover .graf{
+  visibility: visible;
+}
+
+.card:hover + .item .shad{
+  visibility: hidden;
+}
