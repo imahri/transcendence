@@ -50,22 +50,21 @@ class ConversationView(APIView):
             .order_by("-last_modified")
             .distinct()
         )
+        conversation_list = [
+            conversation
+            for conversation in conversation_list
+            if conversation.check_is_friend
+        ]
         PaginatorConv = Paginator(conversation_list, SIZE, allow_empty_first_page=False)
         if offset <= 0 or offset > PaginatorConv.num_pages:
             return Response(
                 {"error": "Out of range"}, status=status.HTTP_406_NOT_ACCEPTABLE
             )
         conversations = PaginatorConv.get_page(offset)
-        conversations_arr = []
+        conversations_arr = [
+            conversation.as_serialized(user) for conversation in conversations
+        ]
         print(conversations)
-        for conversation in conversations:
-            friend_rl_first, friend_rl_last = (
-                conversation.friends.first(),
-                conversation.friends.last(),
-            )
-            if friend_rl_first is not None and friend_rl_last is not None:
-                if friend_rl_first.is_friend and friend_rl_last.is_friend:
-                    conversations_arr.append(conversation.as_serialized(user))
         return Response(
             {"size": len(conversations_arr), "conversations": conversations_arr}
         )

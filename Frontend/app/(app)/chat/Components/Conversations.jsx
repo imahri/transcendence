@@ -105,16 +105,23 @@ function Conversation({
 	);
 }
 
-async function getMoreConversation(offset) {
-	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
-		offset: offset,
-	});
-	if (isOk) {
-		console.log(data);
-		if (status == 406) return { size: 0, conversations: [] };
-		return data;
+async function getMoreConversation(offset, _convListOffset) {
+	try {
+		const [convListOffset, setConvListOffset] = _convListOffset;
+		const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
+			offset: offset,
+		});
+		if (isOk) {
+			setConvListOffset(convListOffset + 1);
+			return data;
+		} else if (status == 406) {
+			setConvListOffset(0);
+			return { size: 0, conversations: [] };
+		}
+		return { size: 0, conversations: [] };
+	} catch (error) {
+		console.log(error);
 	}
-	return { size: 0, conversations: [] };
 }
 
 export default function Conversations({
@@ -180,24 +187,18 @@ export default function Conversations({
 	}, [convList, convState, messageUpdated]);
 
 	const handleScroll = () => {
-		console.log(
-			ConversationsRef.current.clientHeight,
-			ConversationsRef.current.scrollTop,
-			ConversationsRef.current.scrollHeight,
-		);
-
 		if (
 			ConversationsRef.current.clientHeight +
-				ConversationsRef.current.scrollTop ===
-			ConversationsRef.current.scrollHeight
-		) {
-			getMoreConversation(convListOffset).then(
-				({ size, conversations }) => {
+				ConversationsRef.current.scrollTop +
+				1 >=
+				ConversationsRef.current.scrollHeight &&
+			convListOffset !== 0
+		)
+			getMoreConversation(convListOffset, _convListOffset).then(
+				({ conversations }) => {
 					setConvList([...conversations, ...convList]);
-					setConvListOffset(convListOffset + size);
 				},
 			);
-		}
 	};
 
 	return (

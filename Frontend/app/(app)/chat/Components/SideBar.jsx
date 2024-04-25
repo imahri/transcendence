@@ -144,7 +144,7 @@ export function SideBar() {
 	const { user, socket, data } = useContext(WsChatContext);
 	const [convState, setConvState] = useConvState();
 	const [convList, setConvList] = useState(data.conversations);
-	const [convListOffset, setConvListOffset] = useState(1);
+	const [convListOffset, setConvListOffset] = useState(2);
 	const router = useRouter();
 	const showSideBar = usePathname() === "/chat";
 
