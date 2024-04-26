@@ -105,11 +105,10 @@ function Conversation({
 	);
 }
 
-async function getMoreConversation(offset, _convListOffset) {
+async function getMoreConversation(convListOffset, setConvListOffset) {
 	try {
-		const [convListOffset, setConvListOffset] = _convListOffset;
 		const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
-			offset: offset,
+			offset: convListOffset,
 		});
 		if (isOk) {
 			setConvListOffset(convListOffset + 1);
@@ -194,9 +193,9 @@ export default function Conversations({
 				ConversationsRef.current.scrollHeight &&
 			convListOffset !== 0
 		)
-			getMoreConversation(convListOffset, _convListOffset).then(
+			getMoreConversation(convListOffset, setConvListOffset).then(
 				({ conversations }) => {
-					setConvList([...conversations, ...convList]);
+					setConvList([...convList, ...conversations]);
 				},
 			);
 	};

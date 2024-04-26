@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body
 				suppressHydrationWarning={true}
-				className={`scrollbar-hide ${chakra.className}`}
+				className={`overflow-hidden ${chakra.className}`}
 			>
 				{children}
 			</body>
