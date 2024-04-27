@@ -9,7 +9,6 @@ export const handleSubmit = async (
 	setErrorPassword,
 	setError,
 	setPopUp2Fa,
-	setUser,
 	navigate,
 ) => {
 	e.preventDefault();
@@ -45,8 +44,8 @@ export const handleSubmit = async (
 			}
 			console.log("login success");
 			settoken(responseBody);
-			setUser(responseBody.user);
-			localStorage.setItem("user", JSON.stringify(responseBody.user));
+			// setUser(responseBody.user);
+			// localStorage.setItem("user", JSON.stringify(responseBody.user));
 			navigate.replace("/home");
 		} else {
 			setError(true);

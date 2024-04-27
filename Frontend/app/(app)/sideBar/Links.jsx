@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 
 function borderLeft() {
 	return (
-		<div className="h-[30px] border border-l-3 border-purple-600 top-[-2px] left-[-23px] absolute max-[900px]:border-0  max-[900px]:border-b-[3px] max-[900px]:top-0 max-[900px]:left-[-5px] max-[900px]:w-[38px]"></div>
+		<div className="h-[30px] border border-l-3 border-purple-600 top-[-2px] left-[-23px] absolute [@media(max-width:900px)]:border-0  [@media(max-width:900px)]:border-b-[3px] [@media(max-width:900px)]:top-0 [@media(max-width:900px)]:left-[-5px] [@media(max-width:900px)]:w-[38px]"></div>
 	);
 }
 
@@ -29,7 +29,7 @@ function Links(props) {
 
 	return (
 		<>
-			<li className="h-full grid justify-center max-[900px]:w-full max-[900px]:flex max-[900px]:justify-between">
+			<li className="h-full grid justify-center [@media(max-width:900px)]:w-full [@media(max-width:900px)]:flex [@media(max-width:900px)]:justify-between">
 				<ul className="relative m-[20px] flex justify-center cursor-pointer">
 					<Link href="/home">
 						{Home && borderLeft()}
@@ -63,7 +63,7 @@ function Links(props) {
 				</ul>
 				<div
 					onClick={() => showSettings(true)}
-					className="absolute bottom-[20px] w-[100%] flex justify-center cursor-pointer max-[900px]:relative max-[900px]:bottom-0 max-[900px]:w-[30px] max-[900px]:items-center"
+					className="absolute bottom-[20px] w-[100%] flex justify-center cursor-pointer [@media(max-width:900px)]:relative [@media(max-width:900px)]:bottom-0 [@media(max-width:900px)]:w-[30px] [@media(max-width:900px)]:items-center"
 				>
 					{LinkSvg(settingsPath(), 20, 21)}
 				</div>

@@ -1,7 +1,7 @@
 "use client";
 import { useContext } from "react";
 import Image from "next/image";
-import logo from "../../../logo.png";
+import logo from "@/app/logo.svg";
 import { UserContext } from "../../context";
 
 function Badge(props) {

@@ -40,7 +40,7 @@ function DeleteComponent() {
 			</h2>
 			<input
 				onChange={(e) => setPassword(e.target.value)}
-				className="w-[295px] h-[50px] rounded-[10px] bg-[#D9D9D9] pt-[2px] focus:outline-none text-white text-[30px] pl-[10px]"
+				className="w-[295px] [@media(max-width:550px)]:w-[90%] h-[50px] rounded-[10px] bg-[#D9D9D9] pt-[2px] focus:outline-none text-white text-[30px] pl-[10px]"
 				required
 				type="password"
 				id="password"
@@ -62,10 +62,10 @@ function DeleteComponent() {
 function Sections({ title, callBack, svg }) {
 	return (
 		<div
-			className="w-[80%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do"
+			className="w-[80%] [@media(max-width:500px)]:w-[98%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do"
 			onClick={() => callBack()}
 		>
-			<div className="flex items-center gap-[15px] pl-[35px] max-[260px]:pl-[10px]">
+			<div className="flex items-center gap-[15px] pl-[35px] [@media(max-width:360px)]:pl-[5px]">
 				{svg}
 				<h1 className=" mt-[10px] mb-[10px] font-bold text-white text-[20px]">
 					{title}
@@ -80,10 +80,10 @@ function SpecialSection({ children, title, svg }) {
 
 	return (
 		<div
-			className={`w-[80%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do ${show ? "bg-do" : ""} `}
+			className={`w-[80%] [@media(max-width:500px)]:w-[98%] h-auto bg-[#1D1D1D] opacity-[67%] my-[10px] mx-[20px] rounded-[10px] cursor-pointer hover:bg-do ${show ? "bg-do" : ""} `}
 		>
 			<div
-				className={`flex items-center gap-[15px] ${show ? "justify-center" : "pl-[35px] max-[260px]:pl-[10px]"}`}
+				className={`flex items-center gap-[15px] ${show ? "justify-center" : "pl-[35px] [@media(max-width:360px)]:pl-[5px]"}`}
 				onClick={() => setShow(!show)}
 			>
 				{svg}
@@ -103,7 +103,7 @@ function SettingsSection(props) {
 
 	const navigate = useRouter();
 	return (
-		<div className="w-[500px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col items-center">
+		<div className="w-[500px] [@media(max-width:650px)]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col items-center">
 			{closePopopupSvg(showSettings)}
 
 			<h1 className="mt-[10px] mb-[10px] font-bold text-white text-[20px]">

@@ -11,7 +11,7 @@ export default async function Layout({ children }) {
 		<UserContextProvider value={data}>
 			<div className="w-full h-full flex">
 				<SideBar />
-				<main className="bg-[#202020] w-full min-h-screen ml-[80px] max-[900px]:ml-0 max-[900px]:mb-[60px] max-[900px]:pb-[20px]">
+				<main className="bg-[#202020] w-full min-h-screen ml-[80px] [@media(max-width:900px)]:ml-0 [@media(max-width:900px)]:mb-[60px] [@media(max-width:900px)]:pb-[20px]">
 					{children}
 				</main>
 			</div>

@@ -32,8 +32,12 @@ function Register() {
 		<>
 			{closeSvg(navigate)}
 			<div className="flex items-center flex-col mb-0">
-				<Image src={logo} className="max-[450px]:h-[100px]" alt="" />
-				<h1 className=" font-bold text-[60px] text-white text-center max-[450px]:text-[40px]">
+				<Image
+					src={logo}
+					className="[@media(max-width:450px)]:h-[100px]"
+					alt=""
+				/>
+				<h1 className=" font-bold text-[60px] text-white text-center [@media(max-width:450px)]:text-[40px]">
 					Create <br /> new{" "}
 					<span className="text-[#0275A3]">account</span>
 				</h1>
@@ -54,9 +58,9 @@ function Register() {
 				ref={Form}
 				className="w-full"
 			>
-				<div className="w-[80%] h-[55px] my-[30px] mx-[50px] flex justify-between max-[592px]:h-auto max-[592px]:block">
+				<div className="w-[80%] h-[55px] my-[30px] mx-[50px] flex justify-between [@media(max-width:592px)]:h-auto [@media(max-width:592px)]:block">
 					<div
-						className={`bg-[#3F3A44] rounded-[5px] flex pt-[5px] max-[592px]:h-[50px] max-[592px]:mt-[30px] ${errorFirstame ? "animate-shake border  border-red-600" : ""}`}
+						className={`bg-[#3F3A44] rounded-[5px] flex pt-[5px] [@media(max-width:592px)]:h-[50px] [@media(max-width:592px)]:mt-[30px] ${errorFirstame ? "animate-shake border  border-red-600" : ""}`}
 					>
 						<label
 							className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
@@ -76,7 +80,7 @@ function Register() {
 					</div>
 
 					<div
-						className={`bg-[#3F3A44] rounded-[5px] flex pt-[5px] max-[592px]:h-[50px] max-[592px]:mt-[30px] ${errorLastname ? "animate-shake border  border-red-600" : ""}`}
+						className={`bg-[#3F3A44] rounded-[5px] flex pt-[5px] [@media(max-width:592px)]:h-[50px] [@media(max-width:592px)]:mt-[30px] ${errorLastname ? "animate-shake border  border-red-600" : ""}`}
 					>
 						<label
 							className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
@@ -138,7 +142,7 @@ function Register() {
 					Submit
 				</button>
 
-				<div className="flex justify-center my-[20px] mx-[50px] max-[550px]:grid max-[550px]:text-center">
+				<div className="flex justify-center my-[20px] mx-[50px] [@media(max-width:550px)]:grid [@media(max-width:550px)]:text-center">
 					<span className=" font-bold text-[#8C8C8C] text-[20px]">
 						Already Member?
 					</span>

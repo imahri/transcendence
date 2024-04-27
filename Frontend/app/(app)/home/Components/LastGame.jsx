@@ -23,7 +23,7 @@ function LastGame() {
 	const { user, setUser } = useContext(UserContext);
 
 	return (
-		<div className=" w-[50%] max-[1990px]:w-[40%] h-[424px] rounded-[15px] flex flex-col items-center justify-center gap-[20px] max-[710px]:w-[90%]">
+		<div className=" w-[50%] [@media(max-width:1990px)]:w-[40%] h-[424px] rounded-[15px] flex flex-col items-center justify-center gap-[20px] [@media(max-width:710px)]:w-[90%]">
 			<h2 className=" font-bold text-[20px] text-white">Last Game</h2>
 			<div>
 				<GameState user1={user} user2={user2} />

@@ -40,8 +40,8 @@ function Paddle({ obj, setPopup }) {
 
 function Info({ obj, setObj }) {
 	return (
-		<div className="size-full absolute z-[3] top-0 flex items-center justify-center backdrop-blur-[5px] max-[600px]:justify-start">
-			<div className="w-[500px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col items-center">
+		<div className="size-full absolute z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]  [@media(max-width:600px)]:justify-start">
+			<div className="w-[500px] [@media(max-width:650px)]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col items-center">
 				<svg
 					onClick={() => setObj(false)}
 					className="absolute top-[20px] right-[20px] cursor-pointer"
@@ -57,13 +57,13 @@ function Info({ obj, setObj }) {
 						fillOpacity="0.29"
 					/>
 				</svg>
-				<div className="flex gap-[10px] max-[500px]:flex-col max-[500px]:items-center">
+				<div className="flex gap-[10px] [@media(max-width:500px)]:flex-col [@media(max-width:500px)]:items-center">
 					<img
 						className="size-[131px] rounded-[15px]"
 						src={obj.image}
 						alt=""
 					/>
-					<div className="flex flex-col justify-center gap-[10px] max-[500px]:flex max-[500px]:flex-col max-[500px]:items-center">
+					<div className="flex flex-col justify-center gap-[10px] [@media(max-width:500px)]:flex [@media(max-width:500px)]:flex-col [@media(max-width:500px)]:items-center">
 						<h2 className="text-[#A3A3A3] text-[16px] font-semibold">
 							name :{" "}
 							<span className="text-white text-[16px] font-semibold">

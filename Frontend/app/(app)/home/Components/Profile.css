@@ -1,3 +1,10 @@
 .ProfileImg{
     background-image: url('../assets/profileBanner.png');
 }
+
+@media (max-width: 800px) {
+    .ProfileImg {
+        background-image: none;
+        background-color: #150A1E;
+    }
+}
