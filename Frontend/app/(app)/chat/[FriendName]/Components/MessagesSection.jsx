@@ -34,17 +34,29 @@ function Message({ messageInfo, FriendName, isSent }) {
 	);
 }
 
-export function MessagesSection({ FriendName, messageList }) {
-	const scrollRef = useRef();
+export function MessagesSection({
+	FriendName,
+	messageState: [messageList, isUpdatedState, LoadMoreMessages],
+}) {
+	const secRef = useRef();
+	const messages = [...messageList].reverse();
+	const _ref = useRef();
+	const isVisible = useOnVisible(_ref);
+	const [isUpdated, setIsUpdated] = isUpdatedState;
 
 	useEffect(() => {
-		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-	}, [messageList]);
+		secRef.current.scrollTop = secRef.current.scrollHeight;
+	}, [isUpdated]);
+
+	const onScroll = () => isVisible && LoadMoreMessages();
 
 	return (
-		<div ref={scrollRef} className={styles.container}>
-			{messageList &&
-				messageList.map((messageInfo, idx) => (
+		<div ref={secRef} onScroll={onScroll} className={styles.container}>
+			<div ref={_ref} className="w-full h-[10px] bg-red-400">
+				Load more
+			</div>
+			{messages &&
+				messages.map((messageInfo, idx) => (
 					<Message
 						key={idx}
 						FriendName={FriendName}

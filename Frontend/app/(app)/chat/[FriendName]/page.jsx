@@ -9,6 +9,8 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
 import useConversationID from "../Hooks/useConversationID";
 import { GET_USER_URL } from "@/app/URLS";
+import { useRouter } from "next/navigation";
+import { useMessageList } from "../Hooks/useMessages";
 
 async function getMessages(conversation_id) {
 	if (conversation_id != 0) {
@@ -52,27 +54,29 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		data,
 		messageUpdatedState: [messageUpdated, setmessageUpdated],
 	} = useContext(WsChatContext);
-	const [conversation_id] = useConversationID(FriendName);
+	const conversation_id = useConversationID(FriendName);
+	const { messageList, addNewMessage, isUpdatedState, LoadMoreMessages } =
+		useMessageList(conversation_id);
 	const [friendinfo, setFriendinfo] = useState({
 		name: FriendName,
 		image: null,
 		status: true,
 	});
-	const [messages, setMessages] = useState([]);
-	const [messagesOffset, setMessagesOffset] = useState(0);
 	const [showProfile, setShowProfile] = useState(false);
 	const _ref = useRef();
+	const router = useRouter();
 	const onReceive = useCallback(
 		(e) => {
 			const message = JSON.parse(e.data);
 			if (FriendName == message.sender) {
-				setMessages([...messages, message]);
+				addNewMessage(message);
 				setmessageUpdated(true);
 			}
 			console.log(message);
 		},
-		[FriendName, messages],
+		[FriendName, messageList],
 	);
+
 	if (socket) socket.onmessage = onReceive;
 	const onSend = (new_msg) => {
 		const message = {
@@ -84,18 +88,15 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		};
 		socket.send(JSON.stringify(message));
 		console.log(message);
-		setMessages([...messages, message]);
+		addNewMessage(message);
 		setmessageUpdated(true);
 	};
 
 	useEffect(() => {
-		getFriendInfo(FriendName).then((info) => setFriendinfo(info));
-
-		getMessages(conversation_id).then((new_messages) => {
-			setMessages(new_messages.messages);
-			setMessagesOffset(new_messages.size);
-		});
-	}, [conversation_id, FriendName]);
+		getFriendInfo(FriendName).then((info) =>
+			info ? setFriendinfo(info) : router.replace("/not-found"),
+		);
+	}, [FriendName]);
 
 	return (
 		<>
@@ -112,7 +113,11 @@ export default function DM_Conversation({ params: { FriendName } }) {
 				/>
 				<MessagesSection
 					FriendName={FriendName}
-					messageList={messages}
+					messageState={[
+						messageList,
+						isUpdatedState,
+						LoadMoreMessages,
+					]}
 				/>
 				<TypingBar onSend={onSend} />
 			</div>
