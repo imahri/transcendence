@@ -33,7 +33,10 @@ export const useMessageList = (conversation_id) => {
 	useEffect(() => {
 		if (getMore && Offset > 0 && conversation_id > 0) {
 			getMessages(conversation_id, [Offset, setOffset]).then(
-				({ messages }) => setMessageList([...messageList, ...messages]),
+				({ messages }) => {
+					setMessageList([...messageList, ...messages]);
+					if (messageList.length == 0) setIsUpdated(true);
+				},
 			);
 			setGetMore(false);
 		}

@@ -40,21 +40,19 @@ export function MessagesSection({
 }) {
 	const secRef = useRef();
 	const messages = [...messageList].reverse();
-	const _ref = useRef();
-	const isVisible = useOnVisible(_ref);
 	const [isUpdated, setIsUpdated] = isUpdatedState;
 
 	useEffect(() => {
-		secRef.current.scrollTop = secRef.current.scrollHeight;
+		if (isUpdated) {
+			secRef.current.scrollTop = secRef.current.scrollHeight;
+			setIsUpdated(false);
+		}
 	}, [isUpdated]);
 
-	const onScroll = () => isVisible && LoadMoreMessages();
+	const onScroll = () => secRef.current.scrollTop == 0 && LoadMoreMessages();
 
 	return (
 		<div ref={secRef} onScroll={onScroll} className={styles.container}>
-			<div ref={_ref} className="w-full h-[10px] bg-red-400">
-				Load more
-			</div>
 			{messages &&
 				messages.map((messageInfo, idx) => (
 					<Message
