@@ -121,7 +121,7 @@ export function ProfileSection({
 	return (
 		<div ref={_ref} className={`${styles.container} ${className}`}>
 			<section className={styles.profile}>
-				<div className="flex justify-center items-center flex-col space-y-4">
+				<div className="flex justify-center items-center flex-col space-y-4 md:space-y-1">
 					<div className={styles.profile_img_container}>
 						{image && (
 							<Image
