@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles/MessagesSection.module.css";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
 
@@ -41,6 +41,7 @@ export function MessagesSection({
 	const secRef = useRef();
 	const messages = [...messageList].reverse();
 	const [isUpdated, setIsUpdated] = isUpdatedState;
+	const [oldScrollHeight, setOldScrollHeight] = useState(0);
 
 	useEffect(() => {
 		if (isUpdated) {
@@ -49,7 +50,17 @@ export function MessagesSection({
 		}
 	}, [isUpdated]);
 
-	const onScroll = () => secRef.current.scrollTop == 0 && LoadMoreMessages();
+	useEffect(() => {
+		secRef.current.scrollTop =
+			secRef.current.scrollHeight - oldScrollHeight;
+	}, [messageList]);
+
+	const onScroll = () => {
+		if (secRef.current.scrollTop == 0) {
+			setOldScrollHeight(secRef.current.scrollHeight);
+			LoadMoreMessages();
+		}
+	};
 
 	return (
 		<div ref={secRef} onScroll={onScroll} className={styles.container}>
