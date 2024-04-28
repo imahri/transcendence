@@ -42,6 +42,7 @@ export function MessagesSection({
 	const messages = [...messageList].reverse();
 	const [isUpdated, setIsUpdated] = isUpdatedState;
 	const [oldScrollHeight, setOldScrollHeight] = useState(0);
+	const [FirstInitial, setFirstInitial] = useState(true);
 
 	useEffect(() => {
 		if (isUpdated) {
@@ -55,12 +56,28 @@ export function MessagesSection({
 			secRef.current.scrollHeight - oldScrollHeight;
 	}, [messageList]);
 
+	const LoadMore = () => {
+		setOldScrollHeight(secRef.current.scrollHeight);
+		LoadMoreMessages();
+		secRef.current.scrollTop = 1;
+	};
+
 	const onScroll = () => {
 		if (secRef.current.scrollTop == 0) {
-			setOldScrollHeight(secRef.current.scrollHeight);
-			LoadMoreMessages();
+			LoadMore();
 		}
 	};
+
+	useEffect(() => {
+		if (
+			FirstInitial &&
+			messages.length != 0 &&
+			secRef.current.clientHeight >= secRef.current.scrollHeight
+		) {
+			LoadMore();
+			setFirstInitial(false);
+		}
+	}, [messages]);
 
 	return (
 		<div ref={secRef} onScroll={onScroll} className={styles.container}>
