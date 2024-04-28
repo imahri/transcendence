@@ -19,8 +19,12 @@ function Welcome() {
 	return (
 		<>
 			<div className="flex items-center flex-col mb-0">
-				<Image src={logo} alt="" className="max-[450px]:h-[100px]" />
-				<h1 className=" font-bold text-[60px] text-white max-[450px]:text-[40px]">
+				<Image
+					src={logo}
+					alt=""
+					className="[@media(max-width:450px)]:h-[100px]"
+				/>
+				<h1 className=" font-bold text-[60px] text-white [@media(max-width:450px)]:text-[40px]">
 					Welcome to <br /> Paddel{" "}
 					<span className="text-[#0275A3]">Ghost</span>
 				</h1>

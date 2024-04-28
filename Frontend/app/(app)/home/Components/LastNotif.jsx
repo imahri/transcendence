@@ -56,8 +56,8 @@ const Msgs = [
 
 function LastNotif() {
 	return (
-		<div className="bg-[#353535] w-[30%] max-[1702px]:w-[25%] py-[10px] rounded-[15px] flex flex-col items-center justify-center gap-[10px] max-[1500px]:order-2 max-[1500px]:w-[50%] max-[710px]:w-[90%]">
-			<div className="flex items-center justify-between w-[60%] max-[1990px]:w-[80%]">
+		<div className="bg-[#353535] w-[30%] py-[10px] rounded-[15px] flex flex-col items-center justify-center gap-[10px] [@media(max-width:1500px)]:order-2 [@media(max-width:1500px)]:w-[50%] [@media(max-width:710px)]:w-[90%]">
+			<div className="flex items-center justify-between w-[60%] [@media(max-width:1990px)]:w-[80%]">
 				<h1 className=" font-normal text-[18px] text-[#C3C3C3]">
 					Message
 				</h1>
@@ -65,7 +65,7 @@ function LastNotif() {
 					Go
 				</button>
 			</div>
-			<div className=" flex flex-col gap-[15px]  w-[60%] max-[1990px]:w-[80%]">
+			<div className=" flex flex-col gap-[15px]  w-[60%] [@media(max-width:1990px)]:w-[80%]">
 				<h3 className=" font-extralight text-[12px] text-[#C3C3C3]">
 					Last Notification
 				</h3>

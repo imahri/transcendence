@@ -24,7 +24,7 @@ function BadgeItem(props) {
 	return (
 		<div className="flex flex-col items-center gap-[10px]">
 			<div
-				className="w-[360px] h-[202px] relative cursor-pointer max-[900px]:w-[300px] max-[900px]:h-[174px]"
+				className="w-[360px] h-[202px] relative cursor-pointer [@media(max-width:900px)]:w-[300px] [@media(max-width:900px)]:h-[174px]"
 				onClick={() => setshow(!show)}
 			>
 				<Badge BadgeInfo={obj} />

@@ -79,9 +79,9 @@ function BlockedUsers({ setPopUp }) {
 	}, [BlockedUsers]);
 
 	return (
-		<div className="w-[620px] max-[650px]:w-[90%] flex flex-col items-center gap-[20px] bg-[#343434] rounded-[25px] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)] relative">
+		<div className="w-[620px] [@media(max-width:650px)]:w-[90%] flex flex-col items-center gap-[20px] bg-[#343434] rounded-[25px] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)] relative">
 			{closePopopupSvg(setPopUp)}
-			<h1 className=" font-bold text-[25px] text-white mt-[20px] max-[560px]:text-[20px] max-[460px]:text-[16px]">
+			<h1 className=" font-bold text-[25px] text-white mt-[20px] [@media(max-width:560px)]:text-[20px] [@media(max-width:460px)]:text-[16px]">
 				Blocked Users
 			</h1>
 			<div className="w-[80%] max-h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">

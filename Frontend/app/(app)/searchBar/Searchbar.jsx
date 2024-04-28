@@ -52,21 +52,21 @@ export function Searchbar({ style_ops }) {
 					}}
 				/>
 				<SearchIcon styles={styles} />
-			</label>
 
-			<div
-				className={`bg-[#303030] rounded-xl w-full top-[55px] absolute ${!result || !input ? "hidden" : ""}`}
-			>
-				<div className="m-[20px] flex flex-col gap-[10px] max-h-[280px] overflow-y-auto">
-					{result == 404 && <UserNotFound input={input} />}
+				<div
+					className={`bg-[#303030] rounded-xl w-full absolute top-[60px] left-0 ${!result || !input ? "hidden" : ""}`}
+				>
+					<div className="m-[20px] flex flex-col gap-[10px] max-h-[280px] overflow-y-auto">
+						{result == 404 && <UserNotFound input={input} />}
 
-					{result &&
-						result != 404 &&
-						result.map((res) => {
-							return <Result data={res} />;
-						})}
+						{result &&
+							result != 404 &&
+							result.map((res) => {
+								return <Result data={res} />;
+							})}
+					</div>
 				</div>
-			</div>
+			</label>
 		</div>
 	);
 }

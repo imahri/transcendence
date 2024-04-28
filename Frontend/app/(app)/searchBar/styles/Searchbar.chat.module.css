@@ -3,7 +3,7 @@
 }
 
 .label {
-	@apply bg-[#303030] rounded-xl w-3/4 h-[3.5rem] pl-6 flex flex-row;
+	@apply bg-[#303030] rounded-xl w-3/4 h-[3.5rem] pl-6 flex flex-row relative;
 }
 
 .search_input {

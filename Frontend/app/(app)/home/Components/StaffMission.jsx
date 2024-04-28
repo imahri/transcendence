@@ -32,18 +32,18 @@ const thirdMission = {
 
 function StaffMission() {
 	return (
-		<div className="w-[25%] flex flex-col items-center gap-[10px] max-[1500px]:order-2 max-[1500px]:w-[50%] max-[710px]:w-[90%]">
-			<div className="w-[80%] h-[55px] bg-[#353535] rounded-[7px] flex justify-center items-center max-[710px]:w-[100%]">
+		<div className="w-[25%] flex flex-col items-center gap-[10px] [@media(max-width:1500px)]:order-2 [@media(max-width:1500px)]:w-[50%] [@media(max-width:710px)]:w-[90%]">
+			<div className="w-[80%] h-[55px] bg-[#353535] rounded-[7px] flex justify-center items-center [@media(max-width:710px)]:w-[100%]">
 				<h1 className=" font-bold text-[20px] text-white text-center">
 					Staff Mission
 				</h1>
 			</div>
-			<div className="w-[80%] h-[156px] rounded-[7px] flex justify-between gap-[20px] max-[710px]:w-[100%]">
+			<div className="w-[80%] h-[156px] rounded-[7px] flex justify-between gap-[20px] [@media(max-width:710px)]:w-[100%]">
 				<Mission mission={firstMission} />
 				<Mission mission={secondMission} />
 			</div>
 			<GameMission mission={thirdMission} />
-			<div className="w-[80%] h-[71px] bg-[#4FA1EC] bg-opacity-[61%] rounded-[7px] flex justify-center items-center max-[710px]:w-[100%]">
+			<div className="w-[80%] h-[71px] bg-[#4FA1EC] bg-opacity-[61%] rounded-[7px] flex justify-center items-center [@media(max-width:710px)]:w-[100%]">
 				<h1 className=" font-bold text-[20px] text-white">Verefied</h1>
 			</div>
 		</div>

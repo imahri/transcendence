@@ -25,19 +25,17 @@ export default function Login() {
 	const [errorUsername, setErrorUsername] = useState();
 	const [popUp2Fa, setPopUp2Fa] = useState();
 
-	// const { user, setUser } = useContext(UserContext);
-
-	const setUser = (user) => {
-		console.log(user);
-	};
-
 	return (
 		<>
 			{closeSvg(navigate)}
 
 			<div className="flex items-center flex-col mb-0">
-				<Image src={logo} className="max-[450px]:h-[100px]" alt="" />
-				<h1 className=" font-bold text-[60px] text-white max-[450px]:text-[40px] first-letter:text-[#0275A3]">
+				<Image
+					src={logo}
+					className="[@media(max-width:450px)]:h-[100px]"
+					alt=""
+				/>
+				<h1 className=" font-bold text-[60px] text-white [@media(max-width:450px)]:text-[40px] first-letter:text-[#0275A3]">
 					Login
 				</h1>
 			</div>
@@ -63,7 +61,6 @@ export default function Login() {
 						setError,
 						setErrorPassword,
 						setPopUp2Fa,
-						setUser,
 						navigate,
 					)
 				}
@@ -129,7 +126,7 @@ export default function Login() {
 					></button>
 					<button className="w-[45%] rounded-[5px] bg-[#A11872] bg-contain bg-no-repeat bg-center cursor-pointer hover:bg-[#1791B2]"></button>
 				</div>
-				<div className="flex justify-center my-[20px] mx-[50px] max-[550px]:grid max-[550px]:text-center">
+				<div className="flex justify-center my-[20px] mx-[50px] [@media(max-width:550px)]:grid [@media(max-width:550px)]:text-center">
 					<span className=" font-bold text-[#8C8C8C] text-[20px]">
 						What are you waiting For?
 					</span>

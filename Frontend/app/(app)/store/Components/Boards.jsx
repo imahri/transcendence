@@ -18,7 +18,7 @@ function Board({ obj, index }) {
 		<div key={index} className="flex flex-col items-center gap-[10px]">
 			<div
 				style={style}
-				className="w-[360px] h-[202px] rounded-[10px] bg-center bg-cover bg-no-repeat cursor-pointer border border-solid border-white max-[900px]:w-[300px] max-[900px]:h-[174px]"
+				className="w-[360px] h-[202px] rounded-[10px] bg-center bg-cover bg-no-repeat cursor-pointer border border-solid border-white [@media(max-width:900px)]:w-[300px] [@media(max-width:900px)]:h-[174px]"
 				onClick={() => {
 					setshow(!show);
 				}}
