@@ -4,6 +4,5 @@
 
 .sidebar_h {
 	@apply bg-inherit flex h-full min-w-[28rem] w-[40rem] justify-start  items-center flex-col;
-	/* @apply xs:hidden sm:hidden md:hidden lg:hidden xl:hidden; */
-	@apply max-[1280px]:hidden;
+	@apply xs:hidden sm:hidden md:hidden lg:hidden xl:hidden;
 }
