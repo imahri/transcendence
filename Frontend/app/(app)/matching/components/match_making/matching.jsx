@@ -1,10 +1,13 @@
+"use client";
 import { Linden_Hill } from "next/font/google";
 import styles from "./matching.module.css";
 import Boardskin from "@/app/(app)/matching/components/match_making/board_skin";
 import Ready from "@/app/(app)/matching/components/match_making/ready";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Matching = () => {
+	const router = useRouter();
 	return (
 		<div>
 			<div className={styles.page}>
@@ -84,11 +87,12 @@ const Matching = () => {
 
 						<div className={`${styles.achivement_container}`}>
 							<div className={styles.parent}>
-								<Link href="/choice">
-									<button className={styles.back}>
-										Back
-									</button>
-								</Link>
+								<button
+									onClick={() => router.back()}
+									className={styles.back}
+								>
+									Back
+								</button>
 							</div>
 
 							<div className={`${styles.achivement_asmbler}`}>

@@ -323,6 +323,7 @@
   animation: span_anime 2s linear infinite;
   color: white;
   text-shadow: 2px 2px 3px black ;
+  animation: pico_anime 2s linear infinite;
 }
 
 
@@ -334,21 +335,6 @@
   background-position: center;
   animation: pico_anime 2s linear infinite;
 }
-
-@keyframes span_anime {
-  0% {
-    opacity: color 0.4;
-  }
-  
-  50% {
-    opacity: color 1;
-  }
-  
-  100% {
-    opacity: color 0.4;
-  }
-}
-
 
 
 @keyframes pico_anime {
