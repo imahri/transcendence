@@ -25,7 +25,7 @@ function ProfileBar() {
 	return (
 		<div className="flex gap-[10px]  items-center relative">
 			<div
-				className={`w-[170px] p-[5px] bg-[#303030] rounded-[10px] ${!more ? "[@media(max-width:600px)]:bg-transparent " : "rounded-b-none"}  `}
+				className={`w-[170px] p-[5px] bg-[#303030] rounded-[10px] [@media(max-width:600px)]:bg-transparent [@media(max-width:600px)]:w-auto ${!more ? "" : "rounded-b-none"}  `}
 			>
 				<div
 					className="flex items-center justify-around cursor-pointer gap-[10px] "
@@ -44,7 +44,7 @@ function ProfileBar() {
 					{more ? dropUpSvg : dropDownSvg}
 				</div>
 				{more && (
-					<div className="w-[170px] p-[20px] gap-[20px] flex flex-col bg-[#303030] absolute left-0 rounded-b-[10px]">
+					<div className="w-[170px] p-[20px] gap-[20px] flex flex-col bg-[#303030] absolute [@media(max-width:600px)]:right-0 [@media(max-width:600px)]:top-[60px] [@media(min-width:600px)]:left-0 rounded-b-[10px]">
 						<div className="flex w-full items-center justify-between gap-2 cursor-pointer ">
 							{WalletSvg}{" "}
 							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
@@ -84,17 +84,15 @@ function ProfileBar() {
 
 function NavBar() {
 	return (
-		<div className="w-full fixed z-10 flex justify-center items-center">
-			<nav className="bg-red-400 flex justify-between items-center h-[100px] w-[95%] ">
-				{/* <div className="w-[300px] h-[50px]">
-					<Searchbar style_ops="user" />
-					</div>
-					<div className="flex items-center justify-between gap-[30px]">
-					<Notification />
-					<ProfileBar />
-				</div> */}
-			</nav>
-		</div>
+		<nav className="fixed z-10 flex justify-between mx-px-20 items-center h-[100px] w-[95%] mx-[20px] max-[500px]:mx-0">
+			<div className="w-[300px] h-[50px]">
+				<Searchbar style_ops="user" />
+			</div>
+			<div className="flex items-center justify-between gap-[30px]  pr-[50px] [@media(max-width:1200px)]:pr-[80px] [@media(max-width:900px)]:pr-0">
+				<Notification />
+				<ProfileBar />
+			</div>
+		</nav>
 	);
 }
 

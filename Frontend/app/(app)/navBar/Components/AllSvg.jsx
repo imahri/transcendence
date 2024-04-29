@@ -1,6 +1,6 @@
 export const dropDownSvg = (
 	<svg
-		className="max-[600px]:hidden"
+		className="[@media(max-width:600px)]:hidden"
 		width="13"
 		height="9"
 		viewBox="0 0 13 9"
@@ -16,7 +16,7 @@ export const dropDownSvg = (
 
 export const dropUpSvg = (
 	<svg
-		className="max-[600px]:hidden"
+		className="[@media(max-width:600px)]:hidden"
 		width="13"
 		height="9"
 		viewBox="0 0 13 9"
