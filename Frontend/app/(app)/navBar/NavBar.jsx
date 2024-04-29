@@ -25,18 +25,18 @@ function ProfileBar() {
 	return (
 		<div className="flex gap-[10px]  items-center relative">
 			<div
-				className={`w-[170px] p-[5px] bg-[#303030] rounded-[10px] ${!more ? "max-[600px]:bg-transparent " : "rounded-b-none"}  `}
+				className={`w-[170px] p-[5px] bg-[#303030] rounded-[10px] ${!more ? "[@media(max-width:600px)]:bg-transparent " : "rounded-b-none"}  `}
 			>
 				<div
 					className="flex items-center justify-around cursor-pointer gap-[10px] "
 					onClick={() => setMore(!more)}
 				>
 					<img
-						className="w-[48px] h-[48px] rounded-[5px] max-[600px]:rounded-full"
+						className="w-[48px] h-[48px] rounded-[5px] [@media(max-width:600px)]:rounded-full"
 						src={user.info.profile_img}
 						alt=""
 					/>
-					<div className="max-[600px]:hidden">
+					<div className="[@media(max-width:600px)]:hidden">
 						<h3 className=" font-medium text-[20px] text-[#7D7D7D]">
 							{user.username}
 						</h3>
@@ -84,15 +84,17 @@ function ProfileBar() {
 
 function NavBar() {
 	return (
-		<nav className="fixed z-10 flex justify-between mx-px-20 items-center h-[100px] w-[95%] mx-[20px] max-[500px]:mx-0">
-			<div className="w-[300px] h-[50px]">
-				<Searchbar style_ops="user" />
-			</div>
-			<div className="flex items-center justify-between gap-[30px]">
-				<Notification />
-				<ProfileBar />
-			</div>
-		</nav>
+		<div className="w-full fixed z-10 flex justify-center items-center">
+			<nav className="bg-red-400 flex justify-between items-center h-[100px] w-[95%] ">
+				{/* <div className="w-[300px] h-[50px]">
+					<Searchbar style_ops="user" />
+					</div>
+					<div className="flex items-center justify-between gap-[30px]">
+					<Notification />
+					<ProfileBar />
+				</div> */}
+			</nav>
+		</div>
 	);
 }
 
