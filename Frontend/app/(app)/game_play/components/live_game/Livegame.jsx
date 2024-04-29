@@ -27,7 +27,11 @@ const LGame = () => {
 							<div className={styles.all_in_two}>
 								<h1 className={styles.mode_title}>Mode</h1>
 								<h2 className={styles.cla_title}>Classic</h2>
-								<div className={styles.box}></div>
+								<div className={styles.box}>
+									<div className={styles.profile}></div>
+									<span>FiddlerX</span>
+									<p>Mahri Imad-eddine</p>
+								</div>
 								<div className={styles.but}>
 									<div className={styles.bazoka}>
 										Bazoooooka
