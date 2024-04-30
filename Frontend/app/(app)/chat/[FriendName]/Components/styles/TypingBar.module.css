@@ -6,6 +6,10 @@
 	@apply w-[95%] h-16 pl-14 flex justify-start items-center mb-7 rounded-2xl bg-[#303030];
 }
 
+.reachTheLimit {
+	@apply border-2 border-red-600;
+}
+
 .container input {
 	@apply w-full h-full bg-inherit pb-1;
 	@apply font-normal text-2xl text-[#d6d6d6];
