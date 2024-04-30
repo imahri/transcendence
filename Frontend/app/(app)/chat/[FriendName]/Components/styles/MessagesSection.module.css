@@ -3,7 +3,7 @@
 }
 
 .messageSection {
-	@apply min-h-[5rem] w-full flex;
+	@apply w-full flex;
 	@apply text-white;
 }
 
@@ -17,9 +17,10 @@
 }
 
 .message_text {
-	@apply font-semibold mr-3;
+	@apply max-w-[30rem] break-words;
+	@apply font-semibold m-3 ml-0;
 }
 
 .message_time {
-	@apply text-[#A0A0A0] font-semibold mt-3;
+	@apply text-[#A0A0A0] font-semibold mb-2;
 }
