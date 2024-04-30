@@ -87,6 +87,7 @@ function StartConversation({
 			const get_friends = async () => {
 				const [isOk, status, data] = await fetch_jwt(APIs.user.friends);
 				if (!isOk) {
+					if (status == 404) setFriendList([]);
 					console.log("==> ", status);
 					return;
 				}
@@ -117,6 +118,12 @@ function StartConversation({
 		}
 	};
 
+	useEffect(() => {
+		// TODO: change it to className directly
+		if (friendList.length == 0) _ref.current.classList.add("h-[10rem]");
+		else _ref.current.classList.remove("h-[10rem]");
+	}, [friendList]);
+
 	return (
 		<>
 			<button onClick={handleScale}>
@@ -128,13 +135,21 @@ function StartConversation({
 				flex flex-col items-center justify-start overflow-y-scroll scrollbar-hide
 				"
 			>
-				{friendList.map((friend, idx) => (
-					<MicroProfileFriend
-						key={idx}
-						friend={friend}
-						onClick={() => onStartConv(friend)}
-					/>
-				))}
+				{friendList.length == 0 ? (
+					<div className="w-52 h-20 flex justify-center items-center text-slate-200 my-3">
+						<span className="font-normal text-gray-300 text-1xl">
+							No Result
+						</span>
+					</div>
+				) : (
+					friendList.map((friend, idx) => (
+						<MicroProfileFriend
+							key={idx}
+							friend={friend}
+							onClick={() => onStartConv(friend)}
+						/>
+					))
+				)}
 			</div>
 		</>
 	);
