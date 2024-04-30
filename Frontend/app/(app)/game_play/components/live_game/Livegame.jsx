@@ -7,6 +7,7 @@ import Son from "../images/sound.svg";
 import Soff from "../images/mute.svg";
 import Mon from "../images/music.svg";
 import Moff from "../images/no_sound.svg";
+import { Youchen } from "./game";
 
 const LGame = () => {
 	return (
@@ -19,7 +20,16 @@ const LGame = () => {
 				<div className={`${styles.layer} ${styles.second}`}>
 					<div className={styles.all_in}>
 						<div className={styles.bord_part}>
-							<div className={styles.borad}></div>
+							<div className={styles.borad}>
+								<div className={styles.borad_cover}></div>
+								<div className={styles.f_borad_line}></div>
+								<div className={styles.s_borad_line}></div>
+								<div className={styles.t_borad_line}></div>
+								<div className={styles.l_borad_line}></div>
+								<div className={styles.ppo}>
+									<Youchen />
+								</div>
+							</div>
 							<div className={styles.score}>
 								<div className={styles.score_first}></div>
 								<div className={styles.players}>
@@ -38,17 +48,22 @@ const LGame = () => {
 									</div>
 								</div>
 							</div>
+							<div className={styles.all_ferno}>
+								<div className={styles.ferno}>Bazoooooka</div>
+							</div>
 						</div>
 
 						<div className={styles.mode_part}>
 							<div className={styles.all_in_two}>
 								<h1 className={styles.mode_title}>Mode</h1>
 								<h2 className={styles.cla_title}>Classic</h2>
+
 								<div className={styles.box}>
 									<div className={styles.profile}></div>
 									<span>FiddlerX</span>
 									<p>Mahri Imad-eddine</p>
 								</div>
+
 								<div className={styles.but}>
 									<div className={styles.bazoka}>
 										Bazoooooka
@@ -59,10 +74,6 @@ const LGame = () => {
 										<span>up</span>
 										<div className={styles.tool_box_but}>
 											<div className={styles.inside}>
-												<img
-													src="../images/music.svg"
-													alt=""
-												/>
 												<Image
 													src={Aup}
 													width={15}
@@ -74,19 +85,11 @@ const LGame = () => {
 												W
 											</div>
 										</div>
-										{/* <div className={styles.sound}>
-												<Image className={styles.Image} src={Mon} width={15} height={15} alt="immmm" />
-												<Image className={styles.Image} src={Moff} width={25} height={25} alt="immmm" />
-										</div> */}
 									</div>
 									<div className={styles.tool_box_right}>
 										<span>down</span>
 										<div className={styles.tool_box_but}>
 											<div className={styles.inside}>
-												<img
-													src="../images/music.svg"
-													alt=""
-												/>
 												<Image
 													src={Ado}
 													width={15}
@@ -98,10 +101,6 @@ const LGame = () => {
 												S
 											</div>
 										</div>
-										{/* <div className={styles.sound}>
-												<Image className={styles.Image} src={Son} width={25} height={25} alt="immmm" />
-												<Image className={styles.Image} src={Soff} width={25} height={25} alt="immmm" />
-										</div> */}
 									</div>
 								</div>
 							</div>

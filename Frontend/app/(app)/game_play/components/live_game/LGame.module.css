@@ -59,6 +59,7 @@
 }
 
 .all_in_two{
+    position: relative;
     width: 100%;
     height: 100%;
     /* background: rgba(255, 0, 0, 0.421); */
@@ -89,8 +90,59 @@
 .borad{
     height: 50rem;
     width: 90rem;
-    background: yellowgreen;
+    background: url('../images/board1.png');
+    background-size: cover;
+    background-position: center;
     border-radius: 20px;
+    position: relative;
+    outline: 2px solid white;
+    overflow: hidden;
+}
+
+.borad_cover{
+    background: rgba(0,0,0,0.5);
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    outline: 3px solid white;
+    filter: blur(3px);
+    position: absolute;
+    /* z-index: -1; */
+}
+
+.f_borad_line{
+    width: 45%;
+    height: 0.16rem;
+    background: linear-gradient(90deg, rgba(255,0,230,1) 0%, rgba(255,255,255,1) 0%, rgba(242,242,242,0) 100%);
+    position: absolute;
+    top: 50%;
+}
+
+.s_borad_line{
+    width: 0.16rem;
+    height: 45%;
+    background: linear-gradient(180deg, rgba(255,0,230,1) 0%, rgba(255,255,255,1) 0%, rgba(242,242,242,0) 100%);
+    position: absolute;
+    left: 50%;
+}
+.t_borad_line{
+    width: 45%;
+    height: 0.16rem;
+    background: linear-gradient(90deg, rgba(255,0,230,1) 0%, rgba(255,255,255,1) 0%, rgba(242,242,242,0) 100%);
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: rotate(180deg);
+}
+
+.l_borad_line{
+    width: 0.16rem;
+    height: 45%;
+    background: linear-gradient(180deg, rgba(255,0,230,1) 0%, rgba(255,255,255,1) 0%, rgba(242,242,242,0) 100%);
+    position: absolute;
+    bottom: 0%;
+    left: 50%;
+    transform: rotate(180deg);
 }
 
 .score{
@@ -98,7 +150,8 @@
     height: 5rem;
     background: #4c4c4c;
     position: relative;
-    border-radius: 25px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 2px black;
 }
 
 .score_first{
@@ -106,7 +159,7 @@
     height: 100%;
     width: 55%;
     background-color: #181818;
-    border-radius: 25px 0 0 25px;
+    border-radius: 15px 0 0 15px;
     clip-path: polygon(
       0% 0%
     , 94% 0%
@@ -124,6 +177,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* position: absolute;
+    top: 25%; */
+    z-index: 0;
 }
 
 .box span{
@@ -137,6 +193,11 @@
     font-weight: 400;
 }
 
+/* .but{
+    position: absolute;
+    top: 65%;
+} */
+
 .bazoka{
     padding: 10px 20px;
     background: brow;
@@ -146,12 +207,47 @@
     font-size: 1.5rem;
     font-weight: 600;
     cursor: pointer;
+    transition: 0.5s;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0);
+    /* top: 60%; */
+}
+
+.all_ferno{
+    position: absolute;
+    bottom: 7%;
+    visibility: hidden;
+}
+
+.ferno{
+
+    padding: 10px 20px;
+    background: brow;
+    color: azure;
+    background: linear-gradient(90deg, rgba(255, 76, 0, 1) 0%, rgba(194, 37, 97, 1) 100%);
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.bazoka:hover{
+    font-size: 2rem;
+    padding: 10px 25px;
+}
+
+.ferno:hover{
+    padding: 10px 25px;
 }
 
 .tool_box{
     /* height: 100%; */
     display: flex;
     gap: 30px;
+    position: absolute;
+    bottom: 10%;
 
 }
 
@@ -204,12 +300,16 @@
 } */
 
 .mode_title{
+    position: absolute;
+    top: 20%;
     font-size: 3rem;
     font-weight: 600;
     color: #808080;
 }
 
 .cla_title{
+    position: absolute;
+    top: 26%;
     font-size: 2rem;
     font-weight: 600;
     color: white;
@@ -224,7 +324,7 @@
     background: yellow;
 }
 
-@media (max-width: 2000px){
+@media (max-width: 2250px){
     .mode_part{
         height: 100%;
         display: none;
@@ -234,6 +334,10 @@
         width: 100%;
         height: 100%;
     }
+    .all_ferno{
+        visibility: visible;
+    }
+
 }
 
 
@@ -270,8 +374,8 @@
 
 
 .pr_player{
-    height: 3.5rem;
-    width: 3.5rem;
+    height: 4rem;
+    width: 4rem;
     border-radius: 50%;
     background: cyan;
 }
@@ -284,5 +388,12 @@
 .sc_player{
     font-size: 2rem;
     font-weight: 600;
+
+}
+
+.ppo{
+    height: 100%;
+    width: 100%;
+    position: absolute;
 
 }
