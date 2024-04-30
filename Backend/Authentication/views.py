@@ -24,14 +24,15 @@ class Register(APIView):
     def post(self, request):
         try:
             serializer = UserSerializer(data=request.data)
-            if serializer.is_valid() is False:
-                raise exceptions.AuthenticationFailed()
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else :
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as error:
-            return JsonResponse(
-                {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
-            )
+            print(error)
+            return JsonResponse({"failure" :str(error)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([AllowAny])

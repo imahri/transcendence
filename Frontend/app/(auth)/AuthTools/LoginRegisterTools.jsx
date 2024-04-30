@@ -7,13 +7,11 @@ export function showPassword() {
 	path.setAttribute("fill", color);
 }
 
-export function errorInForm(setErrorInput, setError) {
+export function errorInForm(obj, setError) {
 	//I change the state to true to re-render the componnents and disply the eroor section
-	setErrorInput(true);
-	setError(true);
+	setError(obj);
 	setTimeout(() => {
 		//here i try to display error msg but only for 5s
-		setErrorInput(false);
 		setError(false);
 	}, 5000);
 }

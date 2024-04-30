@@ -37,7 +37,7 @@ function ProfileBar() {
 						alt=""
 					/>
 					<div className="[@media(max-width:600px)]:hidden">
-						<h3 className=" font-medium text-[20px] text-[#7D7D7D]">
+						<h3 className="font-medium text-[20px] text-[#7D7D7D] truncate max-w-[80px]">
 							{user.username}
 						</h3>
 					</div>
