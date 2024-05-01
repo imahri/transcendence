@@ -39,6 +39,7 @@ class ConversationView(APIView):
         PER_PAGE = 12
         user: User = request.user
         offset = int(request.query_params.get("offset"))
+        last: bool = bool(request.query_params.get("last", False))
 
         queryset = Conversation.objects.annotate(
             isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
@@ -48,7 +49,7 @@ class ConversationView(APIView):
             .order_by("-last_modified")
             .distinct()
         )
-        conversation_list = [
+        conversation_list = [  # TODO: do it in queryset
             conversation
             for conversation in conversation_list
             if conversation.check_is_friend
@@ -61,12 +62,19 @@ class ConversationView(APIView):
                 {"error": "Out of range"}, status=status.HTTP_406_NOT_ACCEPTABLE
             )
         conversations = PaginatorConv.get_page(offset)
+        if last:
+            last_index = conversations.__len__() - 1
+            return Response(conversations[last_index].as_serialized(user))
         conversations_arr = [
             conversation.as_serialized(user) for conversation in conversations
         ]
         print(conversations)
         return Response(
-            {"size": len(conversations_arr), "conversations": conversations_arr}
+            {
+                "size": len(conversations_arr),
+                "conversations": conversations_arr,
+                "has_next": conversations.has_next(),
+            }
         )
 
     @staticmethod
@@ -120,6 +128,6 @@ class MessageView(APIView):
             {
                 "size": len(messages_arr),
                 "messages": messages_arr,
-                "NoMore": offset == PaginatorMessages.num_pages,
+                "has_next": messages.has_next(),
             }
         )
