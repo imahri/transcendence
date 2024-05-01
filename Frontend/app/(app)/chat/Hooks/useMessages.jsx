@@ -13,11 +13,11 @@ async function getMessages(conversation_id, [offset, setOffset]) {
 			// 	let data_b = new Date(b.sended_at);
 			// 	return data_a > data_b ? 1 : data_a < data_b ? -1 : 0;
 			// });
-			data.NoMore ? setOffset(0) : setOffset(offset + 1);
+			!data.has_next ? setOffset(0) : setOffset(offset + 1);
 			return data;
 		} else if (status == 406) setOffset(0);
 	}
-	return { messages: [], size: 0, NoMore: true };
+	return { messages: [], size: 0, has_next: true };
 }
 
 export const useMessageList = (conversation_id) => {
