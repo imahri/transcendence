@@ -7,8 +7,8 @@ import { IntraSvg } from "../Allsvg";
 
 function Welcome() {
 	return (
-		<>
-			<div className="flex items-center flex-col mb-0">
+		<div className="w-full flex flex-col justify-center items-center gap-[20px]">
+			<div className="flex items-center flex-col">
 				<Image
 					src={logo}
 					alt=""
@@ -21,23 +21,23 @@ function Welcome() {
 			</div>
 
 			<Link
-				className="flex justify-center items-center w-[80%] h-[45px] mx-[50px] my-[10px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px]  cursor-pointer "
+				className="flex justify-center items-center w-[80%] h-[45px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px] cursor-pointer "
 				href={"/login"}
 			>
 				Sign In
 			</Link>
 			<Link
-				className="flex justify-center items-center w-[80%] h-[45px] mx-[50px] my-[10px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px]  cursor-pointer "
+				className="flex justify-center items-center w-[80%] h-[45px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px] cursor-pointer "
 				href={"/register"}
 			>
 				Sign Up
 			</Link>
 
-			<button className="flex justify-center items-center w-[80%] h-[45px]  mx-[50px] my-[25px] rounded-[5px] bg-[#A11872] bg-contain bg-no-repeat bg-center cursor-pointer hover:bg-[#1791B2]">
+			<button className="flex justify-center items-center w-[80%] h-[45px] rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]">
 				{/* onClick sign-in with 42 */}
 				{IntraSvg}
 			</button>
-		</>
+		</div>
 	);
 }
 

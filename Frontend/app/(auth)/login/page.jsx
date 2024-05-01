@@ -122,7 +122,7 @@ export default function Login() {
 					Submit
 				</button>
 
-				<button className="flex justify-center items-center w-[80%] h-[45px]  rounded-[5px] bg-[#A11872] bg-contain bg-no-repeat bg-center cursor-pointer hover:bg-[#1791B2]">
+				<button className="flex justify-center items-center w-[80%] h-[45px]  rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]">
 					{IntraSvg}
 				</button>
 
