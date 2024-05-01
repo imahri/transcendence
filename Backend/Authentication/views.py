@@ -11,6 +11,8 @@ from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
+import requests
+from io import BytesIO
 
 from User_Management.serializers import UserSerializer
 
@@ -147,3 +149,77 @@ class TwoFactorAuthView(APIView):
             return JsonResponse(
                 {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
             )
+
+@permission_classes([AllowAny])
+class intra_auth(APIView):
+
+    @staticmethod
+    def get_42user_info(access_token):
+        headers = {
+            'Authorization': f'Bearer {access_token}'
+        }
+        response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+        data = response.json()
+        if response.status_code != 200:
+            raise Exception(data.get('error'))
+        return data
+    
+    @staticmethod
+    def get_42access_token(code : str):
+        
+        data = {
+            'grant_type': 'authorization_code',
+            'client_id': 'u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259',
+            'client_secret': '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',
+            'code': code,
+            'redirect_uri': 'http://localhost:3000/login'
+        }
+   
+        response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
+        
+        data = response.json()
+
+        if response.status_code != 200:
+            raise Exception(data.get('error'))
+        
+        access_token = data.get('access_token')
+        return access_token
+
+    def post(self, request):
+
+        try:
+            code = request.data.get('code')
+            access_token = intra_auth.get_42access_token(code=code)
+            user42_info = intra_auth.get_42user_info(access_token=access_token)
+
+            data : dict = {
+                'email' : user42_info['email'],
+                'username' : user42_info['login'],
+                'first_name' : user42_info['first_name'],
+                'last_name' : user42_info['last_name'],
+                'password': 'none',
+            }
+            try:
+                user = User.objects.get(email=user42_info['email'])
+            except User.DoesNotExist :
+                imageUrl = user42_info['image']['link']
+                response = requests.request("GET", imageUrl)
+                
+                userSerialized = UserSerializer(data=data)
+                if userSerialized.is_valid():
+                    user : User = userSerialized.save()
+                    info : Info = user.info
+                    img_name = data['username'] + '.jpg';
+                    image_content = BytesIO(response.content)
+                    info.profile_img.save(img_name, image_content, save=True)
+
+                else:
+                    return Response(data=userSerialized.errors, status=401)
+
+
+            access_token = AccessToken.for_user(user)
+            refresh_token = RefreshToken.for_user(user)
+            return JsonResponse({'access': str(access_token), 'refresh': str(refresh_token)}, status=200)
+        
+        except Exception as error:
+            return JsonResponse({'register' : str(error)}, status=401)

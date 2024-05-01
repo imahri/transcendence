@@ -1,5 +1,11 @@
 "use client";
-import React, { useContext, useRef, useState } from "react";
+import React, {
+	useContext,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +21,7 @@ import {
 	usernameInputSvg,
 } from "../Allsvg";
 
-import { handleSubmit } from "./LoginUtils";
+import { get42Token, handel42, handleSubmit } from "./LoginUtils";
 
 export function InputContainer({ Info, error }) {
 	return (
@@ -61,6 +67,18 @@ export default function Login() {
 	const Form = useRef(null);
 	const [error, setError] = useState();
 	const [popUp2Fa, setPopUp2Fa] = useState();
+
+	useEffect(() => {
+		console.log("called");
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		let code = urlParams.get("code");
+
+		if (code) {
+			console.log("code", code);
+			get42Token(navigate, code);
+		}
+	}, []);
 
 	return (
 		<>
@@ -122,7 +140,10 @@ export default function Login() {
 					Submit
 				</button>
 
-				<button className="flex justify-center items-center w-[80%] h-[45px]  rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]">
+				<button
+					className="flex justify-center items-center w-[80%] h-[45px]  rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]"
+					onClick={handel42}
+				>
 					{IntraSvg}
 				</button>
 

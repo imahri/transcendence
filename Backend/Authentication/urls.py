@@ -3,13 +3,15 @@ from rest_framework_simplejwt.views import (
     token_refresh as jwt_token_refresh,
     token_blacklist as jwt_token_blacklist
 )
-from .views import Register, Login, TwoFactorAuthView
+from .views import Register, Login, TwoFactorAuthView, intra_auth
 
 urlpatterns = [
     # Register
     path("register", Register.as_view(), name="register"),
     # Login
     path("login", Login.as_view(), name="login"),
+    # Login 42
+    path("42auth", intra_auth.as_view(), name="intra"),
     # Logout
     path("logout", jwt_token_blacklist, name="logout"),
     # To Refresh the JWT token
