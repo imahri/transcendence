@@ -1,4 +1,4 @@
-import { TOWFACTOR_URL, TOWFACTOR_QR_URL, LOGOUT_URL } from "../../../URLS.jsx";
+import { TOWFACTOR_URL, TOWFACTOR_QR_URL, LOGOUT_URL } from "../../../URLS.js";
 
 import {
 	getToken,

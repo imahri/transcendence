@@ -1,35 +1,90 @@
 "use client";
-import React, { useContext, useRef, useState } from "react";
+import React, {
+	useContext,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import logo from "@/app/logo.svg";
-
 import { PopupEnternumber } from "../2Fa/Popup.jsx";
 import { showPassword } from "../AuthTools/LoginRegisterTools";
+import {
+	IntraSvg,
+	PasswordSvg,
+	closeSvg,
+	errorSvg,
+	usernameInputSvg,
+} from "../Allsvg";
 
-let navigate;
+import { get42Token, handel42, handleSubmit } from "./LoginUtils";
 
-import { PasswordSvg, closeSvg, errorSvg, usernameInputSvg } from "../Allsvg";
+export function InputContainer({ Info, error }) {
+	return (
+		<div
+			className={`w-[80%] bg-[#3F3A44] rounded-[5px] pt-[5px] flex  ${error ? "animate-shake border  border-red-600" : ""}`}
+		>
+			<label
+				className={`absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px] ${error ? "text-red-600" : ""}`}
+				htmlFor={Info.id}
+			>
+				{Info.label}
+			</label>
+			<input
+				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px]"
+				required
+				type={Info.type}
+				id={Info.id}
+				placeholder=""
+			/>
+			{Info.Svg}
+		</div>
+	);
+}
 
-import { handleSubmit } from "./LoginUtils";
+export function Error({ error }) {
+	return (
+		<div
+			className={
+				error
+					? "animate-shake bg-red-600 mx-[50px] my-[30px] w-[80%] h-[40px] rounded-[5px] flex justify-center items-center"
+					: "hidden"
+			}
+		>
+			{errorSvg}
+			<span className="p-[5px] text-white  font-bold">{error?.msg}</span>
+		</div>
+	);
+}
 
 export default function Login() {
-	navigate = useRouter();
+	const navigate = useRouter();
 
 	const Form = useRef(null);
 	const [error, setError] = useState();
-	const [errorPassword, setErrorPassword] = useState();
-	const [errorUsername, setErrorUsername] = useState();
 	const [popUp2Fa, setPopUp2Fa] = useState();
+
+	useEffect(() => {
+		console.log("called");
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		let code = urlParams.get("code");
+
+		if (code) {
+			console.log("code", code);
+			get42Token(navigate, code);
+		}
+	}, []);
 
 	return (
 		<>
 			{closeSvg(navigate)}
 
-			<div className="flex items-center flex-col mb-0">
+			<div className="flex items-center flex-col">
 				<Image
 					src={logo}
 					className="[@media(max-width:450px)]:h-[100px]"
@@ -39,72 +94,36 @@ export default function Login() {
 					Login
 				</h1>
 			</div>
-			<div
-				className={
-					error
-						? "animate-shake bg-red-600 mx-[50px] my-[30px] w-[80%] h-[40px] rounded-[5px] flex justify-center items-center"
-						: "hidden"
-				}
-			>
-				{errorSvg}
-				<span className="p-[5px] text-white  font-bold">
-					Error in Login Form!
-				</span>
-			</div>
+
+			<Error error={error} />
+
 			<form
-				className="w-full"
+				className="w-full flex flex-col justify-center items-center gap-[20px] mt-[20px]"
 				onSubmit={(e) =>
-					handleSubmit(
-						e,
-						Form,
-						setErrorUsername,
-						setError,
-						setErrorPassword,
-						setPopUp2Fa,
-						navigate,
-					)
+					handleSubmit(e, Form, setError, setPopUp2Fa, navigate)
 				}
 				ref={Form}
 			>
-				<div
-					className={`w-[80%] bg-[#3F3A44] rounded-[5px] pt-[5px] mx-[50px] my-[30px] flex  ${errorUsername ? "animate-shake border  border-red-600" : ""}`}
-				>
-					<label
-						className={`absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px] ${errorUsername ? "text-red-600" : ""}`}
-						htmlFor="username"
-					>
-						Enter your username
-					</label>
-					<input
-						className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px]"
-						required
-						type="text"
-						id="username"
-						placeholder=""
-					/>
-					{usernameInputSvg}
-				</div>
+				<InputContainer
+					Info={{
+						id: "username",
+						type: "text",
+						Svg: usernameInputSvg,
+						label: "Enter your username",
+					}}
+					error={error?.type == "username"}
+				/>
+				<InputContainer
+					Info={{
+						id: "password",
+						type: "password",
+						Svg: PasswordSvg(showPassword),
+						label: "Enter your password",
+					}}
+					error={error?.type == "password"}
+				/>
 
-				<div
-					className={`w-[80%] bg-[#3F3A44] rounded-[5px] pt-[5px] my-[30px] mx-[50px] flex ${errorPassword ? "animate-shake border  border-red-600" : ""}`}
-				>
-					<label
-						className={`absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px] ${errorUsername ? "text-red-600" : ""}`}
-						htmlFor="password"
-					>
-						Enter your Password
-					</label>
-					<input
-						className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px]"
-						required
-						type="password"
-						id="password"
-						placeholder=""
-					/>
-
-					{PasswordSvg(showPassword)}
-				</div>
-				<div className="my-[10px] mx-[60px]">
+				<div className="w-[80%]">
 					<input type="checkbox" id="rememberMe" name="rememberMe" />
 					<label
 						className="text-[#00B6FF]  ml-[5px]"
@@ -113,20 +132,22 @@ export default function Login() {
 						Remember me
 					</label>
 				</div>
+
 				<button
-					className="w-[80%] h-[45px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px]  cursor-pointer mx-[50px] my-[10px]"
+					className="w-[80%] h-[45px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px]  cursor-pointer"
 					type="submit"
 				>
 					Submit
 				</button>
-				<div className="w-[80%] h-[45px] flex justify-between my-[25px] mx-[50px]">
-					<button
-						id="google-signin-button"
-						className="w-[45%] rounded-[5px] bg-[#31377C] bg-contain bg-no-repeat bg-center cursor-pointer hover:bg-[#1791B2]"
-					></button>
-					<button className="w-[45%] rounded-[5px] bg-[#A11872] bg-contain bg-no-repeat bg-center cursor-pointer hover:bg-[#1791B2]"></button>
-				</div>
-				<div className="flex justify-center my-[20px] mx-[50px] [@media(max-width:550px)]:grid [@media(max-width:550px)]:text-center">
+
+				<button
+					className="flex justify-center items-center w-[80%] h-[45px]  rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]"
+					onClick={handel42}
+				>
+					{IntraSvg}
+				</button>
+
+				<div className="flex justify-center [@media(max-width:550px)]:grid [@media(max-width:550px)]:text-center">
 					<span className=" font-bold text-[#8C8C8C] text-[20px]">
 						What are you waiting For?
 					</span>
@@ -138,6 +159,7 @@ export default function Login() {
 					</Link>
 				</div>
 			</form>
+
 			{popUp2Fa && (
 				<PopupEnternumber update={setPopUp2Fa} username={popUp2Fa} />
 			)}

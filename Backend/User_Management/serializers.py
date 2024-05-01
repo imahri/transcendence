@@ -34,9 +34,9 @@ class UserSerializer(ModelSerializer):
         new_user.set_info()
         return new_user
 
-    def save(self, **kwargs):
-        self.is_valid(raise_exception=True)
-        return super().save(**kwargs)
+    # def save(self, **kwargs):
+    #     # self.is_valid(raise_exception=True)
+    #     return super().save(**kwargs)
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username', instance.username)
