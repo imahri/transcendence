@@ -8,6 +8,8 @@ export const REGISTER_URL = `${AUTH_APP}/register`;
 export const REFRESH_TOKEN_URL = `${AUTH_APP}/refresh_token`;
 export const LOGOUT_URL = `${AUTH_APP}/logout`;
 
+export const AUTH_42 = `${AUTH_APP}/42auth`;
+
 export const TOWFACTOR_URL = `${AUTH_APP}/2FA`;
 export const TOWFACTOR_QR_URL = `${AUTH_APP}/2FA/qrcode`;
 

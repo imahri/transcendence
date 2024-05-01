@@ -4,6 +4,7 @@ import Image from "next/image";
 import logo from "@/app/logo.svg";
 import Link from "next/link";
 import { IntraSvg } from "../Allsvg";
+import { handel42 } from "../login/LoginUtils";
 
 function Welcome() {
 	return (
@@ -33,8 +34,10 @@ function Welcome() {
 				Sign Up
 			</Link>
 
-			<button className="flex justify-center items-center w-[80%] h-[45px] rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]">
-				{/* onClick sign-in with 42 */}
+			<button
+				className="flex justify-center items-center w-[80%] h-[45px] rounded-[5px] bg-[#A11872] cursor-pointer hover:bg-[#1791B2]"
+				onClick={handel42}
+			>
 				{IntraSvg}
 			</button>
 		</div>

@@ -1,4 +1,4 @@
-import { LOGIN_URL } from "../../URLS.js";
+import { AUTH_42, LOGIN_URL } from "../../URLS.js";
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools.jsx";
 import { settoken } from "../AuthTools/tokenManagment.jsx";
 
@@ -54,7 +54,7 @@ export const handleSubmit = async (
 export async function get42Token(navigate, code) {
 	let body = { code: code };
 	try {
-		const response = await fetch("http://localhost:8000/auth/42auth", {
+		const response = await fetch(AUTH_42, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(body),
