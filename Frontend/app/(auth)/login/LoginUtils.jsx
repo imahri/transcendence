@@ -1,4 +1,4 @@
-import { LOGIN_URL } from "../../URLS.jsx";
+import { LOGIN_URL } from "../../URLS.js";
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools";
 import { settoken } from "../AuthTools/tokenManagment";
 

@@ -40,6 +40,13 @@ function check_fields(form, setError) {
 		);
 		return true;
 	}
+	if (!isValidEmail(form.email)) {
+		errorInForm(
+			{ type: "email", msg: "Enter a valid email address" },
+			setError,
+		);
+		return true;
+	}
 	if (!form.password) {
 		errorInForm(
 			{ type: "password", msg: "password contain only space" },
@@ -47,7 +54,7 @@ function check_fields(form, setError) {
 		);
 		return true;
 	}
-	if (form.password.length) {
+	if (form.password.length < 9) {
 		errorInForm(
 			{
 				type: "password",

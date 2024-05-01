@@ -2,7 +2,7 @@
 import SideBar from "./sideBar/SideBar.jsx";
 import { UserContextProvider } from "./context.js";
 import { fetch_jwt } from "@/Tools/fetch_jwt_server.js";
-import { USER_URL } from "../URLS.jsx";
+import { USER_URL } from "../URLS.js";
 
 export default async function Layout({ children }) {
 	const [isOk, status, data] = await fetch_jwt(USER_URL);
