@@ -180,6 +180,7 @@ export default function Conversations({
 							: 1,
 					);
 					setConversationList(_convList);
+					ConversationsRef.current.scrollTop = 0;
 				}
 			})();
 			setMessageUpdated(false);

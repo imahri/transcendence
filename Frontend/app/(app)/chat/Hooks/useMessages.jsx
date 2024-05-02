@@ -20,7 +20,7 @@ async function getMessages(conversation_id, [offset, setOffset]) {
 	return { messages: [], size: 0, has_next: true };
 }
 
-export const useMessageList = (conversation_id) => {
+export const useMessageList = (conversation_id, setmessageUpdated) => {
 	const [messageList, setMessageList] = useState([]);
 	const [Offset, setOffset] = useState(1);
 	const [getMore, setGetMore] = useState(true);
@@ -47,6 +47,7 @@ export const useMessageList = (conversation_id) => {
 		addNewMessage: (newMsg) => {
 			setMessageList([newMsg, ...messageList]);
 			setIsUpdated(true);
+			setmessageUpdated(true);
 		},
 		isUpdatedState: [isUpdated, setIsUpdated],
 		LoadMoreMessages: () => setGetMore(true),

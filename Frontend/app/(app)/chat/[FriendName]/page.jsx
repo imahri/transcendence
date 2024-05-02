@@ -12,25 +12,6 @@ import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import { useMessageList } from "../Hooks/useMessages";
 
-async function getMessages(conversation_id) {
-	if (conversation_id != 0) {
-		const [isOk, status, data] = await fetch_jwt(APIs.chat.messages, {
-			conversation: conversation_id,
-			limit: 10,
-			offset: 0,
-		});
-		if (!isOk) {
-			console.log("==> ", status);
-			return { messages: [], size: 0 };
-		}
-		data.messages.sort((a, b) =>
-			a.sended_at > b.sended_at ? 1 : a.sended_at < b.sended_at ? -1 : 0,
-		);
-		return data;
-	}
-	return { messages: [], size: 0 };
-}
-
 async function getFriendInfo(FriendName) {
 	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
 		username: FriendName,
@@ -56,7 +37,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	} = useContext(WsChatContext);
 	const conversation_id = useConversationID(FriendName);
 	const { messageList, addNewMessage, isUpdatedState, LoadMoreMessages } =
-		useMessageList(conversation_id);
+		useMessageList(conversation_id, setmessageUpdated);
 	const [friendinfo, setFriendinfo] = useState({
 		name: FriendName,
 		image: null,
@@ -68,10 +49,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	const onReceive = useCallback(
 		(e) => {
 			const message = JSON.parse(e.data);
-			if (FriendName == message.sender) {
-				addNewMessage(message);
-				setmessageUpdated(true);
-			}
+			if (FriendName == message.sender) addNewMessage(message);
 			console.log(message);
 		},
 		[FriendName, messageList],
@@ -89,7 +67,6 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		socket.send(JSON.stringify(message));
 		console.log(message);
 		addNewMessage(message);
-		setmessageUpdated(true);
 	};
 
 	useEffect(() => {
