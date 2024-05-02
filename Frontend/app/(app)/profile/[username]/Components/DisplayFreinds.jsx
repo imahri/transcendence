@@ -51,7 +51,7 @@ export default function Friendspopup({ DisplayFriends, username }) {
 
 	return (
 		<div className="size-full fixed z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]">
-			<div className="w-[500px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col gap-[20px] items-center">
+			<div className="w-[500px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)] flex flex-col gap-[20px] items-center">
 				{closePopopupSvg(DisplayFriends)}
 				<h1 className="font-Chakra font-semibold text-[36px] text-[#BABABA]">
 					Friends
@@ -61,10 +61,11 @@ export default function Friendspopup({ DisplayFriends, username }) {
 						friends.map((friend, index) => (
 							<Friend friend={friend} index={index} />
 						))}
-					{
-						//style it later
-						error && <h1>No Friends</h1>
-					}
+					<h1
+						className={`${error ? "" : "hidden"} text-white text-center`}
+					>
+						No Friends
+					</h1>
 				</div>
 			</div>
 		</div>

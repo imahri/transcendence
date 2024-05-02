@@ -3,8 +3,11 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-
 import logo from "@/app/logo.svg";
+import { showPassword } from "../AuthTools/LoginRegisterTools";
+import { registerSubmit } from "./registerUtils";
+import { Error, InputContainer } from "../login/page";
+
 import {
 	PasswordSvg,
 	closeSvg,
@@ -12,10 +15,7 @@ import {
 	nameInputSvg,
 	usernameInputSvg,
 } from "../Allsvg";
-
-import { showPassword } from "../AuthTools/LoginRegisterTools";
-import { registerSubmit } from "./registerUtils";
-import { Error, InputContainer } from "../login/page";
+import Loading from "../Loading";
 
 function DoubleInput({ Info, error }) {
 	return (
@@ -45,6 +45,7 @@ function Register() {
 	const navigate = useRouter();
 
 	const [error, setError] = useState();
+	const [isLoading, setLoading] = useState();
 
 	return (
 		<>
@@ -64,7 +65,9 @@ function Register() {
 			<Error error={error} />
 
 			<form
-				onSubmit={(e) => registerSubmit(e, Form, setError, navigate)}
+				onSubmit={(e) =>
+					registerSubmit(e, Form, setError, navigate, setLoading)
+				}
 				ref={Form}
 				className="w-full  flex flex-col justify-center items-center gap-[20px] mt-[20px]"
 			>
@@ -129,6 +132,7 @@ function Register() {
 					</Link>
 				</div>
 			</form>
+			{isLoading && <Loading />}
 		</>
 	);
 }

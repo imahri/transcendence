@@ -1,11 +1,5 @@
 "use client";
-import React, {
-	useContext,
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +16,7 @@ import {
 } from "../Allsvg";
 
 import { get42Token, handel42, handleSubmit } from "./LoginUtils";
+import Loading from "../Loading.jsx";
 
 export function InputContainer({ Info, error }) {
 	return (
@@ -67,6 +62,7 @@ export default function Login() {
 	const Form = useRef(null);
 	const [error, setError] = useState();
 	const [popUp2Fa, setPopUp2Fa] = useState();
+	const [isLoading, setisLoading] = useState();
 
 	useEffect(() => {
 		console.log("called");
@@ -76,7 +72,8 @@ export default function Login() {
 
 		if (code) {
 			console.log("code", code);
-			get42Token(navigate, code);
+			setisLoading(true);
+			get42Token(navigate, code, setisLoading, setError);
 		}
 	}, []);
 
@@ -100,7 +97,14 @@ export default function Login() {
 			<form
 				className="w-full flex flex-col justify-center items-center gap-[20px] mt-[20px]"
 				onSubmit={(e) =>
-					handleSubmit(e, Form, setError, setPopUp2Fa, navigate)
+					handleSubmit(
+						e,
+						Form,
+						setError,
+						setPopUp2Fa,
+						navigate,
+						setisLoading,
+					)
 				}
 				ref={Form}
 			>
@@ -159,7 +163,7 @@ export default function Login() {
 					</Link>
 				</div>
 			</form>
-
+			{isLoading && <Loading />}
 			{popUp2Fa && (
 				<PopupEnternumber update={setPopUp2Fa} username={popUp2Fa} />
 			)}

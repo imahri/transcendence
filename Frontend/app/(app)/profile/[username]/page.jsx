@@ -59,7 +59,7 @@ function Profile({ params }) {
 					<div>Is Loding ...</div>
 				) : (
 					<div className="w-full flex flex-col items-center gap-[20px]">
-						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
+						<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
 							<Banner />
 							<ProfileInfo
 								user={userProfile}
@@ -67,7 +67,7 @@ function Profile({ params }) {
 								EditProfile={setEditProfile}
 							/>
 						</div>
-						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
+						<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
 							<Dashboard />
 						</div>
 					</div>
