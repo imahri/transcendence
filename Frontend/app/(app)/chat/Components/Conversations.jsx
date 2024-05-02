@@ -124,9 +124,12 @@ async function getMoreConversation(convListOffset, setConvListOffset) {
 }
 
 export default function Conversations({
-	_convState,
-	_convList,
-	_convListOffset,
+	_convState: [convState, setConvState],
+	_Conversations: {
+		conversationList,
+		setConversationList,
+		LoadMoreConversation,
+	},
 }) {
 	const {
 		user,
@@ -134,9 +137,6 @@ export default function Conversations({
 		data,
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
-	const [convState, setConvState] = _convState;
-	const [convList, setConvList] = _convList;
-	const [convListOffset, setConvListOffset] = _convListOffset;
 	const { ws } = useContext(UserContext);
 	const ConversationsRef = useRef();
 	const router = useRouter();
@@ -146,20 +146,22 @@ export default function Conversations({
 			console.log(convList);
 			if (data.status == "B") {
 				setConvList(
-					convList.filter((conv) => conv.name !== data.friend),
+					conversationList.filter(
+						(conv) => conv.name !== data.friend,
+					),
 				);
 				router.replace("/chat");
 			}
 		},
-		[convList],
+		[conversationList],
 	);
 
 	if (ws) ws.onmessage = OnMessage;
 
 	useEffect(() => {
 		if (messageUpdated) {
-			const update = async () => {
-				let _convList = [...convList];
+			(async () => {
+				let _convList = [...conversationList];
 				let idx, id;
 				_convList.forEach((conv, _idx) => {
 					if (conv.name === convState) {
@@ -177,27 +179,21 @@ export default function Conversations({
 							? -1
 							: 1,
 					);
-					setConvList(_convList);
+					setConversationList(_convList);
 				}
-			};
-			update();
+			})();
 			setMessageUpdated(false);
 		}
-	}, [convList, convState, messageUpdated]);
+	}, [conversationList, convState, messageUpdated]);
 
 	const handleScroll = () => {
 		if (
 			ConversationsRef.current.clientHeight +
 				ConversationsRef.current.scrollTop +
 				1 >=
-				ConversationsRef.current.scrollHeight &&
-			convListOffset !== 0
+			ConversationsRef.current.scrollHeight
 		)
-			getMoreConversation(convListOffset, setConvListOffset).then(
-				({ conversations }) => {
-					setConvList([...convList, ...conversations]);
-				},
-			);
+			LoadMoreConversation();
 	};
 
 	return (
@@ -207,7 +203,7 @@ export default function Conversations({
 				onScroll={handleScroll}
 				className={styles.container}
 			>
-				{convList?.map((conversation, idx) => (
+				{conversationList?.map((conversation, idx) => (
 					<Conversation key={idx} user={user} info={conversation} />
 				))}
 			</div>

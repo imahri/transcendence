@@ -9,6 +9,7 @@ import { WsChatContext } from "../context/context";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { useConvState } from "../Hooks/useConvState";
+import { useConversations } from "../Hooks/useConversations";
 
 const MicroProfile = ({ onClick, user }) => (
 	<button
@@ -69,7 +70,7 @@ function StartConversation({
 	router,
 	setStates: {
 		setConvState,
-		convListState: [convList, setConvList],
+		convListState: [convList, addNewConversation],
 	},
 }) {
 	const [friendList, setFriendList] = useState([]);
@@ -106,16 +107,12 @@ function StartConversation({
 	};
 
 	const onStartConv = (friend) => {
-		if (
-			convList &&
-			!convList.some((conv) => conv.name === friend.username)
-		) {
-			router.push(`/chat/${friend.username}`);
-			setConvState(friend.username);
+		if (convList && !convList.some((conv) => conv.name === friend.username))
 			getConversation(friend.username).then((conv) =>
-				setConvList([conv, ...convList]),
+				addNewConversation(conv),
 			);
-		}
+		router.push(`/chat/${friend.username}`);
+		setConvState(friend.username);
 	};
 
 	useEffect(() => {
@@ -158,10 +155,9 @@ function StartConversation({
 export function SideBar() {
 	const { user, socket, data } = useContext(WsChatContext);
 	const [convState, setConvState] = useConvState();
-	const [convList, setConvList] = useState(data.conversations);
-	const [convListOffset, setConvListOffset] = useState(2);
 	const router = useRouter();
 	const showSideBar = usePathname() === "/chat";
+	const _Conversations = useConversations(data.conversations);
 
 	return (
 		<>
@@ -172,8 +168,7 @@ export function SideBar() {
 				<Separator className={"w-72 h-1"} />
 				<Conversations
 					_convState={[convState, setConvState]}
-					_convList={[convList, setConvList]}
-					_convListOffset={[convListOffset, setConvListOffset]}
+					_Conversations={_Conversations}
 				/>
 				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
 					<MicroProfile
@@ -185,7 +180,10 @@ export function SideBar() {
 						router={router}
 						setStates={{
 							setConvState,
-							convListState: [convList, setConvList],
+							convListState: [
+								_Conversations.conversationList,
+								_Conversations.addNewConversation,
+							],
 						}}
 					/>
 				</div>
