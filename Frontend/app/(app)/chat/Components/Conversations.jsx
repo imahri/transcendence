@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "../../context";
+import { useOnVisibleAnimation } from "../Hooks/useOnVisibleAnimation";
 
 function Unseen({ count }) {
 	return (
@@ -123,6 +124,7 @@ export default function Conversations({
 	const { ws } = useContext(UserContext);
 	const [FirstInitial, setFirstInitial] = useState(true);
 	const ConversationsRef = useRef();
+	useOnVisibleAnimation(ConversationsRef, styles.show);
 	const router = useRouter();
 	const OnMessage = useCallback(
 		(e) => {
