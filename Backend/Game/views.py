@@ -1,12 +1,8 @@
-import errno
-from functools import partial
-import json
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer
-from .models import Badge, Board, Match, Padel
+from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer
+from .models import Badge, Board, Match, Padel, Items
 from django.core.exceptions import ObjectDoesNotExist
 from core.settings import IMAGES_ROOT_
 
@@ -171,3 +167,25 @@ class PadleView(APIView):
                 return Response(serializer.errors, status=400)
         else:
             return Response({'error': 'you are not admin'}, status=401)
+
+
+#how can i get user collection
+        
+
+class ItemsView(APIView):
+
+    def get(self, request):
+        # paddels or board or badges
+        try:
+            objs = Items.objects.filter(user=request.user)
+            response = {'padels' : '' , 'badges' : '', 'boards' : '' }
+            for obj in objs:
+                ItemsSerialized = ItemsSerializer(instance=obj).data
+                type = ItemsSerialized['item_class']
+                response[type] = ItemsSerialized
+                
+            return Response(response)
+
+        except Exception as error:
+            print("catch : ", error)
+            return Response(data=str(error), status=400)

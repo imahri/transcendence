@@ -54,7 +54,7 @@ function Profile({ params }) {
 	return (
 		<>
 			<NavBar />
-			<main className="w-full  mt-[150px] flex justify-center  h-[1100px]">
+			<main className="w-full  mt-[100px] flex justify-center">
 				{isLoading ? (
 					<div>Is Loding ...</div>
 				) : (

@@ -5,7 +5,7 @@ import logo from "@/app/logo.svg";
 import { UserContext } from "../../context";
 
 function Badge(props) {
-	const { user } = useContext(UserContext);
+	const { user } = useContext(UserContext); // you should pass the user
 
 	const badgeInfo = props.BadgeInfo;
 

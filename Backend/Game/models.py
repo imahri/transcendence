@@ -3,7 +3,6 @@ from itertools import chain
 from pyexpat import model
 from django.db import models
 from core.settings import IMAGES_ROOT_
-
 from rest_framework import serializers
 
 
@@ -82,13 +81,36 @@ class Items(models.Model):
 
     # ''' get current_item object of the <item_class> object'''
 
-    # def get_current_item(self):
-    #     return self.current_item
+    def SerializeItem(self, item_id):
+        # define the type of item && fetch it && serialize it
+        from .serilaizers import PadelSerializer, BadgeSerializer, BoardSerializer
+
+        serializer = None
+        if self.item_class == 'padels':
+            obj: Padel = Padel.objects.get(id=item_id)
+            serializer = PadelSerializer(obj)
+        elif self.item_class == 'badges':
+            obj: Badge = Badge.objects.get(id=item_id)
+            serializer = BadgeSerializer(obj)
+        elif self.item_class == 'boards':
+            obj: Board = Board.objects.get(id=item_id)
+            serializer = BoardSerializer(obj)
+
+        return serializer
+
 
     # ''' get items object of the <item_class> object'''
 
-    # def get_items(self):
-    #     return self.items
+    def Serialize_owned_items(self):
+
+        ownedItems = self.owned_items.all()
+        serializedItem = []        
+
+        for item in ownedItems:
+            data = self.SerializeItem(item.id).data
+            serializedItem.append(data)
+
+        return serializedItem
 
 
 class Item(models.Model):    

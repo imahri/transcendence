@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer
 
 from core.settings import MEDIA_ROOT
 
-from .models import Badge, Match, Board, Padel
+from .models import Badge, Match, Board, Padel, Items
 from rest_framework import serializers
 from User_Management.serializers import UserSerializer
 from User_Management.models import User
@@ -96,49 +96,26 @@ class PadelSerializer(ModelSerializer):
         return representation
 
 
-# class BadgeSerializer(ModelSerializer):
-
-#     class Meta:
-#          model = Badge
-#          fields = ('id', 'color', 'price', 'image_path')
-
-#     def to_representation(self, instance):
-#         representation = super().to_representation(instance)
-#         image_path = MEDIA_ROOT + representation['image_path']
-
-#         with open(image_path, "rb") as f:
-#             image_data = base64.b64encode(f.read()).decode('utf-8')
-#         representation['image'] =  f'data:image/png;base64,{image_data}'
-#         del representation['image_path']
-#         return representation
-# class BoardSerializer(ModelSerializer):
-
-#     class Meta:
-#          model = Board
-#          fields = ('id', 'name', 'price', 'image_path')
-
-#     def to_representation(self, instance):
-#         representation = super().to_representation(instance)
-#         image_path = MEDIA_ROOT + representation['image_path']
-
-#         with open(image_path, "rb") as f:
-#             image_data = base64.b64encode(f.read()).decode('utf-8')
-#         representation['image'] =  f'data:image/png;base64,{image_data}'
-#         del representation['image_path']
-#         return representation
-# class PadelSerializer(ModelSerializer):
-
-#     class Meta:
-#          model = Padel
-#          fields = ('id', 'name',  'definition' ,'price', 'image_path')
 
 
-#     def to_representation(self, instance):
-#         representation = super().to_representation(instance)
-#         image_path = MEDIA_ROOT + representation['image_path']
 
-#         with open(image_path, "rb") as f:
-#             image_data = base64.b64encode(f.read()).decode('utf-8')
-#         representation['image'] =  f'data:image/png;base64,{image_data}'
-#         del representation['image_path']
-#         return representation
+class ItemsSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Items
+        fields = ("id", "item_class", "owned_items", "current_item")
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        
+        
+    
+        obj : Items = instance
+
+        current_item = obj.SerializeItem(obj.current_item.id)    
+        data['current_item'] = current_item.data
+        
+        owned_items = obj.Serialize_owned_items()
+        data['owned_items'] = owned_items
+        
+        return data

@@ -1,7 +1,7 @@
 from django.urls import path
 
 
-from .views import MatchView, BadgeView, BoardView, PadleView
+from .views import MatchView, BadgeView, BoardView, PadleView, ItemsView
 
 urlpatterns = [
     
@@ -12,4 +12,7 @@ urlpatterns = [
     path("board/<int:pk>/", BoardView.as_view(), name="boardUpdate"),
     path("padle", PadleView.as_view(), name="padle"),
     path("padle/<int:pk>/", PadleView.as_view(), name="padleUpdate"),
+    #user collection of items
+    path("items", ItemsView.as_view(), name="items"),
+
 ]
