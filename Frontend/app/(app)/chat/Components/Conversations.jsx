@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
@@ -121,6 +121,7 @@ export default function Conversations({
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
 	const { ws } = useContext(UserContext);
+	const [FirstInitial, setFirstInitial] = useState(true);
 	const ConversationsRef = useRef();
 	const router = useRouter();
 	const OnMessage = useCallback(
@@ -140,6 +141,18 @@ export default function Conversations({
 	);
 
 	if (ws) ws.onmessage = OnMessage;
+
+	useEffect(() => {
+		if (
+			FirstInitial &&
+			conversationList.length != 0 &&
+			ConversationsRef.current.clientHeight >=
+				ConversationsRef.current.scrollHeight
+		) {
+			LoadMoreConversation();
+			setFirstInitial(false);
+		}
+	}, [conversationList]);
 
 	useEffect(() => {
 		if (messageUpdated) {
