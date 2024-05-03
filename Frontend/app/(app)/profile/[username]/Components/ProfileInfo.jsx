@@ -168,7 +168,7 @@ function ProfileInfo({ user, displayFriends, EditProfile }) {
 					src={user.info.profile_img}
 					width={0}
 					height={0}
-					alt=""
+					alt="profile image"
 				/>
 			</div>
 			<div className="ml-[220px]">

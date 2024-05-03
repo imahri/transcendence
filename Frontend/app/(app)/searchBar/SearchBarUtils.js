@@ -20,7 +20,7 @@ export function Result({ data }) {
 				<h1 className="text-white font-semibold truncate">
 					{data.first_name} {data.last_name}
 				</h1>
-				<h3 class=" font-medium text-[13px] text-[#7D7D7D] ml-[5px] truncate">
+				<h3 className=" font-medium text-[13px] text-[#7D7D7D] ml-[5px] truncate">
 					{data.username}
 				</h3>
 			</div>
@@ -30,7 +30,7 @@ export function Result({ data }) {
 
 export function UserNotFound({ input }) {
 	return (
-		<h1 class="text-white font-semibold truncate max-w-[250px] overflow-x-hidden">
+		<h1 className="text-white font-semibold truncate max-w-[250px] overflow-x-hidden">
 			No result for :
 			<span className="font-normal text-[14px]">{input}</span>
 		</h1>

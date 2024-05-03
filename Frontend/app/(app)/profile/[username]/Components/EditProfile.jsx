@@ -2,9 +2,8 @@ import { useContext, useState, useRef } from "react";
 import { UserContext } from "@/app/(app)/context";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 import Image from "next/image";
-import { PasswordSvg, errorSvg, nameInputSvg } from "@/app/(auth)/Allsvg";
+import { errorSvg, nameInputSvg } from "@/app/(auth)/Allsvg";
 import { ChangeInfo } from "./EditUtils";
-import { showPassword } from "@/app/(auth)/AuthTools/LoginRegisterTools";
 
 function InputContainer({ type, label, id, placeHolder, error }) {
 	return (
@@ -50,36 +49,6 @@ function DoubleInput({ type, label, id, placeHolder }) {
 	);
 }
 
-function PasswordInput({ setReady, error }) {
-	const checkPass = (e) => {
-		const password = e.target.value;
-
-		setReady(password.length >= 9);
-	};
-	return (
-		<div
-			className={`w-full h-[60px] bg-[#252525] rounded-[5px] pt-[5px] flex  ${error ? "animate-shake border  border-red-600" : ""}`}
-		>
-			<label
-				className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
-				htmlFor="password"
-			>
-				Enter Your password to confirm
-			</label>
-			<input
-				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px] placeholder:text-white"
-				required
-				type="password"
-				id="password"
-				onChange={(e) => {
-					checkPass(e);
-				}}
-			/>
-			{PasswordSvg(showPassword)}
-		</div>
-	);
-}
-
 function UploadSvg() {
 	return (
 		<div className="absolute top-0 rounded-full w-full h-full flex justify-center items-center opacity-0 hover:opacity-100 hover:backdrop-brightness-50 cursor-pointer">
@@ -102,9 +71,7 @@ function UploadSvg() {
 function EditProfile({ closePopup }) {
 	const Form = useRef(null);
 
-	const [ready, setReady] = useState();
 	const [error, setError] = useState();
-
 	const { user, setUser } = useContext(UserContext);
 
 	return (
@@ -150,23 +117,20 @@ function EditProfile({ closePopup }) {
 						</span>
 					</div>
 
-					<div className="w-full h-[60px] flex justify-between max-[592px]:h-auto max-[592px]:block">
-						<DoubleInput
-							type={"text"}
-							id={"firstname"}
-							label={"Change your firstname"}
-							placeHolder={user.first_name}
-							error={error?.type == "first_name"}
-						/>
-						<DoubleInput
-							type={"text"}
-							id={"lastname"}
-							label={"Change your lastname"}
-							placeHolder={user.last_name}
-							error={error?.type == "last_name"}
-						/>
-					</div>
-
+					<InputContainer
+						type={"text"}
+						id={"firstname"}
+						label={"Change your firstname"}
+						placeHolder={user.first_name}
+						error={error?.type == "first_name"}
+					/>
+					<InputContainer
+						type={"text"}
+						id={"lastname"}
+						label={"Change your lastname"}
+						placeHolder={user.last_name}
+						error={error?.type == "last_name"}
+					/>
 					<InputContainer
 						type={"email"}
 						id={"email"}
@@ -175,12 +139,9 @@ function EditProfile({ closePopup }) {
 						error={error?.type == "email"}
 					/>
 
-					<PasswordInput setReady={setReady} />
-
 					<button
-						className={`w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer ${ready ? "text-white" : "text-gray-300 text-opacity-60"}`}
+						className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white"
 						type="submit"
-						disabled={!ready}
 					>
 						save
 					</button>

@@ -77,6 +77,13 @@ class Login(APIView):
     def delete(self, request):
         pass
 
+@api_view(["GET"])
+def check_token(request):
+    """
+    check the access token
+    """
+    return Response(data="Token is Valid", status=200)
+
 
 class TwoFactorAuthView(APIView):
     """Two_Factor_Auth"""

@@ -7,6 +7,7 @@ export const LOGIN_URL = `${AUTH_APP}/login`;
 export const REGISTER_URL = `${AUTH_APP}/register`;
 export const REFRESH_TOKEN_URL = `${AUTH_APP}/refresh_token`;
 export const LOGOUT_URL = `${AUTH_APP}/logout`;
+export const VERIFY_TOKEN_URL = `${AUTH_APP}/verify_token`;
 
 export const AUTH_42 = `${AUTH_APP}/42auth`;
 

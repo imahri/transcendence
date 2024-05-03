@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TowFaHandler, getCodeQr } from "./SettingsUtils";
-
-// TowFa is the state of user 2FA is true
+import { UserContext } from "../../context";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { USER_URL } from "@/app/URLS";
 
 function Security({ setShowQr }) {
-	const [TowFa, setTowFa] = useState();
+	const { user, setUser } = useContext(UserContext);
+
+	const [TowFa, setTowFa] = useState(user.is_2FA_active);
 	const [qrCode, setQrCode] = useState();
+
+	useEffect(() => {
+		const refetchUser = async () => {
+			//refetch user after update 2Fa state
+			const [isOk, status, data] = await fetch_jwt(USER_URL);
+
+			if (isOk) {
+				setUser(data);
+			}
+		};
+		refetchUser();
+	}, [TowFa]);
 
 	return (
 		<>
