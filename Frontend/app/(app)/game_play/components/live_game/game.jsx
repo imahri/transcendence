@@ -53,18 +53,10 @@ export const Youchen = () => {
 			x: canvas.width / 2,
 			y: canvas.height / 2,
 			radius: 20,
-			speed: 10,
+			speed: 20,
 			velocityX: 5,
 			velocityY: 5,
 			color: "orange",
-		};
-
-		const net = {
-			x: (canvas.width - 2) / 2,
-			y: 0,
-			height: 10,
-			width: 2,
-			color: "WHITE",
 		};
 
 		// mouves
@@ -79,6 +71,7 @@ export const Youchen = () => {
 			console.log(event.keyCode);
 			if (event.keyCode === 38) {
 				upKeyPressed = true;
+				// ws.current.send(JSON.stringify({ message }));
 			}
 			if (event.keyCode === 87) {
 				upKeyPressed = true;
@@ -112,12 +105,6 @@ export const Youchen = () => {
 			}
 			if (downKeyPressed && user.y + user.height < canvas.height) {
 				user.y += 10;
-			}
-		}
-
-		function drawNet() {
-			for (let i = 0; i <= canvas.height; i += 15) {
-				drawRect(net.x, net.y + i, net.width, net.height, net.color);
 			}
 		}
 
@@ -170,7 +157,7 @@ export const Youchen = () => {
 			ball.x = canvas.width / 2;
 			ball.y = canvas.height / 2;
 
-			ball.speed = 10;
+			ball.speed = 20;
 			ball.velocityX *= -1;
 		}
 
