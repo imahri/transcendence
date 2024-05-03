@@ -12,15 +12,36 @@ async function getConversations([offset, setOffset]) {
 	return { conversations: [], size: 0, has_next: true };
 }
 
+async function getLastConversations(offset) {
+	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
+		offset: offset,
+		last: true,
+	});
+	if (isOk) return data;
+	return null;
+}
+
 export const useConversations = (initialState) => {
 	const [ConversationList, setConversationList] = useState(initialState);
 	const [Offset, setOffset] = useState(2);
 	const [getMore, setGetMore] = useState(false);
 	const [isUpdated, setIsUpdated] = useState(false);
+	const [ReplaceLast, setReplaceLast] = useState(false);
 
 	useEffect(() => {
 		setIsUpdated(true);
 	}, []);
+
+	useEffect(() => {
+		if (ReplaceLast && Offset > 0) {
+			getLastConversations(Offset - 1).then(
+				(conversation) =>
+					conversation &&
+					setConversationList([...ConversationList, conversation]),
+			);
+			setReplaceLast(false);
+		}
+	}, [ReplaceLast]);
 
 	useEffect(() => {
 		if (getMore && Offset > 0) {
@@ -41,5 +62,6 @@ export const useConversations = (initialState) => {
 		setConversationList: setConversationList,
 		isUpdatedState: [isUpdated, setIsUpdated],
 		LoadMoreConversation: () => setGetMore(true),
+		LoadToReplace: () => setReplaceLast(true),
 	};
 };

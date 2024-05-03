@@ -105,30 +105,13 @@ function Conversation({
 	);
 }
 
-async function getMoreConversation(convListOffset, setConvListOffset) {
-	try {
-		const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
-			offset: convListOffset,
-		});
-		if (isOk) {
-			setConvListOffset(convListOffset + 1);
-			return data;
-		} else if (status == 406) {
-			setConvListOffset(0);
-			return { size: 0, conversations: [] };
-		}
-		return { size: 0, conversations: [] };
-	} catch (error) {
-		console.log(error);
-	}
-}
-
 export default function Conversations({
 	_convState: [convState, setConvState],
 	_Conversations: {
 		conversationList,
 		setConversationList,
 		LoadMoreConversation,
+		LoadToReplace,
 	},
 }) {
 	const {
@@ -143,14 +126,14 @@ export default function Conversations({
 	const OnMessage = useCallback(
 		(e) => {
 			const data = JSON.parse(e.data);
-			console.log(convList);
 			if (data.status == "B") {
-				setConvList(
+				setConversationList(
 					conversationList.filter(
 						(conv) => conv.name !== data.friend,
 					),
 				);
 				router.replace("/chat");
+				LoadToReplace();
 			}
 		},
 		[conversationList],
