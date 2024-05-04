@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import MyCollection from "./MyCollection";
+import MyState from "./MyState";
 
 function SkinTitle(active, setActive, title) {
 	const color = active ? "text-white" : "text-[#979797]";
@@ -33,7 +34,8 @@ function Dashboard() {
 			</div>
 
 			<div className="w-full flex justify-center">
-				<MyCollection />
+				{active == "My collection" && <MyCollection />}
+				{active == "State" && <MyState />}
 			</div>
 		</div>
 	);
