@@ -61,8 +61,13 @@ export function Searchbar({ style_ops }) {
 
 						{result &&
 							result != 404 &&
-							result.map((res) => {
-								return <Result data={res} />;
+							result.map((res, index) => {
+								return (
+									<div key={index}>
+										{" "}
+										<Result data={res} />{" "}
+									</div>
+								);
 							})}
 					</div>
 				</div>

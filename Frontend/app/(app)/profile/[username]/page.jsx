@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import NavBar from "../../navBar/NavBar";
 import { UserContext } from "../../context";
 import Banner from "./Components/Banner";
@@ -10,6 +10,8 @@ import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import Friendspopup from "./Components/DisplayFreinds";
 import EditProfile from "./Components/EditProfile";
+
+export const UserProfileContext = createContext();
 
 function Profile({ params }) {
 	const [userProfile, setUserProfile] = useState(false);
@@ -54,32 +56,34 @@ function Profile({ params }) {
 	return (
 		<>
 			<NavBar />
-			<main className="w-full  mt-[100px] flex justify-center">
-				{isLoading ? (
-					<div>Is Loding ...</div>
-				) : (
-					<div className="w-full flex flex-col items-center gap-[20px]">
-						<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
-							<Banner />
-							<ProfileInfo
-								user={userProfile}
-								displayFriends={setDisplayFriends}
-								EditProfile={setEditProfile}
-							/>
+			<UserProfileContext.Provider value={userProfile}>
+				<main className="w-full  mt-[100px] flex justify-center">
+					{isLoading ? (
+						<div>Is Loding ...</div>
+					) : (
+						<div className="w-full flex flex-col items-center gap-[20px]">
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
+								<Banner />
+								<ProfileInfo
+									user={userProfile}
+									displayFriends={setDisplayFriends}
+									EditProfile={setEditProfile}
+								/>
+							</div>
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
+								<Dashboard />
+							</div>
 						</div>
-						<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
-							<Dashboard />
-						</div>
-					</div>
+					)}
+				</main>
+				{displayFriends && (
+					<Friendspopup
+						DisplayFriends={setDisplayFriends}
+						username={userProfile.username}
+					/>
 				)}
-			</main>
-			{displayFriends && (
-				<Friendspopup
-					DisplayFriends={setDisplayFriends}
-					username={userProfile.username}
-				/>
-			)}
-			{Edit && <EditProfile closePopup={setEditProfile} />}
+				{Edit && <EditProfile closePopup={setEditProfile} />}
+			</UserProfileContext.Provider>
 		</>
 	);
 }

@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Badge from "@/app/(app)/store/Components/Badge";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ITEMS_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
-import Link from "next/link";
+import { UserProfileContext } from "../page";
 
 function Collection({ children, title }) {
 	return (
@@ -20,7 +20,7 @@ function Collection({ children, title }) {
 function Paddles({ paddles, isLoading }) {
 	return (
 		<div
-			className={`w-[80%] max-w-[80%] flex items-center gap-[20px] overflow-x-scroll p-[10px] ${!paddles ? "justify-center" : ""}`}
+			className={`w-[80%] max-w-[80%] flex items-center gap-[30px] overflow-x-scroll p-[10px] ${!paddles ? "justify-center" : ""}`}
 		>
 			{paddles &&
 				paddles.map((element, index) => {
@@ -38,10 +38,7 @@ function Paddles({ paddles, isLoading }) {
 			{isLoading && <Loading />}
 			{!isLoading && !paddles && (
 				<h1 className="text-white text-center text-[20px]">
-					No Paddles{" "}
-					<Link href="/store" className="text-blue-600">
-						Go get it
-					</Link>
+					No Paddles
 				</h1>
 			)}
 		</div>
@@ -51,7 +48,7 @@ function Paddles({ paddles, isLoading }) {
 function Boards({ boards, isLoading }) {
 	return (
 		<div
-			className={`w-[80%] max-w-[80%] flex items-center gap-[20px] overflow-x-scroll p-[10px] ${!boards ? "justify-center" : ""}`}
+			className={`w-[80%] max-w-[80%] flex items-center gap-[30px] overflow-x-scroll p-[10px] ${!boards ? "justify-center" : ""}`}
 		>
 			{boards &&
 				boards.map((element, index) => {
@@ -69,10 +66,7 @@ function Boards({ boards, isLoading }) {
 			{isLoading && <Loading />}
 			{!isLoading && !boards && (
 				<h1 className="text-white text-center text-[20px]">
-					No Boards{" "}
-					<Link href="/store" className="text-blue-600">
-						Go get it
-					</Link>
+					No Boards
 				</h1>
 			)}
 		</div>
@@ -87,25 +81,17 @@ function Badges({ badges, isLoading }) {
 			{badges &&
 				badges.map((obj, index) => {
 					return (
-						<div>
-							{" "}
-							<div
-								className="w-[222px] h-[135px] relative"
-								key={index}
-							>
-								{" "}
+						<div key={index}>
+							<div className="w-[222px] h-[135px] relative">
 								<Badge BadgeInfo={obj} />{" "}
-							</div>{" "}
+							</div>
 						</div>
 					);
 				})}
 			{isLoading && <Loading />}
 			{!isLoading && !badges && (
 				<h1 className="text-white text-center text-[20px]">
-					No Badges{" "}
-					<Link href="/store" className="text-blue-600">
-						Go get it
-					</Link>
+					No Badges
 				</h1>
 			)}
 		</div>
@@ -118,10 +104,14 @@ export default function MyCollection() {
 	const [badges, setBadges] = useState();
 	const [boards, setBoards] = useState();
 
+	const userProfile = useContext(UserProfileContext);
+
 	useEffect(() => {
 		const fetchItems = async () => {
 			try {
-				const [isOk, status, data] = await fetch_jwt(ITEMS_URL);
+				const [isOk, status, data] = await fetch_jwt(ITEMS_URL, {
+					username: userProfile.username,
+				});
 				setLoading(false);
 
 				if (isOk) {
