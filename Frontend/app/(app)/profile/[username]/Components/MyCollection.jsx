@@ -6,6 +6,23 @@ import { ITEMS_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
 import { UserProfileContext } from "../page";
 
+async function equipItem(item_id, items_id, setter) {
+	const body = { action: "equip", item_id: item_id, items_id: items_id };
+	const [isOk, status, data] = await fetch_jwt(
+		ITEMS_URL,
+		{},
+		{
+			method: "PUT",
+			body: JSON.stringify(body),
+			headers: { "Content-Type": "application/json" },
+		},
+	);
+	if (isOk) {
+		console.log(data);
+		setter(data);
+	}
+}
+
 function Collection({ children, title }) {
 	return (
 		<div className="flex items-center gap-[50px] w-[80%] h-[250px] relative">
@@ -17,22 +34,43 @@ function Collection({ children, title }) {
 	);
 }
 
-function Paddles({ paddles, isLoading }) {
+function Paddles({ paddles, setPaddles, isLoading }) {
+	const userProfile = useContext(UserProfileContext);
+
 	return (
 		<div
 			className={`w-[80%] max-w-[80%] flex items-center gap-[30px] overflow-x-scroll p-[10px] ${!paddles ? "justify-center" : ""}`}
 		>
 			{paddles &&
-				paddles.map((element, index) => {
+				paddles.owned_items.map((element, index) => {
 					return (
-						<Image
+						<div
 							key={index}
-							src={element.image}
-							width={90}
-							height={90}
-							className="size-[90px]"
-							alt="paddles"
-						/>
+							className="relative size-[120px] rounded-[7px] bg-[#00FFE0] bg-opacity-[10%] flex justify-center items-center"
+						>
+							<Image
+								src={element.image}
+								width={90}
+								height={90}
+								className="size-[90px] border-2 border-black cursor-pointer"
+								alt="paddles"
+								onClick={
+									userProfile.friendship == "owner"
+										? () =>
+												equipItem(
+													element.id,
+													paddles.id,
+													setPaddles,
+												)
+										: null
+								}
+							/>
+							{paddles.current_item.id == element.id && (
+								<div className="text-white bg-[#262626] font-bold text-[15px] p-[5px] rounded-[5px] absolute">
+									Equiped
+								</div>
+							)}
+						</div>
 					);
 				})}
 			{isLoading && <Loading />}
@@ -45,22 +83,41 @@ function Paddles({ paddles, isLoading }) {
 	);
 }
 
-function Boards({ boards, isLoading }) {
+function Boards({ boards, setBoards, isLoading }) {
+	const userProfile = useContext(UserProfileContext);
+
 	return (
 		<div
 			className={`w-[80%] max-w-[80%] flex items-center gap-[30px] overflow-x-scroll p-[10px] ${!boards ? "justify-center" : ""}`}
 		>
 			{boards &&
-				boards.map((element, index) => {
+				boards.owned_items.map((element, index) => {
 					return (
-						<Image
-							key={index}
-							width={212}
-							height={117}
-							src={element.image}
-							className="w-[212px] h-[117px]"
-							alt="boards"
-						/>
+						<div className="relative w-[250px] h-[150px] rounded-[10px] bg-[#2846E6] bg-opacity-[19%] flex justify-center items-center backdrop-blur-sm">
+							<Image
+								key={index}
+								width={212}
+								height={117}
+								src={element.image}
+								className="w-[212px] h-[117px] cursor-pointer hover:w-[100%] hover:h-[100%]"
+								alt="boards"
+								onClick={
+									userProfile.friendship == "owner"
+										? () =>
+												equipItem(
+													element.id,
+													boards.id,
+													setBoards,
+												)
+										: null
+								}
+							/>
+							{boards.current_item.id == element.id && (
+								<div className="text-white bg-[#262626] font-bold text-[15px] p-[5px] rounded-[5px] absolute">
+									Equiped
+								</div>
+							)}
+						</div>
 					);
 				})}
 			{isLoading && <Loading />}
@@ -73,18 +130,40 @@ function Boards({ boards, isLoading }) {
 	);
 }
 
-function Badges({ badges, isLoading }) {
+function Badges({ badges, setBadges, isLoading }) {
+	const userProfile = useContext(UserProfileContext);
+
 	return (
 		<div
 			className={`w-[80%] max-w-[80%] flex items-center overflow-x-scroll gap-[30px] p-[10px] ${!badges ? "justify-center" : ""}`}
 		>
 			{badges &&
-				badges.map((obj, index) => {
+				badges.owned_items.map((obj, index) => {
 					return (
-						<div key={index}>
-							<div className="w-[222px] h-[135px] relative">
+						<div
+							key={index}
+							className="relative w-[260px] h-[160px] bg-[#E628C7] bg-opacity-[20%] flex justify-center items-center rounded-[10px]"
+						>
+							<div
+								className="w-[222px] h-[135px] relative cursor-pointer"
+								onClick={
+									userProfile.friendship == "owner"
+										? () =>
+												equipItem(
+													obj.id,
+													badges.id,
+													setBadges,
+												)
+										: null
+								}
+							>
 								<Badge BadgeInfo={obj} />{" "}
 							</div>
+							{badges.current_item.id == obj.id && (
+								<div className="text-white bg-[#262626] font-bold text-[15px] p-[5px] rounded-[5px] absolute">
+									Equiped
+								</div>
+							)}
 						</div>
 					);
 				})}
@@ -115,9 +194,9 @@ export default function MyCollection() {
 				setLoading(false);
 
 				if (isOk) {
-					setBoards(data.boards.owned_items);
-					setPaddles(data.padels.owned_items);
-					setBadges(data.badges.owned_items);
+					setBoards(data.boards);
+					setPaddles(data.padels);
+					setBadges(data.badges);
 				} else {
 					console.log(data);
 				}
@@ -132,15 +211,27 @@ export default function MyCollection() {
 	return (
 		<div className="w-[90%] h-[500px] flex flex-col gap-[20px]">
 			<Collection title={"Paddle"} isLoading={isLoading}>
-				<Paddles paddles={paddles} isLoading={isLoading} />
+				<Paddles
+					paddles={paddles}
+					setPaddles={setPaddles}
+					isLoading={isLoading}
+				/>
 			</Collection>
 
 			<Collection title={"Boards"}>
-				<Boards boards={boards} isLoading={isLoading} />
+				<Boards
+					boards={boards}
+					setBoards={setBoards}
+					isLoading={isLoading}
+				/>
 			</Collection>
 
 			<Collection title={"Badges"}>
-				<Badges badges={badges} isLoading={isLoading} />
+				<Badges
+					badges={badges}
+					setBadges={setBadges}
+					isLoading={isLoading}
+				/>
 			</Collection>
 		</div>
 	);
