@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer
 from .models import Badge, Board, Match, Padel, Items
 from django.core.exceptions import ObjectDoesNotExist
+from User_Management.models import User
 from core.settings import IMAGES_ROOT_
 
 
@@ -175,9 +176,11 @@ class PadleView(APIView):
 class ItemsView(APIView):
 
     def get(self, request):
-        # paddels or board or badges
+        # get user items you should pass username in query
         try:
-            objs = Items.objects.filter(user=request.user)
+            username = request.query_params.get('username')
+            user : User =  User.objects.get(username=username)
+            objs = Items.objects.filter(user=user)
             response = {'padels' : '' , 'badges' : '', 'boards' : '' }
             for obj in objs:
                 ItemsSerialized = ItemsSerializer(instance=obj).data
@@ -189,3 +192,31 @@ class ItemsView(APIView):
         except Exception as error:
             print("catch : ", error)
             return Response(data=str(error), status=400)
+
+
+    def put(self, request):
+        # this view can equip item or add owned item and return the updated items
+        try:
+            
+            action = request.data.get('action')
+            new_item = request.data.get('item_id')
+            response = ''
+
+            if action == 'equip':
+                items_id = request.data.get('items_id')
+                obj : Items = Items.objects.get(id=items_id, user=request.user)
+                response = obj.equip_item(new_item)
+
+            if action == 'buy':
+                item_type = request.data.get('item_type')
+                
+                response = Items.buy_item(item_type, new_item, request.user)
+                
+
+            return Response(data=response)
+
+        except Exception as error:
+            print('catch : ', error)
+            return Response(data=str(error))
+
+

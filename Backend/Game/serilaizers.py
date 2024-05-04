@@ -103,7 +103,7 @@ class ItemsSerializer(ModelSerializer):
     
     class Meta:
         model = Items
-        fields = ("id", "item_class", "owned_items", "current_item")
+        fields = ("id", "item_class", "owned_items", "current_item", "user")
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
