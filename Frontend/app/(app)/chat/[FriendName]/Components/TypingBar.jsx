@@ -16,7 +16,7 @@ export function TypingBar({ onSend }) {
 	const handleChange = () =>
 		labelRef.current.classList.toggle(
 			styles.reachTheLimit,
-			inputMessage.current.value.length >= 300,
+			inputMessage.current.value.length >= 100,
 		);
 
 	return (
@@ -24,7 +24,7 @@ export function TypingBar({ onSend }) {
 			<label ref={labelRef}>
 				<input
 					onChange={handleChange}
-					maxLength={300}
+					maxLength={100}
 					onKeyDown={(e) => e.key === "Enter" && handleClick()}
 					ref={inputMessage}
 					type="text"
