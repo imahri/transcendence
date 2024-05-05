@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles/MessagesSection.module.css";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
+import { useOnVisibleAnimation } from "../../Hooks/useOnVisibleAnimation";
 
 export const MessageTypes = Object.freeze({
 	Sent: "sent",
@@ -43,6 +44,7 @@ export function MessagesSection({
 	const [isUpdated, setIsUpdated] = isUpdatedState;
 	const [oldScrollHeight, setOldScrollHeight] = useState(0);
 	const [FirstInitial, setFirstInitial] = useState(true);
+	useOnVisibleAnimation(secRef, styles.show, [messageList], 0.2);
 
 	useEffect(() => {
 		if (isUpdated) {
