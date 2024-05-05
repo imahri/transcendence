@@ -3,6 +3,7 @@ import { useEffect } from "react";
 export const useOnVisibleAnimation = (
 	ContainerRef,
 	classNameOnshow,
+	deps,
 	threshold = 0.4,
 ) => {
 	useEffect(() => {
@@ -20,5 +21,5 @@ export const useOnVisibleAnimation = (
 			},
 		);
 		entries.forEach((entry) => observer.observe(entry));
-	}, []);
+	}, deps);
 };

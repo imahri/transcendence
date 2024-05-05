@@ -13,7 +13,7 @@
 	@apply translate-x-[100px] opacity-0 transition-all duration-300;
 }
 
-.section.show {
+.show {
 	@apply translate-x-0 opacity-100;
 }
 

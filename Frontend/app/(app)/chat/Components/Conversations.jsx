@@ -74,9 +74,14 @@ function Conversation({
 	info: { name, image, last_message, unseen_msg },
 }) {
 	const router = useRouter();
+	const ConvRef = useRef();
 	const [convState, setConvState] = useContext(ConvChatContext);
 	const isActive = convState === name;
 	// !! For security: Change it to Image object
+
+	useEffect(() => {
+		ConvRef.current.classList.toggle(styles.focus_section, isActive);
+	}, [isActive]);
 
 	const handleClick = () => {
 		if (!isActive) {
@@ -87,10 +92,7 @@ function Conversation({
 	};
 
 	return (
-		<button
-			onClick={handleClick}
-			className={`${styles.section} ${isActive && styles.focus_section}`}
-		>
+		<button ref={ConvRef} onClick={handleClick} className={styles.section}>
 			<ProfileImage src={user.info.profile_img} />
 			<FriendInfo
 				friend_name={name}
@@ -124,7 +126,7 @@ export default function Conversations({
 	const { ws } = useContext(UserContext);
 	const [FirstInitial, setFirstInitial] = useState(true);
 	const ConversationsRef = useRef();
-	useOnVisibleAnimation(ConversationsRef, styles.show);
+	useOnVisibleAnimation(ConversationsRef, styles.show, [conversationList]);
 	const router = useRouter();
 	const OnMessage = useCallback(
 		(e) => {
