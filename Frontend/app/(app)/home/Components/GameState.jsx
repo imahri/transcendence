@@ -1,6 +1,5 @@
-import React from "react";
 import Image from "next/image";
-
+import Link from "next/link";
 //I need user score
 
 function GameState({ user1, user2 }) {
@@ -14,8 +13,8 @@ function GameState({ user1, user2 }) {
 	result2_color = result1_color == draw ? draw : result2_color;
 
 	return (
-		<div className="flex items-center justify-between  w-[200px] ml-[30px]">
-			<div className="flex flex-col items-center justify-center gap-[10px]">
+		<div className="flex items-center justify-between  min-w-[200px]">
+			<div className="flex flex-col items-center justify-center gap-[10px] w-[80px]">
 				<div
 					className={` ${result1_color} size-[46px] rounded-full flex justify-center items-center`}
 				>
@@ -27,7 +26,9 @@ function GameState({ user1, user2 }) {
 						alt=""
 					/>
 				</div>
-				<h2 className={`font-chakra text-[10px] text-white`}>
+				<h2
+					className={`font-chakra text-[10px] text-white w-full overflow-hidden truncate`}
+				>
 					{user1.username}
 				</h2>
 			</div>
@@ -37,7 +38,10 @@ function GameState({ user1, user2 }) {
 					{5} : {user2.score}{" "}
 				</h2>
 			</div>
-			<div className="flex flex-col items-center justify-center gap-[10px]">
+			<Link
+				className="flex flex-col items-center justify-center gap-[10px] w-[80px]"
+				href={`/profile/${user2.userName}`}
+			>
 				<div
 					className={`${result2_color} size-[46px] rounded-full flex justify-center items-center`}
 				>
@@ -49,10 +53,12 @@ function GameState({ user1, user2 }) {
 						alt=""
 					/>
 				</div>
-				<h2 className={`font-chakra text-[10px] text-white`}>
+				<h2
+					className={`font-chakra text-[10px] text-white w-full overflow-hidden truncate`}
+				>
 					{user2.userName}
 				</h2>
-			</div>
+			</Link>
 		</div>
 	);
 }
