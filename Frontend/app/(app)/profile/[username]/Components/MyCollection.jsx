@@ -25,7 +25,7 @@ async function equipItem(item_id, items_id, setter) {
 
 function Collection({ children, title }) {
 	return (
-		<div className="flex items-center gap-[50px] w-[80%] h-[250px] relative">
+		<div className="flex items-center gap-[50px] w-[80%] h-[200px] relative">
 			<h1 className="text-[#868686] font-semibold text-[20px]">
 				{title}
 			</h1>
@@ -209,7 +209,7 @@ export default function MyCollection() {
 	}, []);
 
 	return (
-		<div className="w-[90%] h-[500px] flex flex-col gap-[20px]">
+		<div className="w-[90%] h-auto flex flex-col gap-[20px]">
 			<Collection title={"Paddle"} isLoading={isLoading}>
 				<Paddles
 					paddles={paddles}

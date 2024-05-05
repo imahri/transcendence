@@ -23,8 +23,8 @@ function Dashboard() {
 	const [active, setActive] = useState("My collection");
 
 	return (
-		<div className="w-full h-[700px] mt-[10px] flex flex-col gap-[20px]">
-			<div className="flex gap-[200px] mt-[30px] ml-[60px]">
+		<div className="w-full min-h-[726px] my-[10px] flex flex-col gap-[20px]">
+			<div className="flex gap-[70px] mt-[30px] ml-[60px]">
 				{SkinTitle(
 					active == "My collection",
 					setActive,
