@@ -2,6 +2,7 @@
 	@apply h-full w-[25rem] bg-[#282828] border-l-[1rem] border-[#202020];
 	@apply flex flex-col  items-center justify-end space-y-24;
 	@apply absolute right-0 rounded-l-[3rem];
+	@apply md:h-[53rem] md:space-y-10;
 }
 
 .profile {
@@ -10,11 +11,13 @@
 
 .profile_img_container {
 	@apply w-48 h-48 rounded-full grid place-content-center;
+	@apply md:w-32 md:h-32;
 	@apply bg-gradient-to-l from-[#FF00E6] via-[#CB3737] to-[#7D46F2];
 }
 
 .profile_img {
 	@apply w-[11.3rem] h-[11.3rem] rounded-full;
+	@apply md:w-[7.3rem] md:h-[7.3rem];
 	@apply border-[0.3rem] border-[#313131];
 }
 

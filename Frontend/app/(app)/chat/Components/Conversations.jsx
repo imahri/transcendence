@@ -1,13 +1,13 @@
 "use client";
 import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
 import { useRouter } from "next/navigation";
-import { useConvState } from "../Hooks/useConvState";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
-import { USER_APP } from "@/app/URLS";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { UserContext } from "../../context";
+import { useOnVisibleAnimation } from "../Hooks/useOnVisibleAnimation";
 
 function Unseen({ count }) {
 	return (
@@ -74,9 +74,14 @@ function Conversation({
 	info: { name, image, last_message, unseen_msg },
 }) {
 	const router = useRouter();
+	const ConvRef = useRef();
 	const [convState, setConvState] = useContext(ConvChatContext);
 	const isActive = convState === name;
 	// !! For security: Change it to Image object
+
+	useEffect(() => {
+		ConvRef.current.classList.toggle(styles.focus_section, isActive);
+	}, [isActive]);
 
 	const handleClick = () => {
 		if (!isActive) {
@@ -87,10 +92,7 @@ function Conversation({
 	};
 
 	return (
-		<button
-			onClick={handleClick}
-			className={`${styles.section} ${isActive && styles.focus_section}`}
-		>
+		<button ref={ConvRef} onClick={handleClick} className={styles.section}>
 			<ProfileImage src={user.info.profile_img} />
 			<FriendInfo
 				friend_name={name}
@@ -107,9 +109,13 @@ function Conversation({
 }
 
 export default function Conversations({
-	_convState,
-	_convList,
-	_convListOffset,
+	_convState: [convState, setConvState],
+	_Conversations: {
+		conversationList,
+		setConversationList,
+		LoadMoreConversation,
+		LoadToReplace,
+	},
 }) {
 	const {
 		user,
@@ -117,14 +123,45 @@ export default function Conversations({
 		data,
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
-	const [convState, setConvState] = _convState;
-	const [convList, setConvList] = _convList;
-	const [convListOffset, setConvListOffset] = _convListOffset;
+	const { ws } = useContext(UserContext);
+	const [FirstInitial, setFirstInitial] = useState(true);
+	const ConversationsRef = useRef();
+	useOnVisibleAnimation(ConversationsRef, styles.show, [conversationList]);
+	const router = useRouter();
+	const OnMessage = useCallback(
+		(e) => {
+			const data = JSON.parse(e.data);
+			if (data.status == "B") {
+				setConversationList(
+					conversationList.filter(
+						(conv) => conv.name !== data.friend,
+					),
+				);
+				router.replace("/chat");
+				LoadToReplace();
+			}
+		},
+		[conversationList],
+	);
+
+	if (ws) ws.onmessage = OnMessage;
+
+	useEffect(() => {
+		if (
+			FirstInitial &&
+			conversationList.length != 0 &&
+			ConversationsRef.current.clientHeight >=
+				ConversationsRef.current.scrollHeight
+		) {
+			LoadMoreConversation();
+			setFirstInitial(false);
+		}
+	}, [conversationList]);
 
 	useEffect(() => {
 		if (messageUpdated) {
-			const update = async () => {
-				let _convList = [...convList];
+			(async () => {
+				let _convList = [...conversationList];
 				let idx, id;
 				_convList.forEach((conv, _idx) => {
 					if (conv.name === convState) {
@@ -142,18 +179,32 @@ export default function Conversations({
 							? -1
 							: 1,
 					);
-					setConvList(_convList);
+					setConversationList(_convList);
+					ConversationsRef.current.scrollTop = 0;
 				}
-			};
-			update();
+			})();
 			setMessageUpdated(false);
 		}
-	}, [convState, messageUpdated]);
+	}, [conversationList, convState, messageUpdated]);
+
+	const handleScroll = () => {
+		if (
+			ConversationsRef.current.clientHeight +
+				ConversationsRef.current.scrollTop +
+				1 >=
+			ConversationsRef.current.scrollHeight
+		)
+			LoadMoreConversation();
+	};
 
 	return (
 		<ConvChatContext.Provider value={[convState, setConvState]}>
-			<div className={styles.container}>
-				{convList?.map((conversation, idx) => (
+			<div
+				ref={ConversationsRef}
+				onScroll={handleScroll}
+				className={styles.container}
+			>
+				{conversationList?.map((conversation, idx) => (
 					<Conversation key={idx} user={user} info={conversation} />
 				))}
 			</div>

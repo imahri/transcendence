@@ -36,7 +36,7 @@ const BadgeSection = ({ Grade }) => (
 	<div className={styles.badge_section}>
 		<Image
 			className={styles.badge_section_img}
-			src={badge}
+			src={Grades[Grade - 1].image}
 			width={500}
 			height={500}
 			alt="badge"
@@ -109,67 +109,54 @@ const Block_Icon = () => (
 	</div>
 );
 
-function blockUser(socket, friend) {
-	if (friend) {
-		socket.send(JSON.stringify({ action: "block", friend_id: friend.id }));
-	}
-}
-
-export function ProfileSection({ _ref, className, FriendInfo }) {
+export function ProfileSection({
+	_ref,
+	className,
+	friendinfo: { id, name, image, level },
+	status,
+}) {
 	const router = useRouter();
-	const profile_img = DummyPath;
-	const Nickname = "obmium";
-	const Wallet = "150 $";
-	const Email = "walid.obm95@gmail.com";
-	const Grade = 2;
-	const [friend, setFriend] = useState(null);
-
-	useEffect(() => {
-		if (!friend) {
-			fetch_jwt(GET_USER_URL, { username: FriendInfo.name }).then(
-				([isOk, status, data]) => {
-					if (isOk) {
-						setFriend(data.user);
-					} else {
-						console.log("error fetch");
-					}
-				},
-			);
-		}
-	}, [friend]);
-
 	const { ws } = useContext(UserContext);
 
 	return (
 		<div ref={_ref} className={`${styles.container} ${className}`}>
 			<section className={styles.profile}>
-				<div className="flex justify-center items-center flex-col space-y-4">
+				<div className="flex justify-center items-center flex-col space-y-4 md:space-y-1">
 					<div className={styles.profile_img_container}>
-						<Image
-							className={styles.profile_img}
-							src={profile_img}
-							width={200}
-							height={200}
-							alt="profile_img"
-						/>
+						{image && (
+							<Image
+								className={styles.profile_img}
+								src={image}
+								width={200}
+								height={200}
+								alt="profile_img"
+							/>
+						)}
 					</div>
-					<h1>{FriendInfo.name}</h1>
-					<small>{FriendInfo.status}</small>
+					<h1>{name}</h1>
+					<small>{status}</small>
 				</div>
 				<div className="w-full flex justify-evenly items-center text-white font-medium text-xs mt-5">
 					<button
-						onClick={() =>
-							router.push(`/profile/${FriendInfo.name}`)
-						}
+						onClick={() => router.push(`/profile/${name}`)}
 						className={styles.flex_col_container}
 					>
 						<Profile_Icon />
 						<span>View Profile</span>
 					</button>
-					{/* TODO: add block */}
 					<button
 						className={styles.flex_col_container}
-						onClick={() => blockUser(ws, friend)}
+						onClick={() => {
+							if (id) {
+								console.log(id);
+								ws.send(
+									JSON.stringify({
+										action: "block",
+										friend_id: id,
+									}),
+								);
+							}
+						}}
 					>
 						<Block_Icon />
 						<span>Block</span>
@@ -177,7 +164,8 @@ export function ProfileSection({ _ref, className, FriendInfo }) {
 				</div>
 			</section>
 			<section className={styles.profile_section}>
-				<BadgeSection Grade={Grade} />
+				{/* ?? Delete this */}
+				<BadgeSection Grade={level > 0 ? level : 1} />
 			</section>
 			<Footer />
 		</div>

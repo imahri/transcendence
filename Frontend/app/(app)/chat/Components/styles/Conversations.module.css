@@ -10,6 +10,11 @@
 .section {
 	@apply h-[5.8rem] min-h-[5.8rem] w-[85%] bg-[#303030] rounded-xl flex flex-row justify-between;
 	@apply hover:bg-[#262626];
+	@apply translate-x-[100px] opacity-0 transition-all duration-300;
+}
+
+.show {
+	@apply translate-x-0 opacity-100;
 }
 
 .image {

@@ -54,7 +54,7 @@ export function Searchbar({ style_ops }) {
 				<SearchIcon styles={styles} />
 
 				<div
-					className={`bg-[#303030] rounded-xl w-full absolute top-[60px] left-0 ${!result || !input ? "hidden" : ""}`}
+					className={`bg-[#303030] rounded-xl w-full absolute z-[10] top-[60px] left-0 ${!result || !input ? "hidden" : ""}`}
 				>
 					<div className="m-[20px] flex flex-col gap-[10px] max-h-[280px] overflow-y-auto">
 						{result == 404 && <UserNotFound input={input} />}

@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
 import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
 import { TypingBar } from "./Components/TypingBar";
@@ -8,24 +8,24 @@ import { WsChatContext } from "../context/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
 import useConversationID from "../Hooks/useConversationID";
+import { GET_USER_URL } from "@/app/URLS";
+import { useRouter } from "next/navigation";
+import { useMessageList } from "../Hooks/useMessages";
 
-async function getMessages(conversation_id) {
-	if (conversation_id != 0) {
-		const [isOk, status, data] = await fetch_jwt(APIs.chat.messages, {
-			conversation: conversation_id,
-			limit: 10,
-			offset: 0,
-		});
-		if (!isOk) {
-			console.log("==> ", status);
-			return { messages: [], size: 0 };
-		}
-		data.messages.sort((a, b) =>
-			a.sended_at > b.sended_at ? 1 : a.sended_at < b.sended_at ? -1 : 0,
-		);
-		return data;
+async function getFriendInfo(FriendName) {
+	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
+		username: FriendName,
+	});
+	if (isOk) {
+		let info = {
+			id: data.user.id,
+			name: FriendName,
+			image: data.user.img,
+			level: data.user.info.level,
+		};
+		return info;
 	}
-	return { messages: [], size: 0 };
+	return null;
 }
 
 export default function DM_Conversation({ params: { FriendName } }) {
@@ -35,26 +35,27 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		data,
 		messageUpdatedState: [messageUpdated, setmessageUpdated],
 	} = useContext(WsChatContext);
-	const [conversation_id] = useConversationID(FriendName);
-	const [messages, setMessages] = useState([]);
-	const [messagesOffset, setMessagesOffset] = useState(0);
+	const conversation_id = useConversationID(FriendName);
+	const { messageList, addNewMessage, isUpdatedState, LoadMoreMessages } =
+		useMessageList(conversation_id, setmessageUpdated);
+	const [friendinfo, setFriendinfo] = useState({
+		name: FriendName,
+		image: null,
+		status: true,
+	});
 	const [showProfile, setShowProfile] = useState(false);
 	const _ref = useRef();
+	const router = useRouter();
+	const onReceive = useCallback(
+		(e) => {
+			const message = JSON.parse(e.data);
+			if (FriendName == message.sender) addNewMessage(message);
+			console.log(message);
+		},
+		[FriendName, messageList],
+	);
 
-	useEffect(() => {
-		const _getMessages = async () => {
-			const new_messages = await getMessages(conversation_id);
-			setMessages(new_messages.messages);
-			setMessagesOffset(new_messages.size);
-		};
-
-		_getMessages();
-	}, [conversation_id, FriendName]);
-
-	useEffect(() => {
-		if (socket) socket.onmessage = (e) => onReceive(messages, e.data);
-	}, [messages, FriendName]);
-
+	if (socket) socket.onmessage = onReceive;
 	const onSend = (new_msg) => {
 		const message = {
 			conversation_id: conversation_id,
@@ -65,25 +66,20 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		};
 		socket.send(JSON.stringify(message));
 		console.log(message);
-		setMessages([...messages, message]);
-		setmessageUpdated(true);
+		addNewMessage(message);
 	};
 
-	const onReceive = (messages, new_msg) => {
-		const message = JSON.parse(new_msg);
-		if (FriendName == message.sender) {
-			setMessages([...messages, message]);
-			setmessageUpdated(true);
-		}
-		console.log(message);
-	};
+	useEffect(() => {
+		getFriendInfo(FriendName).then((info) =>
+			info ? setFriendinfo(info) : router.replace("/not-found"),
+		);
+	}, [FriendName]);
 
 	return (
 		<>
-			<div className="flex-grow h-screen">
+			<div className="flex-grow h-screen flex flex-col justify-between items-center">
 				<ProfileBar
-					name={FriendName}
-					profileImg={user.info.profile_img}
+					friendinfo={friendinfo}
 					activeStatus={ActiveStatusTypes.Active}
 					onOpenProfile={() => {
 						showProfile
@@ -94,17 +90,19 @@ export default function DM_Conversation({ params: { FriendName } }) {
 				/>
 				<MessagesSection
 					FriendName={FriendName}
-					messageList={messages}
+					messageState={[
+						messageList,
+						isUpdatedState,
+						LoadMoreMessages,
+					]}
 				/>
 				<TypingBar onSend={onSend} />
 			</div>
 			<ProfileSection
 				_ref={_ref}
 				className="transition-all duration-300 scale-0 origin-right"
-				FriendInfo={{
-					name: FriendName,
-					status: ActiveStatusTypes.Active,
-				}}
+				status={ActiveStatusTypes.Active}
+				friendinfo={friendinfo}
 			/>
 		</>
 	);

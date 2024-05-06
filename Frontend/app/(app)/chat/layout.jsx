@@ -13,8 +13,7 @@ export const metadata = {
 
 async function getConversations() {
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
-		limit: 12,
-		offset: 0,
+		offset: 1,
 	});
 	if (!isOk) console.error("Fetch Error:");
 	return data;

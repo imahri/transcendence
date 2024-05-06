@@ -17,7 +17,7 @@ const useConversationID = (FriendName) => {
 				: router.replace("/chat");
 		});
 	}, [FriendName]);
-	return [conversationID, setConversationID];
+	return conversationID;
 };
 
 export default useConversationID;

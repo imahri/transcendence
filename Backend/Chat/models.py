@@ -30,6 +30,14 @@ class Conversation(models.Model):
         return self.friend_set
 
     @property
+    def check_is_friend(self):
+        friends = self.friends.all()
+        for friend in friends:
+            if not friend.is_friend:
+                return False
+        return True
+
+    @property
     def name(self):
         return [
             self.friends.first().user.username,

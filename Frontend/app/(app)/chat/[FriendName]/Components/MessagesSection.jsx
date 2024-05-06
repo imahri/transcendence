@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles/MessagesSection.module.css";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
+import { useOnVisibleAnimation } from "../../Hooks/useOnVisibleAnimation";
 
 export const MessageTypes = Object.freeze({
 	Sent: "sent",
@@ -23,9 +24,6 @@ function Message({ messageInfo, FriendName, isSent }) {
 	return (
 		<div className={`${styles.messageSection} ${messageSection_style}`}>
 			<section className={`${styles.message} ${message_style}`}>
-				{!isSent && (
-					<h3 className={styles.message_name}>{FriendName}</h3>
-				)}
 				<p className={styles.message_text}>{messageInfo.message}</p>
 				<small
 					className={`${styles.message_time} ${message_time_style}`}
@@ -37,17 +35,56 @@ function Message({ messageInfo, FriendName, isSent }) {
 	);
 }
 
-export function MessagesSection({ FriendName, messageList }) {
-	const scrollRef = useRef();
+export function MessagesSection({
+	FriendName,
+	messageState: [messageList, isUpdatedState, LoadMoreMessages],
+}) {
+	const secRef = useRef();
+	const messages = [...messageList].reverse();
+	const [isUpdated, setIsUpdated] = isUpdatedState;
+	const [oldScrollHeight, setOldScrollHeight] = useState(0);
+	const [FirstInitial, setFirstInitial] = useState(true);
+	useOnVisibleAnimation(secRef, styles.show, [messageList], 0.2);
 
 	useEffect(() => {
-		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+		if (isUpdated) {
+			secRef.current.scrollTop = secRef.current.scrollHeight;
+			setIsUpdated(false);
+		}
+	}, [isUpdated]);
+
+	useEffect(() => {
+		secRef.current.scrollTop =
+			secRef.current.scrollHeight - oldScrollHeight;
 	}, [messageList]);
 
+	const LoadMore = () => {
+		setOldScrollHeight(secRef.current.scrollHeight);
+		LoadMoreMessages();
+		secRef.current.scrollTop = 1;
+	};
+
+	const onScroll = () => {
+		if (secRef.current.scrollTop == 0) {
+			LoadMore();
+		}
+	};
+
+	useEffect(() => {
+		if (
+			FirstInitial &&
+			messages.length != 0 &&
+			secRef.current.clientHeight >= secRef.current.scrollHeight
+		) {
+			LoadMore();
+			setFirstInitial(false);
+		}
+	}, [messages]);
+
 	return (
-		<div ref={scrollRef} className={styles.container}>
-			{messageList &&
-				messageList.map((messageInfo, idx) => (
+		<div ref={secRef} onScroll={onScroll} className={styles.container}>
+			{messages &&
+				messages.map((messageInfo, idx) => (
 					<Message
 						key={idx}
 						FriendName={FriendName}

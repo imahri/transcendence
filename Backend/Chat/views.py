@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -7,6 +6,7 @@ from rest_framework.request import Request
 from User_Management.models import User, Friend
 from .models import Conversation, Message
 from django.db.models import Q, Count, Max
+from django.core.paginator import Paginator
 
 
 def catch_view_exception(func):
@@ -26,6 +26,7 @@ class ConversationView(APIView):
 
     @catch_view_exception
     def options(self, request):
+
         user: User = request.user
         friend: User = User.get_by_identifier(request.query_params.get("FriendName"))
         frined_rl = Friend.objects.filter(user=user, friend=friend).first()
@@ -35,23 +36,45 @@ class ConversationView(APIView):
 
     @catch_view_exception
     def get(self, request):
+        PER_PAGE = 12
         user: User = request.user
-        limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
+        last: bool = bool(request.query_params.get("last", False))
 
         queryset = Conversation.objects.annotate(
             isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
         )
-        conversations = (
+        conversation_list = (
             queryset.filter(isExist=True, num_messages__gt=0)
             .order_by("-last_modified")
-            .distinct()[offset : offset + limit]
-        )  # ?? check this later  # !! check the order
+            .distinct()
+        )
+        conversation_list = [  # TODO: do it in queryset
+            conversation
+            for conversation in conversation_list
+            if conversation.check_is_friend
+        ]
+        PaginatorConv = Paginator(
+            conversation_list, PER_PAGE, allow_empty_first_page=False
+        )
+        if offset <= 0 or offset > PaginatorConv.num_pages:
+            return Response(
+                {"error": "Out of range"}, status=status.HTTP_406_NOT_ACCEPTABLE
+            )
+        conversations = PaginatorConv.get_page(offset)
+        if last:
+            last_index = conversations.__len__() - 1
+            return Response(conversations[last_index].as_serialized(user))
         conversations_arr = [
             conversation.as_serialized(user) for conversation in conversations
         ]
+        print(conversations)
         return Response(
-            {"size": len(conversations_arr), "conversations": conversations_arr}
+            {
+                "size": len(conversations_arr),
+                "conversations": conversations_arr,
+                "has_next": conversations.has_next(),
+            }
         )
 
     @staticmethod
@@ -83,35 +106,28 @@ class MessageView(APIView):
 
     @catch_view_exception
     def get(self, request):
+        PER_PAGE = 10
         user: User = request.user
         conversation: Conversation = Conversation.objects.get(
             pk=request.query_params.get("conversation")
         )
-        limit = int(request.query_params.get("limit"))
         offset = int(request.query_params.get("offset"))
-
-        messages = Message.objects.filter(conversation=conversation).order_by(
+        message_list = Message.objects.filter(conversation=conversation).order_by(
             "-sended_at"
-        )[offset : offset + limit]
-
-        """
-            {
-                size: <how many messages>,
-                messages: [
-                    {
-                        message: <text>,
-                        sent_time: <00:00 AM>,
-                        sender: <username>
-                        type: <sent or received>
-                    },
-                ]
-                .
-                .
-                .
-                <limit>
-            }
-        """
-
+        )
+        PaginatorMessages = Paginator(
+            message_list, PER_PAGE, allow_empty_first_page=False
+        )
+        if offset <= 0 or offset > PaginatorMessages.num_pages:
+            return Response(
+                {"error": "Out of range"}, status=status.HTTP_406_NOT_ACCEPTABLE
+            )
+        messages = PaginatorMessages.get_page(offset)
         messages_arr = [message.as_serialized(user) for message in messages]
-
-        return Response({"size": len(messages_arr), "messages": messages_arr})
+        return Response(
+            {
+                "size": len(messages_arr),
+                "messages": messages_arr,
+                "has_next": messages.has_next(),
+            }
+        )

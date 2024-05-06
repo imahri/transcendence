@@ -9,6 +9,7 @@ import { WsChatContext } from "../context/context";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { useConvState } from "../Hooks/useConvState";
+import { useConversations } from "../Hooks/useConversations";
 
 const MicroProfile = ({ onClick, user }) => (
 	<button
@@ -69,7 +70,7 @@ function StartConversation({
 	router,
 	setStates: {
 		setConvState,
-		convListState: [convList, setConvList],
+		convListState: [convList, addNewConversation],
 	},
 }) {
 	const [friendList, setFriendList] = useState([]);
@@ -87,11 +88,11 @@ function StartConversation({
 			const get_friends = async () => {
 				const [isOk, status, data] = await fetch_jwt(APIs.user.friends);
 				if (!isOk) {
+					if (status == 404) setFriendList([]);
 					console.log("==> ", status);
 					return;
 				}
 				setFriendList(data);
-				console.log(data);
 			};
 			get_friends();
 		}
@@ -106,14 +107,19 @@ function StartConversation({
 	};
 
 	const onStartConv = (friend) => {
+		if (convList && !convList.some((conv) => conv.name === friend.username))
+			getConversation(friend.username).then((conv) =>
+				addNewConversation(conv),
+			);
 		router.push(`/chat/${friend.username}`);
 		setConvState(friend.username);
-		if (!convList.some((conv) => conv.name === friend.username)) {
-			getConversation(friend.username).then((conv) =>
-				setConvList([conv, ...convList]),
-			);
-		}
 	};
+
+	useEffect(() => {
+		// TODO: change it to className directly
+		if (friendList.length == 0) _ref.current.classList.add("h-[10rem]");
+		else _ref.current.classList.remove("h-[10rem]");
+	}, [friendList]);
 
 	return (
 		<>
@@ -126,13 +132,21 @@ function StartConversation({
 				flex flex-col items-center justify-start overflow-y-scroll scrollbar-hide
 				"
 			>
-				{friendList.map((friend, idx) => (
-					<MicroProfileFriend
-						key={idx}
-						friend={friend}
-						onClick={() => onStartConv(friend)}
-					/>
-				))}
+				{friendList.length == 0 ? (
+					<div className="w-52 h-20 flex justify-center items-center text-slate-200 my-3">
+						<span className="font-normal text-gray-300 text-1xl">
+							No Result
+						</span>
+					</div>
+				) : (
+					friendList.map((friend, idx) => (
+						<MicroProfileFriend
+							key={idx}
+							friend={friend}
+							onClick={() => onStartConv(friend)}
+						/>
+					))
+				)}
 			</div>
 		</>
 	);
@@ -141,10 +155,9 @@ function StartConversation({
 export function SideBar() {
 	const { user, socket, data } = useContext(WsChatContext);
 	const [convState, setConvState] = useConvState();
-	const [convList, setConvList] = useState(data.conversations);
-	const [convListOffset, setConvListOffset] = useState(data.size);
 	const router = useRouter();
 	const showSideBar = usePathname() === "/chat";
+	const _Conversations = useConversations(data.conversations);
 
 	return (
 		<>
@@ -155,8 +168,7 @@ export function SideBar() {
 				<Separator className={"w-72 h-1"} />
 				<Conversations
 					_convState={[convState, setConvState]}
-					_convList={[convList, setConvList]}
-					_convListOffset={[convListOffset, setConvListOffset]}
+					_Conversations={_Conversations}
 				/>
 				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
 					<MicroProfile
@@ -168,7 +180,10 @@ export function SideBar() {
 						router={router}
 						setStates={{
 							setConvState,
-							convListState: [convList, setConvList],
+							convListState: [
+								_Conversations.conversationList,
+								_Conversations.addNewConversation,
+							],
 						}}
 					/>
 				</div>
