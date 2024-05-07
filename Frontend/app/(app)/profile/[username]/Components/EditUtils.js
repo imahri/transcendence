@@ -15,7 +15,7 @@ function errorInForm(setError, error) {
 	}, 5000);
 }
 
-function sent(NewInfo, setError, setUser) {
+function sent(NewInfo, setError, setUser, closePopup) {
 	const formData = new FormData();
 
 	NewInfo.profile_img
@@ -25,6 +25,7 @@ function sent(NewInfo, setError, setUser) {
 	NewInfo.first_name ? formData.append("first_name", NewInfo.first_name) : "";
 	NewInfo.email ? formData.append("email", NewInfo.email) : "";
 
+	// convert to async await
 	fetch_jwt(
 		USER_URL,
 		{},
@@ -58,11 +59,12 @@ function sent(NewInfo, setError, setUser) {
 				: "";
 			return;
 		}
+		closePopup(false);
 		setUser(data);
 	});
 }
 
-export function ChangeInfo(e, Form, setError, setUser) {
+export function ChangeInfo(e, Form, setError, setUser, closePopup) {
 	e.preventDefault();
 
 	const FormField = Form.current;
@@ -97,5 +99,5 @@ export function ChangeInfo(e, Form, setError, setUser) {
 		return;
 	}
 
-	sent(NewInfo, setError, setUser);
+	sent(NewInfo, setError, setUser, closePopup);
 }

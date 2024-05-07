@@ -85,7 +85,9 @@ function EditProfile({ closePopup }) {
 				<form
 					className="w-[90%] flex flex-col items-center gap-[20px]"
 					ref={Form}
-					onSubmit={(e) => ChangeInfo(e, Form, setError, setUser)}
+					onSubmit={(e) =>
+						ChangeInfo(e, Form, setError, setUser, closePopup)
+					}
 				>
 					<label htmlFor="profile" className="relative">
 						<Image

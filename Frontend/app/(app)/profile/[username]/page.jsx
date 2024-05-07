@@ -25,33 +25,31 @@ function Profile({ params }) {
 	user.friendship = "owner";
 
 	useEffect(() => {
-		if (!userProfile) {
-			if (!params) {
-				setUserProfile(user);
-				setisLoading(false);
-				return;
-			}
-			fetch_jwt(GET_USER_URL, { username: params.username }).then(
-				([isOk, status, data]) => {
-					if (isOk) {
-						//check if user is blocked i can see it
-						if (
-							data.user.friendship == "B" ||
-							data.user.friendship == "BY"
-						) {
-							navigate.replace("/home");
-							return;
-						}
-						setUserProfile(data.user);
-						setisLoading(false);
-					} else {
-						console.log("error fetch");
-						navigate.replace("/home");
-					}
-				},
-			);
+		if (!params) {
+			setUserProfile(user);
+			setisLoading(false);
+			return;
 		}
-	}, [userProfile]);
+		fetch_jwt(GET_USER_URL, { username: params.username }).then(
+			([isOk, status, data]) => {
+				if (isOk) {
+					//check if user is blocked i can see it
+					if (
+						data.user.friendship == "B" ||
+						data.user.friendship == "BY"
+					) {
+						navigate.replace("/home");
+						return;
+					}
+					setUserProfile(data.user);
+					setisLoading(false);
+				} else {
+					console.log("error fetch");
+					navigate.replace("/home");
+				}
+			},
+		);
+	}, [userProfile, user]);
 
 	return (
 		<>
