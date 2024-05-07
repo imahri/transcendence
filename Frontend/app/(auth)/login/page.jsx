@@ -44,11 +44,7 @@ export function InputContainer({ Info, error }) {
 export function Error({ error }) {
 	return (
 		<div
-			className={
-				error
-					? "animate-shake bg-red-600 mx-[50px] my-[30px] w-[80%] h-[40px] rounded-[5px] flex justify-center items-center"
-					: "hidden"
-			}
+			className={`${error ? "" : "hidden"} animate-shake bg-red-600 mx-[50px] my-[30px] w-[80%] h-[40px] rounded-[5px] flex justify-center items-center`}
 		>
 			{errorSvg}
 			<span className="p-[5px] text-white  font-bold">{error?.msg}</span>

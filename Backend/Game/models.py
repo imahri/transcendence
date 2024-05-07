@@ -148,7 +148,7 @@ class Items(models.Model):
         return obj
 
     @classmethod
-    def create_item(item, user, type):
+    def create_item(cls, item, user, type):
         from .serilaizers import ItemsSerializer
 
         if item.price > user.info.wallet:
@@ -159,13 +159,19 @@ class Items(models.Model):
             serialized.save()
             user.info.wallet = user.info.wallet - item.price
             user.info.save()
-            return serialized.data
+            
+            ownedObjs = serialized.data['owned_items']
+            owned = []
+            for ownedObj in ownedObjs:
+                owned.append(ownedObj['id'])
+
+            return owned
         else:
             raise Exception(serialized.errors)
 
 
     @classmethod
-    def add_item(obj, user, item_id):
+    def add_item(cls, obj, user, item_id):
         from .serilaizers import ItemsSerializer
 
         owned_items = obj.get_owned_items()
@@ -184,7 +190,12 @@ class Items(models.Model):
         obj.owned_items.add(item_id)
         obj.save()
         serialized = ItemsSerializer(obj)
-        return serialized.data 
+        ownedObjs = serialized.data['owned_items']
+        owned = []
+        for ownedObj in ownedObjs:
+            owned.append(ownedObj['id'])
+        
+        return owned
 
     @classmethod
     def buy_item(cls , type, item_id, user : User):

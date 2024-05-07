@@ -5,11 +5,6 @@ from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, Boar
 from .models import Badge, Board, Match, Padel, Items
 from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
-from core.settings import IMAGES_ROOT_
-
-
-
-
 
 class MatchView(APIView):
 
@@ -43,135 +38,71 @@ class MatchView(APIView):
 
 class BadgeView(APIView):
 
-    def post(self, request): 
-       if request.user.is_superuser:
-            serializer = BadgeSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=400)
-       else:
-         return Response({'error':'you are not admin'}, status=401)
-
     def get(self, request):
         
         try:
             objects = Badge.objects.all()
             serializer = BadgeSerializer(instance=objects, many=True)
+            owned = []
+            try:
+                obj : Items = Items.objects.get(user=request.user, item_class='badges')
+                data = ItemsSerializer(obj).data
+                ownedObjs = data['owned_items']
+                for ownedObj in ownedObjs:
+                    owned.append(ownedObj['id'])
+            except Items.DoesNotExist:
+                pass
 
-            return Response(serializer.data)
+            return Response({'badges':  serializer.data, 'owned' : owned})
         except Exception as error:
             return Response({'error': str(error)}, status=400)
-
-    def put(self, request, pk):
-        if request.user.is_superuser:
-            try:
-                paddle = Badge.objects.get(pk=pk)
-            except Badge.DoesNotExist:
-                return Response(
-                    {'error': 'Paddle with this ID does not exist'},
-                    status=404
-                )
-
-            serializer = BadgeSerializer(paddle, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=400)
-        else:
-            return Response({'error': 'you are not admin'}, status=401)
-
            
 class BoardView(APIView):
-
-    def post(self, request): 
-       if request.user.is_superuser:
-            serializer = BoardSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=400)
-       else:
-         return Response({'error':'you are not admin'}, status=401)
     
     def get(self, request):
         
         try:
             objects = Board.objects.all()
             serializer = BoardSerializer(instance=objects, many=True)
+            owned = []
+            try:
+                obj : Items = Items.objects.get(user=request.user, item_class='boards')
+                data = ItemsSerializer(obj).data
+                ownedObjs = data['owned_items']
+                for ownedObj in ownedObjs:
+                    owned.append(ownedObj['id'])
+            except Items.DoesNotExist:
+                pass
 
-            return Response(serializer.data)
+            return Response({'boards':  serializer.data, 'owned' : owned})
+
         except Exception as error:
             return Response({'error': str(error)}, status=400)
-
-    def put(self, request, pk):
-        if request.user.is_superuser:
-            try:
-                board = Board.objects.get(pk=pk)
-            except Board.DoesNotExist:
-                return Response(
-                    {'error': 'Paddle with this ID does not exist'},
-                    status=404
-                )
-
-            serializer = BoardSerializer(board, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=400)
-        else:
-            return Response({'error': 'you are not admin'}, status=401)
 
 
 class PadleView(APIView):
 
-    def post(self, request): 
-       if request.user.is_superuser:
-            serializer = PadelSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=400)
-       else:
-         return Response({'error':'you are not admin'}, status=401)
-    
     def get(self, request):
         
         try:
             objects = Padel.objects.all()
             serializer = PadelSerializer(instance=objects, many=True)
+            #get owned paddles ids
+            owned = []
+            try:
+                obj : Items = Items.objects.get(user=request.user, item_class='padels')
+                data = ItemsSerializer(obj).data
+                ownedObjs = data['owned_items']
+                for ownedObj in ownedObjs:
+                    owned.append(ownedObj['id'])
+            except Items.DoesNotExist:
+                pass
 
-            return Response(serializer.data)
+            return Response({'paddles':  serializer.data, 'owned' : owned})
+        
         except Exception as error:
             return Response({'error': str(error)}, status=400)
-        
-    def put(self, request, pk):
-        if request.user.is_superuser:
-            try:
-                paddle = Padel.objects.get(pk=pk)
-            except Padel.DoesNotExist:
-                return Response(
-                    {'error': 'Paddle with this ID does not exist'},
-                    status=404
-                )
 
-            serializer = PadelSerializer(paddle, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response(serializer.errors, status=400)
-        else:
-            return Response({'error': 'you are not admin'}, status=401)
-
-
-#how can i get user collection
-        
 
 class ItemsView(APIView):
 
@@ -217,6 +148,6 @@ class ItemsView(APIView):
 
         except Exception as error:
             print('catch : ', error)
-            return Response(data=str(error))
+            return Response(data=str(error), status=400)
 
 
