@@ -22,7 +22,7 @@ function GameState({ match }) {
 
 	return (
 		<div className="flex items-center justify-center gap-[20px] w-[100%]">
-			<h2 className=" font-bold text-[15px] text-white w-[90px] overflow-hidden truncate">
+			<h2 className=" font-bold text-[15px] text-white w-[90px] overflow-hidden truncate text-right">
 				{user1.username}
 			</h2>
 			<div
@@ -100,8 +100,17 @@ function Historic() {
 			<div className="w-[100%] pt-[10px] mb-[15px] flex flex-col gap-[20px] overflow-y-auto">
 				{Matches.map((match, index) => {
 					return (
-						<div key={index}>
+						<div
+							className="flex flex-col gap-[10px] justify-center items-center"
+							key={index}
+						>
 							<GameState match={match} />
+							<div
+								className={`flex w-[70%] ${index == Matches.length - 1 ? "hidden" : ""}`}
+							>
+								<div class="w-1/2 h-[2px] bg-gradient-to-l from-white to-transparent"></div>
+								<div class="w-1/2 h-[2px] bg-gradient-to-r from-white to-transparent"></div>
+							</div>
 						</div>
 					);
 				})}
