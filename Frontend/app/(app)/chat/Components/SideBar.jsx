@@ -77,9 +77,7 @@ function StartConversation({
 	const [visible, setVisible] = useState(false);
 	const _ref = useRef();
 	const handleScale = () => {
-		visible
-			? _ref.current.classList.remove("scale-100")
-			: _ref.current.classList.add("scale-100");
+		_ref.current.classList.toggle("scale-100", visible);
 		setVisible(!visible);
 	};
 

@@ -15,8 +15,9 @@ async function getConversations() {
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
 		offset: 1,
 	});
-	if (!isOk) console.error("Fetch Error:");
-	return data;
+	if (isOk) return data;
+	console.error("Fetch Error:", status);
+	return { conversations: [] };
 }
 
 export default async function ChatLayout({ children }) {
