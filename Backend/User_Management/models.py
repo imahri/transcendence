@@ -10,7 +10,6 @@ from core.settings import DEFAULT_BANNER_IMG, DEFAULT_PROFILE_IMG
 from django.db.models.manager import BaseManager
 
 
-
 class User(AbstractUser):
     """
     Username and Email are required. Other fields are optional.
@@ -105,17 +104,17 @@ class User(AbstractUser):
 
     def block_friend(self, friend):
         self.get_friendship(friend).block()
-        
+
     def deblock_friend(self, friend):
         self.get_friendship(friend).deblock()
-        
+
     def delete_friend(self, friend):
         self.get_friendship(friend).delete()
         friend.get_friendship(self).delete()
-    
+
     def get_new_Notification(self):
         return Notification.objects.filter(user=self, is_read=False, is_hidden=False)
-    
+
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
 
@@ -236,9 +235,8 @@ class Friend(models.Model):
         friend_obj.status = "BY"
         friend_obj.save()
 
-
     def deblock(self):
-        if not self.status == 'B':
+        if not self.status == "B":
             raise Exception("is not Blocked")
         self.status = "F"
         self.save()
@@ -262,37 +260,36 @@ class Friend(models.Model):
 class Notification(models.Model):
 
     NotifType = (
-        ('Msg', 'Message'),
-        ('friendShip', 'Friendship'),
-        ('GameInvit', 'Game Invitation')
+        ("Msg", "Message"),
+        ("friendShip", "Friendship"),
+        ("GameInvit", "Game Invitation"),
     )
 
-    user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE, related_name="notification_reciver")
-    notifier = models.ForeignKey("User_Management.User", on_delete=models.CASCADE,related_name="notification_sender")
+    user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
+    sended_to = models.ManyToManyField(
+        "User_Management.User", related_name="notifications"
+    )
     type = models.CharField(choices=NotifType, max_length=20)
     time = models.DateTimeField(auto_now_add=True)
-    content = models.TextField()
+    content = models.TextField(max_length=100)
     is_read = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
 
-
-
     @staticmethod
-    def getNBUnreadedNotif(user : User):
+    def getNBUnreadedNotif(user: User):
         unreadedNotif = user.get_new_Notification()
-        return len(unreadedNotif);
-
+        return len(unreadedNotif)
 
     @staticmethod
     def allNotifSerialised(user):
         from .serializers import NotifSerializer
 
         response = []
-        allNotification =  Notification.objects.filter(user=user)
+        allNotification = user.notifications.all().filter(hidden=False)
 
         if allNotification.exists():
-                for notif in allNotification:
-                    notifData = dict(NotifSerializer(notif).data)
-                    response.append(notifData)
+            for notif in allNotification:
+                notifData = dict(NotifSerializer(notif).data)
+                response.append(notifData)
 
         return response
