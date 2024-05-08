@@ -94,7 +94,6 @@ function BlockedUsers({ setPopUp }) {
 							setError={setError}
 						/>
 					))}
-				{/* style it later*/}
 				<h1
 					className={`${error ? "" : "hidden"} text-white text-center`}
 				>

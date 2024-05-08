@@ -1,6 +1,6 @@
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { isValidEmail } from "@/app/(auth)/register/registerUtils";
-import { POST_INFO_URL, USER_URL } from "@/app/URLS";
+import { USER_URL } from "@/app/URLS";
 
 function onlySpace(str) {
 	return str.trim().length == 0;
@@ -15,7 +15,7 @@ function errorInForm(setError, error) {
 	}, 5000);
 }
 
-function sent(NewInfo, setError, setUser) {
+function sent(NewInfo, setError, setUser, closePopup) {
 	const formData = new FormData();
 
 	NewInfo.profile_img
@@ -24,8 +24,8 @@ function sent(NewInfo, setError, setUser) {
 	NewInfo.last_name ? formData.append("last_name", NewInfo.last_name) : "";
 	NewInfo.first_name ? formData.append("first_name", NewInfo.first_name) : "";
 	NewInfo.email ? formData.append("email", NewInfo.email) : "";
-	formData.append("password", NewInfo.password);
 
+	// convert to async await
 	fetch_jwt(
 		USER_URL,
 		{},
@@ -57,19 +57,14 @@ function sent(NewInfo, setError, setUser) {
 						msg: data.profile_img,
 					})
 				: "";
-			data.password
-				? errorInForm(setError, {
-						type: "password",
-						msg: data.password,
-					})
-				: "";
 			return;
 		}
+		closePopup(false);
 		setUser(data);
 	});
 }
 
-export function ChangeInfo(e, Form, setError, setUser) {
+export function ChangeInfo(e, Form, setError, setUser, closePopup) {
 	e.preventDefault();
 
 	const FormField = Form.current;
@@ -79,19 +74,12 @@ export function ChangeInfo(e, Form, setError, setUser) {
 		first_name: FormField["firstname"].value,
 		last_name: FormField["lastname"].value,
 		email: FormField["email"].value,
-		password: FormField["password"].value,
 	};
 
 	NewInfo.last_name = onlySpace(NewInfo.last_name) ? "" : NewInfo.last_name;
 	NewInfo.first_name = onlySpace(NewInfo.first_name)
 		? ""
 		: NewInfo.first_name;
-	NewInfo.password = onlySpace(NewInfo.password) ? "" : NewInfo.password;
-
-	if (!NewInfo.password) {
-		errorInForm(setError, { type: "password", msg: "password Invalid" });
-		return;
-	}
 
 	if (
 		!NewInfo.first_name &&
@@ -111,5 +99,5 @@ export function ChangeInfo(e, Form, setError, setUser) {
 		return;
 	}
 
-	sent(NewInfo, setError, setUser);
+	sent(NewInfo, setError, setUser, closePopup);
 }

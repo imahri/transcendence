@@ -17,8 +17,11 @@ export const handleSubmit = async (
 	setError,
 	setPopUp2Fa,
 	navigate,
+	setisLoading,
 ) => {
 	e.preventDefault();
+
+	setisLoading(true);
 
 	const FormField = Form.current;
 	const username = FormField["username"].value;
@@ -43,6 +46,7 @@ export const handleSubmit = async (
 
 			navigate.replace("/home");
 		} else {
+			setisLoading(false);
 			ErrorLogin(setError, responseBody);
 			console.error("Login failed", response);
 		}
@@ -51,7 +55,7 @@ export const handleSubmit = async (
 	}
 };
 
-export async function get42Token(navigate, code) {
+export async function get42Token(navigate, code, setisLoading, setError) {
 	let body = { code: code };
 	try {
 		const response = await fetch(AUTH_42, {
@@ -66,6 +70,11 @@ export async function get42Token(navigate, code) {
 			console.log("Login successful");
 			navigate.replace("/home");
 		} else {
+			setisLoading(false);
+			errorInForm(
+				{ type: "intra", msg: "Login with intra failed" },
+				setError,
+			);
 			console.error("Login failed");
 		}
 	} catch (error) {

@@ -7,6 +7,7 @@ export const LOGIN_URL = `${AUTH_APP}/login`;
 export const REGISTER_URL = `${AUTH_APP}/register`;
 export const REFRESH_TOKEN_URL = `${AUTH_APP}/refresh_token`;
 export const LOGOUT_URL = `${AUTH_APP}/logout`;
+export const VERIFY_TOKEN_URL = `${AUTH_APP}/verify_token`;
 
 export const AUTH_42 = `${AUTH_APP}/42auth`;
 
@@ -18,6 +19,7 @@ const GAME_APP = `${BASE_URL}/Game`;
 export const PADDLES_URL = `${GAME_APP}/padle`;
 export const BOARDES_URL = `${GAME_APP}/board`;
 export const BADGES_URL = `${GAME_APP}/badge`;
+export const ITEMS_URL = `${GAME_APP}/items`;
 
 export const USER_APP = `${BASE_URL}/user`;
 

@@ -19,6 +19,7 @@ class UserSerializer(ModelSerializer):
             "last_name",
             "password",
             "img",
+            "is_2FA_active",
         ]
         extra_kwargs = {"password": {"write_only": True}}
 

@@ -4,7 +4,12 @@ import BannerImg from "../assets/BannerImg.png";
 function Banner() {
 	return (
 		<div className="w-full h-[290px] relative ">
-			<Image src={BannerImg} fill className="rounded-t-[25px]" />
+			<Image
+				src={BannerImg}
+				fill
+				className="rounded-t-[25px]"
+				alt="Profile Banner"
+			/>
 		</div>
 	);
 }

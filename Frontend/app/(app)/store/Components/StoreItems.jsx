@@ -1,25 +1,31 @@
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { ITEMS_URL } from "@/app/URLS";
 
-export async function getStoreItem(url, navigate) {
-	const accessToken = getToken();
+export async function buyItem(item_type, item, setOwned, setError) {
+	const body = { action: "buy", item_type: item_type, item_id: item.id };
 
 	try {
-		const response = await fetch(url, {
-			headers: { Authorization: `Bearer  ${accessToken}` },
-		});
-		if (response.ok) {
-			const data = await response.json();
-			return data;
-		} else if (response.status == 401) {
-			console.log("error autorization", response);
-			navigate.replace("/login");
-		} else {
-			console.log("error response", response);
+		const [isOk, status, data] = await fetch_jwt(
+			ITEMS_URL,
+			{},
+			{
+				method: "PUT",
+				body: JSON.stringify(body),
+				headers: { "Content-Type": "application/json" },
+			},
+		);
+		if (!isOk) {
+			setError(data);
+			setTimeout(() => {
+				setError(false);
+			}, 5000);
+			console.log(data);
+			return;
 		}
+		setOwned(data);
 	} catch (error) {
-		console.error("catch error", error);
+		console.log("exception : ", error);
 	}
-	return false;
 }
 
 export const walletSvg = (

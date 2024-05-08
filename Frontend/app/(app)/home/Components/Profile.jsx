@@ -37,12 +37,12 @@ function Profile() {
 
 				<div className="ml-[150px] [@media(max-width:470px)]:ml-[100px] w-auto h-[40%] flex items-center">
 					<div className="ml-10px">
-						<h1 className=" font-semibold text-[96px] [@media(max-width:800px)]:text-[60px] text-[#B872FE]">
+						<h1 className="font-semibold text-[60px] [@media(max-width:800px)]:text-[40px] [@media(max-width:600px)]:text-[15px] [@media(max-width:600px)]:w-[70%] overflow-hidden truncate text-[#B872FE]">
 							{user.username}
 						</h1>
-						<h2 className=" font-semibold text-[38px] [@media(max-width:800px)]:text-[25px] text-white">
+						{/* <h2 className=" font-semibold text-[38px] [@media(max-width:800px)]:text-[25px] text-white">
 							Player Name
-						</h2>
+						</h2> */}
 					</div>
 				</div>
 				<div className="w-auto h-[60%] pl-[70px] [@media(max-width:470px)]:pl-[20px] flex flex-col justify-center gap-[20px]">
@@ -66,14 +66,14 @@ function Profile() {
 							/>
 						</div>
 					</div>
-					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white">
+					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
 						{user.first_name} {user.last_name}
 					</h2>
-					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white">
+					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
 						{user.email}
 					</h2>
 				</div>
-				<h1 className="absolute top-[-20px] right-0 rotate-[-6deg] font-Mesthine text-[96px] [@media(max-width:1000px)]:hidden text-white">
+				<h1 className="absolute top-[-20px] right-0 rotate-[-6deg] font-Mesthine text-[64px] [@media(max-width:1000px)]:hidden text-white">
 					{user.username}
 				</h1>
 			</div>

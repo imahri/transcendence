@@ -4,10 +4,12 @@ import { useContext } from "react";
 import profileImg from "../assets/profile.png";
 import Image from "next/image";
 import { UserContext } from "../../context";
+import Link from "next/link";
 
 function GameState({ match }) {
 	const user1 = match.user1;
 	const user2 = match.user2;
+	user1.score = 5;
 
 	const win = "bg-[#FFD700]";
 	const lose = "bg-red-600";
@@ -20,7 +22,7 @@ function GameState({ match }) {
 
 	return (
 		<div className="flex items-center justify-center gap-[20px] w-[100%]">
-			<h2 className=" font-bold text-[15px] text-white">
+			<h2 className=" font-bold text-[15px] text-white w-[90px] overflow-hidden truncate text-right">
 				{user1.username}
 			</h2>
 			<div
@@ -36,11 +38,11 @@ function GameState({ match }) {
 			</div>
 			<div className="bg-[#696969] size-[34px] rounded-full flex justify-center items-center">
 				<h2 className=" font-bold text-[10px] text-white">
-					{" "}
-					{5} : {user2.score}{" "}
+					{user1.score} : {user2.score}
 				</h2>
 			</div>
-			<div
+			<Link
+				href={`/profile/${user2.username}`}
 				className={`${result2_color} size-[46px] rounded-full flex justify-center items-center`}
 			>
 				<Image
@@ -50,10 +52,12 @@ function GameState({ match }) {
 					src={user2.image}
 					alt=""
 				/>
-			</div>
-			<h2 className=" font-bold text-[15px] text-white">
-				{user2.username}
-			</h2>
+			</Link>
+			<Link href={`/profile/${user2.username}`}>
+				<h2 className=" font-bold text-[15px] text-white w-[90px] overflow-hidden truncate">
+					{user2.username}
+				</h2>
+			</Link>
 		</div>
 	);
 }
@@ -96,9 +100,17 @@ function Historic() {
 			<div className="w-[100%] pt-[10px] mb-[15px] flex flex-col gap-[20px] overflow-y-auto">
 				{Matches.map((match, index) => {
 					return (
-						<div key={index}>
-							{" "}
-							<GameState match={match} />{" "}
+						<div
+							className="flex flex-col gap-[10px] justify-center items-center"
+							key={index}
+						>
+							<GameState match={match} />
+							<div
+								className={`flex w-[70%] ${index == Matches.length - 1 ? "hidden" : ""}`}
+							>
+								<div class="w-1/2 h-[2px] bg-gradient-to-l from-white to-transparent"></div>
+								<div class="w-1/2 h-[2px] bg-gradient-to-r from-white to-transparent"></div>
+							</div>
 						</div>
 					);
 				})}

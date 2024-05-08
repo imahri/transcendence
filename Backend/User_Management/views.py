@@ -1,7 +1,5 @@
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
@@ -47,20 +45,11 @@ class UserView(APIView):
     def post(self, request):
         try:
 
-            UserObj = User.objects.get(id=request.user.pk)
-
-            FormData : dict = request.data.copy()
-            password_list = FormData.pop('password')
-            password = password_list[0] if isinstance(password_list, list) else password_list
-
-            if password is None or UserObj.check_password(password) is False :
-                return Response({"password": "Password Incorrect"}, status=400)
-
+            UserObj = request.user
+            FormData : dict = request.data
             ancien_img = UserObj.info.profile_img
 
-            UserSerialized = UserSerializer(UserObj, data=request.data)
-            infoObj = Info.objects.get(user=UserObj)
-            InfoSerialized = InfoSerializer(infoObj, data=request.data)
+            InfoSerialized = InfoSerializer(UserObj.info, data=request.data)
             if InfoSerialized.is_valid():
                 InfoSerialized.save()
             else:
@@ -69,9 +58,7 @@ class UserView(APIView):
             if UserSerialized.is_valid():
                 UserSerialized.save()
                 UserData = UserSerialized.data
-                UserData["info"] = InfoSerializer(
-                    Info.objects.get(user=request.user.pk)
-                ).data
+                UserData["info"] = InfoSerialized.data
                 if FormData.get('profile_img') is not None and ancien_img != DEFAULT_PROFILE_IMG:
                     os.remove(ancien_img.path)
                       

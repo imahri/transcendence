@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import MyCollection from "./MyCollection";
+import MyState from "./MyState";
 
 function SkinTitle(active, setActive, title) {
 	const color = active ? "text-white" : "text-[#979797]";
@@ -18,15 +20,22 @@ function SkinTitle(active, setActive, title) {
 }
 
 function Dashboard() {
-	const [active, setActive] = useState("Game");
+	const [active, setActive] = useState("My collection");
 
 	return (
-		<div className="w-full h-[700px] mt-[10px]">
-			<div className="flex gap-[200px] mt-[30px] ml-[60px]">
-				{SkinTitle(active == "Game", setActive, "Game")}
+		<div className="w-full min-h-[726px] my-[10px] flex flex-col gap-[20px]">
+			<div className="flex gap-[70px] mt-[30px] ml-[60px]">
+				{SkinTitle(
+					active == "My collection",
+					setActive,
+					"My collection",
+				)}
 				{SkinTitle(active == "State", setActive, "State")}
-				{SkinTitle(active == "Acheivment", setActive, "Acheivment")}
-				{SkinTitle(active == "Skins", setActive, "Skins")}
+			</div>
+
+			<div className="w-full flex justify-center">
+				{active == "My collection" && <MyCollection />}
+				{active == "State" && <MyState />}
 			</div>
 		</div>
 	);

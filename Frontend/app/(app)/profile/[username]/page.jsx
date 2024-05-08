@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import NavBar from "../../navBar/NavBar";
 import { UserContext } from "../../context";
 import Banner from "./Components/Banner";
@@ -10,6 +10,8 @@ import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import Friendspopup from "./Components/DisplayFreinds";
 import EditProfile from "./Components/EditProfile";
+
+export const UserProfileContext = createContext();
 
 function Profile({ params }) {
 	const [userProfile, setUserProfile] = useState(false);
@@ -23,63 +25,63 @@ function Profile({ params }) {
 	user.friendship = "owner";
 
 	useEffect(() => {
-		if (!userProfile) {
-			if (!params) {
-				setUserProfile(user);
-				setisLoading(false);
-				return;
-			}
-			fetch_jwt(GET_USER_URL, { username: params.username }).then(
-				([isOk, status, data]) => {
-					if (isOk) {
-						//check if user is blocked i can see it
-						if (
-							data.user.friendship == "B" ||
-							data.user.friendship == "BY"
-						) {
-							navigate.replace("/home");
-							return;
-						}
-						setUserProfile(data.user);
-						setisLoading(false);
-					} else {
-						console.log("error fetch");
-						navigate.replace("/home");
-					}
-				},
-			);
+		if (!params) {
+			setUserProfile(user);
+			setisLoading(false);
+			return;
 		}
-	}, [userProfile]);
+		fetch_jwt(GET_USER_URL, { username: params.username }).then(
+			([isOk, status, data]) => {
+				if (isOk) {
+					//check if user is blocked i can see it
+					if (
+						data.user.friendship == "B" ||
+						data.user.friendship == "BY"
+					) {
+						navigate.replace("/home");
+						return;
+					}
+					setUserProfile(data.user);
+					setisLoading(false);
+				} else {
+					console.log("error fetch");
+					navigate.replace("/home");
+				}
+			},
+		);
+	}, [userProfile, user]);
 
 	return (
 		<>
 			<NavBar />
-			<main className="w-full  mt-[150px] flex justify-center  h-[1100px]">
-				{isLoading ? (
-					<div>Is Loding ...</div>
-				) : (
-					<div className="w-full flex flex-col items-center gap-[20px]">
-						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
-							<Banner />
-							<ProfileInfo
-								user={userProfile}
-								displayFriends={setDisplayFriends}
-								EditProfile={setEditProfile}
-							/>
+			<UserProfileContext.Provider value={userProfile}>
+				<main className="w-full  mt-[100px] flex justify-center">
+					{isLoading ? (
+						<div>Is Loding ...</div>
+					) : (
+						<div className="w-full flex flex-col items-center gap-[20px]">
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
+								<Banner />
+								<ProfileInfo
+									user={userProfile}
+									displayFriends={setDisplayFriends}
+									EditProfile={setEditProfile}
+								/>
+							</div>
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
+								<Dashboard />
+							</div>
 						</div>
-						<div className="w-[1700px] bg-[#353535] rounded-[25px]">
-							<Dashboard />
-						</div>
-					</div>
+					)}
+				</main>
+				{displayFriends && (
+					<Friendspopup
+						DisplayFriends={setDisplayFriends}
+						username={userProfile.username}
+					/>
 				)}
-			</main>
-			{displayFriends && (
-				<Friendspopup
-					DisplayFriends={setDisplayFriends}
-					username={userProfile.username}
-				/>
-			)}
-			{Edit && <EditProfile closePopup={setEditProfile} />}
+				{Edit && <EditProfile closePopup={setEditProfile} />}
+			</UserProfileContext.Provider>
 		</>
 	);
 }

@@ -40,9 +40,14 @@ module.exports = {
 				"80%": { transform: "translateX(10px)" },
 				"100%": { transform: "translateX(0)" },
 			},
+			spin: {
+				from: { transform: "rotate(0deg)" },
+				to: { transform: "rotate(360deg)" },
+			},
 		},
 		animation: {
 			shake: "shake 0.9s ease-in-out",
+			spin: "spin 1s linear infinite",
 		},
 	},
 	plugins: [require("tailwind-scrollbar-hide")],

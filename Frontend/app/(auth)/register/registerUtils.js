@@ -76,9 +76,16 @@ function DetectError(response, setError) {
 		: "";
 }
 
-export const registerSubmit = async (e, Form, setError, navigate) => {
+export const registerSubmit = async (
+	e,
+	Form,
+	setError,
+	navigate,
+	setLoading,
+) => {
 	e.preventDefault();
 
+	setLoading(true);
 	const FormField = Form.current;
 
 	const form = {
@@ -94,7 +101,10 @@ export const registerSubmit = async (e, Form, setError, navigate) => {
 	form.password = onlySpace(form.password) ? "" : form.password;
 	form.email = onlySpace(form.email) ? "" : form.email;
 
-	if (check_fields(form, setError)) return;
+	if (check_fields(form, setError)) {
+		setLoading(false);
+		return;
+	}
 
 	const requestBody = {
 		username: form.username,
@@ -115,6 +125,7 @@ export const registerSubmit = async (e, Form, setError, navigate) => {
 
 			DetectError(responseBody, setError);
 			console.error("Login failed", responseBody);
+			setLoading(false);
 		}
 	} catch (error) {
 		console.error("Network error:", error);
