@@ -114,7 +114,7 @@ class User(AbstractUser):
         friend.get_friendship(self).delete()
     
     def get_new_Notification(self):
-        return Notification.objects.filter(user=self, is_read=False)
+        return Notification.objects.filter(user=self, is_read=False, is_hidden=False)
     
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
@@ -273,6 +273,7 @@ class Notification(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
     is_read = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
 
 
 

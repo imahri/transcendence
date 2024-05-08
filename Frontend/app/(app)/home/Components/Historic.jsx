@@ -108,8 +108,8 @@ function Historic() {
 							<div
 								className={`flex w-[70%] ${index == Matches.length - 1 ? "hidden" : ""}`}
 							>
-								<div class="w-1/2 h-[2px] bg-gradient-to-l from-white to-transparent"></div>
-								<div class="w-1/2 h-[2px] bg-gradient-to-r from-white to-transparent"></div>
+								<div className="w-1/2 h-[2px] bg-gradient-to-l from-white to-transparent"></div>
+								<div className="w-1/2 h-[2px] bg-gradient-to-r from-white to-transparent"></div>
 							</div>
 						</div>
 					);

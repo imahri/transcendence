@@ -27,6 +27,9 @@ export const USER_URL = `${USER_APP}/`;
 export const USER_SEARCH_URL = `${USER_APP}/search`;
 export const GET_USER_URL = `${USER_APP}/user`;
 export const POST_INFO_URL = `${USER_APP}/info`;
+export const NOTIF_URL = `${USER_APP}/notification`;
+
+export const FRIENDSHIP_URL = `${USER_APP}/friendship`;
 
 export const GET_5Friends_URL = `${USER_APP}/somefriends`;
 export const GET_Friends_URL = `${USER_APP}/userfriends`;

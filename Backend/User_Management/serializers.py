@@ -103,4 +103,4 @@ class NotifSerializer(ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = ["id", "user", "notifier", "type", "time", "content", "is_read"]
+        fields = ["id", "user", "notifier", "type", "time", "content", "is_read", "is_hidden"]

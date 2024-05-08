@@ -13,7 +13,7 @@ export const UserContextProvider = ({ children, value }) => {
 	useLayoutEffect(() => {
 		if (!socket) {
 			const ws = new WebSocket(
-				`ws://localhost:8000/ws/user?token=${getToken()}`,
+				`ws://localhost:8000/ws/notif?token=${getToken()}`,
 			);
 			setSocket(ws);
 			return;

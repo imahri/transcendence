@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import ImageView, UserView, InfoView, searchView, getFriendView, getFewFriend, getUserFriends, BlockView
+from .views import ImageView, UserView, InfoView, searchView , FriendShip
+from .views import getFriendView, getFewFriend, getUserFriends, BlockView, NotifView
 
 urlpatterns = [
     path("", UserView.as_view(), name="user"),
@@ -12,4 +13,6 @@ urlpatterns = [
     path("somefriends", getFewFriend, name="fewfriends"),
     path("userfriends", getUserFriends, name="userfriends"),
     path("block", BlockView.as_view(), name="getblocked"),
+    path("notification", NotifView.as_view(), name="notification"),
+    path("friendship", FriendShip.as_view(), name="friendship"),
 ]

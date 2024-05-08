@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-
-import IMG from "../../home/assets/profile.png";
-import { ChatSvg, GmaeSvg, FriendSvg } from "./AllSvg";
-import { initSocket } from "./NotifSocket";
+import { useState, useEffect, useContext } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { ChatSvg, GmaeSvg, FriendSvg } from "./AllSvg";
+import { UserContext } from "../../context";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { NOTIF_URL } from "@/app/URLS";
 
 function setType(notifType, notifContent) {
 	const sentMsg = "Sent you a message";
@@ -21,19 +21,18 @@ function setType(notifType, notifContent) {
 	}
 }
 
-function readNotif(socket, notif) {
+function readNotif(socket, notif, setNbNotif) {
+	if (notif.is_read) return;
 	socket.send(
 		JSON.stringify({
-			action: "read",
+			action: "readNotif",
 			id: notif.id,
 		}),
 	);
-	console.log("mark notif as readed");
-	socket.send(
-		JSON.stringify({
-			action: "nb_notif",
-		}),
-	);
+	setNbNotif((prev) => {
+		if (prev <= 0) return prev;
+		else return prev - 1;
+	});
 	notif.is_read = true;
 }
 
@@ -56,7 +55,9 @@ function NotifSection({ notif }) {
 			<div className="relative">
 				<Image
 					className="size-[50px] rounded-full ml-[5px]"
-					src={IMG}
+					width={50}
+					height={50}
+					src={notif.notifier.img}
 					alt=""
 				/>
 				{Svg}
@@ -75,20 +76,62 @@ function NotifSection({ notif }) {
 	);
 }
 
+async function getNotif(setNotif, setNbNotif) {
+	try {
+		const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
+		if (isOk) {
+			setNbNotif(data.nb_unreaded);
+			const notif = data.allNotif.filter((notif) => !notif.is_hidden);
+			setNotif(notif);
+			return;
+		}
+		console.log("error fetch notif", data);
+	} catch (error) {
+		console.error("fetch notif : ", error);
+	}
+}
+
+function handelNotif(data, setNotif, setNbNotif) {
+	if (data.action == "update") {
+		setNotif((prev) => {
+			if (prev) {
+				prev.unshift(data.last_notif);
+				return prev;
+			} else return data.last_notif;
+		});
+		setNbNotif((prev) => prev + 1);
+	}
+}
+
 function Notification() {
 	const [notif, setNotif] = useState(false);
-
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
 	const [socket, setSocket] = useState();
 
-	useEffect(() => {
-		initSocket(setSocket, setnbNotif, setNotif);
+	const { ws } = useContext(UserContext);
 
-		return () => {
-			if (socket) socket.close();
-		};
-	}, []);
+	useEffect(() => {
+		if (!notif) {
+			getNotif(setNotif, setnbNotif);
+		}
+
+		if (ws) {
+			setSocket(ws);
+			ws.addEventListener("message", (e) => {
+				const data = JSON.parse(e.data);
+				if (data.type == "notification")
+					handelNotif(data, setNotif, setnbNotif);
+			});
+			ws.onerror = (error) => {
+				console.log("error");
+				console.error("WebSocket error:", error);
+			};
+			ws.onclose = (event) => {
+				console.log("friendship WebSocket closed:", event.reason);
+			};
+		}
+	}, [ws]);
 
 	return (
 		<div className="relative">
@@ -122,7 +165,9 @@ function Notification() {
 						notif.map((notif, index) => {
 							return (
 								<div
-									onClick={() => readNotif(socket, notif)}
+									onClick={() =>
+										readNotif(socket, notif, setnbNotif)
+									}
 									key={index}
 								>
 									<NotifSection notif={notif} />
@@ -131,7 +176,7 @@ function Notification() {
 						})}
 					{notif?.length == 0 && (
 						<h1 className="text-white text-center">
-							Not Notification yet
+							No Notification
 						</h1>
 					)}
 				</div>

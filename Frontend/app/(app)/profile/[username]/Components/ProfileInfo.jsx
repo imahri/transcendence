@@ -1,50 +1,45 @@
 import Image from "next/image";
 import { useState, useContext, useLayoutEffect, useEffect } from "react";
-
 import { UserContext } from "@/app/(app)/context";
-import { GET_5Friends_URL } from "@/app/URLS";
+import { FRIENDSHIP_URL, GET_5Friends_URL } from "@/app/URLS";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 
-function updateStatus(e, setStatus, socket, friend_id) {
-	const data = JSON.parse(e.data);
-	console.log("Received message:", data);
-	if (data.status == "update") {
-		getStatus(socket, friend_id);
-		return;
-	}
-	setStatus(data.status);
-}
-
-function getStatus(socket, friend_id) {
-	socket.send(
-		JSON.stringify({
-			action: "check",
-			friend_id: friend_id,
-		}),
-	);
-}
-
-function callBack(socket, action, friend_id) {
-	let update;
+async function callBack(action, friend_id, setFriendShip) {
+	let my_action = action;
 	if (action == "edit") {
 		return;
-	} else if (action == "Add Friend")
-		update = { action: "add", friend_id: friend_id };
-	else if (action == "Accept")
-		update = { action: "accept", friend_id: friend_id };
-	else if (action == "block")
-		update = { action: "block", friend_id: friend_id };
-	else if (action == "Unblock")
-		update = { action: "Unblock", friend_id: friend_id };
-	else if (
+	} else if (action == "Add Friend") my_action = "add";
+	else if (action == "Accept") my_action = "accept";
+	else if (action == "block") my_action = "block";
+	else if (action == "Unblock") my_action = "Unblock";
+	if (
 		action == "Reject" ||
 		action == "Remove Friend" ||
 		action == "remove Request"
 	)
-		update = { action: "remove", friend_id: friend_id };
-	else return;
+		my_action = "remove";
 
-	socket.send(JSON.stringify(update));
+	const body = { action: my_action, friend_id: friend_id };
+
+	try {
+		const [isOk, status, data] = await fetch_jwt(
+			FRIENDSHIP_URL,
+			{},
+			{
+				method: "POST",
+				body: JSON.stringify(body),
+				headers: { "Content-Type": "application/json" },
+			},
+		);
+
+		if (isOk) {
+			setFriendShip(data.status);
+			return;
+		}
+		console.error("error friendship Post :", data);
+	} catch (error) {
+		console.log("send friendship error : ", error);
+	}
 }
 
 const createButton = (status, color, action) => {
@@ -63,26 +58,34 @@ const Allbuttons = [
 	createButton("BY", "bg-red-600", "User Blocked You"),
 ];
 
-function Button({ action, color, socket, friend_id }) {
+function Button({ action, color, friend_id, setStatus }) {
 	return (
 		<button
 			className={`border-none rounded-[6px] w-[161px] h-[40px] ${color} font-semibold text-[16px] text-white cursor-pointer`}
-			onClick={() => callBack(socket, action, friend_id)}
+			onClick={() => callBack(action, friend_id, setStatus)}
 		>
 			{action}
 		</button>
 	);
 }
 
+function updateStatus(data, setStatus, profileId) {
+	if (data.friend_id == profileId) {
+		setStatus(data.status);
+	}
+}
+
 function Buttons({ profileUser, EditProfile }) {
 	const [status, setStatus] = useState(profileUser.friendship);
 	const { ws } = useContext(UserContext);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (ws) {
-			ws.onmessage = (e) => {
-				updateStatus(e, setStatus, ws, profileUser.id);
-			};
+			ws.addEventListener("message", (e) => {
+				const data = JSON.parse(e.data);
+				if (data.type == "friendShip")
+					updateStatus(data, setStatus, profileUser.id);
+			});
 			ws.onerror = (error) => {
 				console.log("error");
 				console.error("WebSocket error:", error);
@@ -91,7 +94,7 @@ function Buttons({ profileUser, EditProfile }) {
 				console.log("friendship WebSocket closed:", event.reason);
 			};
 		}
-	}, [ws]);
+	}, []);
 
 	return (
 		<div
@@ -104,9 +107,9 @@ function Buttons({ profileUser, EditProfile }) {
 						<Button
 							key={index}
 							action={element.action}
-							socket={ws}
 							friend_id={profileUser.id}
 							color={element.color}
+							setStatus={setStatus}
 						/>
 					);
 				},

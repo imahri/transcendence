@@ -5,14 +5,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from Tools.HttpFileResponse import HttpFileResponse
 from core.settings import DEFAULT_PROFILE_IMG
+from .Consumers.Notifconsumers import NotificationConsumer
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 from .serializers import UserSerializer, InfoSerializer
-from .models import Info, User, Friend
+from .models import Info, User, Friend, Notification
 import os
-
-# Create your views here.
-
 
 class ImageView(APIView):
 
@@ -254,3 +254,81 @@ class BlockView(APIView):
         except Exception as error:
             return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
         
+
+
+class NotifView(APIView):
+
+    #get al notif and number of notif
+    def get(self, request):
+        try:
+            user : User = request.user
+            all_notif = Notification.allNotifSerialised(user)
+            nbUnreadedNotif = Notification.getNBUnreadedNotif(user)
+            return Response({"allNotif" : all_notif, "nb_unreaded" : nbUnreadedNotif})
+
+        except Exception as error:
+            print('notif view error : ', error)
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        
+class FriendShip(APIView):
+    
+    #set firendship and create notif and send it in socket
+    def NotifUser(self, action, friend):
+        
+        #create notif
+        if action == 'remove':
+            return
+        
+        is_hidden = True
+        if action == 'add' or action == 'accept':
+            is_hidden = False
+
+        notif = Notification(user=friend, notifier=self.request.user, content=action, type='friendShip', is_hidden=is_hidden)
+        notif.save()
+
+        channel_layer =  get_channel_layer();
+        #send notification it using socket
+        async_to_sync(NotificationConsumer().send_notif_user)(channel_layer, friend, notif)
+
+    def sendStatus(self, user, friend):
+        
+        channel_layer =  get_channel_layer();
+        async_to_sync(NotificationConsumer().send_user_status)(channel_layer, friend, user)
+
+
+    def post(self, request):
+        try:
+            user : User = request.user
+            action = request.data.get('action')
+            friend_id = request.data.get('friend_id')
+            friend : User = User.objects.get(pk=friend_id)
+
+            if action == 'add':
+               user.add_friend(friend=friend)
+            elif action == 'accept':
+                user.accept_friend(friend=friend)
+            elif action == 'remove':
+                user.delete_friend(friend=friend)
+            elif action == 'block':
+                user.block_friend(friend=friend)
+            elif action == 'Unblock':
+                user.deblock_friend(friend=friend)
+
+            #send status to your friend
+            self.sendStatus(user, friend)
+            # create the appropriate notification and send it and send status t user if is logged in
+            self.NotifUser(action, friend)     
+            
+
+            #return friendShip status after edit it  
+            try:
+                friendShip = user.get_friendship(friend=friend)
+                response = {"friend": friend.username, 'status': friendShip.status}
+                return Response(response)
+            except Friend.DoesNotExist:
+                response = {"friend": friend.username, 'status': 'not friend'}
+                return Response(response)
+
+        except Exception as error:
+            print('friendship error : ', error)
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
