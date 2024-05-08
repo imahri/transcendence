@@ -1,0 +1,32 @@
+version: "3"
+
+networks:
+    transcendence_network:
+        driver: bridge
+
+services:
+    Frontend:
+        container_name: "Frontend"
+        image: "Frontend"
+        build: "./Frontend"
+        ports:
+            - 443:443
+        networks:
+            - transcendence_network
+        restart: always
+    Backend:
+        container_name: "Backend"
+        image: "Backend"
+        build: "./Backend"
+        networks:
+            - transcendence_network
+        restart: always
+    Database:
+        image: postgres
+        networks:
+            - transcendence_network
+        environment: # in env file
+            - POSTGRES_DB=1234
+            - POSTGRES_USER=1234
+            - POSTGRES_PASSWORD=1234
+        restart: always
