@@ -5,6 +5,8 @@ import styles from "./LGame.module.css";
 
 let xcord = 0;
 let ycord = 0;
+let x_com = 0;
+let c_com = "black";
 export const Youchen = () => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
@@ -17,11 +19,22 @@ export const Youchen = () => {
 			setSocket(ws);
 		};
 
+		// ws.onmessage = (event) => {
+		// 	const data = JSON.parse(event.data);
+		// 	if (data.event === "update") {
+		// 		xcord = data.x;
+		// 		ycord = data.y;
+		// 		x_com = data.com_x;
+		// 	}
+		// };
+
 		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 			if (data.event === "update") {
-				xcord = data.x;
-				ycord = data.y;
+				xcord = data.x; // Keeping 'x' for the ball's x-coordinate
+				ycord = data.y; // Keeping 'y' for the ball's y-coordinate
+				x_com = data.com_x; // Adjusted variable name for the computer paddle's y-coordinate
+				c_com = data.com_c;
 			}
 		};
 
@@ -41,15 +54,80 @@ export const Youchen = () => {
 			canvas.width = document.documentElement.clientWidth;
 			canvas.height = document.documentElement.clientHeight;
 
+			const user = {
+				x: 3,
+				y: canvas.height / 2 - 200 / 2,
+				width: 25,
+				height: 200,
+				color: "orange",
+				score: 0,
+			};
+
+			const com = {
+				x: canvas.width - 31,
+				y: canvas.height / 2 - 200 / 2,
+				width: 25,
+				height: 200,
+				color: "orange",
+				score: 0,
+			};
+
 			const ball = {
 				x: canvas.width / 2,
 				y: canvas.height / 2,
 				radius: 30,
-				speed: 20,
+				speed: 5,
 				velocityX: 5,
 				velocityY: 5,
-				color: "orange",
+				color: "black",
 			};
+
+			let upKeyPressed = false;
+			let downKeyPressed = false;
+
+			document.addEventListener("keydown", keyDownHandler);
+			document.addEventListener("keyup", keyUpHandler);
+
+			function keyDownHandler(event) {
+				console.log(event.keyCode);
+				if (event.keyCode === 38) {
+					upKeyPressed = true;
+				}
+
+				if (event.keyCode === 87) {
+					upKeyPressed = true;
+				}
+				if (event.keyCode === 40) {
+					downKeyPressed = true;
+				}
+				if (event.keyCode === 83) {
+					downKeyPressed = true;
+				}
+			}
+
+			function keyUpHandler(event) {
+				if (event.keyCode === 38) {
+					upKeyPressed = false;
+				}
+				if (event.keyCode === 87) {
+					upKeyPressed = false;
+				}
+				if (event.keyCode === 40) {
+					downKeyPressed = false;
+				}
+				if (event.keyCode === 83) {
+					downKeyPressed = false;
+				}
+			}
+
+			function updatePaddlePosition() {
+				if (upKeyPressed && user.y > 0) {
+					user.y -= 10;
+				}
+				if (downKeyPressed && user.y + user.height < canvas.height) {
+					user.y += 10;
+				}
+			}
 
 			function drawRect(x, y, w, h, color) {
 				ctx.fillStyle = color;
@@ -65,15 +143,53 @@ export const Youchen = () => {
 			}
 
 			function render() {
-				drawCircle(xcord, ycord, 20, "orange");
-				drawRect(0, canvas.height / 2 - 200 / 2, 30, 200, "orange");
-				drawRect(
-					canvas.width - 30,
-					canvas.height / 2 - 200 / 2,
-					30,
-					200,
-					"orange",
+				console.log(c_com);
+				drawRect(x_com, com.y, 30, 200, c_com);
+				drawRect(user.x, user.y, user.width, user.height, user.color); // user
+
+				drawCircle(xcord, ycord, 20, ball.color);
+			}
+
+			function collision(b, p) {
+				b.top = b.y - b.radius;
+				b.bottom = b.y + b.radius;
+				b.left = b.x - b.radius;
+				b.right = b.x + b.radius;
+
+				p.top = p.y;
+				p.bottom = p.y + p.height;
+				p.left = p.x;
+				p.right = p.x + p.width;
+
+				return (
+					b.right > p.left &&
+					b.bottom > p.top &&
+					b.left < p.right &&
+					b.top < p.bottom
 				);
+			}
+
+			function update() {
+				let computerLevel = 0.5;
+				com.y += (ycord - (com.y + com.height / 2)) * computerLevel;
+
+				// let player = (xcord < canvas.width/2) ? user : com;
+
+				// if (collision(ball, player))
+				// {
+				// 	console.log("okk");
+				// 	let collpoint = ycord - (player.y + player.height/2);
+
+				// 	collpoint = collpoint/(player.height/2);
+
+				// 	let angleRad =  collpoint * Math.PI/4;
+
+				// 	let direction = (xcord < canvas.width/2) ? 1 : -1;
+
+				// 	ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+				// 	ball.velocityY = ball.speed * Math.sin(angleRad);
+				// 	ball.speed += 0.5;
+				// }
 			}
 
 			function game() {
@@ -81,6 +197,8 @@ export const Youchen = () => {
 				canvas.height = document.documentElement.clientHeight;
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				window.requestAnimationFrame(game);
+				update();
+				updatePaddlePosition();
 				render();
 			}
 
@@ -88,13 +206,22 @@ export const Youchen = () => {
 
 			setInterval(() => {
 				if (socket && socket.readyState === WebSocket.OPEN) {
-					console.log(canvas.height);
-					console.log(canvas.width);
 					socket.send(
 						JSON.stringify({
 							event: "resize",
+
 							canvasHeight: canvas.height,
 							canvasWidth: canvas.width,
+
+							player_x: user.x,
+							player_y: user.y,
+							player_w: user.width,
+							player_h: user.height,
+							player_c: user.color,
+
+							com_x: com.x,
+							com_y: com.y,
+							com_c: com.color,
 						}),
 					);
 				}

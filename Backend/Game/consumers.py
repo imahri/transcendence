@@ -1,5 +1,8 @@
 from cgitb import text
+import collections
+from doctest import FAIL_FAST
 from email import message
+from shutil import which
 from sys import stderr
 from typing import Self
 import math
@@ -20,15 +23,15 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 
-class Game:
-    def __init__(self):
+# class Game:
+#     def __init__(self):
         # self.downKeyPressed = False
         # self.upKeyPressed = False
   
-        self.canvas = {
-            "width":1000,
-            "height":900
-        }
+        # self.canvas = {
+        #     "width":1000,
+        #     "height":900
+        # }
         # self.canvas = {
         #     "width": canvas_width,
         #     "height": canvas_height
@@ -39,9 +42,18 @@ class Game:
         #     "y": self.canvas['height'] / 2 - 200 / 2,
         #     "width": 25,
         #     "height": 200,
-        #     "color": "orange",
+        #     "color": "red",
         #     "score": 0
         # }
+        # self.com = {
+        #     "x": self.canvas['width'] - 30,
+        #     "y": self.canvas['height'] / 2 - 200 / 2,
+        #     "width": 25,
+        #     "height": 200,
+        #     "color": "red",
+        #     "score": 0
+        # }
+        
         # self.user1 = {
         #     "x": 3,
         #     "y": self.canvas['height'] / 2 - 200 / 2,
@@ -50,24 +62,25 @@ class Game:
         #     "color": "orange",
         #     "score": 0
         # }
+        
         # self.com = {
-        #     "x": self.canvas['width'] - 28,
+        #     "x": 20,
         #     "y": self.canvas['height'] / 2 - 200 / 2,
-        #     "width": 25,
+        #     "width": 30,
         #     "height": 200,
         #     "color": "orange",
         #     "score": 0
         # }
         
-        self.ball = {
-            "x": self.canvas['width'] / 2,
-            "y": self.canvas['height'] / 2,
-            "radius": 30,
-            "speed": 10,
-            "velocityX": 5,
-            "velocityY": 5,
-            "color": "orange"
-        }
+        # self.ball = {
+        #     "x": self.canvas['width'] / 2,
+        #     "y": self.canvas['height'] / 2,
+        #     "radius": 30,
+        #     "speed": 10,
+        #     "velocityX": 5,
+        #     "velocityY": 5,
+        #     "color": "orange"
+        # }
         
     # def receive(self, data):
     #     print(data)
@@ -98,75 +111,67 @@ class Game:
     #     bal = self.ball['x'] - self.ball['radius']
     #     bar = self.ball['x'] + self.ball['radius']
         
-    #     ut= user['y']
+    #     ut = user['y']
     #     ub = user['y'] + user['height']
     #     ul = user['x']
     #     ur = user['x'] + user['width']
         
-    #     return (bat > ul and bab > ut and bal < ur and bat < ub)
+    #     return (bar > ul and bab > ut and bal < ur and bat < ub)
     
 
-    def update_ball(self):
-        self.ball['x'] += self.ball['velocityX']
-        self.ball['y'] += self.ball['velocityY']
+    # def update_ball(self):
+        # for testing ball ------------------------------------------------>>----------------
+        # self.ball['x'] += self.ball['velocityX']
+        # self.ball['y'] += self.ball['velocityY']
         
-        if (self.ball['y'] + self.ball['radius'] > self.canvas['height'] or self.ball['y'] - self.ball['radius'] < 0):
-            self.ball['velocityY'] *= -1
-        if (self.ball['x'] - self.ball['radius'] < 0 or self.ball['x'] + self.ball['radius'] > self.canvas['width']):
-            self.ball['velocityX'] *= -1
-        
-        
-        # print("self.ball['x'] >> " + str(self.ball['x']))
-        # print("self.ball['y'] >> " + str(self.ball['y']))
-
-            
-        
-   
-        # print("allo")
-        # print("self.user['x'] >> " + str(self.user['x']))
-        # print("self.user['y'] >> " + str(self.user['y']))
-        # print("self.com['x'] >> " + str(self.com['x']))
-        # print("self.com['y'] >> " + str(self.com['y']))
-
-        
-        # computerLevl = 0.5
-        
-        # self.com['y'] += (self.ball['y'] - (self.com['y'] + self.com['height'] / 2)) * computerLevl
-        
-        # if (self.ball['y'] + self.ball['radius'] > self.canvas['height'] or self.ball['y'] - self.ball['radius'] < 0 ):
+        # if (self.ball['y'] + self.ball['radius'] > self.canvas['height'] or self.ball['y'] - self.ball['radius'] < 0):
         #     self.ball['velocityY'] *= -1
-            
-        # if self.ball['x'] < self.canvas['width'] / 2:
-        #     player = self.user
+        # if (self.ball['x'] - self.ball['radius'] < 0 or self.ball['x'] + self.ball['radius'] > self.canvas['width']):
+        #     self.ball['velocityX'] *= -1
+        # for testing ball ------------------------------------------------>>----------------
+
+        # self.ball['x'] += self.ball['velocityX']
+        # self.ball['y'] += self.ball['velocityY']
+        
+        # computerLevel = 0.5
+        # self.com['y'] += (self.ball['y'] - (self.com['y'] + self.com['height']/2)) * computerLevel
+        
+        # if (self.ball['y'] + self.ball['radius'] > self.canvas['height'] or self.ball['y'] - self.ball['radius'] < 0):
+        #     self.ball['velocityY'] *= -1
+        # if (self.ball['x'] - self.ball['radius'] < 0 or self.ball['x'] + self.ball['radius'] > self.canvas['width']):
+        #     self.ball['velocityX'] *= -1
+        
+        # print(self.canvas['width'])
+        # print(self.canvas['height'])
+        
+        # midpoint1 = self.canvas['height'] / 2
+        # midpoint2 = self.canvas['width'] / 2
+        # if self.ball['y'] < midpoint1 and self.ball['x'] < midpoint2:
+        #     print("user")
         # else:
-        #     player = self.com
+        #     print("bot")
+
+
+
         
-        # if (self.collision(self.ball,player)):
-            
-        #     collpoint = self.ball['y'] - (player['y'] + player['height'] / 2)
-            
-        #     collpoint = collpoint / (player['height'] / 2)
-            
-        #     angleRad = (collpoint * math.pi) / 4
-            
-        #     direction = 1 if self.ball['x'] < self.canvas['width'] / 2 else -1
-            
-        #     self.ball['velocityX'] = direction * self.ball['speed'] * math.cos(angleRad)
-            
-        #     self.ball['velocityY'] = self.ball['speed'] * math.sin(angleRad)
-            
+        # for testing ball ------------------------------------------------>>----------------
+
+
+
+        # if (self.collision(self.ball, self.user)):
+        #     self.ball['velocityX'] *= -1
+        #     self.ball['velocityY'] *= -1
         #     self.ball['speed'] += 0.5
+    
+
+
+        
+        
+
+        
 
 
 
-        # if ((self.ball['x'] - self.ball['radius']) < 0):
-        #     self.com['score'] += 1
-        #     self.reset_ball()
-        #     print("com +1 >> " + str(self.com['score']))
-        # elif ((self.ball['x'] + self.ball['radius']) > self.canvas['width']):
-        #     self.user['score'] += 1
-        #     self.reset_ball()
-        #     print("user +1 >> " + str(self.user['score']))
                 
                 
 
@@ -174,19 +179,19 @@ class Game:
                 
                 
             
-        
+
             
         
 
-class GameConsumer(AsyncJsonWebsocketConsumer):
+# class GameConsumer(AsyncJsonWebsocketConsumer):
     
     
-    async def connect(self):
-        await self.accept()
-        await self.send_json(content={"type": "Connected"})
-        self.loba = Game()
-        await asyncio.sleep(1)
-        self.game_task = asyncio.create_task(self.send_ball_coordinates())
+#     async def connect(self):
+#         await self.accept()
+#         await self.send_json(content={"type": "Connected"})
+#         self.loba = Game()
+#         await asyncio.sleep(2)
+#         self.game_task = asyncio.create_task(self.send_ball_coordinates())
     
     # async def connect(self):
     #     await self.accept()
@@ -197,10 +202,38 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     #     self.game_task = asyncio.create_task(self.send_ball_coordinates())
 
 
-    async def receive(self, text_data):
-        data = json.loads(text_data)
-        self.loba.canvas['height'] = data.get("canvasWidth")
-        self.loba.canvas['width'] = data.get("canvasHeight")
+    # async def receive(self, text_data):
+    #     data = json.loads(text_data)
+    #     self.loba.canvas['height'] = data.get("canvasWidth")
+    #     self.loba.canvas['width'] = data.get("canvasHeight")
+    #     self.loba.user['x'] = data.get("player_x")
+    #     self.loba.user['y'] = data.get("player_y")
+    #     self.loba.user['width'] = data.get("player_w")
+    #     self.loba.user['height'] = data.get("player_h")
+    #     self.loba.user['color'] = data.get("player_c")
+        
+        # self.loba.com['x'] = data.get("com_x")
+        # self.loba.com['y'] = data.get("com_y")
+        # self.loba.com['width'] = data.get("com_w")
+        # self.loba.com['height'] = data.get("com_h")
+        # self.loba.com['color'] = data.get("com_c")
+        
+        # print("com_x " + str(data.get("com_x")))
+        # print("com_y " + str(data.get("com_y")))
+        # com__X = data.get("com_x")
+        # com__Y = data.get("com_y")
+        # self.loba.com['x'] = com__X
+        # self.loba.com['y'] = com__Y
+        # print(self.loba.com['x'])
+        # print(self.loba.com['y'])
+
+
+
+        # self.loba.com['width'] = data.get("com_w")
+        # self.loba.com['height'] = data.get("com_h")
+        # self.loba.com['color'] = data.get("com_c")
+        # print(str(data.get("player_y")))
+        # print("x_ball : " + str(self.loba.ball['x']))
 
     # async def receive(self, text_data):
     #     data = json.loads(text_data)
@@ -209,18 +242,19 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     #     self.loba.canvas['height'] = canvas_height
     #     self.loba.canvas['width'] = canvas_width
 
-    async def send_ball_coordinates(self):
+    # async def send_ball_coordinates(self):
         
-        while True:
-            self.loba.update_ball()
-            x = self.loba.ball['x']
-            y = self.loba.ball['y']
-            await asyncio.sleep(0.0075)
-            await self.send_json(content={
-                    'event': 'update',
-                    'x': y,
-                    'y': x
-                })
+    #     while True:
+    #         self.loba.update_ball()
+    #         x = self.loba.ball['x']
+    #         y = self.loba.ball['y']
+    #         by = self.loba.com['y']
+    #         await asyncio.sleep(0.0075)
+    #         await self.send_json(content={
+    #                 'event': 'update',
+    #                 'x': y,
+    #                 'y': x
+    #             })
         
 
 
@@ -266,3 +300,231 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 #     async def disconnect(self, close_code):
 #         self.send_ball_updates = False
+
+
+
+
+
+        
+        
+        
+        
+class Game:
+    def __init__(self):
+  
+        self.canvas = {
+            "width":1000,
+            "height":900
+        }
+        self.user = {
+            "x": 3,
+            "y": self.canvas['height'] / 2 - 200 / 2,
+            "width": 25,
+            "height": 200,
+            "color": "red",
+            "score": 0
+        }
+        self.com = {
+            # "x": self.canvas['width'] - 30,
+            "x":  self.canvas['width'] - 31,
+            "y": self.canvas['height'] / 2 - 200 / 2,
+            "width": 25,
+            "height": 200,
+            "color": "red",
+            "score": 0
+        }
+                
+        self.ball = {
+            "x": self.canvas['width'] / 2,
+            "y": self.canvas['height'] / 2,
+            "radius": 30,
+            "speed": 5,
+            "velocityX": 5,
+            "velocityY": 5,
+            "color": "orange",
+            "name" : "imad"
+        }
+
+    def reset_ball(self):
+        self.ball['x'] = self.canvas['width'] / 2
+        self.ball['y'] = self.canvas['height'] / 2
+        self.ball['speed'] = 10
+        self.ball['velocityX'] *= -1
+        
+        
+    def collision(self, player):
+        # Get the coordinates of the ball and the paddle
+        ball_left = self.ball['x'] - self.ball['radius']
+        ball_right = self.ball['x'] + self.ball['radius']
+        ball_top = self.ball['y'] - self.ball['radius']
+        ball_bottom = self.ball['y'] + self.ball['radius']
+        
+        player_left = player['x']
+        player_right = player['x'] + player['width']
+        player_top = player['y']
+        player_bottom = player['y'] + player['height']
+        
+        # Check for collision
+        return (ball_right >= player_left and ball_left <= player_right and 
+                ball_bottom >= player_top and ball_top <= player_bottom)
+
+    def update_ball(self):
+        self.ball['x'] += self.ball['velocityX']
+        self.ball['y'] += self.ball['velocityY']
+
+        if (self.ball['y'] + self.ball['radius'] >= self.canvas['height'] or self.ball['y'] - self.ball['radius'] <= 0):
+            self.ball['velocityY'] *= -1
+        if (self.ball['x'] - self.ball['radius'] <= 0 or self.ball['x'] + self.ball['radius'] >= self.canvas['width']):
+            self.ball['velocityX'] *= -1
+
+        if (self.ball['x'] < (self.canvas['width'] / 2)):
+            if self.collision(self.user):
+                print("Paddle user Collision Detected")
+                self.ball['velocityX'] *= -1
+        else:
+            if self.collision(self.com):
+                print("Paddle com Collision Detected")
+                self.ball['velocityX'] *= -1
+
+
+
+
+
+
+    # def collision(self, player):
+    #     # Get the coordinates of the ball and the paddle
+    #     ball_left = self.ball['x'] - self.ball['radius']
+    #     ball_right = self.ball['x'] + self.ball['radius']
+    #     ball_top = self.ball['y'] - self.ball['radius']
+    #     ball_bottom = self.ball['y'] + self.ball['radius']
+        
+    #     player_left = player['x']
+    #     player_right = player['x'] + player['width']
+    #     player_top = player['y']
+    #     player_bottom = player['y'] + player['height']
+        
+    #     # Check for collision
+    #     # return (ball_right > player_left and ball_bottom > player_top and ball_left < player_right  and ball_top < player_bottom)
+    #     return (ball_right > player_left and ball_left < player_right and 
+    #     ball_bottom > player_top and ball_top < player_bottom)
+
+    
+
+    # def update_ball(self):
+        
+    #     # print("woo")
+
+    #     self.ball['x'] += self.ball['velocityX']
+    #     self.ball['y'] += self.ball['velocityY']
+
+    #     if (self.ball['y'] + self.ball['radius'] > self.canvas['height'] or self.ball['y'] - self.ball['radius'] < 0):
+    #         self.ball['velocityY'] *= -1
+    #     if (self.ball['x'] - self.ball['radius'] < 0 or self.ball['x'] + self.ball['radius'] > self.canvas['width']):
+    #         self.ball['velocityX'] *= -1
+
+
+    #     if (self.ball['x'] < (self.canvas['width'] / 2)):
+    #         # player = self.user
+    #         if self.collision(self.user):
+    #             print("Paddle user Collision Detected")
+    #             # time.sleep(.5)
+    #             self.ball['velocityX'] *= -1
+    #     else:    
+    #         # player = self.com
+    #         if self.collision(self.com):
+    #             print("Paddle com Collision Detected")
+    #             self.ball['velocityX'] *= -1
+    #             # time.sleep(.5)
+
+
+        # print("Ball Position:", self.ball['x'], self.ball['y'])
+        # print("Computer Paddle Position:", self.com['x'], self.com['y'])
+
+
+
+        # Check for collision with computer paddle
+        # elif self.collision(self.com):
+        #     print("Computer Paddle Collision Detected")
+        # Check for collision with top or bottom of canvas
+        # elif (self.ball['y'] - self.ball['radius'] <= 0 or 
+        #     self.ball['y'] + self.ball['radius'] >= self.canvas['height']):
+        #     print("Canvas Collision Detected (Top/Bottom)")
+        # else:
+        #     print("No Collision Detected")
+            
+        # if (self.user['score'] == 0):
+        # if ( == True):
+            
+            # self.user['score'] += 1
+
+        
+        # if (self.collision(player)):
+        #     collision_detected = False
+        #     print("allo")
+            
+        # if collision_detected:
+        #     print("Collision detected")
+
+
+        # if (self.ball['x'] - self.ball['radius'] < 0):
+        #     self.com['score'] += 1
+        #     print("+1 to computer and the score is : " + str(self.com['score']))
+
+        # elif (self.ball['x'] + self.ball['radius'] > self.canvas['width']):
+        #     self.user['score'] += 1
+        #     print("+1 to player and the score is : " + str(self.user['score']))
+        
+
+
+
+
+
+class GameConsumer(AsyncJsonWebsocketConsumer):
+    
+    
+    async def connect(self):
+        await self.accept()
+        await self.send_json(content={"type": "Connected"})
+        self.loba = Game()
+        await asyncio.sleep(1)
+        self.game_task = asyncio.create_task(self.send_ball_coordinates())
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        self.loba.canvas['height'] = data.get("canvasHeight")
+        self.loba.canvas['width'] = data.get("canvasWidth")
+        self.loba.user['x'] = data.get("player_x")
+        self.loba.user['y'] = data.get("player_y")
+        self.loba.user['width'] = data.get("player_w")
+        self.loba.user['height'] = data.get("player_h")
+        self.loba.user['color'] = data.get("player_c")
+        
+        self.loba.com['x'] = data.get("com_x")
+        self.loba.com['y'] = data.get("com_y")
+        # self.loba.com['color'] = data.get("com_c")
+
+
+
+    async def send_ball_coordinates(self):
+        while True:
+            self.loba.update_ball()
+            await asyncio.sleep(0.0075)
+            x = self.loba.ball['x']
+            y = self.loba.ball['y']
+            com_x = self.loba.canvas['width'] - (self.loba.com['width'])
+            collo = self.loba.com['color']
+            # print(collo)
+            # com_x = self.loba.com['x']
+            await self.send_json(content={
+                'event': 'update',
+                'x': x,
+                'y': y,
+                "com_x": com_x,
+                "com_c": collo
+            })
+            
+    async def disconnect(self, close_code):
+        if hasattr(self, 'game_task'):
+            self.game_task.cancel()
+
+
