@@ -113,7 +113,7 @@ class User(AbstractUser):
         friend.get_friendship(self).delete()
 
     def get_new_Notification(self):
-        return Notification.objects.filter(user=self, is_read=False, is_hidden=False)
+        return self.notifications.all().filter(is_hidden=False, is_read=False)
 
     def get_all_notif(self):
         return Notification.objects.filter(user=self)

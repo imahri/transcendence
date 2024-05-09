@@ -283,9 +283,9 @@ class FriendShip(APIView):
         if action == 'add' or action == 'accept':
             is_hidden = False
 
-        notif = Notification(user=friend, content=action, type='friendShip', is_hidden=is_hidden)
+        notif = Notification(user=self.request.user, content=action, type='friendShip', is_hidden=is_hidden)
         notif.save()
-        notif.sended_to.set([self.request.user])
+        notif.sended_to.set([friend])
 
         channel_layer =  get_channel_layer();
         #send notification it using socket
