@@ -285,7 +285,7 @@ class Notification(models.Model):
         from .serializers import NotifSerializer
 
         response = []
-        allNotification = user.notifications.all().filter(hidden=False)
+        allNotification = user.notifications.all().filter(is_hidden=False)
 
         if allNotification.exists():
             for notif in allNotification:
