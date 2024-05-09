@@ -49,7 +49,7 @@ function NotifSection({ notif }) {
 
 	return (
 		<Link
-			href={`${link}/${notif.notifier.username}`}
+			href={`${link}/${notif.user.username}`}
 			className=" w-full h-[70px] flex items-center gap-[10px] relative"
 		>
 			<div className="relative">
@@ -57,14 +57,14 @@ function NotifSection({ notif }) {
 					className="size-[50px] rounded-full ml-[5px]"
 					width={50}
 					height={50}
-					src={notif.notifier.img}
+					src={notif.user.img}
 					alt=""
 				/>
 				{Svg}
 			</div>
 			<div>
 				<h1 className="text-white font-bold text-[15px]">
-					{notif.notifier.username}
+					{notif.user.username}
 				</h1>
 				<h2 className="text-[#7D7D7D] text-[13px]">{type}</h2>
 				<h2 className="text-[#7D7D7D] text-[10px]">2 Days ago</h2>
