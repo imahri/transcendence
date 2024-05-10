@@ -90,9 +90,6 @@ function Buttons({ profileUser, EditProfile }) {
 				console.log("error");
 				console.error("WebSocket error:", error);
 			};
-			ws.onclose = (event) => {
-				console.log("friendship WebSocket closed:", event.reason);
-			};
 		}
 	}, []);
 
@@ -162,7 +159,52 @@ function Friend({ displayFriends, username }) {
 	);
 }
 
+function updateOnlineStatus(setOnline, e, user) {
+	const data = JSON.parse(e.data);
+	if (data.type == "onlineStatus") {
+		const isOnline = data.status == "online";
+		console.log("online status recived : ", data);
+		if (user.username == data.username) setOnline(isOnline);
+	}
+}
+
 function ProfileInfo({ user, displayFriends, EditProfile }) {
+	const [online, setOnline] = useState();
+	const { ws } = useContext(UserContext);
+
+	useEffect(() => {
+		if (user.friendship == "owner") {
+			setOnline(true);
+			return;
+		}
+		if (!ws) {
+			console.log("ws is false, userprofile");
+			return;
+		}
+
+		ws.send(
+			JSON.stringify({
+				action: "checkStatus",
+				username: user.username,
+			}),
+		);
+		const handleMessage = (e) => {
+			updateOnlineStatus(setOnline, e, user);
+		};
+		ws.addEventListener("message", handleMessage);
+
+		return () => {
+			console.log("end profile info");
+			ws.removeEventListener("message", handleMessage);
+			ws.send(
+				JSON.stringify({
+					action: "end_checkStatus",
+					username: user.username,
+				}),
+			);
+		};
+	}, [ws]);
+
 	return (
 		<div className="w-full h-[130px]  flex items-center justify-between relative">
 			<div className="rounded-full size-[160px]  absolute left-[50px] top-[-30px] flex justify-center items-center bg-[#353535]">
@@ -173,6 +215,10 @@ function ProfileInfo({ user, displayFriends, EditProfile }) {
 					height={0}
 					alt="profile image"
 				/>
+				{/* online status */}
+				<div
+					className={` ${online ? "bg-[#80FF00]" : "bg-[#C3C3C3]"} size-[15px] rounded-full absolute right-7 bottom-3`}
+				></div>
 			</div>
 			<div className="ml-[220px]">
 				<h1 className="font-semibold text-[32px] text-white">

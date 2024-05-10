@@ -93,9 +93,11 @@ function Boards({ boards, setBoards, isLoading }) {
 			{boards &&
 				boards.owned_items.map((element, index) => {
 					return (
-						<div className="relative w-[250px] h-[150px] rounded-[10px] bg-[#2846E6] bg-opacity-[19%] flex justify-center items-center backdrop-blur-sm">
+						<div
+							key={index}
+							className="relative w-[250px] h-[150px] rounded-[10px] bg-[#2846E6] bg-opacity-[19%] flex justify-center items-center backdrop-blur-sm"
+						>
 							<Image
-								key={index}
 								width={212}
 								height={117}
 								src={element.image}

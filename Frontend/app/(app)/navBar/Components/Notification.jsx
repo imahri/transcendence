@@ -81,8 +81,9 @@ async function getNotif(setNotif, setNbNotif) {
 		const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
 		if (isOk) {
 			setNbNotif(data.nb_unreaded);
-			const notif = data.allNotif.filter((notif) => !notif.is_hidden);
-			setNotif(notif);
+			// filter only displayable
+			// const notif = data.allNotif.filter((notif) => !notif.is_hidden);
+			setNotif(data.allNotif);
 			return;
 		}
 		console.log("error fetch notif", data);

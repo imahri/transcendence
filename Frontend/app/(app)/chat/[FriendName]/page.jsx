@@ -11,6 +11,7 @@ import useConversationID from "../Hooks/useConversationID";
 import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import { useMessageList } from "../Hooks/useMessages";
+import { UserContext } from "../../context";
 
 async function getFriendInfo(FriendName) {
 	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
@@ -26,6 +27,17 @@ async function getFriendInfo(FriendName) {
 		return info;
 	}
 	return null;
+}
+
+function updateOnlineStatus(setActiveStatus, e, userName) {
+	const data = JSON.parse(e.data);
+	console.log("status data : ", data);
+	if (data.type == "onlineStatus") {
+		if (userName == data.username)
+			data.status == "online"
+				? setActiveStatus(ActiveStatusTypes.Active)
+				: setActiveStatus(ActiveStatusTypes.Offline);
+	}
 }
 
 export default function DM_Conversation({ params: { FriendName } }) {
@@ -75,12 +87,39 @@ export default function DM_Conversation({ params: { FriendName } }) {
 		);
 	}, [FriendName]);
 
+	const [ActiveStatus, setActiveStatus] = useState(ActiveStatusTypes.Offline);
+	const { ws } = useContext(UserContext);
+
+	useEffect(() => {
+		if (!ws) return;
+
+		ws.send(
+			JSON.stringify({
+				action: "checkStatus",
+				username: FriendName,
+			}),
+		);
+		const handelMessage = (e) =>
+			updateOnlineStatus(setActiveStatus, e, FriendName);
+		ws.addEventListener("message", handelMessage);
+
+		return () => {
+			ws.removeEventListener("message", handelMessage);
+			ws.send(
+				JSON.stringify({
+					action: "end_checkStatus",
+					username: FriendName,
+				}),
+			);
+		};
+	}, [ws]);
+
 	return (
 		<>
 			<div className="flex-grow h-screen flex flex-col justify-between items-center">
 				<ProfileBar
 					friendinfo={friendinfo}
-					activeStatus={ActiveStatusTypes.Active}
+					activeStatus={ActiveStatus}
 					onOpenProfile={() => {
 						showProfile
 							? _ref.current.classList.remove("scale-100")
