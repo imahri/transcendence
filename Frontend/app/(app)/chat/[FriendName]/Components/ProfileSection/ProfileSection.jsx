@@ -140,21 +140,6 @@ export function ProfileSection({
 }) {
 	const router = useRouter();
 
-	const { ws } = useContext(UserContext);
-
-	useEffect(() => {
-		const checkBlock = (e) => {
-			const data = JSON.parse(e.data);
-			console.log(data);
-		};
-		if (ws) {
-			ws.addEventListner("message", checkBlock); // hadi ghaliban makhashach tkoun hena
-		}
-		return () => {
-			if (ws) ws.removeEventListner("message", checkBlock);
-		};
-	}, []);
-
 	return (
 		<div ref={_ref} className={`${styles.container} ${className}`}>
 			<section className={styles.profile}>

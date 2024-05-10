@@ -46,11 +46,12 @@ function NotifSection({ notif }) {
 
 	const type = setType(notif.type, notif.content);
 	const link = notif.type == "friendShip" ? "/profile" : "#";
+	const time = new Date(notif.time).toLocaleTimeString();
 
 	return (
 		<Link
 			href={`${link}/${notif.user.username}`}
-			className=" w-full h-[70px] flex items-center gap-[10px] relative"
+			className="w-full h-[70px] flex items-center gap-[10px] relative"
 		>
 			<div className="relative">
 				<Image
@@ -67,7 +68,7 @@ function NotifSection({ notif }) {
 					{notif.user.username}
 				</h1>
 				<h2 className="text-[#7D7D7D] text-[13px]">{type}</h2>
-				<h2 className="text-[#7D7D7D] text-[10px]">2 Days ago</h2>
+				<h2 className="text-[#7D7D7D] text-[10px]">{time}</h2>
 			</div>
 			<div
 				className={`absolute size-[10px] bg-greatBlue rounded-full right-[10px] ${notif.is_read ? "hidden" : ""}`}
@@ -81,8 +82,6 @@ async function getNotif(setNotif, setNbNotif) {
 		const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
 		if (isOk) {
 			setNbNotif(data.nb_unreaded);
-			// filter only displayable
-			// const notif = data.allNotif.filter((notif) => !notif.is_hidden);
 			setNotif(data.allNotif);
 			return;
 		}
@@ -108,7 +107,6 @@ function Notification() {
 	const [notif, setNotif] = useState(false);
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
-	const [socket, setSocket] = useState();
 
 	const { ws } = useContext(UserContext);
 
@@ -118,19 +116,11 @@ function Notification() {
 		}
 
 		if (ws) {
-			setSocket(ws);
 			ws.addEventListener("message", (e) => {
 				const data = JSON.parse(e.data);
 				if (data.type == "notification")
 					handelNotif(data, setNotif, setnbNotif);
 			});
-			ws.onerror = (error) => {
-				console.log("error");
-				console.error("WebSocket error:", error);
-			};
-			ws.onclose = (event) => {
-				console.log("friendship WebSocket closed:", event.reason);
-			};
 		}
 	}, [ws]);
 
@@ -161,20 +151,22 @@ function Notification() {
 				<div className="flex justify-center items-center h-[50px] bg-greatBlue">
 					<h1 className="text-white font-semibold"> Notification</h1>
 				</div>
-				<div className="max-h-[300px] mb-[20px] overflow-y-auto ">
+				<div className="max-h-[300px] mb-[20px] overflow-y-auto flex flex-col gap-[5px] pl-[5px]">
 					{notif &&
-						notif.map((notif, index) => {
-							return (
-								<div
-									onClick={() =>
-										readNotif(socket, notif, setnbNotif)
-									}
-									key={index}
-								>
-									<NotifSection notif={notif} />
-								</div>
-							);
-						})}
+						notif
+							.sort((a, b) => new Date(b.time) - new Date(a.time))
+							.map((notif, index) => {
+								return (
+									<div
+										onClick={() =>
+											readNotif(ws, notif, setnbNotif)
+										}
+										key={index}
+									>
+										<NotifSection notif={notif} />
+									</div>
+								);
+							})}
 					{notif?.length == 0 && (
 						<h1 className="text-white text-center">
 							No Notification
