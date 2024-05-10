@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/app/(app)/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { GET_USER_URL } from "@/app/URLS";
+import { FRIENDSHIP_URL, GET_USER_URL } from "@/app/URLS";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -109,6 +109,29 @@ const Block_Icon = () => (
 	</div>
 );
 
+async function BlockUser(friend_id) {
+	const body = { action: "block", friend_id: friend_id };
+	try {
+		const [isOk, status, data] = await fetch_jwt(
+			FRIENDSHIP_URL,
+			{},
+			{
+				method: "POST",
+				body: JSON.stringify(body),
+				headers: { "Content-Type": "application/json" },
+			},
+		);
+
+		if (isOk) {
+			// setFriendShip(data.status);
+			return;
+		}
+		console.error("error friendship Post :", data);
+	} catch (error) {
+		console.log("send friendship error : ", error);
+	}
+}
+
 export function ProfileSection({
 	_ref,
 	className,
@@ -116,7 +139,6 @@ export function ProfileSection({
 	status,
 }) {
 	const router = useRouter();
-	const { ws } = useContext(UserContext);
 
 	return (
 		<div ref={_ref} className={`${styles.container} ${className}`}>
@@ -149,12 +171,7 @@ export function ProfileSection({
 						onClick={() => {
 							if (id) {
 								console.log(id);
-								ws.send(
-									JSON.stringify({
-										action: "block",
-										friend_id: id,
-									}),
-								);
+								BlockUser(id);
 							}
 						}}
 					>
