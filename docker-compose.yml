@@ -23,7 +23,7 @@ services:
         healthcheck:
             test: "manage.py check --deploy"
         environment:
-            - SECRET_KEY=SECRET_KEY
+            SECRET_KEY: ${SECRET_KEY}
         restart: always
         #  In-Production
         #      - Configure with Postgress
@@ -37,9 +37,11 @@ services:
         networks:
             - transcendence_network
         environment: # in env file
-            - POSTGRES_DB=POSTGRES_DB
-            - POSTGRES_USER=POSTGRES_USER
-            - POSTGRES_PASSWORD=POSTGRES_PASSWORD
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         restart: always
         #  In-Production
         #       - Only auth host is "backend"
+    Redis:
+        image: redis
