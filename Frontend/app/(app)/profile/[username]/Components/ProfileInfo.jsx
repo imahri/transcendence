@@ -81,17 +81,16 @@ function Buttons({ profileUser, EditProfile }) {
 
 	useEffect(() => {
 		if (ws) {
-			ws.addEventListener("message", (e) => {
+			const HandelMsg = (e) => {
 				const data = JSON.parse(e.data);
 				if (data.type == "friendShip")
 					updateStatus(data, setStatus, profileUser.id);
-			});
-			ws.onerror = (error) => {
-				console.log("error");
-				console.error("WebSocket error:", error);
 			};
+			ws.addEventListener("message", HandelMsg);
+
+			return () => ws.removeEventListener("message", HandelMsg);
 		}
-	}, []);
+	}, [ws]);
 
 	return (
 		<div

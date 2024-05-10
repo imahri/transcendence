@@ -275,15 +275,9 @@ class FriendShip(APIView):
     #set firendship and create notif and send it in socket
     def NotifUser(self, action, friend):
         
-        #create notif
-        if action == 'remove':
+        if action != 'add' and action != 'accept':
             return
-        
-        is_hidden = True
-        if action == 'add' or action == 'accept':
-            is_hidden = False
-
-        notif = Notification(user=self.request.user, content=action, type='friendShip', is_hidden=is_hidden)
+        notif = Notification(user=self.request.user, content=action, type='friendShip')
         notif.save()
         notif.sended_to.set([friend])
 
