@@ -49,7 +49,7 @@ function Profile({ params }) {
 				}
 			},
 		);
-	}, [userProfile, user]);
+	}, []);
 
 	return (
 		<>
