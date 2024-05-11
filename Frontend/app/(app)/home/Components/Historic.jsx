@@ -22,7 +22,7 @@ function GameState({ match }) {
 
 	return (
 		<div className="flex items-center justify-center gap-[20px] w-[100%]">
-			<h2 className=" font-bold text-[15px] text-white w-[90px] overflow-hidden truncate text-right">
+			<h2 className=" font-bold text-[15px] text-white w-[90px] sm:w-[60px] xs:w-[60px] overflow-hidden truncate text-right">
 				{user1.username}
 			</h2>
 			<div
@@ -54,7 +54,7 @@ function GameState({ match }) {
 				/>
 			</Link>
 			<Link href={`/profile/${user2.username}`}>
-				<h2 className=" font-bold text-[15px] text-white w-[90px] overflow-hidden truncate">
+				<h2 className=" font-bold text-[15px] text-white w-[90px] sm:w-[60px] xs:w-[60px] overflow-hidden truncate">
 					{user2.username}
 				</h2>
 			</Link>
@@ -93,7 +93,7 @@ function Historic() {
 	];
 
 	return (
-		<div className="h-[424px] w-[50%] [@media(max-width:1990px)]:w-[60%] rounded-[15px] flex flex-col items-center gap-[20px] [@media(max-width:710px)]:w-[90%]">
+		<div className="h-[424px] w-[50%] [@media(max-width:1990px)]:w-[60%] rounded-[15px] flex flex-col items-center gap-[20px] [@media(max-width:710px)]:w-full">
 			<h2 className=" font-bold text-[20px] text-white mt-[20px]">
 				Historic
 			</h2>

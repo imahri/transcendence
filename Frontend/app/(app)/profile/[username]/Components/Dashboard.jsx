@@ -23,7 +23,7 @@ function Dashboard() {
 	const [active, setActive] = useState("State");
 
 	return (
-		<div className="w-full min-h-[726px] my-[10px] flex flex-col gap-[20px]">
+		<div className="w-full min-h-[750px] my-[10px] flex flex-col gap-[20px]">
 			<div className="flex gap-[70px] mt-[30px] ml-[60px]">
 				{SkinTitle(active == "State", setActive, "State")}
 				{SkinTitle(active == "Skin", setActive, "Skin")}

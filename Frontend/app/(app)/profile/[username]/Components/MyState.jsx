@@ -95,12 +95,12 @@ export default function MyState() {
 
 	return (
 		<div className="w-[95%] flex justify-center items-center gap-[20px] [@media(max-width:1400px)]:flex-col">
-			<div className="h-full pb-[15px] w-[30%] [@media(max-width:1400px)]:w-[90%] bg-[#2F2F2F] rounded-[10px] flex flex-col items-center gap-[20px]">
+			<div className="h-full pb-[15px] w-[30%] [@media(max-width:1400px)]:w-[95%] bg-[#2F2F2F] rounded-[10px] flex flex-col items-center gap-[20px]">
 				<Status state={state} />
 				<ShowRoom items={achs} title={"Acheivment"} />
 				<ShowRoom items={Trophy} title={"Trophy"} />
 			</div>
-			<div className="h-full w-[70%] [@media(max-width:1400px)]:w-[90%] rounded-[10px] bg-[#2F2F2F] flex justify-center items-center [@media(max-width:900px)]:flex-col">
+			<div className="h-full w-[70%] [@media(max-width:1400px)]:w-[95%] rounded-[10px] bg-[#2F2F2F] flex justify-center items-center [@media(max-width:900px)]:flex-col">
 				<LastGame />
 				<Historic />
 			</div>
