@@ -2,14 +2,14 @@
 import Script from "next/script";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LGame.module.css";
-import { useRecoilState } from "recoil";
 
 let xcord = 0;
 let ycord = 0;
 let x_com = 0;
 let c_com = "black";
 let gaa = false;
-export const Youchen = ({ setBotScore, setUserScore }) => {
+
+export const Youchen = ({ setPlayerone, setPlayertwo }) => {
 	const cvs = useRef(null);
 
 	useEffect(() => {
@@ -30,18 +30,18 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 			color: "orange",
 		};
 
-		const user = {
+		const user1 = {
 			x: 3,
 			y: 0,
 			y: canvas.height / 2 - 200 / 2,
 			width: 30,
 			height: 200,
 			// height : canvas.height,
-			color: "orange",
+			color: "red",
 			score: 0,
 		};
 
-		const com = {
+		const user2 = {
 			x: canvas.width - 31,
 			y: canvas.height / 2 - 200 / 2,
 			width: 30,
@@ -53,23 +53,24 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 		let paused = false;
 		let upKeyPressed = false;
 		let downKeyPressed = false;
+		let upKeyPressed1 = false;
+		let downKeyPressed1 = false;
 
 		document.addEventListener("keydown", keyDownHandler);
 		document.addEventListener("keyup", keyUpHandler);
 
 		function keyDownHandler(event) {
-			console.log(event.keyCode);
-			if (event.keyCode === 38) {
-				upKeyPressed = true;
-			}
 			if (event.keyCode === 87) {
 				upKeyPressed = true;
 			}
-			if (event.keyCode === 40) {
-				downKeyPressed = true;
-			}
 			if (event.keyCode === 83) {
 				downKeyPressed = true;
+			}
+			if (event.keyCode === 38) {
+				upKeyPressed1 = true;
+			}
+			if (event.keyCode === 40) {
+				downKeyPressed1 = true;
 			}
 			if (event.keyCode === 32) {
 				paused = !paused;
@@ -77,27 +78,33 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 		}
 
 		function keyUpHandler(event) {
-			if (event.keyCode === 38) {
-				upKeyPressed = false;
-			}
 			if (event.keyCode === 87) {
 				upKeyPressed = false;
 			}
-			if (event.keyCode === 40) {
-				downKeyPressed = false;
-			}
 			if (event.keyCode === 83) {
 				downKeyPressed = false;
+			}
+			if (event.keyCode === 38) {
+				upKeyPressed1 = false;
+			}
+			if (event.keyCode === 40) {
+				downKeyPressed1 = false;
 			}
 		}
 
 		function updatePaddlePosition() {
 			if (!paused) {
-				if (upKeyPressed && user.y > 0) {
-					user.y -= 10;
+				if (upKeyPressed && user1.y > 0) {
+					user1.y -= 20;
 				}
-				if (downKeyPressed && user.y + user.height < canvas.height) {
-					user.y += 10;
+				if (downKeyPressed && user1.y + user1.height < canvas.height) {
+					user1.y += 20;
+				}
+				if (upKeyPressed1 && user2.y > 0) {
+					user2.y -= 20;
+				}
+				if (downKeyPressed1 && user2.y + user2.height < canvas.height) {
+					user2.y += 20;
 				}
 			}
 		}
@@ -143,15 +150,22 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 		}
 
 		function render() {
-			// drawText(user.score, canvas.width / 4, canvas.height / 5, "white");
-			// drawText(
-			// 	com.score,
-			// 	(3 * canvas.width) / 4,
-			// 	canvas.height / 5,
-			// 	"white",
-			// );
-			drawRect(user.x, user.y, user.width, user.height, user.color, 1);
-			drawRect(com.x, com.y, com.width, com.height, com.color, 1);
+			drawRect(
+				user1.x,
+				user1.y,
+				user1.width,
+				user1.height,
+				user1.color,
+				1,
+			);
+			drawRect(
+				user2.x,
+				user2.y,
+				user2.width,
+				user2.height,
+				user2.color,
+				1,
+			);
 
 			drawCircle(ball.x, ball.y, ball.radius, ball.color);
 		}
@@ -164,12 +178,46 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 			ball.velocityX *= -1;
 		}
 
+		// function update() {
+		// 	ball.x += ball.velocityX;
+		// 	ball.y += ball.velocityY;
+
+		// 	if (
+		// 		ball.y + ball.radius > canvas.height ||
+		// 		ball.y - ball.radius < 0
+		// 	) {
+		// 		ball.velocityY *= -1;
+		// 	}
+
+		// 	let player = ball.x < canvas.width / 2 ? user1 : user2;
+
+		// 	if (collision(ball, player)) {
+		// 		let collpoint = ball.y - (player.y + player.height / 2);
+
+		// 		collpoint = collpoint / (player.height / 2);
+
+		// 		let angleRad = (collpoint * Math.PI) / 4;
+
+		// 		let direction = ball.x < canvas.width / 2 ? 1 : -1;
+
+		// 		ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+		// 		ball.velocityY = ball.speed * Math.sin(angleRad);
+		// 		ball.speed += 0.5;
+		// 	}
+		// 	if (ball.x - ball.radius < 0) {
+		// 		user2.score++;
+		// 		setPlayerone((prev) => prev + 1);
+		// 		resetBall();
+		// 	} else if (ball.x + ball.radius > canvas.width) {
+		// 		user1.score++;
+		// 		setPlayertwo((prev) => prev + 1);
+		// 		resetBall();
+		// 	}
+		// }
+
 		function update() {
 			ball.x += ball.velocityX;
 			ball.y += ball.velocityY;
-
-			let computerLevel = 0.2;
-			com.y += (ball.y - (com.y + com.height / 2)) * computerLevel;
 
 			if (
 				ball.y + ball.radius > canvas.height ||
@@ -178,7 +226,7 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 				ball.velocityY *= -1;
 			}
 
-			let player = ball.x < canvas.width / 2 ? user : com;
+			let player = ball.x < canvas.width / 2 ? user1 : user2;
 
 			if (collision(ball, player)) {
 				let collpoint = ball.y - (player.y + player.height / 2);
@@ -194,14 +242,23 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 				ball.speed += 0.5;
 			}
 			if (ball.x - ball.radius < 0) {
-				console.log("hereeeeee33eeee");
-				com.score++;
-				setBotScore((prev) => prev + 1);
-				resetBall();
+				user2.score++;
+				setPlayerone((prev) => prev + 1);
+				if (user2.score === 7) {
+					pauseGame();
+					resetScores();
+				} else {
+					resetBall();
+				}
 			} else if (ball.x + ball.radius > canvas.width) {
-				user.score++;
-				setUserScore((prev) => prev + 1);
-				resetBall();
+				user1.score++;
+				setPlayertwo((prev) => prev + 1);
+				if (user1.score === 7) {
+					pauseGame();
+					resetScores();
+				} else {
+					resetBall();
+				}
 			}
 		}
 
@@ -209,7 +266,7 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 			if (!paused) {
 				canvas.width = document.documentElement.clientWidth;
 				canvas.height = document.documentElement.clientHeight;
-				com.x = canvas.width - 31;
+				user2.x = canvas.width - 31;
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				window.requestAnimationFrame(game);
 				update();
@@ -227,7 +284,24 @@ export const Youchen = ({ setBotScore, setUserScore }) => {
 			}
 		}
 
+		function pauseGame() {
+			paused = true;
+		}
+
+		function resetScores() {
+			user1.score = 0;
+			user2.score = 0;
+			setPlayerone(0);
+			setPlayertwo(0);
+		}
+
 		game();
+
+		return () => {
+			document.removeEventListener("keydown", keyDownHandler);
+			document.removeEventListener("keyup", keyUpHandler);
+			clearTimeout(timeoutId);
+		};
 	}, []);
 	return (
 		<canvas style={{ height: "100%", width: "100%" }} ref={cvs}></canvas>

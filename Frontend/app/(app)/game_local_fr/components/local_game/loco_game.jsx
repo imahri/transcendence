@@ -11,9 +11,11 @@ import Moff from "../images/no_sound.svg";
 import React, { useEffect, useState } from "react";
 import { Youchen } from "./lgame";
 import Res from "./res";
+
 const LGame = () => {
-	const [botScore, setBotScore] = useState(0);
-	const [userScore, setUserScore] = useState(0);
+	const [playerOne, setPlayerone] = useState(0);
+	const [playerTwo, setPlayertwo] = useState(0);
+
 	return (
 		<div className={styles.page}>
 			<div className={styles.container}>
@@ -32,12 +34,12 @@ const LGame = () => {
 								<div className={styles.l_borad_line}></div>
 								<div className={styles.ppo}>
 									<Youchen
-										setBotScore={setBotScore}
-										setUserScore={setUserScore}
+										setPlayerone={setPlayerone}
+										setPlayertwo={setPlayertwo}
 									/>
 								</div>
 							</div>
-							<Res botScore={botScore} userScore={userScore} />
+							<Res playerOne={playerOne} playerTwo={playerTwo} />
 							<div className={styles.all_ferno}>
 								<div className={styles.ferno}>Bazoooooka</div>
 							</div>

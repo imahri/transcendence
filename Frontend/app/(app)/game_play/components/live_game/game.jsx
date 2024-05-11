@@ -7,6 +7,8 @@ let xcord = 0;
 let ycord = 0;
 let x_com = 0;
 let c_com = "black";
+let player_y = 0;
+
 export const Youchen = () => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
@@ -35,6 +37,8 @@ export const Youchen = () => {
 				ycord = data.y; // Keeping 'y' for the ball's y-coordinate
 				x_com = data.com_x; // Adjusted variable name for the computer paddle's y-coordinate
 				c_com = data.com_c;
+				player_y = data.user_y;
+				console.log("player_y  ", player_y);
 			}
 		};
 
@@ -64,7 +68,7 @@ export const Youchen = () => {
 			};
 
 			const com = {
-				x: canvas.width - 31,
+				x: canvas.width + 50,
 				y: canvas.height / 2 - 200 / 2,
 				width: 25,
 				height: 200,
@@ -90,42 +94,34 @@ export const Youchen = () => {
 
 			function keyDownHandler(event) {
 				console.log(event.keyCode);
-				if (event.keyCode === 38) {
+				if (event.keyCode === 38 || event.keyCode === 87) {
 					upKeyPressed = true;
-				}
-
-				if (event.keyCode === 87) {
-					upKeyPressed = true;
-				}
-				if (event.keyCode === 40) {
+					sendPaddleUpdate();
+				} else if (event.keyCode === 40 || event.keyCode === 83) {
 					downKeyPressed = true;
-				}
-				if (event.keyCode === 83) {
-					downKeyPressed = true;
+					sendPaddleUpdate();
 				}
 			}
 
 			function keyUpHandler(event) {
-				if (event.keyCode === 38) {
+				if (event.keyCode === 38 || event.keyCode === 87) {
 					upKeyPressed = false;
-				}
-				if (event.keyCode === 87) {
-					upKeyPressed = false;
-				}
-				if (event.keyCode === 40) {
+					sendPaddleUpdate();
+				} else if (event.keyCode === 40 || event.keyCode === 83) {
 					downKeyPressed = false;
-				}
-				if (event.keyCode === 83) {
-					downKeyPressed = false;
+					sendPaddleUpdate();
 				}
 			}
 
-			function updatePaddlePosition() {
-				if (upKeyPressed && user.y > 0) {
-					user.y -= 10;
-				}
-				if (downKeyPressed && user.y + user.height < canvas.height) {
-					user.y += 10;
+			function sendPaddleUpdate() {
+				if (socket && socket.readyState === WebSocket.OPEN) {
+					socket.send(
+						JSON.stringify({
+							event: "updatePaddle",
+							upKeyPressed: upKeyPressed,
+							downKeyPressed: downKeyPressed,
+						}),
+					);
 				}
 			}
 
@@ -144,9 +140,7 @@ export const Youchen = () => {
 
 			function render() {
 				console.log(c_com);
-				drawRect(x_com, com.y, 30, 200, c_com);
-				drawRect(user.x, user.y, user.width, user.height, user.color); // user
-
+				drawRect(user.x, player_y, user.width, user.height, user.color);
 				drawCircle(xcord, ycord, 20, ball.color);
 			}
 
@@ -169,36 +163,11 @@ export const Youchen = () => {
 				);
 			}
 
-			function update() {
-				let computerLevel = 0.5;
-				com.y += (ycord - (com.y + com.height / 2)) * computerLevel;
-
-				// let player = (xcord < canvas.width/2) ? user : com;
-
-				// if (collision(ball, player))
-				// {
-				// 	console.log("okk");
-				// 	let collpoint = ycord - (player.y + player.height/2);
-
-				// 	collpoint = collpoint/(player.height/2);
-
-				// 	let angleRad =  collpoint * Math.PI/4;
-
-				// 	let direction = (xcord < canvas.width/2) ? 1 : -1;
-
-				// 	ball.velocityX = direction * ball.speed * Math.cos(angleRad);
-				// 	ball.velocityY = ball.speed * Math.sin(angleRad);
-				// 	ball.speed += 0.5;
-				// }
-			}
-
 			function game() {
 				canvas.width = document.documentElement.clientWidth;
 				canvas.height = document.documentElement.clientHeight;
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				window.requestAnimationFrame(game);
-				update();
-				updatePaddlePosition();
 				render();
 			}
 
@@ -214,7 +183,6 @@ export const Youchen = () => {
 							canvasWidth: canvas.width,
 
 							player_x: user.x,
-							player_y: user.y,
 							player_w: user.width,
 							player_h: user.height,
 							player_c: user.color,
