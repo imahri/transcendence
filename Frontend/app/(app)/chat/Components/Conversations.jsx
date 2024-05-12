@@ -131,20 +131,22 @@ export default function Conversations({
 	const OnMessage = useCallback(
 		(e) => {
 			const data = JSON.parse(e.data);
-			if (data.status == "B") {
-				setConversationList(
-					conversationList.filter(
-						(conv) => conv.name !== data.friend,
-					),
-				);
-				router.replace("/chat");
-				LoadToReplace();
+			if (data.type == "friendShip") {
+				if (data.status == "B" || data.status == "BY") {
+					setConversationList(
+						conversationList.filter(
+							(conv) => conv.name !== data.friendName,
+						),
+					);
+					if (data.status == "B") router.replace("/chat");
+					LoadToReplace();
+				}
 			}
 		},
 		[conversationList],
 	);
 
-	if (ws) ws.onmessage = OnMessage;
+	if (ws) ws.addEventListener("message", OnMessage);
 
 	useEffect(() => {
 		if (

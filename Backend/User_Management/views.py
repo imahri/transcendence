@@ -289,6 +289,7 @@ class FriendShip(APIView):
         
         channel_layer =  get_channel_layer();
         async_to_sync(NotificationConsumer().send_user_status)(channel_layer, friend, user)
+        async_to_sync(NotificationConsumer().send_user_status)(channel_layer, user, friend)
 
 
     def post(self, request):
