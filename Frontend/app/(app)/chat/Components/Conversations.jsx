@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "../../context";
@@ -128,6 +128,7 @@ export default function Conversations({
 	const ConversationsRef = useRef();
 	useOnVisibleAnimation(ConversationsRef, styles.show, [conversationList]);
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const OnMessage = useCallback(
 		(e) => {
 			const data = JSON.parse(e.data);
@@ -145,6 +146,14 @@ export default function Conversations({
 		},
 		[conversationList],
 	);
+
+	useEffect(() => {
+		const remove_conv = searchParams.get("remove_conv");
+		if (remove_conv)
+			setConversationList(
+				conversationList.filter((conv) => conv.name !== remove_conv),
+			);
+	}, [searchParams]);
 
 	if (ws) ws.addEventListener("message", OnMessage);
 
