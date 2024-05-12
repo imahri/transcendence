@@ -139,21 +139,19 @@ export function ProfileSection({
 	status,
 }) {
 	const router = useRouter();
-
 	const { ws } = useContext(UserContext);
+	const checkBlock = (e) => {
+		const data = JSON.parse(e.data);
+		console.log(data);
+	};
 
-	useEffect(() => {
-		const checkBlock = (e) => {
-			const data = JSON.parse(e.data);
-			console.log(data);
-		};
-		if (ws) {
-			ws.addEventListner("message", checkBlock); // hadi ghaliban makhashach tkoun hena
-		}
-		return () => {
-			if (ws) ws.removeEventListner("message", checkBlock);
-		};
-	}, []);
+	// useEffect(() => {
+	// 	if (!ws || ws.readyState != 1) return;
+	// 	ws.addEventListner("message", checkBlock);
+	// 	return () => {
+	// 		ws.removeEventListner("message", checkBlock);
+	// 	};
+	// }, [ws]);
 
 	return (
 		<div ref={_ref} className={`${styles.container} ${className}`}>
