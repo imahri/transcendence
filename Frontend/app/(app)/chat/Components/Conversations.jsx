@@ -8,6 +8,9 @@ import { ToHour12Time } from "@/Tools/getCurrentTime";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "../../context";
 import { useOnVisibleAnimation } from "../Hooks/useOnVisibleAnimation";
+import { Iceland } from "next/font/google";
+
+const iceland = Iceland({ weight: "400", subsets: ["latin"] });
 
 function Unseen({ count }) {
 	return (
@@ -215,9 +218,21 @@ export default function Conversations({
 				onScroll={handleScroll}
 				className={styles.container}
 			>
-				{conversationList?.map((conversation, idx) => (
-					<Conversation key={idx} user={user} info={conversation} />
-				))}
+				{conversationList ? (
+					conversationList.map((conversation, idx) => (
+						<Conversation
+							key={idx}
+							user={user}
+							info={conversation}
+						/>
+					))
+				) : (
+					<h1
+						className={`text-[#C1C1C1] text-3xl ${iceland.className}`}
+					>
+						No Conversations
+					</h1>
+				)}
 			</div>
 		</ConvChatContext.Provider>
 	);
