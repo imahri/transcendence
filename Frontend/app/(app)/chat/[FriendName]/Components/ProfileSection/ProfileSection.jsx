@@ -130,11 +130,13 @@ export const ProfileSection = ({
 	status,
 }) => (
 	<div ref={_ref} className={`${styles.container} ${className}`}>
-		<section className={styles.profile}>
-			<FriendProfile image={image} name={name} status={status} />
-			<Options name={name} id={id} />
-		</section>
-		<BadgeSection Grade={level > 0 ? level : 1} />
+		<div className="w-full h-full flex flex-col justify-evenly">
+			<section className={styles.profile}>
+				<FriendProfile image={image} name={name} status={status} />
+				<Options name={name} id={id} />
+			</section>
+			<BadgeSection Grade={level > 0 ? level : 1} />
+		</div>
 		<Footer />
 	</div>
 );
