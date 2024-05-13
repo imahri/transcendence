@@ -69,12 +69,12 @@ function Badge(props) {
 							</h2>
 						</div>
 					</div>
-					<div className="w-[90%] h-[15%] ml-[5%] rounded-[10px] relative bg-gray-300 bg-opacity-15 shadow-md">
+					<div className="w-[90%] h-[15%] ml-[5%] rounded-[10px] relative bg-gray-300 bg-opacity-15 shadow-md flex justify-center items-center">
 						<div
 							style={progresBarstyle}
-							className="h-full rounded-[10px]"
+							className="absolute h-full rounded-[10px] left-0"
 						></div>
-						<h1 className="absolute top-[6px] left-[38%] text-black text-opacity-[43%] text-[12px] font-bold">
+						<h1 className="z-20 text-black text-opacity-[43%] text-[12px] font-bold">
 							level {user.info.level}%
 						</h1>
 					</div>

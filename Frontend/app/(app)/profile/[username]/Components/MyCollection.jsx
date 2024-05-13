@@ -55,7 +55,7 @@ function Paddles({ paddles, setPaddles, isLoading }) {
 									src={element.image}
 									width={90}
 									height={90}
-									className="size-[90px] border-2 border-black cursor-pointer hover:size-full"
+									className="size-[90px] border-2 border-black cursor-pointer hover:size-full transition duration-1000"
 									alt="paddles"
 									onClick={
 										userProfile.friendship == "owner"
@@ -106,7 +106,7 @@ function Boards({ boards, setBoards, isLoading }) {
 									width={212}
 									height={117}
 									src={element.image}
-									className="w-[212px] h-[117px] cursor-pointer hover:w-[100%] hover:h-[100%]"
+									className="w-[212px] h-[117px] cursor-pointer hover:w-[100%] hover:h-[100%]  transition duration-[5000ms]"
 									alt="boards"
 									onClick={
 										userProfile.friendship == "owner"
@@ -219,7 +219,7 @@ export default function MyCollection() {
 	}, []);
 
 	return (
-		<div className="w-[80vw] flex flex-col gap-[20px]">
+		<div className="w-[95%] [@media(max-width:1950px)]:w-[80vw] flex flex-col gap-[20px]">
 			<Collection title={"Paddle"} isLoading={isLoading}>
 				<Paddles
 					paddles={paddles}
