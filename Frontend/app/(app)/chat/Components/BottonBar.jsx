@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { MicroProfile, StartConversation } from "./SideBar";
+import { MicroProfile } from "./MicroProfile";
+import { StartConversation } from "./StartConversation";
 
 export const BottonBar = ({ user, setConvState, _Conversations }) => {
 	const router = useRouter();
