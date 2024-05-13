@@ -10,8 +10,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { useConvState } from "../Hooks/useConvState";
 import { useConversations } from "../Hooks/useConversations";
+import { BottonBar } from "./BottonBar";
 
-const MicroProfile = ({ onClick, user }) => (
+export const MicroProfile = ({ onClick, user }) => (
 	<button
 		className="w-52 h-20 flex justify-start items-center text-slate-200"
 		onClick={onClick}
@@ -66,7 +67,7 @@ const Add_icon = () => (
 	</svg>
 );
 
-function StartConversation({
+export function StartConversation({
 	router,
 	setStates: {
 		setConvState,
@@ -168,23 +169,12 @@ export function SideBar() {
 					_convState={[convState, setConvState]}
 					_Conversations={_Conversations}
 				/>
-				<div className="w-full h-[7rem] flex justify-between py-4 px-12 ">
-					<MicroProfile
-						onClick={() => router.push("/profile")}
-						user={user}
-					/>
-					<StartConversation
-						user={user}
-						router={router}
-						setStates={{
-							setConvState,
-							convListState: [
-								_Conversations.conversationList,
-								_Conversations.addNewConversation,
-							],
-						}}
-					/>
-				</div>
+				<BottonBar
+					user={user}
+					setConvState={setConvState}
+					router={router}
+					_Conversations={_Conversations}
+				></BottonBar>
 			</aside>
 			<Separators />
 		</>
