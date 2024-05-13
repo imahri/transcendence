@@ -20,6 +20,7 @@ export const PADDLES_URL = `${GAME_APP}/padle`;
 export const BOARDES_URL = `${GAME_APP}/board`;
 export const BADGES_URL = `${GAME_APP}/badge`;
 export const ITEMS_URL = `${GAME_APP}/items`;
+export const MISSIONS_URL = `${GAME_APP}/missions`;
 
 export const USER_APP = `${BASE_URL}/user`;
 

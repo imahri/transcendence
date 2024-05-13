@@ -137,7 +137,7 @@ export default function Login() {
 					className="w-[80%] h-[45px] bg-[#1791B2] rounded-[5px] text-white font-bold text-[16px]  cursor-pointer"
 					type="submit"
 				>
-					Submit
+					Login
 				</button>
 
 				<button

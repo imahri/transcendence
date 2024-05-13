@@ -40,11 +40,11 @@ function Dashboard() {
 				<StaffMission />
 			</div>
 
-			<div className="w-[100%] flex justify-between [@media(max-width:1200px)]:flex-col [@media(max-width:1200px)]:items-center [@media(max-width:1200px)]:justify-center [@media(max-width:1200px)]:gap-[20px]">
+			{/* <div className="w-[100%] flex justify-between [@media(max-width:1200px)]:flex-col [@media(max-width:1200px)]:items-center [@media(max-width:1200px)]:justify-center [@media(max-width:1200px)]:gap-[20px]">
 				<Rooms room={FirstRoom} />
 				<Rooms room={SecondRoom} />
 				<Rooms room={ThirdRoom} />
-			</div>
+			</div> */}
 		</div>
 	);
 }

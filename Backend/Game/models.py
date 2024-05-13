@@ -10,7 +10,7 @@ class Acheivement(models.Model):
 
     name = models.CharField(max_length=50)
     icon_path = models.ImageField(upload_to=IMAGES_ROOT_)
-    users = models.ManyToManyField("User_Management.User", related_name="acheivements")
+    users = models.ManyToManyField("User_Management.User", related_name="acheivements", blank=True)
 
 
 class Match(models.Model):

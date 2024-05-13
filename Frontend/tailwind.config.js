@@ -44,10 +44,21 @@ module.exports = {
 				from: { transform: "rotate(0deg)" },
 				to: { transform: "rotate(360deg)" },
 			},
+			pop: {
+				"0%": {
+					transform: "scale(0.5)",
+					opacity: "0",
+				},
+				"100%": {
+					transform: "scale(1)",
+					opacity: "1",
+				},
+			},
 		},
 		animation: {
 			shake: "shake 0.9s ease-in-out",
 			spin: "spin 1s linear infinite",
+			pop: "pop 1s",
 		},
 	},
 	plugins: [require("tailwind-scrollbar-hide")],

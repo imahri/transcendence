@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
 from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer
 from .models import Badge, Board, Match, Padel, Items
 from django.core.exceptions import ObjectDoesNotExist
@@ -149,5 +148,3 @@ class ItemsView(APIView):
         except Exception as error:
             print('catch : ', error)
             return Response(data=str(error), status=400)
-
-
