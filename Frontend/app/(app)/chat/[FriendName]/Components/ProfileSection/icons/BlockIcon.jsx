@@ -1,0 +1,26 @@
+export const BlockIcon = () => (
+	<div className="flex justify-center items-center w-10 h-10">
+		<svg
+			className="w-[33px] h-[34px]"
+			width="28"
+			height="29"
+			viewBox="0 0 28 29"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				d="M13.766 25.8281C19.7057 25.8281 24.5208 20.7563 24.5208 14.5C24.5208 8.24365 19.7057 3.17188 13.766 3.17188C7.8263 3.17188 3.01123 8.24365 3.01123 14.5C3.01123 20.7563 7.8263 25.8281 13.766 25.8281Z"
+				stroke="white"
+				strokeWidth="2"
+				strokeMiterlimit="10"
+			/>
+			<path d="M6.16138 6.48999L21.3708 22.5102Z" fill="white" />
+			<path
+				d="M6.16138 6.48999L21.3708 22.5102"
+				stroke="white"
+				strokeWidth="2"
+				strokeMiterlimit="10"
+			/>
+		</svg>
+	</div>
+);

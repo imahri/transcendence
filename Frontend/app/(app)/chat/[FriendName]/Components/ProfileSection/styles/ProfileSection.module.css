@@ -51,9 +51,6 @@
 	@apply flex flex-col justify-center items-center;
 }
 
-.svg_container {
-	@apply flex justify-center items-center w-10 h-10;
-}
 
 .footer {
 	@apply w-full grid place-items-center pb-5;
