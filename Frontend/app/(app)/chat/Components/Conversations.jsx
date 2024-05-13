@@ -3,11 +3,14 @@ import Image from "next/image";
 import styles from "./styles/Conversations.module.css";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ConvChatContext, WsChatContext } from "../context/context";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ToHour12Time } from "@/Tools/getCurrentTime";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "../../context";
 import { useOnVisibleAnimation } from "../Hooks/useOnVisibleAnimation";
+import { Iceland } from "next/font/google";
+
+const iceland = Iceland({ weight: "400", subsets: ["latin"] });
 
 function Unseen({ count }) {
 	return (
@@ -128,23 +131,34 @@ export default function Conversations({
 	const ConversationsRef = useRef();
 	useOnVisibleAnimation(ConversationsRef, styles.show, [conversationList]);
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const OnMessage = useCallback(
 		(e) => {
 			const data = JSON.parse(e.data);
-			if (data.status == "B") {
-				setConversationList(
-					conversationList.filter(
-						(conv) => conv.name !== data.friend,
-					),
-				);
-				router.replace("/chat");
-				LoadToReplace();
+			if (data.type == "friendShip") {
+				if (data.status == "B" || data.status == "BY") {
+					setConversationList(
+						conversationList.filter(
+							(conv) => conv.name !== data.friendName,
+						),
+					);
+					if (data.status == "B") router.replace("/chat");
+					LoadToReplace();
+				}
 			}
 		},
 		[conversationList],
 	);
 
-	if (ws) ws.onmessage = OnMessage;
+	useEffect(() => {
+		const remove_conv = searchParams.get("remove_conv");
+		if (remove_conv)
+			setConversationList(
+				conversationList.filter((conv) => conv.name !== remove_conv),
+			);
+	}, [searchParams]);
+
+	if (ws) ws.addEventListener("message", OnMessage);
 
 	useEffect(() => {
 		if (
@@ -204,9 +218,21 @@ export default function Conversations({
 				onScroll={handleScroll}
 				className={styles.container}
 			>
-				{conversationList?.map((conversation, idx) => (
-					<Conversation key={idx} user={user} info={conversation} />
-				))}
+				{conversationList ? (
+					conversationList.map((conversation, idx) => (
+						<Conversation
+							key={idx}
+							user={user}
+							info={conversation}
+						/>
+					))
+				) : (
+					<h1
+						className={`text-[#C1C1C1] text-3xl ${iceland.className}`}
+					>
+						No Conversations
+					</h1>
+				)}
 			</div>
 		</ConvChatContext.Provider>
 	);

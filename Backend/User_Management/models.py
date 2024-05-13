@@ -109,8 +109,7 @@ class User(AbstractUser):
         self.get_friendship(friend).deblock()
 
     def delete_friend(self, friend):
-        self.get_friendship(friend).delete()
-        friend.get_friendship(self).delete()
+        self.get_friendship(friend).conversation.delete()
 
     def get_new_Notification(self):
         return self.notifications.all().filter(is_hidden=False, is_read=False)

@@ -105,7 +105,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={'type' : 'notification', 'action': 'update', 'last_notif' : event['lastNotif']})
 
     async def send_status(self, event):
-        await self.send_json(content={'type' : 'friendShip', 'friend_id': event['friend_id'], 'status' : event['status']})
+        await self.send_json(content={'type' : 'friendShip', 'friend_id': event['friend_id'],'friendName' : event['username'] ,  'status' : event['status']})
     
 
     async def send_user_status(self, channel_layer, friend : User,  user : User):
@@ -117,7 +117,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 status = friendShip.status
             except Friend.DoesNotExist:
                 status = "not friend"
-            await channel_layer.send(target_channel, {"type" : "send_status" , "friend_id" : user.id, "status" : status})
+            await channel_layer.send(target_channel, {"type" : "send_status" , "friend_id" : user.pk, "username": user.username, "status" : status})
 
         except Exception as error:
             print('update status: ', error)

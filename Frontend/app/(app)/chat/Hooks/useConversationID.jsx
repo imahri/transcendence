@@ -14,7 +14,7 @@ const useConversationID = (FriendName) => {
 		).then(([isOk, status, data]) => {
 			isOk
 				? setConversationID(data.conversation_id)
-				: router.replace("/chat");
+				: router.replace(`/chat?remove_conv=${FriendName}`);
 		});
 	}, [FriendName]);
 	return conversationID;
