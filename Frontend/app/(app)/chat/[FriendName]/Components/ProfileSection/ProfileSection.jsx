@@ -1,8 +1,5 @@
-import { Separator } from "../../../Components/Separator";
-import { DummyPath } from "../../../DummyData";
 import styles from "./styles/ProfileSection.module.css";
 import Image from "next/image";
-import badge from "./assets/badge.svg";
 
 import g_bronze from "./assets/g_bronze.svg";
 import g_silver from "./assets/g_silver.svg";
@@ -11,10 +8,10 @@ import g_platinum from "./assets/g_platinum.svg";
 import g_master from "./assets/g_master.svg";
 import g_grandmaster from "./assets/g_grandmaster.svg";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "@/app/(app)/context";
-import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { FRIENDSHIP_URL, GET_USER_URL } from "@/app/URLS";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { FRIENDSHIP_URL } from "@/app/URLS";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },

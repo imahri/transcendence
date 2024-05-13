@@ -18,10 +18,6 @@ function SearchIcon({ styles }) {
 	);
 }
 
-// TODO: handle backend
-// TODO: review code & test
-// TODO: handle responsive
-
 let timeout;
 
 export function Searchbar({ style_ops }) {

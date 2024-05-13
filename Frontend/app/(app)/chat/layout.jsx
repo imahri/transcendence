@@ -1,5 +1,4 @@
 import { WsChatProvider } from "./context/context";
-import styles from "./styles/layout.module.css";
 import { SideBar } from "./Components/SideBar";
 import { Inter } from "next/font/google";
 import { fetch_jwt } from "@/Tools/fetch_jwt_server";
@@ -28,7 +27,9 @@ export default async function ChatLayout({ children }) {
 				className={`h-screen w-full flex bg-[#202020] ${inter.className}`}
 			>
 				<SideBar />
-				<main className={styles.main}>{children}</main>
+				<main className="bg-inherit grow w-full h-full flex flex-row justify-center items-center">
+					{children}
+				</main>
 			</div>
 		</WsChatProvider>
 	);
