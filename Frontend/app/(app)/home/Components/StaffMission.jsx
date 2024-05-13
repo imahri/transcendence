@@ -42,6 +42,7 @@ async function verify(setMissions) {
 			{},
 			{ method: "PUT" },
 		);
+		``;
 
 		if (isOk) {
 			setMissions((prev) => {
