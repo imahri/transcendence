@@ -1,45 +1,21 @@
 import Image from "next/image";
-import { useState, useContext, useLayoutEffect, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "@/app/(app)/context";
-import { FRIENDSHIP_URL, GET_5Friends_URL } from "@/app/URLS";
+import { GET_5Friends_URL } from "@/app/URLS";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 
-async function callBack(action, friend_id, setFriendShip) {
+async function callBack(action, friend_id, ws) {
 	let my_action = action;
-	if (action == "edit") {
-		return;
-	} else if (action == "Add Friend") my_action = "add";
+	if (action == "edit") return;
+	else if (action == "Add Friend") my_action = "add";
 	else if (action == "Accept") my_action = "accept";
 	else if (action == "block") my_action = "block";
 	else if (action == "Unblock") my_action = "Unblock";
-	if (
-		action == "Reject" ||
-		action == "Remove Friend" ||
-		action == "remove Request"
-	)
-		my_action = "remove";
+	else my_action = "remove";
 
-	const body = { action: my_action, friend_id: friend_id };
+	const content = { action: my_action, friend_id: friend_id };
 
-	try {
-		const [isOk, status, data] = await fetch_jwt(
-			FRIENDSHIP_URL,
-			{},
-			{
-				method: "POST",
-				body: JSON.stringify(body),
-				headers: { "Content-Type": "application/json" },
-			},
-		);
-
-		if (isOk) {
-			setFriendShip(data.status);
-			return;
-		}
-		console.error("error friendship Post :", data);
-	} catch (error) {
-		console.log("send friendship error : ", error);
-	}
+	ws.send(JSON.stringify({ action: "set_friendship", content: content }));
 }
 
 const createButton = (status, color, action) => {
@@ -58,11 +34,11 @@ const Allbuttons = [
 	createButton("BY", "bg-red-600", "User Blocked You"),
 ];
 
-function Button({ action, color, friend_id, setStatus }) {
+function Button({ action, color, friend_id, ws }) {
 	return (
 		<button
 			className={`border-none rounded-[6px] w-[161px] h-[40px] ${color} font-semibold text-[16px] text-white cursor-pointer`}
-			onClick={() => callBack(action, friend_id, setStatus)}
+			onClick={() => callBack(action, friend_id, ws)}
 		>
 			{action}
 		</button>
@@ -70,6 +46,8 @@ function Button({ action, color, friend_id, setStatus }) {
 }
 
 function updateStatus(data, setStatus, profileId) {
+	console.log(data);
+
 	if (data.friend_id == profileId) {
 		setStatus(data.status);
 	}
@@ -105,7 +83,7 @@ function Buttons({ profileUser, EditProfile }) {
 							action={element.action}
 							friend_id={profileUser.id}
 							color={element.color}
-							setStatus={setStatus}
+							ws={ws}
 						/>
 					);
 				},
@@ -180,7 +158,6 @@ function ProfileInfo({ user, displayFriends, EditProfile }) {
 			console.log("ws is false, userprofile");
 			return;
 		}
-
 		ws.send(
 			JSON.stringify({
 				action: "checkStatus",

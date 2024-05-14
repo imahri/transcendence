@@ -13,12 +13,10 @@ function setType(notifType, notifContent) {
 	const sentAccept = "Accept your Invitation";
 	const sentGameInvit = "Sent you Game Invitation";
 
-	if (notifType == "Msg") return sentMsg;
-	else if (notifType == "GameInvit") return sentGameInvit;
-	else {
-		if (notifContent == "add") return sentInvit;
-		else return sentAccept;
-	}
+	if (notifType == "C") return sentMsg;
+	else if (notifType == "G") return sentGameInvit;
+	if (notifContent.status == "add") return sentInvit;
+	else return sentAccept;
 }
 
 function readNotif(socket, notif, setNbNotif) {
@@ -37,15 +35,10 @@ function readNotif(socket, notif, setNbNotif) {
 }
 
 function NotifSection({ notif }) {
-	const Svg =
-		notif.type == "Msg"
-			? ChatSvg
-			: notif.type == "friendShip"
-				? FriendSvg
-				: GmaeSvg;
-
+	const ntype = notif.type;
+	const Svg = ntype == "C" ? ChatSvg : ntype == "F" ? FriendSvg : GmaeSvg;
 	const type = setType(notif.type, notif.content);
-	const link = notif.type == "friendShip" ? "/profile" : "#";
+	const link = ntype == "F" ? "/profile" : "#";
 
 	return (
 		<Link
@@ -81,8 +74,6 @@ async function getNotif(setNotif, setNbNotif) {
 		const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
 		if (isOk) {
 			setNbNotif(data.nb_unreaded);
-			// filter only displayable
-			// const notif = data.allNotif.filter((notif) => !notif.is_hidden);
 			setNotif(data.allNotif);
 			return;
 		}
@@ -93,22 +84,19 @@ async function getNotif(setNotif, setNbNotif) {
 }
 
 function handelNotif(data, setNotif, setNbNotif) {
-	if (data.action == "update") {
-		setNotif((prev) => {
-			if (prev) {
-				prev.unshift(data.last_notif);
-				return prev;
-			} else return data.last_notif;
-		});
-		setNbNotif((prev) => prev + 1);
-	}
+	setNotif((prev) => {
+		if (prev) {
+			prev.unshift(data.content);
+			return prev;
+		} else return data.content;
+	});
+	setNbNotif((prev) => prev + 1);
 }
 
 function Notification() {
 	const [notif, setNotif] = useState(false);
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
-	const [socket, setSocket] = useState();
 
 	const { ws } = useContext(UserContext);
 
@@ -118,19 +106,11 @@ function Notification() {
 		}
 
 		if (ws) {
-			setSocket(ws);
 			ws.addEventListener("message", (e) => {
 				const data = JSON.parse(e.data);
 				if (data.type == "notification")
 					handelNotif(data, setNotif, setnbNotif);
 			});
-			ws.onerror = (error) => {
-				console.log("error");
-				console.error("WebSocket error:", error);
-			};
-			ws.onclose = (event) => {
-				console.log("friendship WebSocket closed:", event.reason);
-			};
 		}
 	}, [ws]);
 
@@ -167,7 +147,7 @@ function Notification() {
 							return (
 								<div
 									onClick={() =>
-										readNotif(socket, notif, setnbNotif)
+										readNotif(ws, notif, setnbNotif)
 									}
 									key={index}
 								>
