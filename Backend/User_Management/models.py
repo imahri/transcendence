@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
-import requests as api_request
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -154,11 +153,12 @@ class Info(models.Model):
     """
     Store additional info about the User
     """
+    from Game.models import Grade
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    level = models.FloatField(default=0)
+    level = models.FloatField(default=1.5)
     energy = models.IntegerField(default=10)
-    wallet = models.IntegerField(default=0)
+    wallet = models.IntegerField(default=500)
 
     GENDER = (("M", "Male"), ("F", "Female"))
     gender = models.CharField(max_length=1, choices=GENDER, blank=True)
@@ -168,7 +168,8 @@ class Info(models.Model):
     banner_img = models.ImageField(
         upload_to=IMAGES_ROOT_, default=DEFAULT_BANNER_IMG, blank=True
     )
-    grade_id = models.IntegerField(default=0)
+    # grade_id = models.IntegerField(default=1)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, default=1)
     exp = models.IntegerField(default=0)
 
     @staticmethod

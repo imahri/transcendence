@@ -1,7 +1,6 @@
 from django.db import models
 from core.settings import IMAGES_ROOT_
 from rest_framework import serializers
-from User_Management.serializers import UserSerializer
 from User_Management.models import User
 
 

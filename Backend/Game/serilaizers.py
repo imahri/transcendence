@@ -1,16 +1,8 @@
 from dataclasses import fields
-import os
-from pyexpat import model
 from rest_framework.serializers import ModelSerializer
-
-from core.settings import MEDIA_ROOT
 
 from .models import Badge, Match, Board, Padel, Items, Acheivement
 from rest_framework import serializers
-from User_Management.serializers import UserSerializer
-from User_Management.models import User
-import base64
-
 
 class MatchSerializer(ModelSerializer):
     # accept mode as string and store it as int but it return it as string
@@ -44,8 +36,24 @@ class MatchSerializer(ModelSerializer):
     #     enemy_user = User.get_by_identifier(data.pop("enemy"))
     #     enemy_serialised = UserSerializer(instance=enemy_user)
     #     data["enemy"] = enemy_serialised.data
-
     #     return data
+
+class GradeSerializer(ModelSerializer):
+
+
+    class Meta:
+        from .models import Grade
+        model = Grade
+        fields = ("id", "name", "image")
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        image_path = (
+            "http://localhost:8000/user/image?path=" + representation["image"]
+        )
+        representation["image"] = image_path
+        return representation
+
 
 
 class BadgeSerializer(ModelSerializer):

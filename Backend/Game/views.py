@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer
-from .models import Badge, Board, Match, Padel, Items
+from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
+from .models import Badge, Board, Match, Padel, Items, Acheivement
 from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
 
@@ -32,8 +32,6 @@ class MatchView(APIView):
         except Exception as error:
             return Response({'error': str(error)}, status=400)
         
-
-
 
 class BadgeView(APIView):
 
@@ -148,3 +146,23 @@ class ItemsView(APIView):
         except Exception as error:
             print('catch : ', error)
             return Response(data=str(error), status=400)
+        
+        
+class AcheivmentView(APIView):
+
+    def get(self, request):
+
+        user : User = request.user
+
+        all_acheivements = Acheivement.objects.all()
+        unlocked_acheivements = user.acheivements.all()
+        
+        acheivements_data = AcheivmentSerializer(instance=all_acheivements, many=True).data
+        
+        for achievement in acheivements_data:
+            if unlocked_acheivements.filter(id=achievement.get('id')).exists():
+                achievement['unlocked'] = True
+            else:
+                achievement['unlocked'] = False
+
+        return Response(data=acheivements_data)
