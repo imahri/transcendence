@@ -61,8 +61,11 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 await self.checkOnline(text_data['username'])
             elif action == 'end_checkStatus':
                 await self.discardFromGroup(text_data['username'])
-            
-            
+            elif action == 'send_notif':
+                await self.send_notification(text_data['content'])
+            elif action == 'set_friendship':
+                await self.set_friendship(text_data['content'])
+
         except Exception as error:
             print('error : ', error)
 
@@ -99,41 +102,96 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_Onlinestatus(self, event):
         await self.send_json(content={'type' : 'onlineStatus', 'username': event['username'], 'status' : event['status']})
-
-        
-    async def send_notification(self, event):
-        await self.send_json(content={'type' : 'notification', 'action': 'update', 'last_notif' : event['lastNotif']})
-
+  
     async def send_status(self, event):
-        await self.send_json(content={'type' : 'friendShip', 'friend_id': event['friend_id'],'friendName' : event['username'] ,  'status' : event['status']})
+
+        friend = event['friend']
+        user = event['user']
+        friend_id = friend.id
+        friend_name = friend.username
+        status = ''
+        try:
+            friendShip = await database_sync_to_async(user.get_friendship)(friend)
+            status = friendShip.status
+        except Friend.DoesNotExist:
+            status = "not friend"
+            
+        await self.send_json(content={'type' : 'friendShip', 'friend_id': friend_id,'friendName' : friend_name ,  'status' : status})
     
 
-    async def send_user_status(self, channel_layer, friend : User,  user : User):
+    async def send_friend_status(self, friend : User,  user : User):
         try:
             status = ''  
             target_channel = self.get_channel_by_user(friend.username)
-            try:
-                friendShip = await database_sync_to_async(friend.get_friendship)(user)
-                status = friendShip.status
-            except Friend.DoesNotExist:
-                status = "not friend"
-            await channel_layer.send(target_channel, {"type" : "send_status" , "friend_id" : user.pk, "username": user.username, "status" : status})
+            await self.channel_layer.send(target_channel, {"type" : "send_status" , "friend" : user, "user": friend})
 
         except Exception as error:
             print('update status: ', error)
 
-    @classmethod
-    def serilaizeLastNotif(cls, lastNotif):
-        NotifSerialized = NotifSerializer(lastNotif).data
-        return NotifSerialized
+    async def redirect(self, event):
+        content = event['content']
+        await self.send_json({'type' : 'notification', "content" : content})
 
-    async def send_notif_user(self, channel_layer , user,  lastNotif):
+    async def send_notification(self, content):
+        '''
+        {
+            to: <to> 
+            type: <
+                    ("C", "Chat"),
+                    ("F", "Friendship"),
+                    ("G", "Game"),
+                    ("T", "Tournament"),
+                    >
+            content: <content>
+        }
+        '''
         try:
-
-            target_channel = self.get_channel_by_user(user.username)
-
-            Notifdata = await database_sync_to_async(self.serilaizeLastNotif)(lastNotif=lastNotif);
-            await channel_layer.send(target_channel, {"type" : "send_notification" ,"lastNotif" : Notifdata})
-
+            notification: Notification = await database_sync_to_async(Notification.create)(self.user, content)
+            sended_to_CL = self.get_channel_by_user(content["to"])
+            data = await database_sync_to_async(notification.as_serialized)()
+            await self.channel_layer.send(
+                    sended_to_CL,
+                    {
+                        'type': "redirect",
+                        'content': data
+                    }
+            )
         except Exception as error:
-            print('update notification: ', error)
+            print('notif error : ', error)
+
+    
+    async def set_friendship(self, content : dict):
+        '''
+        {
+            content = {firend_id , action}
+        }
+        '''
+        try:
+            user : User = self.user
+            action = content['action']
+            friend : User = await database_sync_to_async(User.objects.get)(pk=content['friend_id'])
+
+            #set friendship
+            if action == 'add':
+                   await database_sync_to_async(user.add_friend)(friend=friend)
+            elif action == 'accept':
+                await database_sync_to_async(user.accept_friend)(friend=friend)
+            elif action == 'remove':
+                await database_sync_to_async(user.delete_friend)(friend=friend)
+            elif action == 'block':
+                await database_sync_to_async(user.block_friend)(friend=friend)
+            elif action == 'Unblock':
+                await database_sync_to_async(user.deblock_friend)(friend=friend)
+
+            # send the actual status to current
+            await self.send_status({"user" : user, "friend" : friend})
+
+            #create notification if is necasser send it 
+            if action == 'add' or action == 'accept':
+                content = {"type" : "F", "to" : friend.username, "content" : {"status" : action} }
+                await self.send_notification(content=content)
+            
+            #send new status to friend
+            await self.send_friend_status(friend, user)
+        except Exception as error :
+            print(error)
