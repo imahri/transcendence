@@ -21,6 +21,7 @@ export const BOARDES_URL = `${GAME_APP}/board`;
 export const BADGES_URL = `${GAME_APP}/badge`;
 export const ITEMS_URL = `${GAME_APP}/items`;
 export const MISSIONS_URL = `${GAME_APP}/missions`;
+export const ACHEIVMENTS_URL = `${GAME_APP}/acheivement`;
 
 export const USER_APP = `${BASE_URL}/user`;
 

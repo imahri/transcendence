@@ -102,7 +102,7 @@ function StaffMission() {
 				{isLoading && <Loading />}
 				{!isLoading && missions && (
 					<>
-						<div className="w-full h-[156px] rounded-[7px] flex justify-between gap-[20px] [@media(max-width:710px)]:w-[100%]">
+						<div className="w-full h-[156px] rounded-[7px] flex justify-between gap-[10px] [@media(max-width:710px)]:w-[100%]">
 							<Mission
 								mission={missions.UserMission}
 								setPopup={setPopup}

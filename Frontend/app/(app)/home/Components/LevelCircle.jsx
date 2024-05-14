@@ -3,7 +3,11 @@ import Image from "next/image";
 import starpng from "../assets/starpng.png";
 
 function LevelCircle({ level }) {
-	const levelPercent = (level - Math.floor(level)) * 100 + "%";
+	let levelPercent = (level - Math.floor(level)) * 100 + "%";
+	if (levelPercent == "0%") {
+		levelPercent = "1.5%";
+		level = level + ".0";
+	}
 	const levelStyle = {
 		background: `conic-gradient(from 0deg, #79DDD7 0% ${levelPercent}, transparent ${levelPercent}, transparent 100%)`,
 	};

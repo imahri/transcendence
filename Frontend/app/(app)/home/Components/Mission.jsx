@@ -4,7 +4,7 @@ import Image from "next/image";
 export function Mission({ mission, setPopup }) {
 	return (
 		<div
-			className={`w-[45%] h-[100%] ${mission.title == "User" ? "bg-greatBlue" : "bg-goto"} rounded-[7px] flex flex-col justify-evenly pl-[15px]  [@media(max-width:1700px)]:pl-[10px] relative`}
+			className={`w-[50%] h-[100%] ${mission.title == "User" ? "bg-greatBlue" : "bg-goto"} rounded-[7px] flex flex-col justify-evenly pl-[15px]  [@media(max-width:1700px)]:pl-[10px] relative`}
 		>
 			<div
 				onClick={() => setPopup(mission.task)}
