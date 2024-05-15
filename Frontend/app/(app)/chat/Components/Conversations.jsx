@@ -64,10 +64,8 @@ const TimeNotification = ({ time, unseen_msg }) => (
 	</div>
 );
 
-function Conversation({
-	user,
-	info: { name, image, last_message, unseen_msg },
-}) {
+function Conversation({ user, info }) {
+	const { name, image, last_message, unseen_msg } = info;
 	const router = useRouter();
 	const ConvRef = useRef();
 	const [convState, setConvState] = useContext(ConvChatContext);
@@ -80,7 +78,7 @@ function Conversation({
 
 	const handleClick = () => {
 		if (!isActive) {
-			// TODO : set unseen_message_count to 0 because you see message XD
+			info.unseen_msg = 0;
 			router.push(`/chat/${name}`);
 			setConvState(name);
 		}
@@ -193,7 +191,51 @@ export default function Conversations({
 	}, [conversationList, convState, messageUpdated]);
 
 	useEffect(() => {
-		const listener = () => console.log("yes");
+		// const listener = () => console.log("yes");
+
+		// {
+		// 		id: 19,
+		// 		last_message: { sended_at: '2024-05-15T19:43:36.077459Z', message: 'asd' },
+		// 		unseen_msg: 0,
+		// 		name: 'red_user18',
+		// 		image: '/default/default.png'
+		//  }
+
+		// {
+		// 		id: 11,
+		// 		user: {
+		// 		  id: 26,
+		// 		  email: 'red_user18@gmail.com',
+		// 		  username: 'red_user18',
+		// 		  first_name: 'red_user18',
+		// 		  last_name: 'red_user18',
+		// 		  img: 'http://localhost:8000/user/image?path=/default/default.png',
+		// 		  is_2FA_active: false
+		// 		},
+		// 		type: 'C',
+		// 		time: '2024-05-15T19:44:34.584752Z',
+		// 		content: { conversationID: 19, FirstTime: false, message: 'asdasd' },
+		// 		is_read: false,
+		// 		is_hidden: false
+		//  }
+
+		const listener = (e) => {
+			console.log(e);
+			const convList = [...conversationList];
+			convList.forEach((conv) => {
+				if (conv.id == e.content.conversationID && e.is_read == false) {
+					// if (convState !== conv.name) {
+					conv.unseen_msg += 1;
+					// }
+					conv.last_message = {
+						sended_at: e.time,
+						message: e.content.message,
+					};
+				}
+			});
+			setConversationList(convList);
+		};
+
 		addListenerNotif(ws, listener);
 	}, [ws]);
 
