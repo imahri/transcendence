@@ -1,7 +1,6 @@
 "use client";
 import { useContext } from "react";
 import LevelCircle from "./LevelCircle";
-import Myskin from "../assets/12.png";
 import "./Profile.css";
 
 import Image from "next/image";
@@ -40,9 +39,6 @@ function Profile() {
 						<h1 className="font-semibold text-[60px] [@media(max-width:800px)]:text-[40px] [@media(max-width:600px)]:text-[15px] [@media(max-width:600px)]:w-[70%] overflow-hidden truncate text-[#B872FE]">
 							{user.username}
 						</h1>
-						{/* <h2 className=" font-semibold text-[38px] [@media(max-width:800px)]:text-[25px] text-white">
-							Player Name
-						</h2> */}
 					</div>
 				</div>
 				<div className="w-auto h-[60%] pl-[70px] [@media(max-width:470px)]:pl-[20px] flex flex-col justify-center gap-[20px]">
@@ -58,11 +54,13 @@ function Profile() {
 							color={"#E55D10"}
 						/>
 						<State number={12} name={"games"} color={"#8710E5"} />
-						<div className="bg-[#52FF00] w-[51px] h-[47px] rounded-[5px] flex justify-center items-center">
+						<div className="w-[51px] h-[47px] rounded-[5px] flex justify-center items-center">
 							<Image
-								className="size-[90%] rounded-[4px]"
-								src={Myskin}
-								alt=""
+								className="rounded-[4px]"
+								src={user.info.grade.image}
+								width={70}
+								height={70}
+								alt="Grade"
 							/>
 						</div>
 					</div>

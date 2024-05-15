@@ -4,7 +4,6 @@ from rest_framework.serializers import ModelSerializer
 from .models import User, Info, Notification
 from rest_framework import serializers
 
-
 class UserSerializer(ModelSerializer):
 
     img = serializers.SerializerMethodField();
@@ -58,6 +57,10 @@ class UserSerializer(ModelSerializer):
 
 
 class InfoSerializer(ModelSerializer):
+    
+    from Game.serilaizers import GradeSerializer
+
+    grade = GradeSerializer()
 
     class Meta:
         model = Info
@@ -69,6 +72,7 @@ class InfoSerializer(ModelSerializer):
             "exp",
             "banner_img",
             "profile_img",
+            "grade",
         ]
 
     def create(self, validated_data):
@@ -84,11 +88,7 @@ class InfoSerializer(ModelSerializer):
                 "http://localhost:8000/user/image?path=" + representation["profile_img"]
             )
             representation["profile_img"] = profile_path
-        if representation["banner_img"] is not None:
-            banner_path = (
-                "http://localhost:8000/user/image?path=" + representation["banner_img"]
-            )
-            representation["banner_img"] = banner_path
+        
         return representation
 
     def save(self, **kwargs):

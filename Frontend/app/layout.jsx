@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body
 				suppressHydrationWarning={true}
-				className={`overflow-hidden ${chakra.className}`}
+				className={`${chakra.className}`}
 			>
 				{children}
 			</body>

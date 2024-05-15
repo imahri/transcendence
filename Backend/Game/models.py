@@ -1,7 +1,6 @@
 from django.db import models
 from core.settings import IMAGES_ROOT_
 from rest_framework import serializers
-from User_Management.serializers import UserSerializer
 from User_Management.models import User
 
 
@@ -10,7 +9,7 @@ class Acheivement(models.Model):
 
     name = models.CharField(max_length=50)
     icon_path = models.ImageField(upload_to=IMAGES_ROOT_)
-    users = models.ManyToManyField("User_Management.User", related_name="acheivements")
+    users = models.ManyToManyField("User_Management.User", related_name="acheivements", blank=True)
 
 
 class Match(models.Model):

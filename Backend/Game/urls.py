@@ -1,7 +1,8 @@
 from django.urls import path
 
 
-from .views import MatchView, BadgeView, BoardView, PadleView, ItemsView
+from .views import MatchView, BadgeView, BoardView, PadleView, ItemsView, AcheivmentView
+from .StaffMissions import MissionView
 
 urlpatterns = [
     
@@ -14,5 +15,7 @@ urlpatterns = [
     # path("padle/<int:pk>/", PadleView.as_view(), name="padleUpdate"),
     #user collection of items
     path("items", ItemsView.as_view(), name="items"),
+    path("missions", MissionView.as_view(), name="missions"),
+    path("acheivement", AcheivmentView.as_view(), name="acheivement"),
 
 ]
