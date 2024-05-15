@@ -122,8 +122,7 @@ export default function Conversations({
 }) {
 	const {
 		user,
-		socket,
-		data,
+		addListenerNotif,
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
 	const { ws } = useContext(UserContext);
@@ -200,6 +199,11 @@ export default function Conversations({
 			setMessageUpdated(false);
 		}
 	}, [conversationList, convState, messageUpdated]);
+
+	useEffect(() => {
+		const listener = () => console.log("yes");
+		addListenerNotif(ws, listener);
+	}, [ws]);
 
 	const handleScroll = () => {
 		if (

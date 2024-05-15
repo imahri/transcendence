@@ -31,7 +31,6 @@ async function getFriendInfo(FriendName) {
 
 function updateOnlineStatus(setActiveStatus, e, userName) {
 	const data = JSON.parse(e.data);
-	console.log("status data : ", data);
 	if (data.type == "onlineStatus") {
 		if (userName == data.username)
 			data.status == "online"
@@ -42,9 +41,8 @@ function updateOnlineStatus(setActiveStatus, e, userName) {
 
 export default function DM_Conversation({ params: { FriendName } }) {
 	const {
-		user,
 		socket,
-		data,
+		sendNotif,
 		messageUpdatedState: [messageUpdated, setmessageUpdated],
 	} = useContext(WsChatContext);
 	const conversation_id = useConversationID(FriendName);
@@ -77,6 +75,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			sended_at: getCurrentTime(),
 		};
 		socket.send(JSON.stringify(message));
+		sendNotif(FriendName, conversation_id, new_msg);
 		console.log(message);
 		addNewMessage(message);
 	};

@@ -3,6 +3,7 @@ import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { wsChat } from "@/app/URLS";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
+import { useNotification } from "../Hooks/useNotification";
 
 export const WsChatContext = createContext();
 
@@ -11,6 +12,7 @@ export const WsChatProvider = ({ children, conversations }) => {
 	const messageUpdatedState = useState(false);
 	const [socket, setSocket] = useState(null);
 	const { user, setUser } = useContext(UserContext);
+	const { sendNotif, addListenerNotif } = useNotification();
 
 	useEffect(() => {
 		if (!socket) {
@@ -30,6 +32,8 @@ export const WsChatProvider = ({ children, conversations }) => {
 				socket: socket,
 				data: conversations,
 				messageUpdatedState: messageUpdatedState,
+				sendNotif: sendNotif,
+				addListenerNotif: addListenerNotif,
 			}}
 		>
 			{children}
