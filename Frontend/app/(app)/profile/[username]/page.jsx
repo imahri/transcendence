@@ -55,7 +55,7 @@ function Profile({ params }) {
 		<>
 			<NavBar />
 			<UserProfileContext.Provider value={userProfile}>
-				<main className="w-full  mt-[100px] flex justify-center">
+				<main className="w-full  mt-[100px] [@media(max-width:900px)]:mb-[70px] flex justify-center">
 					{isLoading ? (
 						<div>Is Loding ...</div>
 					) : (
