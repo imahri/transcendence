@@ -40,7 +40,7 @@ const FriendProfile = ({ image, name, status }) => (
 );
 
 function BlockUser(ws, friend_id) {
-	const content = { action: "block", friend_id: 2 };
+	const content = { action: "block", friend_id: friend_id };
 	ws.send(JSON.stringify({ action: "set_friendship", content: content }));
 }
 

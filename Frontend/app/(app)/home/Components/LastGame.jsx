@@ -31,10 +31,8 @@ function LastGame() {
 	return (
 		<div className="w-[50%] [@media(max-width:1990px)]:w-[40%] h-[424px] rounded-[15px] flex flex-col items-center justify-center gap-[20px] [@media(max-width:710px)]:w-[90%]">
 			<h2 className=" font-bold text-[20px] text-white">Last Game</h2>
-			{/* <div> */}
 			<GameState user1={user} user2={user2} />
 			<Image className="w-[254px] h-[66px]" src={gameTable} alt="" />
-			{/* </div> */}
 			<State title={"Level"} state1={user.info.level} state2={6.4} />
 			<State title={"Rank"} state1={"Gold"} state2={"Bronz"} />
 			<State title={"Paddle"} state1={"Aubarc"} state2={"Podolica"} />

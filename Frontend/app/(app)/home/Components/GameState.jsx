@@ -26,9 +26,7 @@ function GameState({ user1, user2 }) {
 						alt=""
 					/>
 				</div>
-				<h2
-					className={`font-chakra text-[10px] text-white w-full overflow-hidden truncate`}
-				>
+				<h2 className="font-chakra text-[10px] text-white w-full overflow-hidden truncate text-center">
 					{user1.username}
 				</h2>
 			</div>
@@ -53,9 +51,7 @@ function GameState({ user1, user2 }) {
 						alt=""
 					/>
 				</div>
-				<h2
-					className={`font-chakra text-[10px] text-white w-full overflow-hidden truncate`}
-				>
+				<h2 className="font-chakra text-[10px] text-white w-full overflow-hidden truncate text-center">
 					{user2.userName}
 				</h2>
 			</Link>

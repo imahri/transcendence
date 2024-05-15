@@ -35,7 +35,11 @@ function Task({ tasks }) {
 	);
 }
 
-async function verify(setMissions) {
+async function verify(setMissions, setverify) {
+	setverify(true);
+	setTimeout(() => {
+		setverify(false);
+	}, 500);
 	try {
 		const [isOk, status, data] = await fetch_jwt(
 			MISSIONS_URL,
@@ -74,6 +78,7 @@ function StaffMission() {
 	const [popUp, setPopup] = useState();
 	const [missions, setMissions] = useState();
 	const [isLoading, setLoading] = useState(true);
+	const [verifyLoading, setverify] = useState();
 
 	useEffect(() => {
 		if (!missions) {
@@ -99,33 +104,34 @@ function StaffMission() {
 			</div>
 
 			<div className="w-[80%] h-[272px] flex flex-col gap-[10px] relative">
-				{isLoading && <Loading />}
-				{!isLoading && missions && (
-					<>
-						<div className="w-full h-[156px] rounded-[7px] flex justify-between gap-[10px] [@media(max-width:710px)]:w-[100%]">
-							<Mission
-								mission={missions.UserMission}
-								setPopup={setPopup}
-							/>
-							<Mission
-								mission={missions.ChatMission}
-								setPopup={setPopup}
-							/>
-						</div>
-						<GameMission
-							mission={missions.GameMission}
-							setPopup={setPopup}
-						/>
-					</>
-				)}
+				<div className="w-full h-[156px] rounded-[7px] flex justify-between gap-[10px] [@media(max-width:710px)]:w-[100%]">
+					<Mission
+						mission={missions?.UserMission}
+						setPopup={setPopup}
+						isLoading={isLoading}
+						title={"User"}
+					/>
+					<Mission
+						mission={missions?.ChatMission}
+						setPopup={setPopup}
+						isLoading={isLoading}
+						title={"Chat"}
+					/>
+				</div>
+				<GameMission
+					mission={missions?.GameMission}
+					setPopup={setPopup}
+					isLoading={isLoading}
+				/>
 			</div>
 			<button
-				className="w-[80%] h-[70px] bg-[#4FA1EC] bg-opacity-[61%] rounded-[7px] font-bold text-[20px] text-white [@media(max-width:710px)]:w-[100%]"
+				className="w-[80%] h-[70px] bg-[#4FA1EC] bg-opacity-[61%] rounded-[7px] font-bold text-[20px] text-white [@media(max-width:710px)]:w-[100%] relative"
 				onClick={() => {
-					verify(setMissions);
+					verify(setMissions, setverify);
 				}}
 			>
 				Verefied
+				{verifyLoading && <Loading />}
 			</button>
 
 			<div
