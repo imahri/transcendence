@@ -20,9 +20,7 @@ export const handleSubmit = async (
 	setisLoading,
 ) => {
 	e.preventDefault();
-
 	setisLoading(true);
-
 	const FormField = Form.current;
 	const username = FormField["username"].value;
 	const password = FormField["password"].value;
@@ -42,8 +40,8 @@ export const handleSubmit = async (
 				return;
 			}
 			console.log("login success");
+			setisLoading(false);
 			settoken(responseBody);
-
 			navigate.replace("/home");
 		} else {
 			setisLoading(false);
@@ -51,6 +49,7 @@ export const handleSubmit = async (
 			console.error("Login failed", response);
 		}
 	} catch (error) {
+		setisLoading(false);
 		console.error("Network error:", error);
 	}
 };
