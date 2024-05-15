@@ -63,7 +63,6 @@ function Profile({ params }) {
 							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
 								<Banner />
 								<ProfileInfo
-									user={userProfile}
 									displayFriends={setDisplayFriends}
 									EditProfile={setEditProfile}
 								/>

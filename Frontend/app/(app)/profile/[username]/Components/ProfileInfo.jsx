@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "@/app/(app)/context";
 import { GET_5Friends_URL } from "@/app/URLS";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { UserProfileContext } from "../page";
 
 async function callBack(action, friend_id, ws) {
 	let my_action = action;
@@ -144,19 +145,17 @@ function updateOnlineStatus(setOnline, e, user) {
 	}
 }
 
-function ProfileInfo({ user, displayFriends, EditProfile }) {
+function ProfileInfo({ displayFriends, EditProfile }) {
 	const [online, setOnline] = useState();
 	const { ws } = useContext(UserContext);
+	const user = useContext(UserProfileContext);
 
 	useEffect(() => {
 		if (user.friendship == "owner") {
 			setOnline(true);
 			return;
 		}
-		if (!ws) {
-			console.log("ws is false, userprofile");
-			return;
-		}
+		if (!ws) return;
 		ws.send(
 			JSON.stringify({
 				action: "checkStatus",
@@ -189,7 +188,6 @@ function ProfileInfo({ user, displayFriends, EditProfile }) {
 					height={0}
 					alt="profile image"
 				/>
-				{/* online status */}
 				<div
 					className={` ${online ? "bg-[#80FF00]" : "bg-[#C3C3C3]"} size-[15px] rounded-full absolute right-7 bottom-3`}
 				></div>
