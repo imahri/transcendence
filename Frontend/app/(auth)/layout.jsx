@@ -1,4 +1,3 @@
-"use client";
 import "./Layout.css";
 
 export default function Layout({ children }) {
