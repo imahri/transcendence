@@ -7,10 +7,10 @@ import g_platinum from "./assets/g_platinum.svg";
 import g_master from "./assets/g_master.svg";
 import g_grandmaster from "./assets/g_grandmaster.svg";
 import { useRouter } from "next/navigation";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { FRIENDSHIP_URL } from "@/app/URLS";
 import { BlockIcon } from "./icons/BlockIcon";
 import { ProfileIcon } from "./icons/ProfileIcon";
+import { UserContext } from "@/app/(app)/context";
+import { useContext } from "react";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -20,29 +20,6 @@ export const Grades = [
 	{ grade: "master", image: g_master },
 	{ grade: "grandmaster", image: g_grandmaster },
 ];
-
-async function BlockUser(friend_id) {
-	const body = { action: "block", friend_id: friend_id };
-	try {
-		const [isOk, status, data] = await fetch_jwt(
-			FRIENDSHIP_URL,
-			{},
-			{
-				method: "POST",
-				body: JSON.stringify(body),
-				headers: { "Content-Type": "application/json" },
-			},
-		);
-
-		if (isOk) {
-			// ila blockiti dak user chno adir
-			return;
-		}
-		console.error("error friendship Post :", data);
-	} catch (error) {
-		console.log("send friendship error : ", error);
-	}
-}
 
 const FriendProfile = ({ image, name, status }) => (
 	<div className="flex justify-center items-center flex-col space-y-4 md:space-y-1">
@@ -62,8 +39,15 @@ const FriendProfile = ({ image, name, status }) => (
 	</div>
 );
 
+function BlockUser(ws, friend_id) {
+	const content = { action: "block", friend_id: 2 };
+	ws.send(JSON.stringify({ action: "set_friendship", content: content }));
+}
+
 const Options = (name, id) => {
 	const router = useRouter();
+	const { ws } = useContext(UserContext);
+
 	return (
 		<div className="w-full flex justify-evenly items-center text-white font-medium text-xs mt-5">
 			<button
@@ -78,7 +62,7 @@ const Options = (name, id) => {
 				onClick={() => {
 					if (id) {
 						console.log(id);
-						BlockUser(id);
+						BlockUser(ws, id);
 					}
 				}}
 			>

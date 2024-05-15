@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ImageView, UserView, InfoView, searchView , FriendShip
+from .views import ImageView, UserView, InfoView, searchView
 from .views import getFriendView, getFewFriend, getUserFriends, BlockView, NotifView
 
 urlpatterns = [
@@ -14,5 +14,4 @@ urlpatterns = [
     path("userfriends", getUserFriends, name="userfriends"),
     path("block", BlockView.as_view(), name="getblocked"),
     path("notification", NotifView.as_view(), name="notification"),
-    path("friendship", FriendShip.as_view(), name="friendship"),
 ]

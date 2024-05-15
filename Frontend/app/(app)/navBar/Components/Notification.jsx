@@ -13,12 +13,10 @@ function setType(notifType, notifContent) {
 	const sentAccept = "Accept your Invitation";
 	const sentGameInvit = "Sent you Game Invitation";
 
-	if (notifType == "Msg") return sentMsg;
-	else if (notifType == "GameInvit") return sentGameInvit;
-	else {
-		if (notifContent == "add") return sentInvit;
-		else return sentAccept;
-	}
+	if (notifType == "C") return sentMsg;
+	else if (notifType == "G") return sentGameInvit;
+	if (notifContent.status == "add") return sentInvit;
+	else return sentAccept;
 }
 
 function readNotif(socket, notif, setNbNotif) {
@@ -37,15 +35,10 @@ function readNotif(socket, notif, setNbNotif) {
 }
 
 function NotifSection({ notif }) {
-	const Svg =
-		notif.type == "Msg"
-			? ChatSvg
-			: notif.type == "friendShip"
-				? FriendSvg
-				: GmaeSvg;
-
+	const ntype = notif.type;
+	const Svg = ntype == "C" ? ChatSvg : ntype == "F" ? FriendSvg : GmaeSvg;
 	const type = setType(notif.type, notif.content);
-	const link = notif.type == "friendShip" ? "/profile" : "#";
+	const link = ntype == "F" ? "/profile" : "#";
 	const time = new Date(notif.time).toLocaleTimeString();
 
 	return (
@@ -92,15 +85,13 @@ async function getNotif(setNotif, setNbNotif) {
 }
 
 function handelNotif(data, setNotif, setNbNotif) {
-	if (data.action == "update") {
-		setNotif((prev) => {
-			if (prev) {
-				prev.unshift(data.last_notif);
-				return prev;
-			} else return data.last_notif;
-		});
-		setNbNotif((prev) => prev + 1);
-	}
+	setNotif((prev) => {
+		if (prev) {
+			prev.unshift(data.content);
+			return prev;
+		} else return data.content;
+	});
+	setNbNotif((prev) => prev + 1);
 }
 
 function Notification() {

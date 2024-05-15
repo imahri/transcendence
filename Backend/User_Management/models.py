@@ -260,9 +260,10 @@ class Friend(models.Model):
 class Notification(models.Model):
 
     NotifType = (
-        ("Msg", "Message"),
-        ("friendShip", "Friendship"),
-        ("GameInvit", "Game Invitation"),
+        ("C", "Chat"),
+        ("F", "Friendship"),
+        ("G", "Game"),
+        ("T", "Tournament"),
     )
 
     user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
@@ -271,9 +272,25 @@ class Notification(models.Model):
     )
     type = models.CharField(choices=NotifType, max_length=20)
     time = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(max_length=100)
+    content = models.JSONField()
     is_read = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
+
+
+
+    @staticmethod
+    def create(user: User, content: dict):
+        friend = User.get_by_identifier(content["to"])
+        notification = Notification(user=user, type=content["type"])
+        notification.content = content["content"]
+        notification.save()
+        notification.sended_to.add(friend)
+        return notification
+
+
+    def as_serialized(self):
+        from .serializers import NotifSerializer
+        return NotifSerializer(self).data
 
     @staticmethod
     def getNBUnreadedNotif(user: User):
@@ -293,3 +310,5 @@ class Notification(models.Model):
                 response.append(notifData)
 
         return response
+
+    
