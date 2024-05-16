@@ -3,40 +3,24 @@ from rest_framework.serializers import ModelSerializer
 
 from .models import Badge, Match, Board, Padel, Items, Acheivement
 from rest_framework import serializers
+from User_Management.serializers import UserSerializer
 
-class MatchSerializer(ModelSerializer):
-    # accept mode as string and store it as int but it return it as string
-    # accept enemy username and stor it with his pk
-    # user is get from request and return it's username
-    # but still does not stor the match enemy
-    # we will figure out how to store it when implemnt the view
-
-    mode = serializers.CharField()
-    enemy = serializers.CharField()
+class EnemyMatchSerializer(ModelSerializer):
 
     class Meta:
         model = Match
-        fields = ("id", "enemy", "score", "played_at", "mode", "user", "enemy_match")
+        fields = ("id", "score")
 
-    # def create(self, validated_data):
-    #     validated_data["user"] = self.context["user"]
-    #     mode_name = validated_data.pop("mode")
-    #     validated_data["mode"] = Match.get_mode_name(mode_name)
-    #     enemy_name = validated_data.pop("enemy")
-    #     enemy = User.get_by_identifier(enemy_name)
-    #     validated_data["enemy"] = enemy
-    #     return super().create(validated_data)
+class MatchSerializer(ModelSerializer):
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     key = int(data.pop("mode"))
-    #     data["mode"] = Match.get_mode_value(key)
-    #     user = User.objects.get(id=data.pop("user"))
-    #     data["user"] = user.username
-    #     enemy_user = User.get_by_identifier(data.pop("enemy"))
-    #     enemy_serialised = UserSerializer(instance=enemy_user)
-    #     data["enemy"] = enemy_serialised.data
-    #     return data
+    enemy = UserSerializer()
+    enemy_match = EnemyMatchSerializer()
+    mode_display = serializers.CharField(source="get_mode_display", read_only=True)
+
+    class Meta:
+        model = Match
+        fields = ("id", "enemy", "score", "played_at", "mode", "mode_display",  "user", "enemy_match")
+
 
 class GradeSerializer(ModelSerializer):
 

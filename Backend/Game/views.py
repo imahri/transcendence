@@ -7,28 +7,17 @@ from User_Management.models import User
 
 class MatchView(APIView):
 
-    def post(self, request):
-        try:
-            user = request.user
-            serializer = MatchSerializer(data=request.data, context={'user': user})
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=400)
-        except ObjectDoesNotExist as error:
-            return Response({'error': "Username doesn't exist"}, status=400)
-        except Exception as error:
-            return Response({'error': str(error)}, status=400)
-
-    
     def get(self, request):
         try:
-            user = request.user
-            matches = Match.objects.filter(user=user).order_by('-played_at')
+            #check if user blocked
+            username = request.query_params.get('username')
+            user : User =  User.objects.get(username=username)
+            last_match = Match.getLstMatch(user)
+            allMatches = Match.getAllMatches(user)
+            if allMatches == []:
+                allMatches = ""
 
-            serializer = MatchSerializer(matches, many=True)
-
-            return Response(serializer.data)
+            return Response({"all" : allMatches, "last_match" : last_match})
         except Exception as error:
             return Response({'error': str(error)}, status=400)
         

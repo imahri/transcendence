@@ -75,6 +75,7 @@ function Status({ state }) {
 import t from "../assets/noTrophy.png";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ACHEIVMENTS_URL } from "@/app/URLS";
+import { GameHistoric } from "@/app/(app)/home/Components/Dashboard";
 
 function ShowRoom({ title, items }) {
 	return (
@@ -110,6 +111,10 @@ export default function MyState() {
 	const Trophy = [t];
 
 	const [ach, setAch] = useState();
+	const [lastGame, setLastGame] = useState();
+	const [gameHistoric, setGmaeHistoric] = useState();
+	const [isLoading, setLoading] = useState();
+	const userProfile = useContext(UserProfileContext);
 
 	useEffect(() => {
 		const getAcheivments = async (setAch) => {
@@ -126,6 +131,12 @@ export default function MyState() {
 			}
 		};
 		getAcheivments(setAch);
+		GameHistoric(
+			userProfile.username,
+			setLastGame,
+			setGmaeHistoric,
+			setLoading,
+		);
 	}, []);
 
 	return (
@@ -138,8 +149,16 @@ export default function MyState() {
 				</div>
 			</div>
 			<div className="h-full w-[70%] [@media(max-width:1400px)]:w-[95%] rounded-[10px] bg-[#2F2F2F] flex justify-center items-center [@media(max-width:900px)]:flex-col">
-				<LastGame />
-				<Historic />
+				<LastGame
+					User={userProfile}
+					lastgame={lastGame}
+					isLoading={isLoading}
+				/>
+				<Historic
+					User={userProfile}
+					gameHistoric={gameHistoric}
+					isLoading={isLoading}
+				/>
 			</div>
 		</div>
 	);

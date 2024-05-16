@@ -1,13 +1,9 @@
 "use client";
-import React, { useContext } from "react";
-
 import gameTable from "../assets/game_table.png";
-import profileImg from "../assets/profile.png";
 import GameState from "./GameState";
 import Image from "next/image";
-import { UserContext } from "../../context";
-
-const user2 = { score: 5, userName: "chafi99999999999", image: profileImg };
+import Loading from "@/app/(auth)/Loading";
+import Link from "next/link";
 
 function State({ title, state1, state2 }) {
 	return (
@@ -25,24 +21,89 @@ function State({ title, state1, state2 }) {
 	);
 }
 
-function LastGame() {
-	const { user, setUser } = useContext(UserContext); //get the user from props and fetch his gamestate
-
+function Info({ title, value }) {
 	return (
-		<div className="w-[50%] [@media(max-width:1990px)]:w-[40%] h-[424px] rounded-[15px] flex flex-col items-center justify-center gap-[20px] [@media(max-width:710px)]:w-[90%]">
-			<h2 className=" font-bold text-[20px] text-white">Last Game</h2>
-			<GameState user1={user} user2={user2} />
-			<Image className="w-[254px] h-[66px]" src={gameTable} alt="" />
-			<State title={"Level"} state1={user.info.level} state2={6.4} />
-			<State title={"Rank"} state1={"Gold"} state2={"Bronz"} />
-			<State title={"Paddle"} state1={"Aubarc"} state2={"Podolica"} />
-			<State
-				title={"Player"}
-				state1={user.username}
-				state2={user2.userName}
-			/>
+		<div className="flex items-center justify-between w-[200px]">
+			<h2 className="text-[#7D7D7D]">{title}</h2>
+			<h2 className="text-[#FFFCFC]">{value}</h2>
 		</div>
 	);
 }
 
+function NoGameYet({ User }) {
+	return (
+		<div className="w-full h-full flex flex-col items-center gap-[10px]">
+			<Image
+				className="size-[100px] rounded-full border-2 border-[#FCE155]"
+				width={100}
+				height={100}
+				src={User.img}
+				alt="User Image"
+			/>
+			<h1 className="text-[#7D7D7D] font-bold">
+				{User.first_name} {User.last_name}
+			</h1>
+			<Image className="w-[254px] h-[66px]" src={gameTable} alt="" />
+			<Info title={"Level"} value={User.info.level} />
+			<Info title={"Match Played"} value={0} />
+			<Info title={"Walet"} value={User.info.wallet} />
+			<Link
+				href={"/game"}
+				className="text-[#00FE75] font-normal text-[15px]"
+			>
+				Start Playing
+			</Link>
+		</div>
+	);
+}
+
+function LastGame({ User, lastgame, isLoading }) {
+	return (
+		<div className="w-[50%] [@media(max-width:1990px)]:w-[40%] h-[424px] rounded-[15px] flex flex-col items-center gap-[20px] [@media(max-width:710px)]:w-[90%]">
+			<h2 className=" font-bold text-[20px] text-white  mt-[20px]">
+				Last Game
+			</h2>
+			<div className={`${isLoading ? "" : "hidden"} relative  size-full`}>
+				<Loading />
+			</div>
+
+			{!lastgame && !isLoading && <NoGameYet User={User} />}
+			{lastgame && (
+				<>
+					<GameState
+						user1={User}
+						user2={lastgame.enemy}
+						score1={lastgame.score}
+						score2={lastgame.enemy_match.score}
+					/>
+					<Image
+						className="w-[254px] h-[66px]"
+						src={gameTable}
+						alt=""
+					/>
+					<State
+						title={"Level"}
+						state1={User.info.level}
+						state2={lastgame.enemy.info.level}
+					/>
+					<State
+						title={"Energy"}
+						state1={User.info.energy}
+						state2={lastgame.enemy.info.energy}
+					/>
+					<State
+						title={"Rank"}
+						state1={User.info.grade.name}
+						state2={lastgame.enemy.info.grade.name}
+					/>
+					<State
+						title={"Player"}
+						state1={User.username}
+						state2={lastgame.enemy.username}
+					/>
+				</>
+			)}
+		</div>
+	);
+}
 export default LastGame;
