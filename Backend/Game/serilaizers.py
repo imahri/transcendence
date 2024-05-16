@@ -103,10 +103,6 @@ class PadelSerializer(ModelSerializer):
         del representation["image_path"]
         return representation
 
-
-
-
-
 class ItemsSerializer(ModelSerializer):
     
     class Meta:

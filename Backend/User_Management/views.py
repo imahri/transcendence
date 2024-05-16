@@ -44,12 +44,11 @@ class UserView(APIView):
         
     def post(self, request):
         try:
-
             UserObj = request.user
             FormData : dict = request.data
             ancien_img = UserObj.info.profile_img
 
-            InfoSerialized = InfoSerializer(UserObj.info, data=request.data)
+            InfoSerialized = InfoSerializer(UserObj.info, data=request.data, partial=True)
             if InfoSerialized.is_valid():
                 InfoSerialized.save()
             else:
@@ -269,61 +268,3 @@ class NotifView(APIView):
         except Exception as error:
             print('notif view error : ', error)
             return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
-        
-# class FriendShip(APIView):
-#     #set firendship and create notif and send it in socket
-#     def NotifUser(self, action, friend):
-        
-#         if action != 'add' and action != 'accept':
-#             return
-#         notif = Notification(user=self.request.user, content=action, type='friendShip')
-#         notif.save()
-#         notif.sended_to.set([friend])
-
-#         channel_layer =  get_channel_layer();
-#         #send notification it using socket
-#         async_to_sync(NotificationConsumer().send_notif_user)(channel_layer, friend, notif)
-
-#     def sendStatus(self, user, friend):
-        
-#         channel_layer =  get_channel_layer();
-#         async_to_sync(NotificationConsumer().send_user_status)(channel_layer, friend, user)
-#         async_to_sync(NotificationConsumer().send_user_status)(channel_layer, user, friend)
-
-
-#     def post(self, request):
-#         try:
-#             user : User = request.user
-#             action = request.data.get('action')
-#             friend_id = request.data.get('friend_id')
-#             friend : User = User.objects.get(pk=friend_id)
-
-#             if action == 'add':
-#                user.add_friend(friend=friend)
-#             elif action == 'accept':
-#                 user.accept_friend(friend=friend)
-#             elif action == 'remove':
-#                 user.delete_friend(friend=friend)
-#             elif action == 'block':
-#                 user.block_friend(friend=friend)
-#             elif action == 'Unblock':
-#                 user.deblock_friend(friend=friend)
-
-#             #send status to your friend
-#             self.sendStatus(user, friend)
-#             # create the appropriate notification and send it and send status t user if is logged in
-#             self.NotifUser(action, friend)     
-            
-
-#             #return friendShip status after edit it  
-#             try:
-#                 friendShip = user.get_friendship(friend=friend)
-#                 response = {"friend": friend.username, 'status': friendShip.status}
-#                 return Response(response)
-#             except Friend.DoesNotExist:
-#                 response = {"friend": friend.username, 'status': 'not friend'}
-#                 return Response(response)
-
-#         except Exception as error:
-#             print('friendship error : ', error)
-#             return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
