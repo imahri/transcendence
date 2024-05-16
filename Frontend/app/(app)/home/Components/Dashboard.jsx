@@ -9,7 +9,7 @@ import { UserContext } from "../../context";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { MATCHES_URL } from "@/app/URLS";
 
-export async function GameHistoric(
+async function GameHistoric(
 	username,
 	setLastGame,
 	setGmaeHistoric,

@@ -1,7 +1,7 @@
 from django.db import models
 from core.settings import IMAGES_ROOT_
 from User_Management.models import User
-
+from django.db.models import F
 
 
 class Acheivement(models.Model):
@@ -52,7 +52,16 @@ class Match(models.Model):
         last_match_serialized = MatchSerializer(last_match).data
         last_match_serialized['enemy']['info'] = enemy.get_info()
         return last_match_serialized
+    
+    @staticmethod
+    def getWinning(user):
+        winning_count = Match.objects.filter(user=user, score__gt=F('enemy_match__score')).count()
+        return winning_count
 
+    @staticmethod
+    def getLoses(user):
+        winning_count = Match.objects.filter(user=user, score__lt=F('enemy_match__score')).count()
+        return winning_count
 
 
 class Grade(models.Model):

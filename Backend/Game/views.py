@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
+from .serilaizers import BadgeSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
 from .models import Badge, Board, Match, Padel, Items, Acheivement
 from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
@@ -13,11 +13,17 @@ class MatchView(APIView):
             username = request.query_params.get('username')
             user : User =  User.objects.get(username=username)
             last_match = Match.getLstMatch(user)
+            winning = 0
+            loses = 0
             allMatches = Match.getAllMatches(user)
+            played = len(allMatches)
             if allMatches == []:
                 allMatches = ""
+            if played != 0:
+                winning = Match.getWinning(user)
+                loses = Match.getLoses(user)
 
-            return Response({"all" : allMatches, "last_match" : last_match})
+            return Response({"all" : allMatches, "last_match" : last_match, "played" : played,"winning": winning, "loses" : loses})
         except Exception as error:
             return Response({'error': str(error)}, status=400)
         
