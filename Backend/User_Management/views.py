@@ -1,13 +1,11 @@
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
 from Tools.HttpFileResponse import HttpFileResponse
 from core.settings import DEFAULT_PROFILE_IMG
-from .Consumers.Notifconsumers import NotificationConsumer
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
+from .serializers import NotifSerializer
 
 
 from .serializers import UserSerializer, InfoSerializer
@@ -268,3 +266,18 @@ class NotifView(APIView):
         except Exception as error:
             print('notif view error : ', error)
             return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def getUnseenMsgs(request):
+    try:
+        user : User = request.user
+        msgs_notif = user.get_last_msg_notification()
+        if not msgs_notif.exists():
+            return Response(data="")
+        msgs_notif_serialzied = NotifSerializer(msgs_notif, many=True).data
+        return Response(data=msgs_notif_serialzied)
+
+    except Exception as error:
+        print('last msg view error : ', error)
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,90 +1,112 @@
-import React from "react";
-
-import profile from "../assets/profile.png";
+"use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import NoConv_icon from "../assets/no_conv.svg";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { MSGNOTIF_URL } from "@/app/URLS";
+import Loading from "@/app/(auth)/Loading";
 
 function Msg({ msg }) {
+	const time = new Date(msg.time).toLocaleTimeString();
+
 	return (
 		<div className="flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]">
 			<Image
 				className="size-[39px] rounded-full"
-				src={msg.user.image}
-				alt=""
+				width={39}
+				height={39}
+				src={msg.user.img}
+				alt="sender image"
 			/>
 			<div>
 				<h2 className=" font-normal text-[13px] text-white">
-					{msg.user.userName}
+					{msg.user.username}
 				</h2>
 				<h3 className=" font-normal text-[10px] max-w-[200px] overflow-hidden  text-[#C3C3C3]">
-					{msg.message}
+					{msg.content.msg}
 				</h3>
 			</div>
 			<div className="absolute right-[10px] flex flex-col justify-center items-center">
 				<h3 className=" font-normal text-[10px] text-[#C3C3C3]">
-					{msg.time}
+					{time}
 				</h3>
-				<div className="size-[12px] bg-[#3294A7] rounded-full flex justify-center items-center">
-					<h3 className=" font-normal text-[7px] text-[#353535]">
-						2
-					</h3>
-				</div>
 			</div>
 		</div>
 	);
 }
 
-const user = (userName, image) => {
-	return { userName: userName, image: image };
-};
+function NoMsg() {
+	return (
+		<div className="size-full flex flex-col justify-center items-center">
+			<Image
+				width={100}
+				height={100}
+				src={NoConv_icon}
+				alt="no conv icon"
+			/>
+			<p className="text-[#C3C3C3]">No Message</p>
+		</div>
+	);
+}
 
-const Msgs = [
-	{ user: user("oussama", profile), message: "weshh hani", time: 2.3 },
-	{ user: user("assema", profile), message: "weshh hani", time: 5.3 },
-	{ user: user("Fucking fact", profile), message: "mrta7", time: "now" },
-	{ user: user("NabFake", profile), message: "cvv ", time: 3.1 },
-	{ user: user("popop", profile), message: "feeen", time: 6.5 },
-	{
-		user: user("redmega", profile),
-		message:
-			"hak dcfcfvfvfvfvfvfvfvfvdcdddcfjvbfjvbfjbvjfbvfbvjkfvjfbvjfbvjfbvfbvjfbvjfbvjfbvjfbvjfbvjfbvfjbv",
-		time: 4.2,
-	},
-	{ user: user("fiddler", profile), message: "servfv", time: 1.23 },
-	{ user: user("sakawi", profile), message: "weshdcdcfvvf", time: 8.45 },
-];
+async function getLastMsgs(setMsgs, setLoading) {
+	try {
+		const [isOk, status, data] = await fetch_jwt(MSGNOTIF_URL);
+
+		if (!isOk) {
+			setLoading(false);
+			console.log(data);
+			return;
+		}
+		setMsgs(data);
+		setLoading(false);
+	} catch (error) {
+		console.log("last msgs : ", error);
+	}
+	setLoading(false);
+}
 
 function LastNotif() {
+	const [Msgs, setMsgs] = useState();
+	const [isLoading, setLoading] = useState(true);
+
+	useEffect(() => {
+		getLastMsgs(setMsgs, setLoading);
+	}, []);
+
 	return (
-		<div className="bg-[#353535] w-[30%] py-[10px] rounded-[15px] flex flex-col items-center justify-center gap-[10px] [@media(max-width:1500px)]:order-2 [@media(max-width:1500px)]:w-[50%] [@media(max-width:710px)]:w-[90%]">
+		<div className="bg-[#353535] py-[15px] w-[30%] rounded-[15px] flex flex-col items-center gap-[10px] [@media(max-width:1500px)]:order-2 [@media(max-width:1500px)]:w-[50%] [@media(max-width:710px)]:w-[90%]">
 			<div className="flex items-center justify-between w-[60%] [@media(max-width:1990px)]:w-[80%]">
-				<h1 className=" font-normal text-[18px] text-[#C3C3C3]">
+				<h1 className="font-normal text-[18px] text-[#C3C3C3]">
 					Message
 				</h1>
-				<button className=" font-light text-[18px] text-white text-center border-none rounded-[5px] bg-greatBlue w-[44px] h-[29px] cursor-pointer ">
+				<Link
+					href={"/chat"}
+					className=" font-light text-[18px] text-white text-center border-none rounded-[5px] bg-greatBlue w-[44px] h-[29px] cursor-pointer "
+				>
 					Go
-				</button>
+				</Link>
 			</div>
 			<div className=" flex flex-col gap-[15px]  w-[60%] [@media(max-width:1990px)]:w-[80%]">
 				<h3 className=" font-extralight text-[12px] text-[#C3C3C3]">
 					Last Notification
 				</h3>
-				<div className="flex flex-col gap-[20px] h-[250px] overflow-y-auto pr-[10px]">
-					{Msgs.map((msg, index) => {
-						return (
-							<div key={index}>
-								<Msg msg={msg} />{" "}
-							</div>
-						);
-					})}
+				<div className="flex flex-col gap-[20px] h-[250px] overflow-y-auto pr-[10px] relative">
+					{isLoading && <Loading />}
+					{!Msgs && !isLoading && <NoMsg />}
+					{Msgs &&
+						Msgs.sort(
+							(a, b) => new Date(b.time) - new Date(a.time),
+						).map((msg, index) => {
+							return (
+								<div key={index}>
+									<Msg msg={msg} />
+								</div>
+							);
+						})}
 				</div>
 			</div>
-			<Link
-				className=" font-normal text-[15px] text-[#00FE75] no-underline"
-				href={"/home"}
-			>
-				show all messages
-			</Link>
 		</div>
 	);
 }

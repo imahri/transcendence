@@ -30,6 +30,7 @@ export const USER_SEARCH_URL = `${USER_APP}/search`;
 export const GET_USER_URL = `${USER_APP}/user`;
 export const POST_INFO_URL = `${USER_APP}/info`;
 export const NOTIF_URL = `${USER_APP}/notification`;
+export const MSGNOTIF_URL = `${USER_APP}/msgnotif`;
 
 export const FRIENDSHIP_URL = `${USER_APP}/friendship`;
 
