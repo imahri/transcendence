@@ -7,15 +7,13 @@ function onlySpace(str) {
 }
 
 function errorInForm(setError, error) {
-	//I change the state to true to re-render the componnents and disply the eroor section
 	setError(error);
 	setTimeout(() => {
-		//here i try to display error msg but only for 5s
 		setError(false);
 	}, 5000);
 }
 
-function sent(NewInfo, setError, setUser, closePopup) {
+async function sent(NewInfo, setError, setUser, closePopup) {
 	const formData = new FormData();
 
 	NewInfo.profile_img
@@ -25,48 +23,48 @@ function sent(NewInfo, setError, setUser, closePopup) {
 	NewInfo.first_name ? formData.append("first_name", NewInfo.first_name) : "";
 	NewInfo.email ? formData.append("email", NewInfo.email) : "";
 
-	// convert to async await
-	fetch_jwt(
+	const [isOk, status, data] = await fetch_jwt(
 		USER_URL,
 		{},
 		{
 			method: "POST",
 			body: formData,
 		},
-	).then(([isOk, status, data]) => {
-		if (!isOk) {
-			console.log(data);
-			data.email
-				? errorInForm(setError, { type: "email", msg: data.email[0] })
-				: "";
-			data.first_name
-				? errorInForm(setError, {
-						type: "first_name",
-						msg: data.first_name[0],
-					})
-				: "";
-			data.last_name
-				? errorInForm(setError, {
-						type: "last_name",
-						msg: data.last_name[0],
-					})
-				: "";
-			data.profile_img
-				? errorInForm(setError, {
-						type: "profile_img",
-						msg: data.profile_img,
-					})
-				: "";
-			return;
-		}
-		closePopup(false);
-		setUser(data);
-	});
+	);
+
+	if (!isOk) {
+		console.log(data);
+		data.email
+			? errorInForm(setError, { type: "email", msg: data.email[0] })
+			: "";
+		data.first_name
+			? errorInForm(setError, {
+					type: "first_name",
+					msg: data.first_name[0],
+				})
+			: "";
+		data.last_name
+			? errorInForm(setError, {
+					type: "last_name",
+					msg: data.last_name[0],
+				})
+			: "";
+		data.profile_img
+			? errorInForm(setError, {
+					type: "profile_img",
+					msg: data.profile_img,
+				})
+			: "";
+		return;
+	}
+	closePopup(false);
+	setUser(data);
 }
 
-export function ChangeInfo(e, Form, setError, setUser, closePopup) {
+export function ChangeInfo(e, Form, setError, setUser, closePopup, setLoading) {
 	e.preventDefault();
 
+	setLoading(true);
 	const FormField = Form.current;
 
 	const NewInfo = {
@@ -91,13 +89,16 @@ export function ChangeInfo(e, Form, setError, setUser, closePopup) {
 			type: "field",
 			msg: "You should change at least one field befor submit",
 		});
+		setLoading(false);
 		return;
 	}
 
 	if (NewInfo.email && !isValidEmail(NewInfo.email)) {
 		errorInForm(setError, { type: "email", msg: "email is invalid" });
+		setLoading(false);
 		return;
 	}
 
 	sent(NewInfo, setError, setUser, closePopup);
+	setLoading(false);
 }

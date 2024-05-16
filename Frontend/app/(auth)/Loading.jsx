@@ -1,6 +1,9 @@
-function Loading() {
+function Loading(props) {
+	const style = props?.style;
 	return (
-		<div className="w-full h-full absolute top-0 flex justify-center items-center backdrop-blur-sm">
+		<div
+			className={`${style} w-full h-full absolute top-0 flex justify-center items-center backdrop-blur-sm`}
+		>
 			<div role="status">
 				<svg
 					aria-hidden="true"
