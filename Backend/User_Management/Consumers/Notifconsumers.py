@@ -3,7 +3,6 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 
 from ..models import  Notification, User, Friend
-from ..serializers import NotifSerializer
 
 class NotificationConsumer(AsyncJsonWebsocketConsumer):
     channels: dict = {}

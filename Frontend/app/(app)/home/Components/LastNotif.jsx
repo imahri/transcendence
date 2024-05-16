@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NoConv_icon from "../assets/no_conv.svg";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { MSGNOTIF_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
+import { UserContext } from "../../context";
 
 function Msg({ msg }) {
 	const time = new Date(msg.time).toLocaleTimeString();
@@ -70,10 +71,27 @@ async function getLastMsgs(setMsgs, setLoading) {
 function LastNotif() {
 	const [Msgs, setMsgs] = useState();
 	const [isLoading, setLoading] = useState(true);
+	const { ws } = useContext(UserContext);
 
 	useEffect(() => {
 		getLastMsgs(setMsgs, setLoading);
 	}, []);
+
+	const newMsg = (e) => {
+		const data = JSON.parse(e.data);
+		if (data.type == "notification") {
+			console.log(data);
+		}
+	};
+	useEffect(() => {
+		if (!ws) return;
+
+		ws.addEventListener("message", newMsg);
+
+		return () => {
+			ws.removeEventListener("message", newMsg);
+		};
+	}, [ws]);
 
 	return (
 		<div className="bg-[#353535] py-[15px] w-[30%] rounded-[15px] flex flex-col items-center gap-[10px] [@media(max-width:1500px)]:order-2 [@media(max-width:1500px)]:w-[50%] [@media(max-width:710px)]:w-[90%]">
