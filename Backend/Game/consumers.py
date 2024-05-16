@@ -6,6 +6,7 @@ from shutil import which
 from sys import stderr
 from typing import Self
 import math
+import venv
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 from User_Management.models import User
@@ -29,8 +30,8 @@ class Game:
     def __init__(self):
   
         self.canvas = {
-            "width":1000,
-            "height":900
+            "height":1651,
+            "width":1110
         }
         self.user = {
             "x": 3,
@@ -124,9 +125,15 @@ class Game:
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
     
+    game_room  = {}
     
     async def connect(self):
         await self.accept()
+        self.room_group_name = 'test'
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
         await self.send_json(content={"type": "Connected"})
         self.loba = Game()
         self.loba.user['y'] = self.loba.canvas['height'] / 2 - 100
@@ -154,7 +161,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 
 
+
     async def send_ball_coordinates(self):
+        print("allo",file=sys.stderr)
         while True:
             self.loba.update_ball()
             self.loba.updatePaddlePosition()
@@ -164,15 +173,29 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             com_x = self.loba.canvas['width'] - (self.loba.com['width'])
             collo = self.loba.com['color']
             user_cy = self.loba.user['y']
-            await self.send_json(content={
+            message = {
                 'event': 'update',
                 'x': x,
                 'y': y,
                 "com_x": com_x,
                 "com_c": collo,
                 "user_y": user_cy
-            })
+            }
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'update',
+                    'message': message,
+                }
+            )
+            # await asyncio.sleep(0.023)
 
+    async def update(self, event):
+        message = event['message']
+        await self.send_json(content={
+            'event': 'update',
+            'message': message,
+        })
 
     async def disconnect(self, close_code):
         if hasattr(self, 'game_task'):
