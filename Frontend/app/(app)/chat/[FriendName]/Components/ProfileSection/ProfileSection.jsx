@@ -44,7 +44,7 @@ function BlockUser(ws, friend_id) {
 	ws.send(JSON.stringify({ action: "set_friendship", content: content }));
 }
 
-const Options = (name, id) => {
+const Options = ({ name, id }) => {
 	const router = useRouter();
 	const { ws } = useContext(UserContext);
 
