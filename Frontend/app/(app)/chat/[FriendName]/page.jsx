@@ -139,7 +139,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			<ProfileSection
 				_ref={_ref}
 				className="transition-all duration-300 scale-0 origin-right"
-				status={ActiveStatusTypes.Active}
+				status={ActiveStatus}
 				friendinfo={friendinfo}
 			/>
 		</>

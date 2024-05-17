@@ -11,6 +11,7 @@ import { BlockIcon } from "./icons/BlockIcon";
 import { ProfileIcon } from "./icons/ProfileIcon";
 import { UserContext } from "@/app/(app)/context";
 import { useContext } from "react";
+import { ActiveStatusTypes } from "../ProfileBar";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -35,7 +36,15 @@ const FriendProfile = ({ image, name, status }) => (
 			)}
 		</div>
 		<h1>{name}</h1>
-		<small>{status}</small>
+		<small
+			className={
+				status === ActiveStatusTypes.Active
+					? "text-green-400"
+					: "text-red-500"
+			}
+		>
+			{status}
+		</small>
 	</div>
 );
 

@@ -28,7 +28,7 @@
 
 .profile small {
 	@apply m-2;
-	@apply text-green-600 text-lg font-medium;
+	@apply text-lg font-medium;
 }
 
 .profile_section {
@@ -50,7 +50,6 @@
 .flex_col_container {
 	@apply flex flex-col justify-center items-center;
 }
-
 
 .footer {
 	@apply w-full grid place-items-center pb-5;

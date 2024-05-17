@@ -121,23 +121,6 @@ export default function Conversations({
 	useOnVisibleAnimation(ConversationsRef, styles.show, [conversationList]);
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const OnMessage = useCallback(
-		(e) => {
-			const data = JSON.parse(e.data);
-			if (data.type == "friendShip") {
-				if (data.status == "B" || data.status == "BY") {
-					setConversationList(
-						conversationList.filter(
-							(conv) => conv.name !== data.friendName,
-						),
-					);
-					if (data.status == "B") router.replace("/chat");
-					LoadToReplace();
-				}
-			}
-		},
-		[conversationList],
-	);
 
 	useEffect(() => {
 		const remove_conv = searchParams.get("remove_conv");
@@ -147,7 +130,27 @@ export default function Conversations({
 			);
 	}, [searchParams]);
 
-	if (ws) ws.addEventListener("message", OnMessage);
+	const OnMessage = (e) => {
+		const data = JSON.parse(e.data);
+		if (
+			data.type == "friendShip" &&
+			(data.status == "B" || data.status == "BY")
+		) {
+			setConversationList((prevConversationList) =>
+				prevConversationList.filter(
+					(conv) => conv.name !== data.friendName,
+				),
+			);
+			if (data.friendName == convState) router.replace("/chat");
+			LoadToReplace();
+		}
+	};
+
+	useEffect(() => {
+		if (!ws) return;
+		ws.addEventListener("message", OnMessage);
+		return () => ws.removeEventListener("message", OnMessage);
+	}, [ws]);
 
 	useEffect(() => {
 		if (
@@ -190,43 +193,12 @@ export default function Conversations({
 		}
 	}, [conversationList, convState, messageUpdated]);
 
-	useEffect(() => {
-		// const listener = () => console.log("yes");
-
-		// {
-		// 		id: 19,
-		// 		last_message: { sended_at: '2024-05-15T19:43:36.077459Z', message: 'asd' },
-		// 		unseen_msg: 0,
-		// 		name: 'red_user18',
-		// 		image: '/default/default.png'
-		//  }
-
-		// {
-		// 		id: 11,
-		// 		user: {
-		// 		  id: 26,
-		// 		  email: 'red_user18@gmail.com',
-		// 		  username: 'red_user18',
-		// 		  first_name: 'red_user18',
-		// 		  last_name: 'red_user18',
-		// 		  img: 'http://localhost:8000/user/image?path=/default/default.png',
-		// 		  is_2FA_active: false
-		// 		},
-		// 		type: 'C',
-		// 		time: '2024-05-15T19:44:34.584752Z',
-		// 		content: { conversationID: 19, FirstTime: false, message: 'asdasd' },
-		// 		is_read: false,
-		// 		is_hidden: false
-		//  }
-
-		const listener = (e) => {
-			console.log(e);
+	const listener = useCallback(
+		(e) => {
 			const convList = [...conversationList];
 			convList.forEach((conv) => {
 				if (conv.id == e.content.conversationID && e.is_read == false) {
-					// if (convState !== conv.name) {
-					conv.unseen_msg += 1;
-					// }
+					if (convState !== conv.name) conv.unseen_msg += 1;
 					conv.last_message = {
 						sended_at: e.time,
 						message: e.content.message,
@@ -234,10 +206,13 @@ export default function Conversations({
 				}
 			});
 			setConversationList(convList);
-		};
+		},
+		[conversationList, convState],
+	);
 
+	useEffect(() => {
 		addListenerNotif(ws, listener);
-	}, [ws]);
+	}, [ws, listener]);
 
 	const handleScroll = () => {
 		if (

@@ -56,12 +56,11 @@ export const useNotification = () => {
 
 	const ListenerNotif = (socket, listener) => {
 		if (socket)
-			socket.addEventListener("message", (e) => {
+			socket.onmessage = (e) => {
 				const event = JSON.parse(e.data);
-				console.log("Notification:", event);
 				if (event.type == "notification" && event.content.type == "C")
 					listener(event.content);
-			});
+			};
 	};
 
 	return {
