@@ -6,7 +6,7 @@ import { BOARDES_URL } from "@/app/URLS";
 
 let xcord = 0;
 let ycord = 0;
-let x_com = 0;
+let y_com = 0;
 let c_com = "black";
 let player_y = 0;
 
@@ -33,14 +33,12 @@ export const Youchen = () => {
 
 		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
-			console.log(data);
+			// console.log(data);
 			if (data?.event === "update") {
 				xcord = data?.message?.x; // Keeping 'x' for the ball's x-coordinate
 				ycord = data?.message?.y; // Keeping 'y' for the ball's y-coordinate
-				x_com = data?.message?.com_x; // Adjusted variable name for the computer paddle's y-coordinate
-				c_com = data?.message?.com_c;
+				y_com = data?.message?.y_com; // Adjusted variable name for the computer paddle's y-coordinate
 				player_y = data?.message?.user_y;
-				console.log("player_y  ", player_y);
 			}
 		};
 
@@ -60,6 +58,7 @@ export const Youchen = () => {
 
 			// 	canvas.width = document.documentElement.clientWidth;
 			// 	canvas.height = document.documentElement.clientHeight;
+
 			canvas.width = 2560;
 			canvas.height = 1300;
 
@@ -73,7 +72,7 @@ export const Youchen = () => {
 				score: 0,
 			};
 
-			const com = {
+			const user1 = {
 				x: canvas.width - 31,
 				y: canvas.height / 2 - 200 / 2,
 				width: 30,
@@ -94,27 +93,54 @@ export const Youchen = () => {
 
 			let upKeyPressed = false;
 			let downKeyPressed = false;
+			// let upKeyPressed1 = false;
+			// let downKeyPressed1 = false;
 
 			document.addEventListener("keydown", keyDownHandler);
 			document.addEventListener("keyup", keyUpHandler);
 
 			function keyDownHandler(event) {
-				console.log(event.keyCode);
-				if (event.keyCode === 38 || event.keyCode === 87) {
+				if (event.keyCode === 87) {
 					upKeyPressed = true;
+					console.log("event");
 					sendPaddleUpdate();
-				} else if (event.keyCode === 40 || event.keyCode === 83) {
+				}
+				if (event.keyCode === 83) {
 					downKeyPressed = true;
+					console.log("event");
+					sendPaddleUpdate();
+				}
+				if (event.keyCode === 38) {
+					upKeyPressed = true;
+					console.log("event");
+					sendPaddleUpdate();
+				}
+				if (event.keyCode === 40) {
+					downKeyPressed = true;
+					console.log("event");
 					sendPaddleUpdate();
 				}
 			}
 
 			function keyUpHandler(event) {
-				if (event.keyCode === 38 || event.keyCode === 87) {
+				if (event.keyCode === 87) {
 					upKeyPressed = false;
+					console.log("event");
 					sendPaddleUpdate();
-				} else if (event.keyCode === 40 || event.keyCode === 83) {
+				}
+				if (event.keyCode === 83) {
 					downKeyPressed = false;
+					console.log("event");
+					sendPaddleUpdate();
+				}
+				if (event.keyCode === 38) {
+					upKeyPressed = false;
+					console.log("event");
+					sendPaddleUpdate();
+				}
+				if (event.keyCode === 40) {
+					downKeyPressed = false;
+					console.log("event");
 					sendPaddleUpdate();
 				}
 			}
@@ -163,10 +189,9 @@ export const Youchen = () => {
 				);
 			}
 			function render() {
-				// console.log(c_com);
 				drawRect(0, 0, canvas.width, canvas.height, "black", 1);
 				drawRect(user.x, player_y, user.width, user.height, user.color);
-				drawRect(com.x, com.y, com.width, com.height, "red");
+				drawRect(user1.x, y_com, user1.width, user1.height, "red");
 				drawCircle(xcord, ycord, 20, ball.color);
 			}
 
@@ -192,9 +217,9 @@ export const Youchen = () => {
 							player_h: user.height,
 							player_c: user.color,
 
-							com_x: com.x,
-							com_y: com.y,
-							com_c: com.color,
+							com_x: user1.x,
+							com_y: user1.y,
+							com_c: user1.color,
 						}),
 					);
 				}
