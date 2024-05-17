@@ -1,5 +1,5 @@
 "use client";
-import gameTable from "../assets/game_table.png";
+import gameTable from "../assets/game_table.svg";
 import GameState from "./GameState";
 import Image from "next/image";
 import Loading from "@/app/(auth)/Loading";

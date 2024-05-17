@@ -22,7 +22,7 @@ function GameState({ user1, user2, score1, score2 }) {
 						height={0}
 						width={0}
 						src={user1.img}
-						alt=""
+						alt="User Image"
 					/>
 				</div>
 				<h2 className="font-chakra text-[10px] text-white w-full overflow-hidden truncate text-center">
@@ -46,7 +46,7 @@ function GameState({ user1, user2, score1, score2 }) {
 						height={0}
 						className="size-[95%] rounded-full"
 						src={user2.img}
-						alt=""
+						alt="Friend Image"
 					/>
 				</div>
 				<h2 className="font-chakra text-[10px] text-white w-full overflow-hidden truncate text-center">

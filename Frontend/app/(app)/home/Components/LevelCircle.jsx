@@ -1,6 +1,5 @@
-import React from "react";
 import Image from "next/image";
-import starpng from "../assets/starpng.png";
+import starpng from "../assets/Star.svg";
 
 function LevelCircle({ level }) {
 	let levelPercent = (level - Math.floor(level)) * 100 + "%";
@@ -22,7 +21,7 @@ function LevelCircle({ level }) {
 						<h1 className="font-bold text-[30px] text-white">
 							{level}
 						</h1>
-						<Image src={starpng} alt="" />
+						<Image src={starpng} alt="Star for Level" />
 					</div>
 				</div>
 			</div>
