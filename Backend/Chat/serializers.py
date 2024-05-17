@@ -19,7 +19,6 @@ class ConversationSerializer(ModelSerializer):
             "name_arr": instance.name,
             "image_arr": instance.image,
             "last_message": instance.last_message,
-            "unseen_msg": instance.unseen_msg,
         }
 
 

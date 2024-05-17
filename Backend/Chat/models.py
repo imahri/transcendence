@@ -51,10 +51,15 @@ class Conversation(models.Model):
             self.friends.last().user.info.profile_img.url,
         ]
 
-    @property
-    def unseen_msg(self):
-        """Currently"""
-        return 0
+    def unseen_msg(self, user):
+        allNotification = user.notifications.all().filter(
+            type="C", is_read=False, is_hidden=False
+        )
+        counter = 0
+        for Notification in allNotification:
+            if self.pk == Notification.content["conversationID"]:
+                counter += 1
+        return counter
 
     def as_serialized(self, user: User):
         from .serializers import ConversationSerializer
@@ -65,6 +70,7 @@ class Conversation(models.Model):
         data = dict(ConversationSerializer(self).data)
         data["name"] = opts_v(data.pop("name_arr"), user.username)
         data["image"] = opts_v(data.pop("image_arr"), user.info.profile_img.url)
+        data["unseen_msg"] = self.unseen_msg(user)
         return data
 
 
