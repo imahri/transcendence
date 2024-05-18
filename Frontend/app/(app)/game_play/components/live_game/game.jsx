@@ -9,7 +9,7 @@ let ycord = 0;
 let player2_y = 0;
 let c_com = "black";
 let player1_y = 0;
-// let id = 0;
+let uid = 0;
 export const Youchen = () => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
@@ -30,7 +30,10 @@ export const Youchen = () => {
 				player1_y = data?.message?.user1_y;
 				player2_y = data?.message?.user2_y;
 			}
-			if (data.event == "index_player") console.log(data.index);
+			if (data.event == "index_player") {
+				uid = parseInt(data.index);
+				console.log(">>>>  ", uid);
+			}
 		};
 
 		ws.onerror = () => {
@@ -84,14 +87,8 @@ export const Youchen = () => {
 			let upKeyPressed = false;
 			let downKeyPressed = false;
 
-			// let upKeyPressed2 = false;
-			// let downKeyPressed2 = false;
-
 			document.addEventListener("keydown", keyDownHandler);
 			document.addEventListener("keyup", keyUpHandler);
-
-			// document.addEventListener("keydown", keyDownHandler2);
-			// document.addEventListener("keyup", keyUpHandler2);
 
 			function keyDownHandler(event) {
 				if (event.keyCode === 87) {
@@ -115,28 +112,6 @@ export const Youchen = () => {
 					sendPaddleUpdate();
 				}
 			}
-			// function keyDownHandler2(event) {
-			// 	if (event.keyCode === 87 && id == 2) {
-			// 		upKeyPressed2 = true;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// 	if (event.keyCode === 83 && id == 2) {
-			// 		downKeyPressed2 = true;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// 	if (event.keyCode === 38 && id == 2) {
-			// 		upKeyPressed2 = true;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// 	if (event.keyCode === 40 && id == 2) {
-			// 		downKeyPressed2 = true;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// }
 
 			function keyUpHandler(event) {
 				if (event.keyCode === 87) {
@@ -160,52 +135,20 @@ export const Youchen = () => {
 					sendPaddleUpdate();
 				}
 			}
-			// function keyUpHandler2(event) {
-			// 	if (event.keyCode === 87 && id == 2) {
-			// 		upKeyPressed2 = false;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// 	if (event.keyCode === 83 && id == 2) {
-			// 		downKeyPressed2 = false;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// 	if (event.keyCode === 38 && id == 2) {
-			// 		upKeyPressed2 = false;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// 	if (event.keyCode === 40 && id == 2) {
-			// 		downKeyPressed2 = false;
-			// 		console.log("event2");
-			// 		sendPaddleUpdate2();
-			// 	}
-			// }
 
 			function sendPaddleUpdate() {
+				console.log(typeof uid);
 				if (socket && socket.readyState === WebSocket.OPEN) {
 					socket.send(
 						JSON.stringify({
 							event: "updatePaddle",
 							upKeyPressed: upKeyPressed,
 							downKeyPressed: downKeyPressed,
+							id: uid,
 						}),
 					);
 				}
 			}
-
-			// function sendPaddleUpdate2() {
-			// 	if (socket && socket.readyState === WebSocket.OPEN) {
-			// 		socket.send(
-			// 			JSON.stringify({
-			// 				event: "updatePaddle2",
-			// 				upKeyPressed2: upKeyPressed2,
-			// 				downKeyPressed2: downKeyPressed2,
-			// 			}),
-			// 		);
-			// 	}
-			// }
 
 			function drawRect(x, y, w, h, color) {
 				ctx.fillStyle = color;

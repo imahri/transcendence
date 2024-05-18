@@ -58,7 +58,7 @@ class Game:
             "x": self.canvas['width'] / 2,
             "y": self.canvas['height'] / 2,
             "radius": 20,
-            "speed": 5,
+            "speed": 10,
             "velocityX": 5,
             "velocityY": 5,
             "color": "orange",
@@ -66,26 +66,53 @@ class Game:
 
     upKeyPressed = False
     downKeyPressed = False
-    upKeyPressed2 = False
-    downKeyPressed2 = False
-    i = 0
+    uid = 0
 
 
+    # i = 0
 
     def updatePaddlePosition(self):
-        self.user2['x'] = self.canvas['width'] - 31
-        if (self.upKeyPressed and self.user1['y'] > 0):
-            self.user1['y'] -= 10
-            self.user2['y'] -= 10
-        if (self.downKeyPressed and self.user1['y'] + self.user1['height'] < self.canvas['height']):
-            self.user1['y'] += 10
-            self.user2['y'] += 10
+        # self.user2['x'] = self.canvas['width'] - 31
+        if (self.uid == 1):
+            if ((self.upKeyPressed and self.user1['y'] > 0)):
+                self.user1['y'] -= 10
+
+            if ((self.downKeyPressed and self.user1['y'] + self.user1['height'] < self.canvas['height'])):
+                self.user1['y'] += 10
+
+        if (self.uid == 2):
+            if ((self.upKeyPressed and self.user2['y'] > 0)):
+
+                self.user2['y'] -= 10
+            if ((self.downKeyPressed and self.user2['y'] + self.user2['height'] < self.canvas['height'])):
+                self.user2['y'] += 10
+
+            
+
+
+    
+    # def updatePaddlePosition2(self):
+    #     print("wa bzaf")
+    #     self.user2['x'] = self.canvas['width'] - 31
+        
+    #     if (self.upKeyPressed and self.user1['y'] > 0):
+    #         self.user1['y'] -= 10
+    #         print("user 1 up")
+    #     if (self.downKeyPressed and self.user1['y'] + self.user1['height'] < self.canvas['height']):
+    #         self.user1['y'] += 10
+
+            # print("user 1 down")
+        # if (self.upKeyPressed2 and self.user2['y'] > 0):
+        #     print("user 2 up")
+        # if (self.downKeyPressed2 and self.user2['y'] + self.user2['height'] < self.canvas['height']):
+        #     print("user 2 down")
 
     def reset_ball(self):
         self.ball['x'] = self.canvas['width'] / 2
         self.ball['y'] = self.canvas['height'] / 2
         self.ball['speed'] = 101
         self.ball['velocityX'] *= -1
+
 
 
     def collision(self, player):
@@ -114,8 +141,8 @@ class Game:
 
         if (self.ball['x'] < (self.canvas['width'] / 2)):
             if self.collision(self.user1):
-                self.i += 1
-                print("Paddle user Collision Detected " + str(self.i))
+                # self.i += 1
+                # print("Paddle user Collision Detected " + str(self.i))
 
                 collpoint = self.ball['y'] - (self.user1['y'] + self.user1['height'] / 2)
                 collpoint = collpoint / (self.user1['height'] / 2)
@@ -184,7 +211,7 @@ def check_for_game_start(nested_list, name):
     index = check_nested_players_status(nested_list)
     if (index != None):
         nested_list[index][1].append(name + "_2")
-        print("><> " + nested_list[index][1][1])
+        # print("><> " + nested_list[index][1][1])
         print(nested_list)
         return True
     else:
@@ -243,17 +270,20 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         if data.get("event") == "resize":
             obg.canvas['height'] = data.get("canvasHeight")
             obg.canvas['width'] = data.get("canvasWidth")
-
-            
             
 
         if data.get("event") == "updatePaddle":
+            print(data)
             obg.upKeyPressed = data.get("upKeyPressed")
             obg.downKeyPressed = data.get("downKeyPressed")
+            obg.uid = data.get("id")
+            # obg.user2['y'] -= 10
+            # print(obg.uid)
         
-        if data.get("event") == "updatePaddle2":
-            obg.upKeyPressed2 = data.get("upKeyPressed2")
-            obg.downKeyPressed2 = data.get("downKeyPressed2")
+        # if data.get("event") == "updatePaddle2":
+        #     obg.upKeyPressed2 = data.get("upKeyPressed2")
+        #     obg.downKeyPressed2 = data.get("downKeyPressed2")
+            
             
             
 
@@ -267,6 +297,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             obg.update_ball()
             
             obg.updatePaddlePosition()
+            # obg.updatePaddlePosition2()
             
             await asyncio.sleep(0.0075)
             
