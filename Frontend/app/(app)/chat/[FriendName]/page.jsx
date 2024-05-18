@@ -75,7 +75,12 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			sended_at: getCurrentTime(),
 		};
 		socket.send(JSON.stringify(message));
-		sendNotif(FriendName, conversation_id, new_msg);
+		sendNotif(
+			FriendName,
+			conversation_id,
+			new_msg,
+			messageList.length == 0,
+		);
 		console.log(message);
 		addNewMessage(message);
 	};

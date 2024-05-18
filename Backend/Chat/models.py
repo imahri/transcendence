@@ -23,7 +23,7 @@ class Conversation(models.Model):
         message = self.messages.order_by("-sended_at").first()
         if message is None:
             return None
-        return {"sended_at": message.sended_at, "message": message.message}
+        return {"sended_at": str(message.sended_at), "message": message.message}
 
     @property
     def friends(self) -> BaseManager[Friend]:

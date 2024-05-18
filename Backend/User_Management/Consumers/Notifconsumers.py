@@ -2,6 +2,8 @@ from cgitb import text
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 
+from Chat.models import Conversation
+
 from ..models import  Notification, User, Friend
 from ..serializers import NotifSerializer
 
@@ -129,8 +131,18 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             print('update status: ', error)
 
     async def redirect(self, event):
-        content = event['content']
-        await self.send_json({'type' : 'notification', "content" : content})
+        content = event["content"]
+        if content["type"] == "C":
+            if content["content"]["FirstTime"] is True:
+                id = content["content"]["conversationID"]
+                conversation: Conversation = await database_sync_to_async(
+                    Conversation.objects.get
+                )(id=id)
+                serializerd: dict = await database_sync_to_async(
+                    conversation.as_serialized
+                )(self.user)
+                content["content"]["conversation"] = serializerd
+        await self.send_json({"type": "notification", "content": content})
 
     async def send_notification(self, content):
         '''

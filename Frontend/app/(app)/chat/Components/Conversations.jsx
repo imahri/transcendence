@@ -195,17 +195,24 @@ export default function Conversations({
 
 	const listener = useCallback(
 		(e) => {
-			const convList = [...conversationList];
-			convList.forEach((conv) => {
-				if (conv.id == e.content.conversationID && e.is_read == false) {
-					if (convState !== conv.name) conv.unseen_msg += 1;
-					conv.last_message = {
-						sended_at: e.time,
-						message: e.content.message,
-					};
-				}
-			});
-			setConversationList(convList);
+			if (e.content.FirstTime) {
+				setConversationList((prevConvList) => [
+					e.content.conversation,
+					...prevConvList,
+				]);
+			} else {
+				const convList = [...conversationList];
+				convList.forEach((conv) => {
+					if (conv.id == e.content.conversationID) {
+						if (convState !== conv.name) conv.unseen_msg += 1;
+						conv.last_message = {
+							sended_at: e.time,
+							message: e.content.message,
+						};
+					}
+				});
+				setConversationList(convList);
+			}
 		},
 		[conversationList, convState],
 	);
