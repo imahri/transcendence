@@ -65,6 +65,7 @@ const TimeNotification = ({ time, unseen_msg }) => (
 );
 
 function Conversation({ user, info }) {
+	const { ws } = useContext(UserContext);
 	const { name, image, last_message, unseen_msg } = info;
 	const router = useRouter();
 	const ConvRef = useRef();
@@ -79,6 +80,12 @@ function Conversation({ user, info }) {
 	const handleClick = () => {
 		if (!isActive) {
 			info.unseen_msg = 0;
+			ws.send(
+				JSON.stringify({
+					action: "markConversationAsRead",
+					id: info.id,
+				}),
+			);
 			router.push(`/chat/${name}`);
 			setConvState(name);
 		}

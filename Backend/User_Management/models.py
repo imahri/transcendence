@@ -311,4 +311,10 @@ class Notification(models.Model):
 
         return response
 
-    
+    @staticmethod
+    def conversationAsRead(id, _notifications):
+        notifications = _notifications.filter(type='C', is_read=False)
+        for notification in notifications:
+            if notification.content["conversationID"] == id:
+                notification.is_read = True
+                notification.save()

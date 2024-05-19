@@ -1,4 +1,3 @@
-from cgitb import text
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 
@@ -59,6 +58,8 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             
             if action == 'readNotif':
                 await self.markAsRead(text_data['id'])
+            elif action == 'markConversationAsRead':
+                await self.markConversationAsRead(text_data['id'])
             elif action == 'checkStatus':
                 await self.checkOnline(text_data['username'])
             elif action == 'end_checkStatus':
@@ -77,6 +78,14 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         
         print(self.user.username, " deleted from : ",  group_name)
         
+
+    async def markConversationAsRead(self, id):
+        """
+            action: markConversationAsRead
+            id: <id>
+        """
+        notifications = await database_sync_to_async(self.user.notifications.all)()
+        await database_sync_to_async(Notification.conversationAsRead)(id, notifications)
 
     async def checkOnline(self, username):
         try:
