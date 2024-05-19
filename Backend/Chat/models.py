@@ -37,19 +37,12 @@ class Conversation(models.Model):
                 return False
         return True
 
-    @property
-    def name(self):
-        return [
-            self.friends.first().user.username,
-            self.friends.last().user.username,
-        ]
-
-    @property
-    def image(self):
-        return [
-            self.friends.first().user.info.profile_img.url,
-            self.friends.last().user.info.profile_img.url,
-        ]
+    def friend(self, user: User):
+        return (
+            self.friends.first().friend
+            if self.friends.first().user.pk == user.pk
+            else self.friends.first().user
+        )
 
     def unseen_msg(self, user):
         allNotification = user.notifications.all().filter(
@@ -64,12 +57,9 @@ class Conversation(models.Model):
     def as_serialized(self, user: User):
         from .serializers import ConversationSerializer
 
-        def opts_v(arr, value):
-            return arr[1] if arr[0] == value else arr[0]
-
         data = dict(ConversationSerializer(self).data)
-        data["name"] = opts_v(data.pop("name_arr"), user.username)
-        data["image"] = opts_v(data.pop("image_arr"), user.info.profile_img.url)
+        data["name"] = self.friend(user).username
+        data["image"] = self.friend(user).info.profile_img.url
         data["unseen_msg"] = self.unseen_msg(user)
         return data
 

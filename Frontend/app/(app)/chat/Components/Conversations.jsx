@@ -9,6 +9,7 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "../../context";
 import { useOnVisibleAnimation } from "../Hooks/useOnVisibleAnimation";
 import { Iceland } from "next/font/google";
+import { USER_APP } from "@/app/URLS";
 
 const iceland = Iceland({ weight: "400", subsets: ["latin"] });
 
@@ -90,10 +91,9 @@ function Conversation({ user, info }) {
 			setConvState(name);
 		}
 	};
-
 	return (
 		<button ref={ConvRef} onClick={handleClick} className={styles.section}>
-			<ProfileImage src={user.info.profile_img} />
+			<ProfileImage src={`${USER_APP}/image?path=${info.image}`} />
 			<FriendInfo
 				friend_name={name}
 				last_msg={!isActive && last_message?.message}
