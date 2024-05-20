@@ -5,6 +5,8 @@ from rest_framework.request import Request
 from rest_framework import status
 from .models import Tournament
 
+TOURNAMENT_PARTICIPANTS = 16
+
 
 def catch_view_exception(func):
 
@@ -61,3 +63,14 @@ class TournamentView(APIView):
         tournament = Tournament.objects.get(id=id)
         tournament.delete()
         return Response({"name": tournament.name})
+
+
+@api_view(["GET"])
+def StartTournament(request):
+    id = request.GET.get("id")
+    tournament = Tournament.objects.get(id=id)
+    if (
+        tournament.creator == request.user
+        and len(tournament.participants) == TOURNAMENT_PARTICIPANTS
+    ):
+        pass
