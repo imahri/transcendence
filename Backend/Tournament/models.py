@@ -24,6 +24,9 @@ class Tournament(models.Model):
     def join(self, user: User, unique_name: str):
         self.participants.add(Participant.objects.create(name=unique_name, user=user))
 
+    def quit(self, unique_name: str):
+        self.participants.remove(Participant.objects.get(name=unique_name))
+
 
 class Participant(models.Model):
 
