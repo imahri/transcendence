@@ -155,7 +155,7 @@ function page() {
 				className={`${!create && !searchResult ? "hidden" : ""} bg-[#252525] w-[70%] h-[350px] p-[10px] rounded-lg `}
 			>
 				<div
-					className={`${searchResult ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll size-full`}
+					className={`${searchResult && !create ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll size-full`}
 				>
 					{searchResult &&
 						searchResult.map((obj, index) => {
