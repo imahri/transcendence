@@ -9,73 +9,65 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "../../context";
 import { useOnVisibleAnimation } from "../Hooks/useOnVisibleAnimation";
 import { Iceland } from "next/font/google";
+import { USER_APP } from "@/app/URLS";
 
 const iceland = Iceland({ weight: "400", subsets: ["latin"] });
 
-function Unseen({ count }) {
-	return (
-		<div
-			className="
+const Unseen = ({ count }) => (
+	<div
+		className="
             h-6 w-6
 			mb-3 pb-0.3
             bg-gradient-to-r from-[#7D46F2] to-[#CB3737]
             flex justify-center items-center
             rounded-full
             "
-		>
-			<small className="cursor-default text-white">{count}</small>
-		</div>
-	);
-}
+	>
+		<small className="cursor-default text-white">{count}</small>
+	</div>
+);
 
-function ProfileImage({ src }) {
-	return (
-		<div className={styles.image}>
-			<Image
-				width={100}
-				height={100}
-				className={styles.img}
-				src={src}
-				alt="Profile"
-			/>
-		</div>
-	);
-}
+const ProfileImage = ({ src }) => (
+	<div className={styles.image}>
+		<Image
+			width={100}
+			height={100}
+			className={styles.img}
+			src={src}
+			alt="Profile"
+		/>
+	</div>
+);
 
-function FriendInfo({ friend_name, last_msg }) {
-	return (
-		<div className="h-full flex-grow flex flex-col justify-start">
-			<h3 className="pt-4 text-start text-xl font-semibold text-white">
-				{friend_name}
-			</h3>
-			{last_msg && (
-				<small className="mt-2 text-start font-medium text-[#7D7D7D]">
-					{last_msg.length > 20
-						? `${last_msg.substring(0, 20)}...`
-						: last_msg}
-				</small>
-			)}
-		</div>
-	);
-}
-
-function TimeNotification({ time, unseen_msg }) {
-	return (
-		<div className="h-full w-[18%] rounded-r-sm flex justify-center items-center flex-col">
-			<small className="mr-2 mt-2 font-light text-xs text-[#7D7D7D]">
-				{ToHour12Time(time)}
+const FriendInfo = ({ friend_name, last_msg }) => (
+	<div className="h-full flex-grow flex flex-col justify-start">
+		<h3 className="pt-4 text-start text-xl font-semibold text-white">
+			{friend_name}
+		</h3>
+		{last_msg && (
+			<small className="mt-2 text-start font-medium text-[#7D7D7D]">
+				{last_msg.length > 20
+					? `${last_msg.substring(0, 20)}...`
+					: last_msg}
 			</small>
-			<div className="flex-grow w-full flex justify-center items-center">
-				{unseen_msg > 0 && <Unseen count={unseen_msg} />}
-			</div>
-		</div>
-	);
-}
+		)}
+	</div>
+);
 
-function Conversation({
-	user,
-	info: { name, image, last_message, unseen_msg },
-}) {
+const TimeNotification = ({ time, unseen_msg }) => (
+	<div className="h-full w-[18%] rounded-r-sm flex justify-center items-center flex-col">
+		<small className="mr-2 mt-2 font-light text-xs text-[#7D7D7D]">
+			{ToHour12Time(time)}
+		</small>
+		<div className="flex-grow w-full flex justify-center items-center">
+			{unseen_msg > 0 && <Unseen count={unseen_msg} />}
+		</div>
+	</div>
+);
+
+function Conversation({ user, info }) {
+	const { ws } = useContext(UserContext);
+	const { name, image, last_message, unseen_msg } = info;
 	const router = useRouter();
 	const ConvRef = useRef();
 	const [convState, setConvState] = useContext(ConvChatContext);
@@ -88,15 +80,20 @@ function Conversation({
 
 	const handleClick = () => {
 		if (!isActive) {
-			// TODO : set unseen_message_count to 0 because you see message XD
+			info.unseen_msg = 0;
+			ws.send(
+				JSON.stringify({
+					action: "markConversationAsRead",
+					id: info.id,
+				}),
+			);
 			router.push(`/chat/${name}`);
 			setConvState(name);
 		}
 	};
-
 	return (
 		<button ref={ConvRef} onClick={handleClick} className={styles.section}>
-			<ProfileImage src={user.info.profile_img} />
+			<ProfileImage src={`${USER_APP}/image?path=${info.image}`} />
 			<FriendInfo
 				friend_name={name}
 				last_msg={!isActive && last_message?.message}
@@ -122,8 +119,7 @@ export default function Conversations({
 }) {
 	const {
 		user,
-		socket,
-		data,
+		addListenerNotif,
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
 	const { ws } = useContext(UserContext);
@@ -132,23 +128,6 @@ export default function Conversations({
 	useOnVisibleAnimation(ConversationsRef, styles.show, [conversationList]);
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const OnMessage = useCallback(
-		(e) => {
-			const data = JSON.parse(e.data);
-			if (data.type == "friendShip") {
-				if (data.status == "B" || data.status == "BY") {
-					setConversationList(
-						conversationList.filter(
-							(conv) => conv.name !== data.friendName,
-						),
-					);
-					if (data.status == "B") router.replace("/chat");
-					LoadToReplace();
-				}
-			}
-		},
-		[conversationList],
-	);
 
 	useEffect(() => {
 		const remove_conv = searchParams.get("remove_conv");
@@ -158,7 +137,27 @@ export default function Conversations({
 			);
 	}, [searchParams]);
 
-	if (ws) ws.addEventListener("message", OnMessage);
+	const OnMessage = (e) => {
+		const data = JSON.parse(e.data);
+		if (
+			data.type == "friendShip" &&
+			(data.status == "B" || data.status == "BY")
+		) {
+			setConversationList((prevConversationList) =>
+				prevConversationList.filter(
+					(conv) => conv.name !== data.friendName,
+				),
+			);
+			if (data.friendName == convState) router.replace("/chat");
+			LoadToReplace();
+		}
+	};
+
+	useEffect(() => {
+		if (!ws) return;
+		ws.addEventListener("message", OnMessage);
+		return () => ws.removeEventListener("message", OnMessage);
+	}, [ws]);
 
 	useEffect(() => {
 		if (
@@ -200,6 +199,34 @@ export default function Conversations({
 			setMessageUpdated(false);
 		}
 	}, [conversationList, convState, messageUpdated]);
+
+	const listener = useCallback(
+		(e) => {
+			if (e.content.FirstTime) {
+				setConversationList((prevConvList) => [
+					e.content.conversation,
+					...prevConvList,
+				]);
+			} else {
+				const convList = [...conversationList];
+				convList.forEach((conv) => {
+					if (conv.id == e.content.conversationID) {
+						if (convState !== conv.name) conv.unseen_msg += 1;
+						conv.last_message = {
+							sended_at: e.time,
+							message: e.content.message,
+						};
+					}
+				});
+				setConversationList(convList);
+			}
+		},
+		[conversationList, convState],
+	);
+
+	useEffect(() => {
+		addListenerNotif(ws, listener);
+	}, [ws, listener]);
 
 	const handleScroll = () => {
 		if (

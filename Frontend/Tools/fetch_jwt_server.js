@@ -16,7 +16,11 @@ export const fetch_jwt = async (endpoint, query_params, init) => {
 		const token = cookies().get("access_token")?.value;
 		const headers = new Headers(init?.headers);
 		if (token) headers.set("Authorization", `Bearer ${token}`);
-		const response = await fetch(url, { ...init, headers });
+		const response = await fetch(url, {
+			...init,
+			headers,
+			cache: "no-cache",
+		});
 		const data = await response.json();
 		return [response.ok, response.status, data];
 	} catch (error) {

@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../context";
 
 /*
@@ -27,22 +27,8 @@ import { UserContext } from "../../context";
         }
 */
 
-export const useNotification = (initialState = () => {}) => {
+export const useNotification = () => {
 	const { ws } = useContext(UserContext);
-	const [EventListener, setEventListener] = useState(initialState);
-
-	const listener = (e) => {
-		const event = JSON.parse(e.data);
-		if (event.type == "notification" && event.content.type == "C")
-			EventListener(event.content);
-	};
-
-	useEffect(() => {
-		if (EventListener == null) return;
-		ws.removeEventListener("message", listener);
-		ws.addEventListener("message", listener);
-		return () => ws.removeEventListener("message", listener);
-	}, [EventListener]);
 
 	const sendNotif = (
 		to,
@@ -52,22 +38,33 @@ export const useNotification = (initialState = () => {}) => {
 		action = "send_notif",
 		type = "C",
 	) => {
-		ws.send({
-			action: action,
-			content: {
-				to: to,
-				type: type,
+		ws.send(
+			JSON.stringify({
+				action: action,
 				content: {
-					conversationID: conversationID,
-					FirstTime: FirstTime,
-					message: message,
+					to: to,
+					type: type,
+					content: {
+						conversationID: conversationID,
+						FirstTime: FirstTime,
+						message: message,
+					},
 				},
-			},
-		});
+			}),
+		);
+	};
+
+	const ListenerNotif = (socket, listener) => {
+		if (socket)
+			socket.onmessage = (e) => {
+				const event = JSON.parse(e.data);
+				if (event.type == "notification" && event.content.type == "C")
+					listener(event.content);
+			};
 	};
 
 	return {
 		sendNotif: sendNotif,
-		addListenerNotif: setEventListener,
+		addListenerNotif: ListenerNotif,
 	};
 };

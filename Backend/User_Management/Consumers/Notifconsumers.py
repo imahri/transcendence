@@ -1,6 +1,7 @@
-from cgitb import text
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
+
+from Chat.models import Conversation
 
 from ..models import  Notification, User, Friend
 
@@ -56,6 +57,8 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             
             if action == 'readNotif':
                 await self.markAsRead(text_data['id'])
+            elif action == 'markConversationAsRead':
+                await self.markConversationAsRead(text_data['id'])
             elif action == 'checkStatus':
                 await self.checkOnline(text_data['username'])
             elif action == 'end_checkStatus':
@@ -74,6 +77,14 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         
         print(self.user.username, " deleted from : ",  group_name)
         
+
+    async def markConversationAsRead(self, id):
+        """
+            action: markConversationAsRead
+            id: <id>
+        """
+        notifications = await database_sync_to_async(self.user.notifications.all)()
+        await database_sync_to_async(Notification.conversationAsRead)(id, notifications)
 
     async def checkOnline(self, username):
         try:
@@ -128,8 +139,18 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             print('update status: ', error)
 
     async def redirect(self, event):
-        content = event['content']
-        await self.send_json({'type' : 'notification', "content" : content})
+        content = event["content"]
+        if content["type"] == "C":
+            if content["content"]["FirstTime"] is True:
+                id = content["content"]["conversationID"]
+                conversation: Conversation = await database_sync_to_async(
+                    Conversation.objects.get
+                )(id=id)
+                serializerd: dict = await database_sync_to_async(
+                    conversation.as_serialized
+                )(self.user)
+                content["content"]["conversation"] = serializerd
+        await self.send_json({"type": "notification", "content": content})
 
     async def send_notification(self, content):
         '''

@@ -33,18 +33,11 @@ export function StartConversation({
 	};
 
 	useEffect(() => {
-		if (visible) {
-			const get_friends = async () => {
-				const [isOk, status, data] = await fetch_jwt(APIs.user.friends);
-				if (!isOk) {
-					if (status == 404) setFriendList([]);
-					console.log("==> ", status);
-					return;
-				}
-				setFriendList(data);
-			};
-			get_friends();
-		}
+		if (visible)
+			fetch_jwt(APIs.user.friends).then(([isOk, status, data]) => {
+				if (isOk) setFriendList(data);
+				if (status == 404) setFriendList([]);
+			});
 	}, [visible]);
 
 	const getConversation = async (friend) => {

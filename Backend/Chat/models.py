@@ -23,7 +23,7 @@ class Conversation(models.Model):
         message = self.messages.order_by("-sended_at").first()
         if message is None:
             return None
-        return {"sended_at": message.sended_at, "message": message.message}
+        return {"sended_at": str(message.sended_at), "message": message.message}
 
     @property
     def friends(self) -> BaseManager[Friend]:
@@ -37,34 +37,30 @@ class Conversation(models.Model):
                 return False
         return True
 
-    @property
-    def name(self):
-        return [
-            self.friends.first().user.username,
-            self.friends.last().user.username,
-        ]
+    def friend(self, user: User):
+        return (
+            self.friends.first().friend
+            if self.friends.first().user.pk == user.pk
+            else self.friends.first().user
+        )
 
-    @property
-    def image(self):
-        return [
-            self.friends.first().user.info.profile_img.url,
-            self.friends.last().user.info.profile_img.url,
-        ]
-
-    @property
-    def unseen_msg(self):
-        """Currently"""
-        return 0
+    def unseen_msg(self, user):
+        allNotification = user.notifications.all().filter(
+            type="C", is_read=False, is_hidden=False
+        )
+        counter = 0
+        for Notification in allNotification:
+            if self.pk == Notification.content["conversationID"]:
+                counter += 1
+        return counter
 
     def as_serialized(self, user: User):
         from .serializers import ConversationSerializer
 
-        def opts_v(arr, value):
-            return arr[1] if arr[0] == value else arr[0]
-
         data = dict(ConversationSerializer(self).data)
-        data["name"] = opts_v(data.pop("name_arr"), user.username)
-        data["image"] = opts_v(data.pop("image_arr"), user.info.profile_img.url)
+        data["name"] = self.friend(user).username
+        data["image"] = self.friend(user).info.profile_img.url
+        data["unseen_msg"] = self.unseen_msg(user)
         return data
 
 
