@@ -1,5 +1,5 @@
 from django.db import models
-from Tournament.serializers import TournamentSerializer
+from Tournament.serializers import ParticipantSerializer, TournamentSerializer
 from User_Management.models import User
 
 
@@ -36,3 +36,6 @@ class Participant(models.Model):
 
     name = models.CharField(max_length=50)
     user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
+
+    def as_serialized(self):
+        return ParticipantSerializer(self).data
