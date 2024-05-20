@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "Authentication",
     "Game",
     "Chat",
+    "Tournament",
 ]
 
 MIDDLEWARE = [
