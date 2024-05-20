@@ -28,4 +28,4 @@ class Tournament(models.Model):
 class Participant(models.Model):
 
     name = models.CharField(max_length=50)
-    user = models.ForeignKey("User_Management.Model", on_delete=models.CASCADE)
+    user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
