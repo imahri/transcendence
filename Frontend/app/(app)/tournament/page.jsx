@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 
-function PlusSvg(setCreate) {
+function PlusSvg(setCreate, setDemo) {
 	return (
 		<svg
 			onClick={() => {
 				setCreate((prev) => !prev);
+				setDemo(false);
 			}}
 			className="cursor-pointer"
 			width="25"
@@ -24,20 +25,29 @@ function PlusSvg(setCreate) {
 }
 
 import profile from "./assets/profile.png";
+import { UserContext } from "../context";
+
+const user = { img: profile, name: "ok" };
+const users = [user, user, user, user, user, user, user, user];
 const tr = [
-	{ name: "first", owner: profile, nb: "5" },
-	{ name: "first", owner: profile, nb: "5" },
-	{ name: "first", owner: profile, nb: "5" },
-	{ name: "first", owner: profile, nb: "5" },
-	{ name: "first", owner: profile, nb: "5" },
-	{ name: "first", owner: profile, nb: "5" },
-	{ name: "first", owner: profile, nb: "5" },
+	{ name: "first", owner: profile, nb: "8", users },
+	{ name: "first", owner: profile, nb: "5", users },
+	{ name: "first", owner: profile, nb: "5", users },
+	{ name: "first", owner: profile, nb: "5", users },
+	{ name: "first", owner: profile, nb: "5", users },
+	{ name: "first", owner: profile, nb: "5", users },
+	{ name: "first", owner: profile, nb: "5", users },
 ];
 
-function Display({ obj }) {
+function Display({ obj, setDemo, setResult }) {
 	return (
 		<div className="w-full flex justify-between items-center gap-[10px] h-[50px]">
-			<div className="w-[80%] cursor-pointer h-full flex justify-between items-center">
+			<div
+				className="w-[80%] cursor-pointer h-full flex justify-between items-center"
+				onClick={() => {
+					setResult(false), setDemo(obj);
+				}}
+			>
 				<h1 className="font-bold text-[17px] text-[#cccccc]">
 					{obj.name}
 				</h1>
@@ -121,8 +131,9 @@ function Create() {
 	);
 }
 
-function searchTournament(e, setResult, setCreate) {
+function searchTournament(e, setResult, setCreate, setDemo) {
 	setCreate(false);
+	setDemo(false);
 	const input = e.target.value;
 	if (!input) {
 		setResult(false);
@@ -131,9 +142,67 @@ function searchTournament(e, setResult, setCreate) {
 	setResult(tr);
 }
 
+function UsersDemo({ user, index }) {
+	return (
+		<div
+			key={index}
+			className="w-full flex justify-between items-center gap-[10px] h-[50px]"
+		>
+			<h1 className="font-bold text-[17px] text-[#cccccc]">
+				{user.name}
+			</h1>
+			<Image
+				className="size-[40px] cursor-pointer rounded-full"
+				src={user.img}
+				alt="Friend Image"
+			/>
+		</div>
+	);
+}
+
+function joinTournament(id, user, nickname, setError) {
+	//PUT add user to a tournament
+}
+
+function Demo({ Tournament }) {
+	const { user } = useContext(UserContext);
+	const users = Tournament.users;
+	const full = Tournament.nb == 8;
+	const [nickname, setNickName] = useState();
+	const [error, setError] = useState();
+	return (
+		<div className="w-full flex flex-col items-center gap-[10px]">
+			<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
+				{Tournament.name}
+			</h1>
+			<div className="w-[80%] h-[250px] flex flex-col gap-[20px] rounded-lg bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] p-[10px] overflow-y-scroll">
+				{users &&
+					users.map((obj, index) => {
+						return <UsersDemo user={obj} index={index} />;
+					})}
+			</div>
+			{!full && (
+				<Input
+					label={"You can Enter Username"}
+					error={error}
+					setter={setNickName}
+				/>
+			)}
+			<button
+				className={`${full ? "cursor-not-allowed bg-blue-600" : "cursor-pointer bg-green-500  bg-opacity-70"} w-[138px] h-[37px] rounded-[10px]  font-bold text-[16px] text-white relative`}
+				onClick={() => joinTournament(5, user, nickname, setError)}
+				disabled={full}
+			>
+				{full ? "Full" : "Join"}
+			</button>
+		</div>
+	);
+}
+
 function page() {
 	const [create, setCreate] = useState();
 	const [searchResult, setResult] = useState();
+	const [demo, setDemo] = useState();
 
 	return (
 		<div className="absolute py-[30px] [@media(max-width:570px)]:w-[90%] w-[500px] min-h-[530px] bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)] flex flex-col items-center gap-[20px] rounded-md">
@@ -146,27 +215,32 @@ function page() {
 					className="bg-transparent h-full focus:outline-none font-bold text-[17px] text-[#cccccc] placeholder:text-[#cccccc] placeholder:cursor-default"
 					placeholder="Search Tournament"
 					onChange={(e) => {
-						searchTournament(e, setResult, setCreate);
+						searchTournament(e, setResult, setCreate, setDemo);
 					}}
 				/>
-				{PlusSvg(setCreate)}
+				{PlusSvg(setCreate, setDemo)}
 			</div>
 			<div
-				className={`${!create && !searchResult ? "hidden" : ""} bg-[#252525] w-[70%] h-[350px] p-[10px] rounded-lg `}
+				className={`${!create && !searchResult && !demo ? "hidden" : ""} bg-[#252525] w-[70%] min-h-[350px] p-[10px] rounded-lg`}
 			>
 				<div
-					className={`${searchResult && !create ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll size-full`}
+					className={`${searchResult && !create ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll w-full h-[340px]`}
 				>
 					{searchResult &&
 						searchResult.map((obj, index) => {
 							return (
 								<div className="w-full pr-[10px]" key={index}>
-									<Display obj={obj} />
+									<Display
+										obj={obj}
+										setResult={setResult}
+										setDemo={setDemo}
+									/>
 								</div>
 							);
 						})}
 				</div>
 				{create && <Create />}
+				{demo && <Demo Tournament={demo} />}
 			</div>
 		</div>
 	);
