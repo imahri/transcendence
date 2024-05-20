@@ -1,4 +1,5 @@
 from django.db import models
+from Tournament.serializers import TournamentSerializer
 from User_Management.models import User
 
 
@@ -11,6 +12,9 @@ class Tournament(models.Model):
     schedule = models.JSONField()
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
+
+    def as_serialized(self):
+        return TournamentSerializer(self).data
 
     @staticmethod
     def create(name: str, creator: User, creator_unique_name: str):
