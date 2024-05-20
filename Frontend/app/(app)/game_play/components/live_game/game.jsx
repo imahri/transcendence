@@ -3,6 +3,7 @@ import Script from "next/script";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LGame.module.css";
 import { BOARDES_URL } from "@/app/URLS";
+import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
 let xcord = 0;
 let ycord = 0;
@@ -16,7 +17,9 @@ export const Youchen = () => {
 	console.log(111111);
 
 	useEffect(() => {
-		const ws = new WebSocket("ws://localhost:8000/ws/game");
+		const ws = new WebSocket(
+			"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
+		);
 		ws.onopen = () => {
 			console.log("opened");
 			setSocket(ws);
@@ -91,6 +94,9 @@ export const Youchen = () => {
 			document.addEventListener("keyup", keyUpHandler);
 
 			function keyDownHandler(event) {
+				if (event.keyCode === 32) {
+					togglePause();
+				}
 				if (event.keyCode === 87) {
 					upKeyPressed = true;
 					console.log("event");
@@ -150,6 +156,12 @@ export const Youchen = () => {
 				}
 			}
 
+			const togglePause = () => {
+				if (socket && socket.readyState === WebSocket.OPEN) {
+					socket.send(JSON.stringify({ event: "togglePause" }));
+				}
+			};
+
 			function drawRect(x, y, w, h, color) {
 				ctx.fillStyle = color;
 				ctx.fillRect(x, y, w, h);
@@ -163,24 +175,6 @@ export const Youchen = () => {
 				ctx.fill();
 			}
 
-			function collision(b, p) {
-				b.top = b.y - b.radius;
-				b.bottom = b.y + b.radius;
-				b.left = b.x - b.radius;
-				b.right = b.x + b.radius;
-
-				p.top = p.y;
-				p.bottom = p.y + p.height;
-				p.left = p.x;
-				p.right = p.x + p.width;
-
-				return (
-					b.right > p.left &&
-					b.bottom > p.top &&
-					b.left < p.right &&
-					b.top < p.bottom
-				);
-			}
 			function render() {
 				drawRect(0, 0, canvas.width, canvas.height, "black", 1);
 				drawRect(
@@ -223,7 +217,13 @@ export const Youchen = () => {
 
 	return (
 		<canvas
-			style={{ width: "95%", height: "85%", objectFit: "contain" }}
+			className={styles.canvasWithBackground}
+			style={{
+				width: "100%",
+				height: "100%",
+				objectFit: "contain",
+				overflow: "hidden",
+			}}
 			ref={cvs}
 		></canvas>
 	);

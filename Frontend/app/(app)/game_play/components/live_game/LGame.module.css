@@ -52,7 +52,7 @@
 .all_in{
     width: 100%;
     height: 100%;
-    background: rgba(255, 0, 0, 0.421);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -63,7 +63,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    /* background: rgba(255, 0, 0, 0.421); */
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,7 +73,6 @@
 .bord_part{
     height: 100%;
     width: 100%;
-    background: rgba(255, 192, 203, 0.543);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -89,9 +88,12 @@
 }
 
 .borad{
-    background: red;
+    /* background: red; */
     height:100%;
     width: 90%;
+    padding: 0 1%;
+    overflow: hidden;
+    position: relative;
     /* background: url('../images/board1.png'); */
     /* background-size: cover; */
     /* background-position: center; */
@@ -326,7 +328,7 @@
     background: yellow;
 }
 
-/* @media (max-width: 2250px){
+@media (max-width: 2250px){
     .mode_part{
         height: 100%;
         display: none;
@@ -335,12 +337,13 @@
     .borad{
         width: 100%;
         height: 100%;
+        
     }
     .all_ferno{
         visibility: visible;
     }
 
-} */
+}
 
 
 .players{
@@ -393,15 +396,31 @@
 
 }
 
-.ppo{
-    /* position: absolute; */
+/* .ppo{
+    position: absolute;
     height:100%;
     width: 100%;
     background: green;
-}
+} */
 
 .canvas{
-    background: rebeccapurple;
+    /* background: rebeccapurple; */
     /* position: absolute; */
     left:0;
 }
+
+/* .canvasWithBackground {
+    background-image: url('./borad2.jpg');
+    background-size: cover;
+    background-position: center;
+} */
+
+/* .faker{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: red;
+    object-fit:contain;
+} */

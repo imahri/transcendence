@@ -18,10 +18,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from asyncio.locks import Lock
 import random
-# create class game
-# construct
 
-# ws://localhost:8000/ws/game
 
 class Game:
     def __init__(self):
@@ -29,7 +26,11 @@ class Game:
             "height":1300,
             "width":2560
         }
-
+        
+        
+        self.paused = False
+        
+        
         self.user1 = {
             "x": 3,
             "y": self.canvas['height'] / 2 - 200 / 2,
@@ -50,10 +51,6 @@ class Game:
             "id" : 0
         }
         
-        player_side = {
-            "name" : 0
-        }
-        
         self.ball = {
             "x": self.canvas['width'] / 2,
             "y": self.canvas['height'] / 2,
@@ -66,13 +63,14 @@ class Game:
 
     upKeyPressed = False
     downKeyPressed = False
+    pause = False
     uid = 0
 
 
-    # i = 0
-
+    def toggle_pause(self):
+        self.paused = not self.paused
+    
     def updatePaddlePosition(self):
-        # self.user2['x'] = self.canvas['width'] - 31
         if (self.uid == 1):
             if ((self.upKeyPressed and self.user1['y'] > 0)):
                 self.user1['y'] -= 10
@@ -87,33 +85,12 @@ class Game:
             if ((self.downKeyPressed and self.user2['y'] + self.user2['height'] < self.canvas['height'])):
                 self.user2['y'] += 10
 
-            
-
-
-    
-    # def updatePaddlePosition2(self):
-    #     print("wa bzaf")
-    #     self.user2['x'] = self.canvas['width'] - 31
-        
-    #     if (self.upKeyPressed and self.user1['y'] > 0):
-    #         self.user1['y'] -= 10
-    #         print("user 1 up")
-    #     if (self.downKeyPressed and self.user1['y'] + self.user1['height'] < self.canvas['height']):
-    #         self.user1['y'] += 10
-
-            # print("user 1 down")
-        # if (self.upKeyPressed2 and self.user2['y'] > 0):
-        #     print("user 2 up")
-        # if (self.downKeyPressed2 and self.user2['y'] + self.user2['height'] < self.canvas['height']):
-        #     print("user 2 down")
 
     def reset_ball(self):
         self.ball['x'] = self.canvas['width'] / 2
         self.ball['y'] = self.canvas['height'] / 2
-        self.ball['speed'] = 101
+        self.ball['speed'] = 10
         self.ball['velocityX'] *= -1
-
-
 
     def collision(self, player):
         ball_left = self.ball['x'] - self.ball['radius']
@@ -131,18 +108,20 @@ class Game:
                 ball_bottom > player_top and ball_top < player_bottom)
 
     def update_ball(self):
+        if (self.pause == True):
+            time.sleep(10)
+            self.pause = False
         self.ball['x'] += self.ball['velocityX']
         self.ball['y'] += self.ball['velocityY']
 
         if (self.ball['y'] + self.ball['radius'] >= self.canvas['height'] or self.ball['y'] - self.ball['radius'] <= 0):
             self.ball['velocityY'] *= -1
-        if (self.ball['x'] - self.ball['radius'] <= 0 or self.ball['x'] + self.ball['radius'] >= self.canvas['width']):
-            self.ball['velocityX'] *= -1
+
+        # if (self.ball['x'] - self.ball['radius'] <= 0 or self.ball['x'] + self.ball['radius'] >= self.canvas['width']):
+        #     self.ball['velocityX'] *= -1
 
         if (self.ball['x'] < (self.canvas['width'] / 2)):
             if self.collision(self.user1):
-                # self.i += 1
-                # print("Paddle user Collision Detected " + str(self.i))
 
                 collpoint = self.ball['y'] - (self.user1['y'] + self.user1['height'] / 2)
                 collpoint = collpoint / (self.user1['height'] / 2)
@@ -151,10 +130,10 @@ class Game:
                 self.ball['velocityX'] = direction * self.ball['speed'] * math.cos(angleRad)
                 self.ball['velocityY'] = self.ball['speed'] * math.sin(angleRad)
                 self.ball['speed'] += 0.5
+                
 
         else:
             if self.collision(self.user2):
-                print("Paddle user2 Collision Detected")
                 collpoint = self.ball['y'] - (self.user2['y'] + self.user2['height'] / 2)
                 collpoint = collpoint / (self.user2['height'] / 2)
                 angleRad = (collpoint * math.pi) / 4
@@ -162,6 +141,17 @@ class Game:
                 self.ball['velocityX'] = direction * self.ball['speed'] * math.cos(angleRad)
                 self.ball['velocityY'] = self.ball['speed'] * math.sin(angleRad)
                 self.ball['speed'] += 0.5
+        if (self.ball['x'] - self.ball['radius'] < 0):
+            self.user2['score'] += 1
+            print("user2 score >> " + str(self.user2['score']))
+            self.reset_ball()
+        elif (self.ball['x'] + self.ball['radius'] > self.canvas['width']):
+            self.user1['score'] += 1
+            print("user1 score >> " + str(self.user1['score']))
+            self.reset_ball()
+
+
+
 
 
 # in wich room
@@ -195,7 +185,6 @@ def creat_room_name(nested_list):
             return room_name
 
 
-
 def check_players_status(players):
     return len(players) == 2
 
@@ -203,20 +192,18 @@ def check_nested_players_status(nested_list):
     for index, room in enumerate(nested_list):
         room_name, players = room[0], room[1]
         if not check_players_status(players):
-            # print(f"{room_name} needs player")
             return index
     return None
 
 def check_for_game_start(nested_list, name):
     index = check_nested_players_status(nested_list)
     if (index != None):
-        nested_list[index][1].append(name + "_2")
-        # print("><> " + nested_list[index][1][1])
+        nested_list[index][1].append(name)
         print(nested_list)
         return True
     else:
         rn = creat_room_name(nested_list)
-        nested_list.append([rn,[name + "_1"]])
+        nested_list.append([rn,[name]])
         print("Room was created succesfully : " + rn)
         print(nested_list[0][1][0])
         return False
@@ -227,41 +214,39 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     game_room  = []
     game_object  = []
     
-
-
     async def connect(self):
+        try:
+            self.user: User = self.scope["user"]
+            print(self.user)
+            if self.user.is_anonymous:
+                raise Exception("Not Authorizer")
+            
+            else:
+                self.room_group_name = creat_room_name(self.game_room)
+                await self.accept()
+                await self.send_json(content={"type": "Connected"})
 
-        await self.accept()
+                await self.channel_layer.group_add(
+                    self.room_group_name,
+                    self.channel_name
+                )
+                
+                if (not check_for_game_start(self.game_room, self.user.username)):
+                    self.loba = Game()
+                    self.game_object.append(self.loba)
+                    await self.send_json(content={
+                        'event': 'index_player',
+                        'index': 1,
+                    })
 
-        
-
-    
-        self.room_group_name = creat_room_name(self.game_room)
-
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-
-        
-        await self.send_json(content={"type": "Connected"})
-        
-        if (not check_for_game_start(self.game_room, "imad")):
-            self.loba = Game()
-            self.game_object.append(self.loba)
-            await self.send_json(content={
-                'event': 'index_player',
-                'index': 1,
-            })
-        else:
-            await self.send_json(content={
-                'event': 'index_player',
-                'index': 2,
-            })
-            self.game_task = asyncio.create_task(self.send_ball_coordinates())
-
-
-
+                else:
+                    await self.send_json(content={
+                        'event': 'index_player',
+                        'index': 2,
+                    })
+                    self.game_task = asyncio.create_task(self.send_ball_coordinates())
+        except Exception:
+            await self.close()
 
     async def receive(self, text_data):
         index = get_room_index(self.game_room,self.room_group_name)
@@ -272,20 +257,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             obg.canvas['width'] = data.get("canvasWidth")
             
 
-        if data.get("event") == "updatePaddle":
-            print(data)
+        elif data.get("event") == "updatePaddle":
             obg.upKeyPressed = data.get("upKeyPressed")
             obg.downKeyPressed = data.get("downKeyPressed")
             obg.uid = data.get("id")
-            # obg.user2['y'] -= 10
-            # print(obg.uid)
-        
-        # if data.get("event") == "updatePaddle2":
-        #     obg.upKeyPressed2 = data.get("upKeyPressed2")
-        #     obg.downKeyPressed2 = data.get("downKeyPressed2")
-            
-            
-            
+        elif data.get("event") == "togglePause":
+            print("pause")
+            obg.pause = True
+
 
 
 
@@ -295,9 +274,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         obg = self.game_object[index]
         while True:
             obg.update_ball()
-            
+
+
             obg.updatePaddlePosition()
-            # obg.updatePaddlePosition2()
             
             await asyncio.sleep(0.0075)
             
@@ -332,7 +311,3 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
         if hasattr(self, 'game_task'):
             self.game_task.cancel()
-
-
-
-
