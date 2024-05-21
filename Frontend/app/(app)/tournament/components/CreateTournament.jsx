@@ -24,7 +24,7 @@ export function Input({ label, setter, error }) {
 	);
 }
 
-function myseterror(setError, error) {
+export function myseterror(setError, error) {
 	setError(error);
 	setTimeout(() => {
 		setError(false);

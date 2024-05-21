@@ -13,12 +13,14 @@ export default function Display({ obj, setDemo, setResult }) {
 					{obj.name}
 				</h1>
 				<h1 className="font-bold text-[17px] text-[#cccccc]">
-					{obj.nb}/8
+					{obj.participants.length}/8
 				</h1>
 			</div>
 			<Image
 				className="size-[40px] cursor-pointer rounded-full"
-				src={obj.owner}
+				src={obj.creator.img}
+				width={40}
+				height={40}
 				alt="Tournamnt owner"
 			/>
 		</div>

@@ -8,6 +8,9 @@ export default async function middleware(request) {
 	const pathname = request.nextUrl.pathname;
 
 	if (!isAuthenticated) {
+		if (AuthPath.some((path) => pathname.startsWith(path))) {
+			return NextResponse.next();
+		}
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 

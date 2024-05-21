@@ -43,3 +43,4 @@ export const wsChat = `${WS}/ws/chat`;
 const TOURNAMENT_APP = `${BASE_URL}/tournament`;
 
 export const TOURNAMENT_URL = `${TOURNAMENT_APP}/`;
+export const TOURNAMENT_SEARCH_URL = `${TOURNAMENT_APP}/search`;

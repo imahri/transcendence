@@ -1,8 +1,11 @@
 "use client";
-import { useState } from "react";
-import profile from "./assets/profile.png";
+import { useEffect, useState } from "react";
 import Create from "./components/CreateTournament";
 import Display from "./components/Display";
+import Demo from "./components/JoinTournament";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { TOURNAMENT_SEARCH_URL } from "@/app/URLS";
+import { UserNotFound } from "../searchBar/SearchBarUtils";
 
 function PlusSvg(setCreate, setDemo) {
 	return (
@@ -26,33 +29,46 @@ function PlusSvg(setCreate, setDemo) {
 	);
 }
 
-const user = { img: profile, name: "ok" };
-const users = [user, user, user, user, user, user, user, user];
-const tr = [
-	{ name: "first", owner: profile, nb: "8", users },
-	{ name: "first", owner: profile, nb: "5", users },
-	{ name: "first", owner: profile, nb: "5", users },
-	{ name: "first", owner: profile, nb: "5", users },
-	{ name: "first", owner: profile, nb: "5", users },
-	{ name: "first", owner: profile, nb: "5", users },
-	{ name: "first", owner: profile, nb: "5", users },
-];
-
-function searchTournament(e, setResult, setCreate, setDemo) {
+async function searchTournament(input, setResult, setCreate, setDemo) {
 	setCreate(false);
 	setDemo(false);
-	const input = e.target.value;
 	if (!input) {
 		setResult(false);
 		return;
 	}
-	setResult(tr);
+
+	const [isOk, status, data] = await fetch_jwt(TOURNAMENT_SEARCH_URL, {
+		search: input,
+	});
+
+	if (!isOk) {
+		setResult(404);
+		return;
+	}
+	setResult(data);
 }
+
+let timeout;
 
 function page() {
 	const [create, setCreate] = useState();
 	const [searchResult, setResult] = useState();
 	const [demo, setDemo] = useState();
+	const [input, setInput] = useState();
+
+	useEffect(() => {
+		if (input) {
+			clearTimeout(timeout);
+			timeout = setTimeout(
+				() => searchTournament(input, setResult, setCreate, setDemo),
+				300,
+			);
+		}
+		if (!input) {
+			clearTimeout(timeout);
+			setResult(false);
+		}
+	}, [input]);
 
 	return (
 		<div className="absolute py-[30px] [@media(max-width:570px)]:w-[90%] w-[500px] min-h-[530px] bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)] flex flex-col items-center gap-[20px] rounded-md">
@@ -65,18 +81,20 @@ function page() {
 					className="bg-transparent h-full focus:outline-none font-bold text-[17px] text-[#cccccc] placeholder:text-[#cccccc] placeholder:cursor-default"
 					placeholder="Search Tournament"
 					onChange={(e) => {
-						searchTournament(e, setResult, setCreate, setDemo);
+						setInput(e.target.value);
 					}}
 				/>
 				{PlusSvg(setCreate, setDemo)}
 			</div>
 			<div
-				className={`${!create && !searchResult && !demo ? "hidden" : ""} bg-[#252525] w-[70%] min-h-[350px] p-[10px] rounded-lg`}
+				className={`bg-[#252525] w-[70%] min-h-[350px] p-[10px] rounded-lg`}
 			>
 				<div
 					className={`${searchResult && !create ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll w-full h-[340px]`}
 				>
+					{searchResult == 404 && <UserNotFound input={input} />}
 					{searchResult &&
+						searchResult != 404 &&
 						searchResult.map((obj, index) => {
 							return (
 								<div className="w-full pr-[10px]" key={index}>
@@ -90,7 +108,7 @@ function page() {
 						})}
 				</div>
 				{create && <Create />}
-				{demo && <Demo Tournament={demo} />}
+				{demo && <Demo Tournament={demo} setDemo={setDemo} />}
 			</div>
 		</div>
 	);
