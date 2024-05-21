@@ -3,9 +3,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from User_Management.Consumers.Notifconsumers import NotificationConsumer
 from .models import Tournament
 
-TOURNAMENT_PARTICIPANTS = 16
+TOURNAMENT_PARTICIPANTS = 8
 
 
 def catch_view_exception(func):
@@ -69,8 +72,17 @@ class TournamentView(APIView):
 def StartTournament(request):
     id = request.GET.get("id")
     tournament = Tournament.objects.get(id=id)
-    if (
-        tournament.creator == request.user
-        and len(tournament.participants) == TOURNAMENT_PARTICIPANTS
-    ):
-        pass
+    if tournament.creator == request.user:
+        return Response({"error": "only for creator"}, status=status.HTTP_403_FORBIDDEN)
+    if not len(tournament.participants) == TOURNAMENT_PARTICIPANTS:
+        return Response(
+            {"error": "need more participants"}, status=status.HTTP_403_FORBIDDEN
+        )
+    tournament.make_schedule()
+    channel_layer = get_channel_layer()
+    for participant in tournament.participants.all():
+        channel_name = NotificationConsumer.get_channel_by_user(
+            participant.user.username
+        )
+        # send notif
+        async_to_sync(channel_layer.send)(channel_name, {"id": "test"})

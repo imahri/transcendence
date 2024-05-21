@@ -1,5 +1,4 @@
 from django.db import models
-from Tournament.serializers import ParticipantSerializer, TournamentSerializer
 from User_Management.models import User
 
 
@@ -15,6 +14,8 @@ class Tournament(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     def as_serialized(self):
+        from Tournament.serializers import TournamentSerializer
+
         return TournamentSerializer(self).data
 
     @staticmethod
@@ -32,6 +33,28 @@ class Tournament(models.Model):
     def quit(self, unique_name: str):
         self.participants.remove(Participant.objects.get(name=unique_name))
 
+    def make_schedule(self):
+        participants = self.participants.values()
+        self.schedule = {
+            "FirstSide": {
+                "3rd": [
+                    [participants[0], participants[4]],
+                    [participants[2], participants[6]],
+                ],
+                "2nd": None,
+                "1st": None,
+            },
+            "SecondSide": {
+                "3rd": [
+                    [participants[1], participants[5]],
+                    [participants[3], participants[7]],
+                ],
+                "2nd": None,
+                "1st": None,
+            },
+        }
+        self.save()
+
 
 class Participant(models.Model):
 
@@ -39,4 +62,6 @@ class Participant(models.Model):
     user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
 
     def as_serialized(self):
+        from Tournament.serializers import ParticipantSerializer
+
         return ParticipantSerializer(self).data
