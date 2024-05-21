@@ -39,3 +39,7 @@ export const GET_Friends_URL = `${USER_APP}/userfriends`;
 export const Block_URL = `${USER_APP}/block`;
 
 export const wsChat = `${WS}/ws/chat`;
+
+const TOURNAMENT_APP = `${BASE_URL}/tournament`;
+
+export const TOURNAMENT_URL = `${TOURNAMENT_APP}/`;

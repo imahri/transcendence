@@ -1,6 +1,8 @@
 "use client";
-import { useContext, useState } from "react";
-import Image from "next/image";
+import { useState } from "react";
+import profile from "./assets/profile.png";
+import Create from "./components/CreateTournament";
+import Display from "./components/Display";
 
 function PlusSvg(setCreate, setDemo) {
 	return (
@@ -24,9 +26,6 @@ function PlusSvg(setCreate, setDemo) {
 	);
 }
 
-import profile from "./assets/profile.png";
-import { UserContext } from "../context";
-
 const user = { img: profile, name: "ok" };
 const users = [user, user, user, user, user, user, user, user];
 const tr = [
@@ -39,98 +38,6 @@ const tr = [
 	{ name: "first", owner: profile, nb: "5", users },
 ];
 
-function Display({ obj, setDemo, setResult }) {
-	return (
-		<div className="w-full flex justify-between items-center gap-[10px] h-[50px]">
-			<div
-				className="w-[80%] cursor-pointer h-full flex justify-between items-center"
-				onClick={() => {
-					setResult(false), setDemo(obj);
-				}}
-			>
-				<h1 className="font-bold text-[17px] text-[#cccccc]">
-					{obj.name}
-				</h1>
-				<h1 className="font-bold text-[17px] text-[#cccccc]">
-					{obj.nb}/8
-				</h1>
-			</div>
-			<Image
-				className="size-[40px] cursor-pointer rounded-full"
-				src={obj.owner}
-				alt="Tournamnt owner"
-			/>
-		</div>
-	);
-}
-
-function Input({ label, setter, error }) {
-	return (
-		<div
-			className={`${error ? "animate-shake" : ""} w-[80%] h-[55px]  bg-[#343434] rounded-[5px] pt-[5px] flex`}
-		>
-			<label
-				className={`absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]`}
-			>
-				{label}
-			</label>
-			<input
-				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px]"
-				type="text"
-				onChange={(e) => {
-					setter(e.currentTarget.value);
-				}}
-			/>
-		</div>
-	);
-}
-
-function myseterror(setError, error) {
-	setError(error);
-	setTimeout(() => {
-		setError(false);
-	}, 5000);
-}
-
-function handleCreate(username, Tournament, setError) {
-	if (!Tournament) {
-		myseterror(setError, "tournament");
-		return;
-	}
-	// send username and Tournament to backend
-}
-
-function Create() {
-	const [username, setUsername] = useState();
-	const [Tournament, setTournament] = useState();
-	const [error, setError] = useState();
-
-	return (
-		<div className="size-full flex flex-col items-center justify-center gap-[20px] p-[20px] ">
-			<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
-				Creat Tournament
-			</h1>
-
-			<Input
-				label={"Enter Tournament Name"}
-				error={error == "tournament"}
-				setter={setTournament}
-			/>
-			<Input
-				label={"Enter Username"}
-				error={error == "username"}
-				setter={setUsername}
-			/>
-			<button
-				className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white relative"
-				onClick={() => handleCreate(username, Tournament, setError)}
-			>
-				Create
-			</button>
-		</div>
-	);
-}
-
 function searchTournament(e, setResult, setCreate, setDemo) {
 	setCreate(false);
 	setDemo(false);
@@ -140,63 +47,6 @@ function searchTournament(e, setResult, setCreate, setDemo) {
 		return;
 	}
 	setResult(tr);
-}
-
-function UsersDemo({ user, index }) {
-	return (
-		<div
-			key={index}
-			className="w-full flex justify-between items-center gap-[10px] h-[50px]"
-		>
-			<h1 className="font-bold text-[17px] text-[#cccccc]">
-				{user.name}
-			</h1>
-			<Image
-				className="size-[40px] cursor-pointer rounded-full"
-				src={user.img}
-				alt="Friend Image"
-			/>
-		</div>
-	);
-}
-
-function joinTournament(id, user, nickname, setError) {
-	//PUT add user to a tournament
-}
-
-function Demo({ Tournament }) {
-	const { user } = useContext(UserContext);
-	const users = Tournament.users;
-	const full = Tournament.nb == 8;
-	const [nickname, setNickName] = useState();
-	const [error, setError] = useState();
-	return (
-		<div className="w-full flex flex-col items-center gap-[10px]">
-			<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
-				{Tournament.name}
-			</h1>
-			<div className="w-[80%] h-[250px] flex flex-col gap-[20px] rounded-lg bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] p-[10px] overflow-y-scroll">
-				{users &&
-					users.map((obj, index) => {
-						return <UsersDemo user={obj} index={index} />;
-					})}
-			</div>
-			{!full && (
-				<Input
-					label={"You can Enter Username"}
-					error={error}
-					setter={setNickName}
-				/>
-			)}
-			<button
-				className={`${full ? "cursor-not-allowed bg-blue-600" : "cursor-pointer bg-green-500  bg-opacity-70"} w-[138px] h-[37px] rounded-[10px]  font-bold text-[16px] text-white relative`}
-				onClick={() => joinTournament(5, user, nickname, setError)}
-				disabled={full}
-			>
-				{full ? "Full" : "Join"}
-			</button>
-		</div>
-	);
 }
 
 function page() {
