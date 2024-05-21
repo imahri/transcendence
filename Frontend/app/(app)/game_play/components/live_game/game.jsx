@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./LGame.module.css";
 import { BOARDES_URL } from "@/app/URLS";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
+import bg from "./borad2.jpg";
 
 let xcord = 0;
 let ycord = 0;
@@ -14,12 +15,18 @@ let uid = 0;
 export const Youchen = () => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
+	const [isSmallScreen, setIsSmallScreen] = useState(false);
 	console.log(111111);
+
+	// const checkScreenSize = () => {
+	// 	setIsSmallScreen(window.innerWidth < 600); // adjust the width as needed
+	//   };
 
 	useEffect(() => {
 		const ws = new WebSocket(
 			"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
 		);
+
 		ws.onopen = () => {
 			console.log("opened");
 			setSocket(ws);
@@ -58,6 +65,8 @@ export const Youchen = () => {
 
 			canvas.width = 2560;
 			canvas.height = 1300;
+			// canvas.style.backgroundImage = `url(${bg.src})`;
+			// console.log(canvas.style.backgroundImage);
 
 			const user = {
 				x: 3,
@@ -175,8 +184,16 @@ export const Youchen = () => {
 				ctx.fill();
 			}
 
+			const image = new Image(60, 45);
+			image.onload = drawImageActualSize;
+			image.src = bg.src;
+
+			function drawImageActualSize() {
+				ctx.drawImage(image, 0, 0, 2560, 1300);
+			}
+
 			function render() {
-				drawRect(0, 0, canvas.width, canvas.height, "black", 1);
+				drawImageActualSize();
 				drawRect(
 					user.x,
 					player1_y,
@@ -217,12 +234,10 @@ export const Youchen = () => {
 
 	return (
 		<canvas
-			className={styles.canvasWithBackground}
 			style={{
 				width: "100%",
 				height: "100%",
 				objectFit: "contain",
-				overflow: "hidden",
 			}}
 			ref={cvs}
 		></canvas>

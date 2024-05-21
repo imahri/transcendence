@@ -53,7 +53,7 @@ const LGame = () => {
 										Bazoooooka
 									</div>
 								</div>
-								<div className={styles.tool_box}>
+								{/* <div className={styles.tool_box}>
 									<div className={styles.tool_box_right}>
 										<span>up</span>
 										<div className={styles.tool_box_but}>
@@ -86,7 +86,7 @@ const LGame = () => {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
