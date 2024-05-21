@@ -5,6 +5,37 @@ from .models import Badge, Board, Match, Padel, Items, Acheivement
 from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
 
+
+# ************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ************************************************************************
+
 class MatchView(APIView):
 
     def post(self, request):

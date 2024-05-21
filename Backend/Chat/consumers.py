@@ -1,3 +1,5 @@
+from concurrent.futures import thread
+from discord import StandardSticker
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 from Chat.models import Conversation, Message
@@ -106,3 +108,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, code):
         # self.channels.pop(str(self.user.username))
         await self.close(code)
+
+
+
+
+
+
+
+
+# view(req)
+
+#  user1 = req.GET.get(user1)
+#  user2 = req.GET.get(user2)
+
+
+# thread::(Game((user1, channel), (user2, channel)))
