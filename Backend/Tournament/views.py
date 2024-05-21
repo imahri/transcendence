@@ -5,6 +5,8 @@ from rest_framework.request import Request
 from rest_framework import status
 from .models import Tournament
 
+TOURNAMENT_PARTICIPANTS = 16
+
 
 def catch_view_exception(func):
 
@@ -37,8 +39,14 @@ class TournamentView(APIView):
         return Response(tournament.as_serialized())
 
     @catch_view_exception
-    def get(self):
-        tournaments = Tournament.objects.all().order_by("created_at")
+    def get(self, request: Request):
+        """?all=True get all Conversation"""
+        all: bool = bool(request.query_params.get("all", False))
+        tournaments = (
+            Tournament.objects.all().order_by("created_at")
+            if all
+            else Tournament.objects.filter(creator=request.user).order_by("created_at")
+        )
         return Response([tournament.as_serialized() for tournament in tournaments])
 
     @staticmethod
@@ -55,3 +63,14 @@ class TournamentView(APIView):
         tournament = Tournament.objects.get(id=id)
         tournament.delete()
         return Response({"name": tournament.name})
+
+
+@api_view(["GET"])
+def StartTournament(request):
+    id = request.GET.get("id")
+    tournament = Tournament.objects.get(id=id)
+    if (
+        tournament.creator == request.user
+        and len(tournament.participants) == TOURNAMENT_PARTICIPANTS
+    ):
+        pass

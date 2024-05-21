@@ -5,6 +5,7 @@ from User_Management.models import User
 class Tournament(models.Model):
 
     name = models.CharField(max_length=20, unique=True)
+    creator = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
     participants = models.ManyToManyField(
         "Tournament.Participant", related_name="tournaments"
     )
