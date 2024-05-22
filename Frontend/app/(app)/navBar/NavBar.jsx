@@ -84,7 +84,7 @@ function ProfileBar() {
 
 function NavBar() {
 	return (
-		<nav className="fixed z-10 flex justify-between bg-[#202020] mx-px-20 items-center h-[100px] w-[95%] mx-[20px] max-[500px]:mx-0">
+		<nav className="fixed z-10 flex justify-between bg-[#202020] mx-px-20 items-center h-[80px] w-[95%] mx-[20px] max-[500px]:mx-0">
 			<div className="w-[300px] h-[50px]">
 				<Searchbar style_ops="user" />
 			</div>

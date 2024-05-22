@@ -4,7 +4,6 @@ from channels.db import database_sync_to_async
 from Chat.models import Conversation
 
 from ..models import  Notification, User, Friend
-from ..serializers import NotifSerializer
 
 class NotificationConsumer(AsyncJsonWebsocketConsumer):
     channels: dict = {}

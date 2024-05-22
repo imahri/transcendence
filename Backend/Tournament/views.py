@@ -7,6 +7,9 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from User_Management.Consumers.Notifconsumers import NotificationConsumer
 from .models import Tournament
+from django.core.exceptions import ObjectDoesNotExist
+from .serializers import TournamentSerializer
+
 
 TOURNAMENT_PARTICIPANTS = 8
 
@@ -52,10 +55,32 @@ class TournamentView(APIView):
         )
         return Response([tournament.as_serialized() for tournament in tournaments])
 
+    @catch_view_exception
+    def put(self, request: Request):
+        # put methode to join a tournament
+        """
+        {
+            tournament_id:
+            alias_name:
+        }
+        """
+        # first get Tournament and call join
+        id: int = request.data.get("tournament_id")
+        alias_name: str = request.data.get("alias_name")
+        user = request.user
+
+        tournament: Tournament = Tournament.objects.get(id=id)
+        if tournament.join(user=user, unique_name=alias_name) is False:
+            return Response(
+                data="User Arleady in Tournament", status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return Response(tournament.as_serialized())
+
     @staticmethod
     @api_view(["GET"])
     def get_by_name(request, name):
-        """/<name>"""
+        """getbyname/<name>"""
         tournament = Tournament.objects.get(name=name)
         return Response(tournament.as_serialized())
 
@@ -72,9 +97,9 @@ class TournamentView(APIView):
 def StartTournament(request):
     id = request.GET.get("id")
     tournament = Tournament.objects.get(id=id)
-    if tournament.creator == request.user:
+    if not tournament.creator == request.user:
         return Response({"error": "only for creator"}, status=status.HTTP_403_FORBIDDEN)
-    if not len(tournament.participants) == TOURNAMENT_PARTICIPANTS:
+    if not tournament.participants.count() == TOURNAMENT_PARTICIPANTS:
         return Response(
             {"error": "need more participants"}, status=status.HTTP_403_FORBIDDEN
         )
@@ -86,3 +111,20 @@ def StartTournament(request):
         )
         # send notif
         async_to_sync(channel_layer.send)(channel_name, {"id": "test"})
+
+
+@api_view(["GET"])
+def searchTournamentView(request):
+    try:
+        search_text: str = request.query_params.get("search")
+        founded_tournament = Tournament.objects.filter(name__icontains=search_text)
+        if not founded_tournament.exists():
+            raise ObjectDoesNotExist(f"No results found for {search_text}")
+
+        tournament_serialized = TournamentSerializer(founded_tournament, many=True).data
+        return Response(data=tournament_serialized)
+
+    except ObjectDoesNotExist as no_found:
+        return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as error:
+        return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)

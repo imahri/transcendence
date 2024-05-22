@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import ImageView, UserView, InfoView, searchView
-from .views import getFriendView, getFewFriend, getUserFriends, BlockView, NotifView
+from .views import getFriendView, getFewFriend, getUserFriends, BlockView, NotifView, getUnseenMsgs
 
 urlpatterns = [
     path("", UserView.as_view(), name="user"),
@@ -14,4 +14,5 @@ urlpatterns = [
     path("userfriends", getUserFriends, name="userfriends"),
     path("block", BlockView.as_view(), name="getblocked"),
     path("notification", NotifView.as_view(), name="notification"),
+    path("msgnotif", getUnseenMsgs, name="msgnotif"),
 ]

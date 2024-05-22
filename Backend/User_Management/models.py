@@ -113,6 +113,9 @@ class User(AbstractUser):
     def get_new_Notification(self):
         return self.notifications.all().filter(is_hidden=False, is_read=False)
 
+    def get_last_msg_notification(self):
+        return self.notifications.all().filter(type='C', is_read=False)
+
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
 

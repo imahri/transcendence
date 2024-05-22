@@ -13,12 +13,34 @@ import EditProfile from "./Components/EditProfile";
 
 export const UserProfileContext = createContext();
 
+async function getUser(username, setUserProfile, setisLoading, navigate) {
+	try {
+		const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
+			username: username,
+		});
+
+		if (!isOk) {
+			console.log("error fetch");
+			navigate.replace("/home");
+			return;
+		}
+		const friendShip = data.user.friendship;
+		if (friendShip == "B" || friendShip == "BY") {
+			navigate.replace("/home");
+			return;
+		}
+		setUserProfile(data.user);
+		setisLoading(false);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 function Profile({ params }) {
 	const [userProfile, setUserProfile] = useState(false);
 	const [Edit, setEditProfile] = useState(false);
 	const [isLoading, setisLoading] = useState(true);
 	const navigate = useRouter();
-
 	const [displayFriends, setDisplayFriends] = useState();
 
 	const { user } = useContext(UserContext);
@@ -30,32 +52,14 @@ function Profile({ params }) {
 			setisLoading(false);
 			return;
 		}
-		fetch_jwt(GET_USER_URL, { username: params.username }).then(
-			([isOk, status, data]) => {
-				if (isOk) {
-					//check if user is blocked i can see it
-					if (
-						data.user.friendship == "B" ||
-						data.user.friendship == "BY"
-					) {
-						navigate.replace("/home");
-						return;
-					}
-					setUserProfile(data.user);
-					setisLoading(false);
-				} else {
-					console.log("error fetch");
-					navigate.replace("/home");
-				}
-			},
-		);
-	}, []);
+		getUser(params.username, setUserProfile, setisLoading, navigate);
+	}, [user]);
 
 	return (
 		<>
 			<NavBar />
 			<UserProfileContext.Provider value={userProfile}>
-				<main className="w-full  mt-[100px] flex justify-center">
+				<main className="w-full  mt-[100px] [@media(max-width:900px)]:mb-[70px] flex justify-center">
 					{isLoading ? (
 						<div>Is Loding ...</div>
 					) : (
@@ -63,7 +67,6 @@ function Profile({ params }) {
 							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
 								<Banner />
 								<ProfileInfo
-									user={userProfile}
 									displayFriends={setDisplayFriends}
 									EditProfile={setEditProfile}
 								/>

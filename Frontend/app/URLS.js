@@ -22,7 +22,7 @@ export const BADGES_URL = `${GAME_APP}/badge`;
 export const ITEMS_URL = `${GAME_APP}/items`;
 export const MISSIONS_URL = `${GAME_APP}/missions`;
 export const ACHEIVMENTS_URL = `${GAME_APP}/acheivement`;
-
+export const MATCHES_URL = `${GAME_APP}/match`;
 export const USER_APP = `${BASE_URL}/user`;
 
 export const USER_URL = `${USER_APP}/`;
@@ -30,6 +30,7 @@ export const USER_SEARCH_URL = `${USER_APP}/search`;
 export const GET_USER_URL = `${USER_APP}/user`;
 export const POST_INFO_URL = `${USER_APP}/info`;
 export const NOTIF_URL = `${USER_APP}/notification`;
+export const MSGNOTIF_URL = `${USER_APP}/msgnotif`;
 
 export const FRIENDSHIP_URL = `${USER_APP}/friendship`;
 
@@ -38,3 +39,8 @@ export const GET_Friends_URL = `${USER_APP}/userfriends`;
 export const Block_URL = `${USER_APP}/block`;
 
 export const wsChat = `${WS}/ws/chat`;
+
+const TOURNAMENT_APP = `${BASE_URL}/tournament`;
+
+export const TOURNAMENT_URL = `${TOURNAMENT_APP}/`;
+export const TOURNAMENT_SEARCH_URL = `${TOURNAMENT_APP}/search`;

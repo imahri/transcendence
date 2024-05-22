@@ -13,7 +13,7 @@ function SkinTitle(active, setActive, title) {
 		>
 			{title}
 			<div
-				className={`${!active ? "hidden" : ""} w-[40px] h-[2px] bg-[#DB00FF]`}
+				className={`${!active ? "hidden" : ""} animate-pop w-[40px] h-[2px] bg-[#DB00FF]`}
 			></div>
 		</h1>
 	);

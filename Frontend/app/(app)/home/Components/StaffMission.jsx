@@ -96,7 +96,7 @@ function StaffMission() {
 	}, []);
 
 	return (
-		<div className="w-[25%] flex flex-col items-center gap-[10px] relative [@media(max-width:1500px)]:order-2 [@media(max-width:1500px)]:w-[50%] [@media(max-width:710px)]:w-[90%]">
+		<div className="w-[50%] flex flex-col items-center gap-[10px] relative [@media(max-width:710px)]:w-[90%]">
 			<div className="w-[80%] h-[55px] bg-[#353535] rounded-[7px] flex justify-center items-center [@media(max-width:710px)]:w-[100%]">
 				<h1 className=" font-bold text-[20px] text-white text-center">
 					Staff Mission

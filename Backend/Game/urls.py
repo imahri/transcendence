@@ -6,7 +6,7 @@ from .StaffMissions import MissionView
 
 urlpatterns = [
     
-    path("", MatchView.as_view(), name="create"),
+    path("match", MatchView.as_view(), name="create"),
     path("badge", BadgeView.as_view(), name="badge"),
     # path("badge/<int:pk>", BadgeView.as_view(), name="badgeUpdate"),
     path("board", BoardView.as_view(), name="board"),

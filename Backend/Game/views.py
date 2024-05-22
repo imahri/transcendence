@@ -1,34 +1,29 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serilaizers import BadgeSerializer, MatchSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
+from .serilaizers import BadgeSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
 from .models import Badge, Board, Match, Padel, Items, Acheivement
 from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
 
 class MatchView(APIView):
 
-    def post(self, request):
-        try:
-            user = request.user
-            serializer = MatchSerializer(data=request.data, context={'user': user})
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=400)
-        except ObjectDoesNotExist as error:
-            return Response({'error': "Username doesn't exist"}, status=400)
-        except Exception as error:
-            return Response({'error': str(error)}, status=400)
-
-    
     def get(self, request):
         try:
-            user = request.user
-            matches = Match.objects.filter(user=user).order_by('-played_at')
+            #check if user blocked
+            username = request.query_params.get('username')
+            user : User =  User.objects.get(username=username)
+            last_match = Match.getLstMatch(user)
+            winning = 0
+            loses = 0
+            allMatches = Match.getAllMatches(user)
+            played = len(allMatches)
+            if allMatches == []:
+                allMatches = ""
+            if played != 0:
+                winning = Match.getWinning(user)
+                loses = Match.getLoses(user)
 
-            serializer = MatchSerializer(matches, many=True)
-
-            return Response(serializer.data)
+            return Response({"all" : allMatches, "last_match" : last_match, "played" : played,"winning": winning, "loses" : loses})
         except Exception as error:
             return Response({'error': str(error)}, status=400)
         

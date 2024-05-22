@@ -3,7 +3,6 @@ import LastGame from "@/app/(app)/home/Components/LastGame";
 import { useContext, useEffect, useState } from "react";
 import { UserProfileContext } from "../page";
 import Image from "next/image";
-import starpng from "@/app/(app)/home/assets/starpng.png";
 
 function DisplayStatistic({ title, nb }) {
 	return (
@@ -62,9 +61,9 @@ function Status({ state }) {
 			</div>
 			<div className="flex w-full [@media(max-width:1400px)]:w-[70%] [@media(max-width:650px)]:flex-col [@media(max-width:650px)]:gap-[10px]">
 				<div className="w-1/2 [@media(max-width:650px)]:w-full flex flex-col justify-center  items-center gap-[10px] [@media(max-width:650px)]:order-1">
-					<DisplayStatistic title={"total games"} nb={state.t} />
-					<DisplayStatistic title={"winning games"} nb={state.w} />
-					<DisplayStatistic title={"loses games"} nb={state.l} />
+					<DisplayStatistic title={"total games"} nb={state?.p} />
+					<DisplayStatistic title={"winning games"} nb={state?.w} />
+					<DisplayStatistic title={"loses games"} nb={state?.l} />
 				</div>
 				<Circle info={userProfile.info} />
 			</div>
@@ -74,7 +73,7 @@ function Status({ state }) {
 
 import t from "../assets/noTrophy.png";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { ACHEIVMENTS_URL } from "@/app/URLS";
+import { ACHEIVMENTS_URL, MATCHES_URL } from "@/app/URLS";
 
 function ShowRoom({ title, items }) {
 	return (
@@ -105,11 +104,41 @@ function ShowRoom({ title, items }) {
 	);
 }
 
+async function GameHistoric(
+	username,
+	setLastGame,
+	setGmaeHistoric,
+	setLoading,
+	setState,
+) {
+	try {
+		setLoading(true);
+		const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
+			username: username,
+		});
+		if (!isOk) {
+			console.log(data);
+			setLoading(false);
+			return;
+		}
+		setLastGame(data.last_match);
+		setGmaeHistoric(data.all);
+		setState({ w: data.winning, l: data.loses, p: data.played });
+	} catch (error) {
+		console.log(error);
+	}
+	setLoading(false);
+}
+
 export default function MyState() {
-	const state = { w: 120, l: 4, t: 16 };
 	const Trophy = [t];
 
 	const [ach, setAch] = useState();
+	const [state, setState] = useState();
+	const [lastGame, setLastGame] = useState();
+	const [gameHistoric, setGmaeHistoric] = useState();
+	const [isLoading, setLoading] = useState();
+	const userProfile = useContext(UserProfileContext);
 
 	useEffect(() => {
 		const getAcheivments = async (setAch) => {
@@ -126,6 +155,13 @@ export default function MyState() {
 			}
 		};
 		getAcheivments(setAch);
+		GameHistoric(
+			userProfile.username,
+			setLastGame,
+			setGmaeHistoric,
+			setLoading,
+			setState,
+		);
 	}, []);
 
 	return (
@@ -138,8 +174,16 @@ export default function MyState() {
 				</div>
 			</div>
 			<div className="h-full w-[70%] [@media(max-width:1400px)]:w-[95%] rounded-[10px] bg-[#2F2F2F] flex justify-center items-center [@media(max-width:900px)]:flex-col">
-				<LastGame />
-				<Historic />
+				<LastGame
+					User={userProfile}
+					lastgame={lastGame}
+					isLoading={isLoading}
+				/>
+				<Historic
+					User={userProfile}
+					gameHistoric={gameHistoric}
+					isLoading={isLoading}
+				/>
 			</div>
 		</div>
 	);
