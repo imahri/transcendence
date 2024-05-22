@@ -106,8 +106,21 @@ def StartTournament(request):
     tournament.make_schedule()
     channel_layer = get_channel_layer()
     for participant in tournament.participants.all():
-        channel_name = NotificationConsumer.get_channel_by_user(
-            participant.user.username
+        user: User = participant.user
+        channel_name = NotificationConsumer.get_channel_by_user(user.username)
+        async_to_sync(channel_layer.send)(
+            channel_name,
+            {
+                "action": "send_notif",
+                "content": {
+                    "to": user.username,
+                    "type": "T",
+                    "content": {
+                        "uri": f"/tournament/{tournament.name}",
+                        "message": f"Tournament {tournament.name} is Started",
+                    },
+                },
+            },
         )
         # send notif
         async_to_sync(channel_layer.send)(channel_name, {"id": "test"})
