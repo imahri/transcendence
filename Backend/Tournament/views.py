@@ -5,6 +5,7 @@ from rest_framework.request import Request
 from rest_framework import status
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from User_Management.models import User
 from User_Management.Consumers.Notifconsumers import NotificationConsumer
 from .models import Tournament
 from django.core.exceptions import ObjectDoesNotExist
