@@ -91,9 +91,9 @@ class TournamentView(APIView):
         return Response({"name": tournament.name})
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def StartTournament(request):
-    id = request.GET.get("id")
+    id = request.query_params.get("id")
     tournament = Tournament.objects.get(id=id)
     if not tournament.creator == request.user:
         return Response({"error": "only for creator"}, status=status.HTTP_403_FORBIDDEN)
