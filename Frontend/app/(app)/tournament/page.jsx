@@ -4,7 +4,7 @@ import Create from "./components/CreateTournament";
 import Display from "./components/Display";
 import Demo from "./components/JoinTournament";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { TOURNAMENT_SEARCH_URL } from "@/app/URLS";
+import { TOURNAMENT_SEARCH_URL, TOURNAMENT_URL } from "@/app/URLS";
 import { UserNotFound } from "../searchBar/SearchBarUtils";
 
 function PlusSvg(setCreate, setDemo) {
@@ -43,6 +43,16 @@ async function searchTournament(input, setResult, setCreate, setDemo) {
 
 	if (!isOk) {
 		setResult(404);
+		return;
+	}
+	setResult(data);
+}
+
+async function getMyTornament(setResult) {
+	const [isOk, status, data] = await fetch_jwt(TOURNAMENT_URL);
+
+	if (!isOk) {
+		console.log(data);
 		return;
 	}
 	setResult(data);
@@ -110,6 +120,14 @@ function page() {
 				{create && <Create />}
 				{demo && <Demo Tournament={demo} setDemo={setDemo} />}
 			</div>
+			<button
+				className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[15px] cursor-pointer text-white relative"
+				onClick={() => {
+					setDemo(false), setCreate(false), getMyTornament(setResult);
+				}}
+			>
+				My Tournament
+			</button>
 		</div>
 	);
 }

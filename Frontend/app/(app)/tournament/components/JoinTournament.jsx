@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../context";
-import { Input, myseterror } from "./CreateTournament";
+import { Input } from "./CreateTournament";
 import Image from "next/image";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { TOURNAMENT_URL } from "@/app/URLS";
+import { joinTournament } from "./TournamentMethod";
 
 function UsersDemo({ participant }) {
 	return (
@@ -22,41 +21,58 @@ function UsersDemo({ participant }) {
 	);
 }
 
-async function joinTournament(id, user, nickname, setError, setDemo) {
-	//PUT add user to a tournament
-	if (!nickname) nickname = user.username;
-	const body = JSON.stringify({ tournament_id: id, alias_name: nickname });
-
-	const [isOk, status, data] = await fetch_jwt(
-		TOURNAMENT_URL,
-		{},
-		{
-			method: "PUT",
-			body: body,
-			headers: { "Content-Type": "application/json" },
-		},
+function Button({ text, callBack }) {
+	return (
+		<button
+			className={`${text == "full" ? "cursor-not-allowed" : "cursor-pointer"}  bg-green-500  bg-opacity-70 w-[138px] h-[37px] rounded-[10px]  font-bold text-[16px] text-white relative`}
+			onClick={() => callBack()}
+		>
+			{text}
+		</button>
 	);
-
-	if (!isOk) {
-		console.log(data);
-		myseterror(setError, true);
-		return;
-	}
-	setDemo(data);
 }
 
-export default function Demo({ Tournament, setDemo }) {
-	const { user } = useContext(UserContext);
-	const users = Tournament.participants;
-	const full = users.length == 8;
+function WhatButton(user, Tournament) {
+	const full = Tournament.participants.length == 8;
+	const IamOwner = Tournament.creator.id == user.id;
 	const alreadyIn = Tournament.participants.find(
 		(obj) => obj.user.id == user.id,
 	)
 		? true
 		: false;
-	const button = alreadyIn ? "Quit" : full ? "Full" : "Join";
+
+	if (full && IamOwner) return "Start";
+	if (!full && IamOwner) return "Owner";
+	else if (full && !alreadyIn) return "Full";
+	else if (full && alreadyIn) return "Quit";
+	else if (!full && !alreadyIn) return "Join";
+}
+
+export default function Demo({ Tournament, setDemo }) {
+	const { user } = useContext(UserContext);
+	const users = Tournament.participants;
+
 	const [nickname, setNickName] = useState();
 	const [error, setError] = useState();
+	const button = WhatButton(user, Tournament);
+
+	const callBack = {
+		Start: () => {
+			console.log("start");
+		},
+		Owner: () => {
+			console.log("owner");
+		},
+		Full: () => {
+			console.log("full");
+		},
+		Quit: () => {
+			console.log("quit");
+		},
+		Join: () => {
+			joinTournament(Tournament.id, user, nickname, setError, setDemo);
+		},
+	};
 
 	return (
 		<div className="w-full flex flex-col items-center gap-[10px]">
@@ -73,28 +89,15 @@ export default function Demo({ Tournament, setDemo }) {
 						);
 					})}
 			</div>
-			{!full && !alreadyIn && (
+			{button != "Join" && (
 				<Input
 					label={"You can Enter Username"}
 					error={error}
 					setter={setNickName}
 				/>
 			)}
-			<button
-				className={`${full ? "cursor-not-allowed bg-blue-600" : "cursor-pointer bg-green-500  bg-opacity-70"} w-[138px] h-[37px] rounded-[10px]  font-bold text-[16px] text-white relative`}
-				onClick={() =>
-					joinTournament(
-						Tournament.id,
-						user,
-						nickname,
-						setError,
-						setDemo,
-					)
-				}
-				disabled={full}
-			>
-				{button}
-			</button>
+
+			<Button text={button} callBack={callBack[button]} />
 		</div>
 	);
 }
