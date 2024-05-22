@@ -91,6 +91,30 @@ class Tournament(models.Model):
             )
         return message
 
+    def next_match(self):
+        if self.schedule == None:
+            return
+        self.match_index += 1
+        match self.match_index:
+            case 1:
+                return self.schedule["FirstSide"]["3rd"]["1"]
+            case 2:
+                return self.schedule["SecondSide"]["3rd"]["2"]
+            case 3:
+                return self.schedule["FirstSide"]["3rd"]["3"]
+            case 4:
+                return self.schedule["SecondSide"]["3rd"]["4"]
+            case 5:
+                return self.schedule["FirstSide"]["2nd"]["5"]
+            case 6:
+                return self.schedule["SecondSide"]["2nd"]["6"]
+            case 7:
+                return [
+                    self.schedule["FirstSide"]["1st"],
+                    self.schedule["SecondSide"]["1st"],
+                ]
+        self.save()
+
 
 class Participant(models.Model):
 
