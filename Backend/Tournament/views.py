@@ -54,7 +54,7 @@ class TournamentView(APIView):
         return Response([tournament.as_serialized() for tournament in tournaments])
 
     @catch_view_exception
-    def put(self, request: Request):
+    def put(self, request):
         # put methode to join a tournament
         """
         {
