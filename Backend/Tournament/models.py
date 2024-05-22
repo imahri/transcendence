@@ -9,7 +9,7 @@ class Tournament(models.Model):
     participants = models.ManyToManyField(
         "Tournament.Participant", related_name="tournaments"
     )
-    schedule = models.JSONField(null=True)
+    schedule = models.JSONField(null=True,blank=True)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 

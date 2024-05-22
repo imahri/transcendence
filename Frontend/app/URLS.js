@@ -44,3 +44,4 @@ const TOURNAMENT_APP = `${BASE_URL}/tournament`;
 
 export const TOURNAMENT_URL = `${TOURNAMENT_APP}/`;
 export const TOURNAMENT_SEARCH_URL = `${TOURNAMENT_APP}/search`;
+export const STARTOUR_URL = `${TOURNAMENT_APP}/StartTournament`;

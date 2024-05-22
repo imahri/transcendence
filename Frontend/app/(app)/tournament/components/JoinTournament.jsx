@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../context";
 import { Input } from "./CreateTournament";
 import Image from "next/image";
-import { joinTournament } from "./TournamentMethod";
+import { joinTournament, startTournament } from "./TournamentMethod";
 
 function UsersDemo({ participant }) {
 	return (
@@ -58,14 +58,10 @@ export default function Demo({ Tournament, setDemo }) {
 
 	const callBack = {
 		Start: () => {
-			console.log("start");
+			startTournament(Tournament.id, setError);
 		},
-		Owner: () => {
-			console.log("owner");
-		},
-		Full: () => {
-			console.log("full");
-		},
+		Owner: () => {},
+		Full: () => {},
 		Quit: () => {
 			console.log("quit");
 		},
@@ -75,29 +71,37 @@ export default function Demo({ Tournament, setDemo }) {
 	};
 
 	return (
-		<div className="w-full flex flex-col items-center gap-[10px]">
-			<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
-				{Tournament.name}
-			</h1>
-			<div className="w-[80%] h-[250px] flex flex-col gap-[20px] rounded-lg bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] p-[10px] overflow-y-scroll">
-				{users &&
-					users.map((obj, index) => {
-						return (
-							<div key={index}>
-								<UsersDemo participant={obj} />
-							</div>
-						);
-					})}
+		<>
+			<div className="w-full flex flex-col items-center gap-[15px] py-[10px]">
+				<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
+					{Tournament.name}
+				</h1>
+				<div className="w-[80%] h-[250px] flex flex-col gap-[20px] rounded-lg bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] p-[10px] px-[15px] overflow-y-scroll">
+					{users &&
+						users.map((obj, index) => {
+							return (
+								<div key={index}>
+									<UsersDemo participant={obj} />
+								</div>
+							);
+						})}
+				</div>
+				{button == "Join" && (
+					<Input
+						label={"You can Enter Username"}
+						error={error}
+						setter={setNickName}
+					/>
+				)}
+				<Button text={button} callBack={callBack[button]} />
 			</div>
-			{button != "Join" && (
-				<Input
-					label={"You can Enter Username"}
-					error={error}
-					setter={setNickName}
-				/>
-			)}
-
-			<Button text={button} callBack={callBack[button]} />
-		</div>
+			<div
+				className={`${error?.error ? "" : "hidden"} w-full h-full absolute backdrop-blur-sm top-0 left-0 flex justify-center items-center`}
+			>
+				<h1 className="text-white font-semibold text-[14px]">
+					Error : {error?.error}
+				</h1>
+			</div>
+		</>
 	);
 }

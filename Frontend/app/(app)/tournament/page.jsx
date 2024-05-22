@@ -97,7 +97,7 @@ function page() {
 				{PlusSvg(setCreate, setDemo)}
 			</div>
 			<div
-				className={`bg-[#252525] w-[70%] min-h-[350px] p-[10px] rounded-lg`}
+				className={`bg-[#252525] w-[70%] min-h-[350px] p-[10px] rounded-lg relative`}
 			>
 				<div
 					className={`${searchResult && !create ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll w-full h-[340px]`}

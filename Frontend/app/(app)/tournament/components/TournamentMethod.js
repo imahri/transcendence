@@ -1,5 +1,5 @@
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { TOURNAMENT_URL } from "@/app/URLS";
+import { STARTOUR_URL, TOURNAMENT_URL } from "@/app/URLS";
 import { myseterror } from "./CreateTournament";
 
 export async function joinTournament(id, user, nickname, setError, setDemo) {
@@ -27,7 +27,15 @@ export async function joinTournament(id, user, nickname, setError, setDemo) {
 
 export async function startTournament(id, setError) {
 	//start tournament
-	console.log("start tournament");
+
+	const [isOk, status, data] = await fetch_jwt(STARTOUR_URL, { id: id });
+
+	if (!isOk) {
+		console.log(data);
+		myseterror(setError, data);
+		return;
+	}
+	console.log(data);
 }
 
 export async function quitTournament(id, setError) {

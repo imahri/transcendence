@@ -93,21 +93,21 @@ class TournamentView(APIView):
 def StartTournament(request):
     id = request.GET.get("id")
     tournament = Tournament.objects.get(id=id)
-    
-    if tournament.creator == request.user:
+
+    if tournament.creator != request.user:
         return Response({"error": "only for creator"}, status=status.HTTP_403_FORBIDDEN)
-    if not len(tournament.participants) == TOURNAMENT_PARTICIPANTS:
+    if not tournament.participants.count() == TOURNAMENT_PARTICIPANTS:
         return Response(
             {"error": "need more participants"}, status=status.HTTP_403_FORBIDDEN
         )
     tournament.make_schedule()
-    channel_layer = get_channel_layer()
-    for participant in tournament.participants.all():
-        channel_name = NotificationConsumer.get_channel_by_user(
-            participant.user.username
-        )
-        # send notif
-        async_to_sync(channel_layer.send)(channel_name, {"id": "test"})
+    # channel_layer = get_channel_layer()
+    # for participant in tournament.participants.all():
+    #     channel_name = NotificationConsumer.get_channel_by_user(
+    #         participant.user.username
+    #     )
+    #     # send notif
+    #     async_to_sync(channel_layer.send)(channel_name, {"id": "test"})
 
 
 @api_view(["GET"])
