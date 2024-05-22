@@ -122,8 +122,6 @@ def StartTournament(request):
                 },
             },
         )
-        # send notif
-        async_to_sync(channel_layer.send)(channel_name, {"id": "test"})
 
 
 @api_view(["GET"])
