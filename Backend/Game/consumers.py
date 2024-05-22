@@ -38,7 +38,10 @@ class Game:
             "height": 200,
             "color": "red",
             "score": 0,
-            "id" : 0
+            "id" : 0,
+            "img": "",
+            "user_name": "",
+            "exp": 100,
         }
 
         self.user2 = {
@@ -48,7 +51,10 @@ class Game:
             "height": 200,
             "color": "red",
             "score": 0,
-            "id" : 0
+            "id" : 0,
+            "img": "",
+            "user_name": "",
+            "exp": 100,
         }
         
         self.ball = {
@@ -199,7 +205,6 @@ def check_for_game_start(nested_list, name):
     index = check_nested_players_status(nested_list)
     if (index != None):
         nested_list[index][1].append(name)
-        print(nested_list)
         return True
     else:
         rn = creat_room_name(nested_list)
@@ -231,6 +236,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     self.channel_name
                 )
                 
+                print(">>>>>>>>>>")
+                print(self.user)
                 if (not check_for_game_start(self.game_room, self.user.username)):
                     self.loba = Game()
                     self.game_object.append(self.loba)
@@ -238,12 +245,27 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         'event': 'index_player',
                         'index': 1,
                     })
+                    # await self.send_json(content={
+                    #     'event': 'change_state',
+                    #     'state': "start",
+                    # })
 
                 else:
                     await self.send_json(content={
                         'event': 'index_player',
                         'index': 2,
                     })
+
+
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'change_state',
+                            'state': 'state'
+                        }
+                    
+                    )
+                    
                     self.game_task = asyncio.create_task(self.send_ball_coordinates())
         except Exception:
             await self.close()
@@ -266,7 +288,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             obg.pause = True
 
 
-
+    async def change_state(self, event):
+        await self.send_json(content={
+                        'event': 'change_state',
+                        'state': "start",
+                    })
+        
 
     async def send_ball_coordinates(self):
         print("allo",file=sys.stderr)
