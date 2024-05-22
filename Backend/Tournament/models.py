@@ -1,5 +1,8 @@
 from django.db import models
 from User_Management.models import User
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from User_Management.Consumers.Notifconsumers import NotificationConsumer
 
 
 class Tournament(models.Model):
@@ -63,6 +66,29 @@ class Tournament(models.Model):
             },
         }
         self.save()
+
+    def start_tournament_notif(self):
+        channel_layer = get_channel_layer()
+        uri: str = f"/tournament/{self.name}"
+        message: str = f"Tournament {self.name} is Started"
+        for participant in self.participants.all():
+            user: User = participant.user
+            channel_name = NotificationConsumer.get_channel_by_user(user.username)
+            async_to_sync(channel_layer.send)(
+                channel_name,
+                {
+                    "action": "send_notif",
+                    "content": {
+                        "to": user.username,
+                        "type": "T",
+                        "content": {
+                            "uri": uri,
+                            "message": message,
+                        },
+                    },
+                },
+            )
+        return message
 
 
 class Participant(models.Model):

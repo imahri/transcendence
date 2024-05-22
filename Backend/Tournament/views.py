@@ -3,10 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from User_Management.models import User
-from User_Management.Consumers.Notifconsumers import NotificationConsumer
 from .models import Tournament
 from django.core.exceptions import ObjectDoesNotExist
 from .serializers import TournamentSerializer
@@ -105,26 +102,7 @@ def StartTournament(request):
             {"error": "need more participants"}, status=status.HTTP_403_FORBIDDEN
         )
     tournament.make_schedule()
-    channel_layer = get_channel_layer()
-    uri: str = f"/tournament/{tournament.name}"
-    message: str = f"Tournament {tournament.name} is Started"
-    for participant in tournament.participants.all():
-        user: User = participant.user
-        channel_name = NotificationConsumer.get_channel_by_user(user.username)
-        async_to_sync(channel_layer.send)(
-            channel_name,
-            {
-                "action": "send_notif",
-                "content": {
-                    "to": user.username,
-                    "type": "T",
-                    "content": {
-                        "uri": uri,
-                        "message": message,
-                    },
-                },
-            },
-        )
+    message = tournament.start_tournament_notif()
     return Response({"message": message})
 
 
