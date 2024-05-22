@@ -66,6 +66,7 @@ class Tournament(models.Model):
             },
         }
         self.save()
+        return self
 
     def start_tournament_notif(self):
         channel_layer = get_channel_layer()
