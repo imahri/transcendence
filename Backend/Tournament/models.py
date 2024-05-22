@@ -1,4 +1,5 @@
 from django.db import models
+from Game.models import Match
 from User_Management.models import User
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -90,6 +91,21 @@ class Tournament(models.Model):
                 },
             )
         return message
+
+    def fill_2nd(self):
+        if self.schedule == None:
+            return
+        match_index = self.match_index + 1
+        if match_index == 5:
+            self.schedule["FirstSide"]["2nd"]["5"] = [
+                Match.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
+                Match.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
+            ]
+        elif match_index == 6:
+            self.schedule["SecondSide"]["2nd"]["6"] = [
+                Match.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
+                Match.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
+            ]
 
     def next_match(self):
         if self.schedule == None:
