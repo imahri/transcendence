@@ -1,20 +1,27 @@
 from django.db import models
+from Game.models import Match
 from User_Management.models import User
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from User_Management.Consumers.Notifconsumers import NotificationConsumer
 
 
 class Tournament(models.Model):
 
     name = models.CharField(max_length=20, unique=True)
-    creator = models.ForeignKey("User_Management.User", null=True, on_delete=models.CASCADE)
+    creator = models.ForeignKey(
+        "User_Management.User", null=True, on_delete=models.CASCADE
+    )
     participants = models.ManyToManyField(
         "Tournament.Participant", related_name="tournaments"
     )
-    schedule = models.JSONField(null=True,blank=True)
+    match_index = models.IntegerField(default=0)
+    schedule = models.JSONField(null=True)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 
     def as_serialized(self):
-        from Tournament.serializers import TournamentSerializer
+        from .serializers import TournamentSerializer
 
         return TournamentSerializer(self).data
 
@@ -27,15 +34,14 @@ class Tournament(models.Model):
         )
         return tournament
 
-    #CHECK IF ALREADY ADDED TO TOURNAMENT
+    # CHECK IF ALREADY ADDED TO TOURNAMENT
     def join(self, user: User, unique_name: str):
 
         is_participant = self.participants.filter(user=user).exists()
         if is_participant:
-            return False        
+            return False
         self.participants.add(Participant.objects.create(name=unique_name, user=user))
         return True
-
 
     def quit(self, unique_name: str):
         self.participants.remove(Participant.objects.get(name=unique_name))
@@ -44,22 +50,85 @@ class Tournament(models.Model):
         participants = self.participants.values()
         self.schedule = {
             "FirstSide": {
-                "3rd": [
-                    [participants[0], participants[4]],
-                    [participants[2], participants[6]],
-                ],
-                "2nd": None,
+                "3rd": {
+                    "1": [participants[0], participants[4]],
+                    "3": [participants[2], participants[6]],
+                },
+                "2nd": {"5": None},
                 "1st": None,
             },
             "SecondSide": {
-                "3rd": [
-                    [participants[1], participants[5]],
-                    [participants[3], participants[7]],
-                ],
-                "2nd": None,
+                "3rd": {
+                    "2": [participants[1], participants[5]],
+                    "4": [participants[3], participants[7]],
+                },
+                "2nd": {"6": None},
                 "1st": None,
             },
         }
+        self.save()
+        return self
+
+    def start_tournament_notif(self):
+        channel_layer = get_channel_layer()
+        uri: str = f"/tournament/{self.name}"
+        message: str = f"Tournament {self.name} is Started"
+        for participant in self.participants.all():
+            user: User = participant.user
+            channel_name = NotificationConsumer.get_channel_by_user(user.username)
+            async_to_sync(channel_layer.send)(
+                channel_name,
+                {
+                    "action": "send_notif",
+                    "content": {
+                        "to": user.username,
+                        "type": "T",
+                        "content": {
+                            "uri": uri,
+                            "message": message,
+                        },
+                    },
+                },
+            )
+        return message
+
+    def fill_2nd(self):
+        if self.schedule == None:
+            return
+        match_index = self.match_index + 1
+        if match_index == 5:
+            self.schedule["FirstSide"]["2nd"]["5"] = [
+                Match.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
+                Match.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
+            ]
+        elif match_index == 6:
+            self.schedule["SecondSide"]["2nd"]["6"] = [
+                Match.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
+                Match.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
+            ]
+
+    def next_match(self):
+        if self.schedule == None:
+            return
+        self.match_index += 1
+        match self.match_index:
+            case 1:
+                return self.schedule["FirstSide"]["3rd"]["1"]
+            case 2:
+                return self.schedule["SecondSide"]["3rd"]["2"]
+            case 3:
+                return self.schedule["FirstSide"]["3rd"]["3"]
+            case 4:
+                return self.schedule["SecondSide"]["3rd"]["4"]
+            case 5:
+                return self.schedule["FirstSide"]["2nd"]["5"]
+            case 6:
+                return self.schedule["SecondSide"]["2nd"]["6"]
+            case 7:
+                return [
+                    self.schedule["FirstSide"]["1st"],
+                    self.schedule["SecondSide"]["1st"],
+                ]
         self.save()
 
 
@@ -69,6 +138,6 @@ class Participant(models.Model):
     user = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
 
     def as_serialized(self):
-        from Tournament.serializers import ParticipantSerializer
+        from .serializers import ParticipantSerializer
 
         return ParticipantSerializer(self).data
