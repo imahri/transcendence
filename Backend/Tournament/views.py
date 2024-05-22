@@ -106,6 +106,8 @@ def StartTournament(request):
         )
     tournament.make_schedule()
     channel_layer = get_channel_layer()
+    uri: str = f"/tournament/{tournament.name}"
+    message: str = f"Tournament {tournament.name} is Started"
     for participant in tournament.participants.all():
         user: User = participant.user
         channel_name = NotificationConsumer.get_channel_by_user(user.username)
@@ -117,12 +119,13 @@ def StartTournament(request):
                     "to": user.username,
                     "type": "T",
                     "content": {
-                        "uri": f"/tournament/{tournament.name}",
-                        "message": f"Tournament {tournament.name} is Started",
+                        "uri": uri,
+                        "message": message,
                     },
                 },
             },
         )
+    return Response({"message": message})
 
 
 @api_view(["GET"])
