@@ -11,6 +11,7 @@ class Tournament(models.Model):
     participants = models.ManyToManyField(
         "Tournament.Participant", related_name="tournaments"
     )
+    match_index = models.IntegerField(default=0)
     schedule = models.JSONField(null=True)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
@@ -45,19 +46,19 @@ class Tournament(models.Model):
         participants = self.participants.values()
         self.schedule = {
             "FirstSide": {
-                "3rd": [
-                    [participants[0], participants[4]],
-                    [participants[2], participants[6]],
-                ],
-                "2nd": None,
+                "3rd": {
+                    "1": [participants[0], participants[4]],
+                    "3": [participants[2], participants[6]],
+                },
+                "2nd": {"5": None},
                 "1st": None,
             },
             "SecondSide": {
-                "3rd": [
-                    [participants[1], participants[5]],
-                    [participants[3], participants[7]],
-                ],
-                "2nd": None,
+                "3rd": {
+                    "2": [participants[1], participants[5]],
+                    "4": [participants[3], participants[7]],
+                },
+                "2nd": {"6": None},
                 "1st": None,
             },
         }
