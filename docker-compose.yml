@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 networks:
     transcendence_network:
@@ -40,8 +40,27 @@ services:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            PGDATA: /var/lib/postgresql/data
+        volumes:
+            - ./DB:/var/lib/postgresql/data
         restart: always
         #  In-Production
         #       - Only auth host is "backend"
     Redis:
         image: redis
+    elasticsearch:
+        image: elasticsearch:latest
+        environment:
+            - DISCOVERY_TYPE=single-node
+        volumes:
+            - elasticsearch-data:/var/lib/elasticsearch
+    logstash:
+        image: logstash:latest
+        volumes:
+            - ./logstash.conf:/etc/logstash/conf.d/00-main.conf
+    kibana:
+        image: kibana:latest
+        ports:
+            - 5601:5601
+        depends_on:
+            - elasticsearch

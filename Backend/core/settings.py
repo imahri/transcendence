@@ -129,6 +129,39 @@ DATABASES = {
 }
 
 
+# Logs     install python-beats
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+        },
+    },
+    "handlers": {
+        "beats": {
+            "level": "INFO",
+            "class": "beats.handlers.BeatsHandler",
+            "host": "Backend",  # Replace with your container name
+            "port": 5044,
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["beats"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}
+
+#  To use log
+# import logging
+# logger = logging.getLogger(__name__)
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
