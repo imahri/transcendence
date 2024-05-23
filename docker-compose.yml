@@ -4,6 +4,9 @@ networks:
     transcendence_network:
         driver: bridge
 
+volumes:
+    grafana_data:
+
 services:
     Frontend:
         container_name: Frontend
@@ -48,6 +51,8 @@ services:
         #       - Only auth host is "backend"
     Redis:
         image: redis
+
+    # Infrastructure Setup with ELK (Elasticsearch, Logstash, Kibana)
     elasticsearch:
         image: elasticsearch:latest
         environment:
@@ -64,3 +69,18 @@ services:
             - 5601:5601
         depends_on:
             - elasticsearch
+
+    # Monitoring system with Prometheus and Grafana
+    prometheus:
+        image: prom/prometheus:latest
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        ports:
+            - 9090:9090
+    grafana:
+        image: grafana/grafana:latest
+        volumes:
+            - ./grafana.ini:/etc/grafana/grafana.ini
+            - grafana_data:/var/lib/grafana
+        ports:
+            - 3000:3000
