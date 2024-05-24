@@ -7,6 +7,7 @@ const useConversationID = (FriendName) => {
 	const [conversationID, setConversationID] = useState(0);
 
 	useEffect(() => {
+		// TODO: use route handler
 		fetch_jwt(
 			APIs.chat.conversations,
 			{ FriendName: FriendName },

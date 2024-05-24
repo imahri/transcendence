@@ -2,6 +2,7 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { useEffect, useState } from "react";
 
 async function getConversations([offset, setOffset]) {
+	// TODO: use route handler
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
 		offset: offset,
 	});
@@ -13,6 +14,7 @@ async function getConversations([offset, setOffset]) {
 }
 
 async function getLastConversations(offset) {
+	// TODO: use route handler
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
 		offset: offset,
 		last: true,

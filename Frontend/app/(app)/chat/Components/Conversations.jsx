@@ -182,6 +182,7 @@ export default function Conversations({
 						id = conv.id;
 					}
 				});
+				// TODO: use route handler
 				const [isOk, status, data] = await fetch_jwt(
 					`${APIs.chat.last_message}${id}`,
 				);

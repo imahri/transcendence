@@ -30,6 +30,7 @@ export function StartConversation({
 
 	useEffect(() => {
 		if (visible)
+			// TODO: use route handler
 			fetch_jwt(APIs.user.friends).then(([isOk, status, data]) => {
 				if (isOk) setFriendList(data);
 				_ref.current.classList.toggle("h-[10rem]", !isOk);
@@ -39,6 +40,7 @@ export function StartConversation({
 	}, [visible]);
 
 	const getConversation = async (friend) => {
+		// TODO: use route handler
 		const [isOk, status, data] = await fetch_jwt(
 			`${APIs.chat.conversations}/${friend}`,
 		);

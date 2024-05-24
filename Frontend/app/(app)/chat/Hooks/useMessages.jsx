@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 async function getMessages(conversation_id, [offset, setOffset]) {
 	if (conversation_id != 0) {
+		// TODO: use route handler
 		const [isOk, status, data] = await fetch_jwt(APIs.chat.messages, {
 			conversation: conversation_id,
 			offset: offset,
