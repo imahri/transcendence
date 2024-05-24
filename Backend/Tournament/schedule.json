@@ -1,18 +1,18 @@
 {
 	"FirstSide": {
-		"3rd": [
-			["player1", "player2"],
-			["player1", "player2"]
-		],
-		"2nd": ["player1", "player2"],
+		"3rd":{ 
+			"1": ["player1", "player2"],
+			"3": ["player1", "player2"]
+		},
+		"2nd": {"5": ["player1", "player2"]},
 		"1st": "player2"
 	},
 	"SecondSide": {
-		"3rd": [
-			["player1", "player2"],
-			["player1", "player2"]
-		],
-		"2nd": ["player1", "player2"],
+		"3rd":{ 
+			"2": ["player1", "player2"],
+			"4": ["player1", "player2"]
+		},
+		"2nd": {"6": ["player1", "player2"]},
 		"1st": "player2"
 	}
 }

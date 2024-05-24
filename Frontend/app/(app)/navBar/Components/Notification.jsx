@@ -15,6 +15,7 @@ function setType(notifType, notifContent) {
 
 	if (notifType == "C") return sentMsg;
 	else if (notifType == "G") return sentGameInvit;
+	else if (notifType == "T") return notifContent.message;
 	if (notifContent.status == "add") return sentInvit;
 	else return sentAccept;
 }
@@ -34,16 +35,24 @@ function readNotif(socket, notif, setNbNotif) {
 	notif.is_read = true;
 }
 
+function getNotifLink(notif) {
+	if (notif.type == "F") return `/profile/${notif.user.username}`;
+	if (notif.type == "T")
+		return `/tournament/result/${notif.content.tournament_name}`;
+	if (notif.type == "C") return `/chat/${notif.user.username}`;
+	else return "#";
+}
+
 function NotifSection({ notif }) {
 	const ntype = notif.type;
 	const Svg = ntype == "C" ? ChatSvg : ntype == "F" ? FriendSvg : GmaeSvg;
 	const type = setType(notif.type, notif.content);
-	const link = ntype == "F" ? "/profile" : "#";
+	const link = getNotifLink(notif);
 	const time = new Date(notif.time).toLocaleTimeString();
 
 	return (
 		<Link
-			href={`${link}/${notif.user.username}`}
+			href={link}
 			className="w-full h-[70px] flex items-center gap-[10px] relative"
 		>
 			<div className="relative">

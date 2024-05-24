@@ -113,6 +113,9 @@ class User(AbstractUser):
     def get_new_Notification(self):
         return self.notifications.all().filter(is_hidden=False, is_read=False)
 
+    def get_last_msg_notification(self):
+        return self.notifications.all().filter(type='C', is_read=False)
+
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
 
@@ -287,6 +290,15 @@ class Notification(models.Model):
         notification.sended_to.add(friend)
         return notification
 
+    @staticmethod
+    def createToMultiUsers(user: User, content: dict):
+        sended_to = content["to"]
+        friends_ids = sended_to.values_list('id', flat=True)
+        notification = Notification(user=user, type=content["type"])
+        notification.content = content["content"]
+        notification.save()
+        notification.sended_to.add(*friends_ids)
+        return notification
 
     def as_serialized(self):
         from .serializers import NotifSerializer

@@ -69,7 +69,7 @@ function Paddles({ paddles, setPaddles, isLoading }) {
 									}
 								/>
 								{paddles.current_item.id == element.id && (
-									<div className="text-white bg-[#262626] font-bold text-[15px] p-[5px] rounded-[5px] absolute">
+									<div className="size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white">
 										Equiped
 									</div>
 								)}
@@ -120,7 +120,7 @@ function Boards({ boards, setBoards, isLoading }) {
 									}
 								/>
 								{boards.current_item.id == element.id && (
-									<div className="text-white bg-[#262626] font-bold text-[15px] p-[5px] rounded-[5px] absolute">
+									<div className="size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white">
 										Equiped
 									</div>
 								)}
@@ -169,7 +169,7 @@ function Badges({ badges, setBadges, isLoading }) {
 									<Badge BadgeInfo={obj} />
 								</div>
 								{badges.current_item.id == obj.id && (
-									<div className="text-white bg-[#262626] font-bold text-[15px] p-[5px] rounded-[5px] absolute">
+									<div className="size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white">
 										Equiped
 									</div>
 								)}

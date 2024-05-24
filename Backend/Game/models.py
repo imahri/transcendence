@@ -1,8 +1,7 @@
 from django.db import models
 from core.settings import IMAGES_ROOT_
-from rest_framework import serializers
 from User_Management.models import User
-
+from django.db.models import F
 
 
 class Acheivement(models.Model):
@@ -19,28 +18,12 @@ class Match(models.Model):
     )
     score = models.IntegerField(default=0)
     enemy_match = models.OneToOneField(
-        "Game.Match", null=True, on_delete=models.SET_NULL
+        "Game.Match", null=True, on_delete=models.SET_NULL, blank=True
     )
     played_at = models.TimeField(auto_now=True)
 
     MATCH_MODES = ((0, "Classic"), (1, "Ranked"), (2, "Tournement"))
     mode = models.IntegerField(choices=MATCH_MODES)
-    
-    @staticmethod 
-    def get_mode_name(mode_name):
-        for choice in Match.MATCH_MODES:
-            if choice[1] == mode_name:
-                return choice[0]
-        raise serializers.ValidationError("Invalid mode name provided.")
-        
-    
-    @staticmethod 
-    def get_mode_value(mode_key):
-        for choice in Match.MATCH_MODES:
-            if choice[0] == mode_key:
-                return choice[1]
-            
-
     
     user = models.ForeignKey(
         "User_Management.User",
@@ -48,6 +31,43 @@ class Match(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+
+    @staticmethod
+    def getAllMatches(user):
+        from .serilaizers import MatchSerializer
+        
+        matches = Match.objects.filter(user=user).order_by('-played_at')
+        matches_serialized = MatchSerializer(matches, many=True).data
+        return matches_serialized
+
+    @staticmethod
+    def getLstMatch(user):
+        from .serilaizers import MatchSerializer
+
+        matches = user.matches
+        if not matches.exists():
+            return ""
+        last_match = matches.latest('played_at')
+        enemy : User = last_match.enemy
+        last_match_serialized = MatchSerializer(last_match).data
+        last_match_serialized['enemy']['info'] = enemy.get_info()
+        return last_match_serialized
+    
+    @staticmethod
+    def getWinning(user):
+        winning_count = Match.objects.filter(user=user, score__gt=F('enemy_match__score')).count()
+        return winning_count
+
+    @staticmethod
+    def getLoses(user):
+        winning_count = Match.objects.filter(user=user, score__lt=F('enemy_match__score')).count()
+        return winning_count
+
+    def get_winner(self, match):
+        [player1, player2] = match
+        """Not Implemented"""
+        
+        return str()
 
 
 class Grade(models.Model):

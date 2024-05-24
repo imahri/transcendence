@@ -30,7 +30,7 @@ export function Result({ data }) {
 
 export function UserNotFound({ input }) {
 	return (
-		<h1 className="text-white font-semibold truncate max-w-[250px] overflow-x-hidden">
+		<h1 className="text-white font-semibold truncate max-w-[250px] flex justify-center items-center gap-[10px] overflow-x-hidden">
 			No result for :
 			<span className="font-normal text-[14px]">{input}</span>
 		</h1>

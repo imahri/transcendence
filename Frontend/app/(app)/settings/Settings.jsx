@@ -10,7 +10,7 @@ function Settings(props) {
 	const [ShowBlocked, setShowBlocked] = useState();
 
 	return (
-		<div className="size-full absolute z-[3] top-0 flex items-center justify-center backdrop-blur-[5px] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)]">
+		<div className="size-full fixed z-[10] top-0 flex items-center justify-center backdrop-blur-[5px] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)]">
 			{!ShowQr && !ShowBlocked && (
 				<SettingsSection
 					setShowQr={setShowQr}

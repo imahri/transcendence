@@ -4,6 +4,7 @@ import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 import Image from "next/image";
 import { errorSvg, nameInputSvg } from "@/app/(auth)/Allsvg";
 import { ChangeInfo } from "./EditUtils";
+import Loading from "@/app/(auth)/Loading";
 
 function InputContainer({ type, label, id, placeHolder, error }) {
 	return (
@@ -28,27 +29,6 @@ function InputContainer({ type, label, id, placeHolder, error }) {
 	);
 }
 
-function DoubleInput({ type, label, id, placeHolder }) {
-	return (
-		<div className="w-[47%] bg-[#252525] rounded-[5px] flex pt-[5px] max-[592px]:h-[50px] max-[592px]:mt-[30px]">
-			<label
-				className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
-				htmlFor={id}
-			>
-				{label}
-			</label>
-			<input
-				className="w-full bg-transparent pt-[2px] focus:outline-none text-white text-[14px] pl-[20px] placeholder:text-white"
-				type={type}
-				id={id}
-				placeholder={placeHolder}
-			/>
-
-			{nameInputSvg}
-		</div>
-	);
-}
-
 function UploadSvg() {
 	return (
 		<div className="absolute top-0 rounded-full w-full h-full flex justify-center items-center opacity-0 hover:opacity-100 hover:backdrop-brightness-50 cursor-pointer">
@@ -68,11 +48,22 @@ function UploadSvg() {
 	);
 }
 
+function displayNewImage(e, setnewImage) {
+	const uploadedImage = e.target.files[0];
+	const reader = new FileReader();
+	reader.onload = () => {
+		setnewImage(reader.result);
+	};
+	reader.readAsDataURL(uploadedImage);
+}
+
 function EditProfile({ closePopup }) {
 	const Form = useRef(null);
 
 	const [error, setError] = useState();
 	const { user, setUser } = useContext(UserContext);
+	const [image, setImage] = useState(user.img);
+	const [isLoading, setLoading] = useState();
 
 	return (
 		<div className="size-full fixed z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]">
@@ -86,12 +77,19 @@ function EditProfile({ closePopup }) {
 					className="w-[90%] flex flex-col items-center gap-[20px]"
 					ref={Form}
 					onSubmit={(e) =>
-						ChangeInfo(e, Form, setError, setUser, closePopup)
+						ChangeInfo(
+							e,
+							Form,
+							setError,
+							setUser,
+							closePopup,
+							setLoading,
+						)
 					}
 				>
 					<label htmlFor="profile" className="relative">
 						<Image
-							src={user.img}
+							src={image}
 							width={100}
 							height={100}
 							className="rounded-full size-[100px] hover:opacity-[40%]"
@@ -100,6 +98,7 @@ function EditProfile({ closePopup }) {
 						<UploadSvg />
 					</label>
 					<input
+						onChange={(e) => displayNewImage(e, setImage)}
 						type="file"
 						accept="image/png, "
 						id="profile"
@@ -142,10 +141,11 @@ function EditProfile({ closePopup }) {
 					/>
 
 					<button
-						className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white"
+						className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white relative"
 						type="submit"
 					>
 						save
+						{isLoading && <Loading style={"rounded-[10px]"} />}
 					</button>
 				</form>
 			</div>
