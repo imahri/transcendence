@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
+from Backend.Game.serilaizers import EnemyMatchSerializer
+from Game.models import Match
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -95,6 +97,14 @@ class User(AbstractUser):
     def get_friendship(self, friend):
         return Friend.objects.get(user=self, friend=friend)
 
+    def last_match(self, With=None):
+        if With:
+            return Match.last_match_between(self, With)
+        last_match = Match.objects.filter(user=self).order_by("-played_at").first()
+        if not last_match:
+            raise Exception("No matchs")
+        return last_match
+
     def add_friend(self, friend):
         Friend.add_friend(self, friend)
 
@@ -114,7 +124,7 @@ class User(AbstractUser):
         return self.notifications.all().filter(is_hidden=False, is_read=False)
 
     def get_last_msg_notification(self):
-        return self.notifications.all().filter(type='C', is_read=False)
+        return self.notifications.all().filter(type="C", is_read=False)
 
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
@@ -156,6 +166,7 @@ class Info(models.Model):
     """
     Store additional info about the User
     """
+
     from Game.models import Grade
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -279,8 +290,6 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
 
-
-
     @staticmethod
     def create(user: User, content: dict):
         friend = User.get_by_identifier(content["to"])
@@ -293,7 +302,7 @@ class Notification(models.Model):
     @staticmethod
     def createToMultiUsers(user: User, content: dict):
         sended_to = content["to"]
-        friends_ids = sended_to.values_list('id', flat=True)
+        friends_ids = sended_to.values_list("id", flat=True)
         notification = Notification(user=user, type=content["type"])
         notification.content = content["content"]
         notification.save()
@@ -302,6 +311,7 @@ class Notification(models.Model):
 
     def as_serialized(self):
         from .serializers import NotifSerializer
+
         return NotifSerializer(self).data
 
     @staticmethod
@@ -325,7 +335,7 @@ class Notification(models.Model):
 
     @staticmethod
     def conversationAsRead(id, _notifications):
-        notifications = _notifications.filter(type='C', is_read=False)
+        notifications = _notifications.filter(type="C", is_read=False)
         for notification in notifications:
             if notification.content["conversationID"] == id:
                 notification.is_read = True

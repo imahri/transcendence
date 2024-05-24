@@ -77,6 +77,14 @@ class Match(models.Model):
     def is_winner(self):
         return True if self.score > self.enemy_match.score else False
 
+    @staticmethod
+    def last_match_between(player1: User, player2: User):
+        matchs = Match.objects.filter(user=player1, enemy=player2)
+        last_match = matchs.order_by("-played_at").first()
+        if not last_match:
+            raise Exception("No matchs") 
+        return last_match
+
 
 class Grade(models.Model):
 
