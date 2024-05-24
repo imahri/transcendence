@@ -28,7 +28,11 @@ export async function joinTournament(id, user, nickname, setError, setDemo) {
 export async function startTournament(id, setError) {
 	//start tournament
 
-	const [isOk, status, data] = await fetch_jwt(STARTOUR_URL, { id: id });
+	const [isOk, status, data] = await fetch_jwt(
+		STARTOUR_URL,
+		{ id: id },
+		{ method: "POST" },
+	);
 
 	if (!isOk) {
 		console.log(data);

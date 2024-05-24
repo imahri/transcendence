@@ -25,8 +25,8 @@ function UserImage({ user, nb }) {
 }
 
 export function LastMatch({ tournament, participants }) {
-	const first = tournament.FirstSide["1st"];
-	const second = tournament.SecondSide["1st"];
+	const first = tournament?.FirstSide["1st"];
+	const second = tournament?.SecondSide["1st"];
 
 	const user1 = first ? getParticipant(participants, first) : null;
 	const user2 = second ? getParticipant(participants, second) : null;
@@ -117,28 +117,34 @@ function SecondMatch({ user1, user2, isLeft }) {
 }
 
 export function getParticipant(participants, participant) {
+	if (!participant) return null;
 	const result = participants.find((obj) => obj.name == participant.name);
 	return result;
 }
 
 function CommonSection({ isLeft, tournament, participants }) {
-	const user1 = tournament["3rd"]
-		? getParticipant(participants, tournament["3rd"][0][0])
+	const third = tournament ? tournament["3rd"] : null;
+	const second = tournament ? tournament["2nd"] : null;
+
+	const plus = !isLeft;
+
+	const user1 = third
+		? getParticipant(participants, tournament["3rd"][`${1 + plus}`]?.[0])
 		: null;
-	const user2 = tournament["3rd"]
-		? getParticipant(participants, tournament["3rd"][0][1])
+	const user2 = third
+		? getParticipant(participants, tournament["3rd"][`${1 + plus}`]?.[1])
 		: null;
-	const user3 = tournament["3rd"]
-		? getParticipant(participants, tournament["3rd"][1][0])
+	const user3 = third
+		? getParticipant(participants, tournament["3rd"][`${3 + plus}`]?.[0])
 		: null;
-	const user4 = tournament["3rd"]
-		? getParticipant(participants, tournament["3rd"][1][1])
+	const user4 = third
+		? getParticipant(participants, tournament["3rd"][`${3 + plus}`]?.[1])
 		: null;
-	const user5 = tournament["2nd"]
-		? getParticipant(participants, tournament["2nd"][0][0])
+	const user5 = second
+		? getParticipant(participants, tournament["2nd"][`${5 + plus}`]?.[0])
 		: null;
-	const user6 = tournament["2nd"]
-		? getParticipant(participants, tournament["2nd"][0][1])
+	const user6 = second
+		? getParticipant(participants, tournament["2nd"][`${5 + plus}`]?.[1])
 		: null;
 
 	return (

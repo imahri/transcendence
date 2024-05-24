@@ -290,6 +290,15 @@ class Notification(models.Model):
         notification.sended_to.add(friend)
         return notification
 
+    @staticmethod
+    def createToMultiUsers(user: User, content: dict):
+        sended_to = content["to"]
+        friends_ids = sended_to.values_list('id', flat=True)
+        notification = Notification(user=user, type=content["type"])
+        notification.content = content["content"]
+        notification.save()
+        notification.sended_to.add(*friends_ids)
+        return notification
 
     def as_serialized(self):
         from .serializers import NotifSerializer

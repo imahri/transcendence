@@ -131,12 +131,13 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_friend_status(self, friend : User,  user : User):
         try:
-            status = ''  
             target_channel = self.get_channel_by_user(friend.username)
             await self.channel_layer.send(target_channel, {"type" : "send_status" , "friend" : user, "user": friend})
 
         except Exception as error:
             print('update status: ', error)
+
+
 
     async def redirect(self, event):
         content = event["content"]

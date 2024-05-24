@@ -1,6 +1,6 @@
 from django.db import models
 from Game.models import Match
-from User_Management.models import User
+from User_Management.models import User, Notification
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from User_Management.Consumers.Notifconsumers import NotificationConsumer
@@ -16,7 +16,7 @@ class Tournament(models.Model):
         "Tournament.Participant", related_name="tournaments"
     )
     match_index = models.IntegerField(default=0)
-    schedule = models.JSONField(null=True)
+    schedule = models.JSONField(null=True, blank=True)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 
@@ -73,24 +73,33 @@ class Tournament(models.Model):
         channel_layer = get_channel_layer()
         uri: str = f"/tournament/{self.name}"
         message: str = f"Tournament {self.name} is Started"
+        #create notification for each user and send it
+        content = {
+            "type": "T",
+            "to": self.participants.all(),
+            "content": {
+                "uri": uri,
+                "message": message,
+                "tournament_name": self.name,
+            },
+        }
+        notification = Notification.createToMultiUsers(self.creator, content)
+        data = notification.as_serialized()
+
         for participant in self.participants.all():
             user: User = participant.user
-            channel_name = NotificationConsumer.get_channel_by_user(user.username)
-            async_to_sync(channel_layer.send)(
-                channel_name,
-                {
-                    "action": "send_notif",
-                    "content": {
-                        "to": user.username,
-                        "type": "T",
-                        "content": {
-                            "uri": uri,
-                            "message": message,
-                        },
+            try:
+                channel_name = NotificationConsumer.get_channel_by_user(user.username)
+                async_to_sync(channel_layer.send)(
+                    channel_name,
+                    {
+                        'type': "redirect",
+                        'content': data
                     },
-                },
-            )
-        return message
+                )
+            except :
+                pass
+            return message
 
     def fill_2nd(self):
         if self.schedule == None:
@@ -111,24 +120,41 @@ class Tournament(models.Model):
         if self.schedule == None:
             return
         self.match_index += 1
-        match self.match_index:
-            case 1:
-                return self.schedule["FirstSide"]["3rd"]["1"]
-            case 2:
-                return self.schedule["SecondSide"]["3rd"]["2"]
-            case 3:
-                return self.schedule["FirstSide"]["3rd"]["3"]
-            case 4:
-                return self.schedule["SecondSide"]["3rd"]["4"]
-            case 5:
-                return self.schedule["FirstSide"]["2nd"]["5"]
-            case 6:
-                return self.schedule["SecondSide"]["2nd"]["6"]
-            case 7:
-                return [
-                    self.schedule["FirstSide"]["1st"],
-                    self.schedule["SecondSide"]["1st"],
-                ]
+        # match self.match_index:
+        #     case 1:
+        #         return self.schedule["FirstSide"]["3rd"]["1"]
+        #     case 2:
+        #         return self.schedule["SecondSide"]["3rd"]["2"]
+        #     case 3:
+        #         return self.schedule["FirstSide"]["3rd"]["3"]
+        #     case 4:
+        #         return self.schedule["SecondSide"]["3rd"]["4"]
+        #     case 5:
+        #         return self.schedule["FirstSide"]["2nd"]["5"]
+        #     case 6:
+        #         return self.schedule["SecondSide"]["2nd"]["6"]
+        #     case 7:
+        #         return [
+        #             self.schedule["FirstSide"]["1st"],
+        #             self.schedule["SecondSide"]["1st"],
+        #         ]
+        if self.match_index == 1:
+            return self.schedule["FirstSide"]["3rd"]["1"]
+        elif self.match_index == 2:
+            return self.schedule["SecondSide"]["3rd"]["2"]
+        elif self.match_index == 3:
+            return self.schedule["FirstSide"]["3rd"]["3"]
+        elif self.match_index == 4:
+            return self.schedule["SecondSide"]["3rd"]["4"]
+        elif self.match_index == 5:
+            return self.schedule["FirstSide"]["2nd"]["5"]
+        elif self.match_index == 6:
+            return self.schedule["SecondSide"]["2nd"]["6"]
+        elif self.match_index == 7:
+            return [
+                self.schedule["FirstSide"]["1st"],
+                self.schedule["SecondSide"]["1st"],
+            ]
         self.save()
 
 
