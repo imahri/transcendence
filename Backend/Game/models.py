@@ -73,11 +73,9 @@ class Match(models.Model):
         winning_count = Match.objects.filter(user=user, score__lt=F('enemy_match__score')).count()
         return winning_count
 
-    def get_winner(self, match):
-        [player1, player2] = match
-        """Not Implemented"""
-        
-        return str()
+    @property
+    def is_winner(self):
+        return True if self.score > self.enemy_match.score else False
 
 
 class Grade(models.Model):
