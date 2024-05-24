@@ -25,7 +25,12 @@ export function TypingBar({ onSend }) {
 				<input
 					onChange={handleChange}
 					maxLength={100}
-					onKeyDown={(e) => e.key === "Enter" && handleClick()}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							e.preventDefault();
+							handleClick();
+						}
+					}}
 					ref={inputMessage}
 					type="text"
 					placeholder="Type a message..."
