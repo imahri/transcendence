@@ -8,11 +8,6 @@ async function getMessages(conversation_id, [offset, setOffset]) {
 			offset: offset,
 		});
 		if (isOk) {
-			// data.messages.sort((a, b) => {
-			// 	let data_a = new Date(a.sended_at);
-			// 	let data_b = new Date(b.sended_at);
-			// 	return data_a > data_b ? 1 : data_a < data_b ? -1 : 0;
-			// });
 			!data.has_next ? setOffset(0) : setOffset(offset + 1);
 			return data;
 		} else if (status == 406) setOffset(0);

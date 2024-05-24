@@ -245,7 +245,7 @@ export default function Conversations({
 				onScroll={handleScroll}
 				className={styles.container}
 			>
-				{conversationList ? (
+				{conversationList.length != 0 ? (
 					conversationList.map((conversation, idx) => (
 						<Conversation
 							key={idx}

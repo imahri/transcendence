@@ -8,6 +8,6 @@ export const useConvState = () => {
 		current_conv === undefined ? null : current_conv,
 	);
 	if (path === "/chat" && convState !== null) setConvState(null);
-	else if (path !== "/chat" && convState === null) setConvState(current_conv); // ?? WTF
+	else if (path !== "/chat" && convState === null) setConvState(current_conv);
 	return [convState, setConvState];
 };

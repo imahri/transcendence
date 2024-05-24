@@ -27,17 +27,15 @@ export function StartConversation({
 	const [friendList, setFriendList] = useState([]);
 	const [visible, setVisible] = useState(false);
 	const _ref = useRef();
-	const handleScale = () => {
-		_ref.current.classList.toggle("scale-100", visible);
-		setVisible(!visible);
-	};
 
 	useEffect(() => {
 		if (visible)
 			fetch_jwt(APIs.user.friends).then(([isOk, status, data]) => {
 				if (isOk) setFriendList(data);
-				if (status == 404) setFriendList([]);
+				_ref.current.classList.toggle("h-[10rem]", !isOk);
+				_ref.current.classList.toggle("h-[33rem]", isOk);
 			});
+		_ref.current.classList.toggle("scale-100", visible);
 	}, [visible]);
 
 	const getConversation = async (friend) => {
@@ -57,15 +55,9 @@ export function StartConversation({
 		setConvState(friend.username);
 	};
 
-	useEffect(() => {
-		// TODO: change it to className directly
-		if (friendList.length == 0) _ref.current.classList.add("h-[10rem]");
-		else _ref.current.classList.remove("h-[10rem]");
-	}, [friendList]);
-
 	return (
 		<>
-			<button onClick={handleScale}>
+			<button onClick={() => setVisible(!visible)}>
 				<Add_icon />
 			</button>
 			<div
