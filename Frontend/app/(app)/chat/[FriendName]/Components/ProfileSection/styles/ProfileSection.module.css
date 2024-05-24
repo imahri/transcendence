@@ -3,6 +3,8 @@
 	@apply flex flex-col  items-center justify-end space-y-24;
 	@apply absolute right-0 rounded-l-[3rem];
 	@apply md:h-[53rem] md:space-y-10;
+	@apply sm:h-[53rem] sm:space-y-10;
+	@apply xs:h-[53rem] xs:space-y-10;
 }
 
 .profile {
