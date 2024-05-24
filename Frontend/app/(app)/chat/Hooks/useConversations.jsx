@@ -45,10 +45,20 @@ export const useConversations = (initialState) => {
 
 	useEffect(() => {
 		if (getMore && Offset > 0) {
-			getConversations([Offset, setOffset]).then(({ conversations }) => {
-				setConversationList([...ConversationList, ...conversations]);
-				if (ConversationList.length == 0) setIsUpdated(true);
-			});
+			getConversations([Offset, setOffset]).then(
+				({ conversations, size }) => {
+					if (size == 0) return;
+					setConversationList((oldConversationList) => {
+						if (
+							oldConversationList.at(-1).id ==
+							conversations.at(0).id
+						)
+							conversations.shift();
+						return [...ConversationList, ...conversations];
+					});
+					if (ConversationList.length == 0) setIsUpdated(true);
+				},
+			);
 			setGetMore(false);
 		}
 	}, [getMore]);
@@ -59,7 +69,12 @@ export const useConversations = (initialState) => {
 			setConversationList([conversation, ...ConversationList]);
 			setIsUpdated(true);
 		},
-		setConversationList: setConversationList,
+		setConversationList: (newList) => {
+			newList.sort((f, s) =>
+				f.last_message.sended_at > s.last_message.sended_at ? -1 : 1,
+			);
+			setConversationList(newList);
+		},
 		isUpdatedState: [isUpdated, setIsUpdated],
 		LoadMoreConversation: () => setGetMore(true),
 		LoadToReplace: () => setReplaceLast(true),

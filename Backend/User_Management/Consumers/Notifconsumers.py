@@ -142,15 +142,14 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
     async def redirect(self, event):
         content = event["content"]
         if content["type"] == "C":
-            if content["content"]["FirstTime"] is True:
-                id = content["content"]["conversationID"]
-                conversation: Conversation = await database_sync_to_async(
-                    Conversation.objects.get
-                )(id=id)
-                serializerd: dict = await database_sync_to_async(
-                    conversation.as_serialized
-                )(self.user)
-                content["content"]["conversation"] = serializerd
+            id = content["content"]["conversationID"]
+            conversation: Conversation = await database_sync_to_async(
+                Conversation.objects.get
+            )(id=id)
+            serializerd: dict = await database_sync_to_async(
+                conversation.as_serialized
+            )(self.user)
+            content["content"]["conversation"] = serializerd
         await self.send_json({"type": "notification", "content": content})
 
     async def send_notification(self, content):

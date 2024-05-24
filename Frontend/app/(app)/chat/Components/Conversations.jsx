@@ -209,8 +209,10 @@ export default function Conversations({
 				]);
 			} else {
 				const convList = [...conversationList];
+				let found = false;
 				convList.forEach((conv) => {
 					if (conv.id == e.content.conversationID) {
+						found = true;
 						if (convState !== conv.name) conv.unseen_msg += 1;
 						conv.last_message = {
 							sended_at: e.time,
@@ -218,7 +220,12 @@ export default function Conversations({
 						};
 					}
 				});
-				setConversationList(convList);
+				found
+					? setConversationList(convList)
+					: setConversationList([
+							e.content.conversation,
+							...convList,
+						]);
 			}
 		},
 		[conversationList, convState],
