@@ -17,6 +17,7 @@ class Match(models.Model):
         "User_Management.User", null=True, on_delete=models.SET_NULL
     )
     score = models.IntegerField(default=0)
+    tournament = models.ForeignKey("Tournament.Tournament", null=True, on_delete=models.CASCADE)
     enemy_match = models.ForeignKey(
         "Game.Match", null=True, on_delete=models.SET_NULL, blank=True
     )
@@ -33,9 +34,12 @@ class Match(models.Model):
     )
 
     @staticmethod
-    def create(user: User, enemy: User, mode: int):
+    def create(user: User, enemy: User, mode: int, tournament=None):
         match1 = Match(user=user, enemy=enemy, mode=mode)
         match2 = Match(user=enemy, enemy=user, mode=mode)
+        if tournament and mode == 2:
+            match1.tournament = tournament
+            match2.tournament = tournament
         match1.save()
         match2.save()
         match1.enemy_match = match2
