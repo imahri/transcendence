@@ -17,7 +17,7 @@ class Match(models.Model):
         "User_Management.User", null=True, on_delete=models.SET_NULL
     )
     score = models.IntegerField(default=0)
-    enemy_match = models.OneToOneField(
+    enemy_match = models.ForeignKey(
         "Game.Match", null=True, on_delete=models.SET_NULL, blank=True
     )
     played_at = models.TimeField(auto_now=True)
@@ -31,6 +31,16 @@ class Match(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+
+    @staticmethod
+    def create(user: User, enemy: User, mode: int):
+        match1 = Match(user=user, enemy=enemy, mode=mode)
+        match2 = Match(user=enemy, enemy=user, mode=mode)
+        match1.save()
+        match2.save()
+        match1.enemy_match = match2
+        match2.enemy_match = match1
+        return [match1, match2]
 
     @staticmethod
     def getAllMatches(user):
