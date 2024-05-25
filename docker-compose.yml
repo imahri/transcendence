@@ -54,17 +54,17 @@ services:
 
     # Infrastructure Setup with ELK (Elasticsearch, Logstash, Kibana)
     elasticsearch:
-        image: elasticsearch:latest
+        image: elasticsearch:8.13.4
         environment:
             - DISCOVERY_TYPE=single-node
         volumes:
             - elasticsearch-data:/var/lib/elasticsearch
     logstash:
-        image: logstash:latest
+        image: logstash:8.13.4
         volumes:
             - ./logstash.conf:/etc/logstash/conf.d/00-main.conf
     kibana:
-        image: kibana:latest
+        image: kibana:8.13.4
         ports:
             - 5601:5601
         depends_on:
