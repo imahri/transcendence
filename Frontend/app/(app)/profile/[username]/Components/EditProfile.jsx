@@ -132,13 +132,13 @@ function EditProfile({ closePopup }) {
 						placeHolder={user.last_name}
 						error={error?.type == "last_name"}
 					/>
-					<InputContainer
+					{/* <InputContainer
 						type={"email"}
 						id={"email"}
 						label={"Change your Email"}
 						placeHolder={user.email}
 						error={error?.type == "email"}
-					/>
+					/> */}
 
 					<button
 						className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white relative"

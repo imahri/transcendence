@@ -14,8 +14,7 @@ class User(AbstractUser):
     Username and Email are required. Other fields are optional.
     """
 
-    email = models.EmailField(unique=True)
-    REQUIRED_FIELDS = ["email", "first_name", "last_name", "password"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
     # 2FA field
     is_2FA_active = models.BooleanField(default=False)
     uri_2FA = models.URLField(max_length=200, blank=True)

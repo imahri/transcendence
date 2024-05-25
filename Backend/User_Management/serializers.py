@@ -24,7 +24,7 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data):
         new_user = self.Meta.model(
-            email=validated_data["email"],
+            email=validated_data.get("email", ""),
             username=validated_data["username"],
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
@@ -33,10 +33,6 @@ class UserSerializer(ModelSerializer):
         new_user.save()
         new_user.set_info()
         return new_user
-
-    # def save(self, **kwargs):
-    #     # self.is_valid(raise_exception=True)
-    #     return super().save(**kwargs)
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username', instance.username)

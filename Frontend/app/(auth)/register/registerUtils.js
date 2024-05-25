@@ -2,11 +2,6 @@ import { REGISTER_URL } from "../../URLS";
 
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools";
 
-export function isValidEmail(email) {
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return emailRegex.test(email);
-}
-
 function onlySpace(str) {
 	return str.trim().length == 0;
 }
@@ -33,20 +28,6 @@ function check_fields(form, setError) {
 		);
 		return true;
 	}
-	if (!form.email) {
-		errorInForm(
-			{ type: "email", msg: "email contain only space" },
-			setError,
-		);
-		return true;
-	}
-	if (!isValidEmail(form.email)) {
-		errorInForm(
-			{ type: "email", msg: "Enter a valid email address" },
-			setError,
-		);
-		return true;
-	}
 	if (!form.password) {
 		errorInForm(
 			{ type: "password", msg: "password contain only space" },
@@ -68,9 +49,6 @@ function check_fields(form, setError) {
 }
 
 function DetectError(response, setError) {
-	response?.email
-		? errorInForm({ type: "email", msg: response.email[0] }, setError)
-		: "";
 	response?.username
 		? errorInForm({ type: "username", msg: response.username[0] }, setError)
 		: "";
@@ -91,7 +69,6 @@ export const registerSubmit = async (
 	const form = {
 		firstname: FormField["firstname"].value,
 		lastname: FormField["lastname"].value,
-		email: FormField["email"].value,
 		password: FormField["password"].value,
 		username: FormField["username"].value,
 	};
@@ -99,7 +76,6 @@ export const registerSubmit = async (
 	form.lastname = onlySpace(form.lastname) ? "" : form.lastname;
 	form.firstname = onlySpace(form.firstname) ? "" : form.firstname;
 	form.password = onlySpace(form.password) ? "" : form.password;
-	form.email = onlySpace(form.email) ? "" : form.email;
 
 	if (check_fields(form, setError)) {
 		setLoading(false);
