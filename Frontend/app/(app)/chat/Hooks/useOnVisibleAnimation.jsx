@@ -4,7 +4,7 @@ export const useOnVisibleAnimation = (
 	ContainerRef,
 	classNameOnshow,
 	deps,
-	threshold = 0.4,
+	threshold = 0.3,
 ) => {
 	useEffect(() => {
 		const entries = [...ContainerRef.current.children];
