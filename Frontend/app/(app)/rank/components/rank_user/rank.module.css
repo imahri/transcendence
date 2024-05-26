@@ -66,7 +66,7 @@
     width: 30%;
     height: 90%;
     background: #444444;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .pic_holder{
@@ -153,6 +153,47 @@
 
 }
 
-/* .pico_pico{
+@media (max-width: 2000px) {
+    .cards {
+      width: 100%;
+    }
+    
+    .patron
+    {
+        width: 48%;
+        position: relative;
+    }
 
-} */
+    .pic{
+        width: 7.5rem;
+        height: 7.5rem;
+        background: bisque;
+        border-radius: 50%;
+        align-self: flex-start;
+    }
+  }
+
+@media (max-width: 1000px) {
+    .cards {
+      width: 100%;
+    }
+    
+    .patron
+    {
+        width: 80%;
+        position: relative;
+        margin-top: 5px;
+    }
+
+    .pic{
+        width: 5.5rem;
+        height: 5.5rem;
+        background: bisque;
+        border-radius: 50%;
+        align-self: flex-start;
+    }
+    .title_top{
+        display: none;
+    }
+  }
+
