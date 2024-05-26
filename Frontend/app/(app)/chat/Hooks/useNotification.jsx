@@ -13,7 +13,7 @@ import { UserContext } from "../../context";
                 "username": "testuser",
                 "first_name": "testuser",
                 "last_name": "testuser",
-                "img": "http://10.12.5.7:8000/user/image?path=/default/default.png",
+                "img": "http://localhost:8000/user/image?path=/default/default.png",
                 "is_2FA_active": false
             },
             "type": "C",

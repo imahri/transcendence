@@ -89,7 +89,7 @@ export const handel42 = async (e) => {
 	const params = {
 		client_id:
 			"u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259",
-		redirect_uri: "http://10.12.5.7:3000/login",
+		redirect_uri: "http://localhost:3000/login",
 		response_type: "code",
 	};
 

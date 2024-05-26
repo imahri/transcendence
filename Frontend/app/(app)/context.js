@@ -13,7 +13,7 @@ export const UserContextProvider = ({ children, value }) => {
 	useEffect(() => {
 		if (!socket) {
 			const ws = new WebSocket(
-				"ws://10.12.5.7:8000/ws/notif" + `?token=${getToken()}`,
+				"ws://localhost:8000/ws/notif" + `?token=${getToken()}`,
 			);
 
 			ws.onopen = () => {

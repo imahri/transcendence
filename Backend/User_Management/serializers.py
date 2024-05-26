@@ -85,7 +85,7 @@ class InfoSerializer(ModelSerializer):
         representation = super().to_representation(instance)
         if representation["profile_img"] is not None:
             profile_path = (
-                "http://10.12.5.7:8000/user/image?path=" + representation["profile_img"]
+                "http://localhost:8000/user/image?path=" + representation["profile_img"]
             )
             representation["profile_img"] = profile_path
         

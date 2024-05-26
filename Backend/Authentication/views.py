@@ -179,7 +179,7 @@ class intra_auth(APIView):
             'client_id': 'u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259',
             'client_secret': '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',
             'code': code,
-            'redirect_uri': 'http://10.12.5.7:3000/login'
+            'redirect_uri': 'http://localhost:3000/login'
         }
    
         response = requests.post('https://api.intra.42.fr/oauth/token', data=data)

@@ -14,7 +14,7 @@ const Vim = () => {
 	// //init socket
 	// useEffect(() => {
 	// 	const ws = new WebSocket(
-	// 		"ws://10.12.5.7:8000/ws/game?" + `token=${getToken()}`,
+	// 		"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
 	// 	);
 	// 	ws.onopen = () => {
 	// 		console.log("opened");

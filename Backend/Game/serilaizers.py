@@ -49,7 +49,7 @@ class GradeSerializer(ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         image_path = (
-            "http://10.12.5.7:8000/user/image?path=" + representation["image"]
+            "http://localhost:8000/user/image?path=" + representation["image"]
         )
         representation["image"] = image_path
         return representation
@@ -65,7 +65,7 @@ class BadgeSerializer(ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         image_path = (
-            "http://10.12.5.7:8000/user/image?path=" + representation["image_path"]
+            "http://localhost:8000/user/image?path=" + representation["image_path"]
         )
         representation["image"] = image_path
         del representation["image_path"]
@@ -81,7 +81,7 @@ class BoardSerializer(ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         image_path = (
-            "http://10.12.5.7:8000/user/image?path=" + representation["image_path"]
+            "http://localhost:8000/user/image?path=" + representation["image_path"]
         )
         representation["image"] = image_path
         del representation["image_path"]
@@ -97,7 +97,7 @@ class PadelSerializer(ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         image_path = (
-            "http://10.12.5.7:8000/user/image?path=" + representation["image_path"]
+            "http://localhost:8000/user/image?path=" + representation["image_path"]
         )
         representation["image"] = image_path
         del representation["image_path"]
@@ -138,7 +138,7 @@ class AcheivmentSerializer(ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         image_path = (
-            "http://10.12.5.7:8000/user/image?path=" + representation["icon_path"]
+            "http://localhost:8000/user/image?path=" + representation["icon_path"]
         )
         representation["icon_path"] = image_path
         return representation
