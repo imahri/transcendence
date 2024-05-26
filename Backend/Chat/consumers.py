@@ -67,6 +67,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             conversation = await database_sync_to_async(Conversation.objects.get)(
                 pk=content["conversation_id"]
             )
+            is_friend = await database_sync_to_async(conversation.check_is_friend)()
+            if not is_friend:
+                raise Exception("not a friend")
             receiver = self.get_channel_by_user(send_to)
             if receiver is not None:
                 await self.channel_layer.send(

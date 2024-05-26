@@ -29,11 +29,10 @@ class Conversation(models.Model):
     def friends(self) -> BaseManager[Friend]:
         return self.friend_set
 
-    @property
     def check_is_friend(self):
         friends = self.friends.all()
         for friend in friends:
-            if not friend.is_friend:
+            if not friend.is_friend or friend.is_block:
                 return False
         return True
 
