@@ -65,7 +65,7 @@ const TimeNotification = ({ time, unseen_msg }) => (
 	</div>
 );
 
-function Conversation({ user, info }) {
+function Conversation({ info }) {
 	const { ws } = useContext(UserContext);
 	const { name, image, last_message, unseen_msg } = info;
 	const router = useRouter();
@@ -73,6 +73,18 @@ function Conversation({ user, info }) {
 	const [convState, setConvState] = useContext(ConvChatContext);
 	const isActive = convState === name;
 	// !! For security: Change it to Image object
+
+	useEffect(() => {
+		if (ws) {
+			info.unseen_msg = 0;
+			ws.send(
+				JSON.stringify({
+					action: "markConversationAsRead",
+					id: info.id,
+				}),
+			);
+		}
+	}, [ws]);
 
 	useEffect(() => {
 		ConvRef.current.classList.toggle(styles.focus_section, isActive);
@@ -118,7 +130,6 @@ export default function Conversations({
 	},
 }) {
 	const {
-		user,
 		addListenerNotif,
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
@@ -255,11 +266,7 @@ export default function Conversations({
 			>
 				{conversationList.length != 0 ? (
 					conversationList.map((conversation, idx) => (
-						<Conversation
-							key={idx}
-							user={user}
-							info={conversation}
-						/>
+						<Conversation key={idx} info={conversation} />
 					))
 				) : (
 					<h1
