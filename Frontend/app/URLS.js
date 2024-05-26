@@ -1,5 +1,5 @@
-export const BASE_URL = "http://localhost:8000";
-const WS = "ws://localhost:8000";
+export const BASE_URL = "http://10.12.5.7:8000";
+const WS = "ws://10.12.5.7:8000";
 
 const AUTH_APP = `${BASE_URL}/auth`;
 

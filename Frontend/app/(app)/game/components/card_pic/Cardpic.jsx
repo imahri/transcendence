@@ -11,11 +11,16 @@ const Cardpic = () => {
 			<div className={`${styles.container}`}>
 				<div className={styles.title}>Mode</div>
 				<div className={`${styles.bor}`}>
-					<div className={styles.all_in}>
-						<div className={`${styles.card} ${styles.bot}`}></div>
-						<span className={styles.sp}>Bot</span>
-					</div>
-					<Link href="/choice">
+					<Link href="game/game_local">
+						<div className={styles.all_in}>
+							<div
+								className={`${styles.card} ${styles.bot}`}
+							></div>
+							<span className={styles.sp}>Bot</span>
+						</div>
+					</Link>
+
+					<Link href="game/choice">
 						<div className={styles.all_in}>
 							<div
 								className={`${styles.card} ${styles.friend}`}

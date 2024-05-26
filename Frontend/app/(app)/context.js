@@ -13,14 +13,17 @@ export const UserContextProvider = ({ children, value }) => {
 	useEffect(() => {
 		if (!socket) {
 			const ws = new WebSocket(
-				"ws://localhost:8000/ws/notif" + `?token=${getToken()}`,
+				"ws://10.12.5.7:8000/ws/notif" + `?token=${getToken()}`,
 			);
+
 			ws.onopen = () => {
 				console.log("ws/notif connection is open");
 				setSocket(ws);
 			};
+
 			return;
 		}
+
 		socket.onclose = () => console.log("Disconnected with ws/notif");
 		socket.onerror = () => console.log("Error in ws/notif");
 		return () => {
