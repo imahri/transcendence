@@ -159,7 +159,8 @@ export default function Conversations({
 					(conv) => conv.name !== data.friendName,
 				),
 			);
-			if (data.friendName == convState) router.replace("/chat");
+			if (window.location.pathname.split("/").at(-1) == data.friendName)
+				router.replace("/chat");
 			LoadToReplace();
 		}
 	};
