@@ -21,8 +21,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
             else:
-                if self.get_channel_by_user(self.user.username) is not None:
-                    raise Exception("Already Connected")
                 self.register_channel(self.user.username, self.channel_name)
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
