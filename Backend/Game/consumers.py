@@ -1,23 +1,13 @@
 from cgitb import text
-import collections
-from doctest import FAIL_FAST
-from email import message
-from shutil import which
 from sys import stderr
-from typing import Self
 import math
-import venv
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 from User_Management.models import User
 import json
 import time
-import sys
 from asgiref.sync import async_to_sync
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
-from asyncio.locks import Lock
-import random
 
 
 class Game:
@@ -26,10 +16,9 @@ class Game:
             "height":1300,
             "width":2560
         }
-        
-        
+
+
         self.paused = False
-        
         
         self.user1 = {
             "x": 3,
@@ -38,7 +27,10 @@ class Game:
             "height": 200,
             "color": "red",
             "score": 0,
-            "id" : 0
+            "id" : 0,
+            "img": "",
+            "user_name": "",
+            "exp": 100,
         }
 
         self.user2 = {
@@ -48,14 +40,17 @@ class Game:
             "height": 200,
             "color": "red",
             "score": 0,
-            "id" : 0
+            "id" : 0,
+            "img": "",
+            "user_name": "",
+            "exp": 100,
         }
         
         self.ball = {
             "x": self.canvas['width'] / 2,
             "y": self.canvas['height'] / 2,
             "radius": 20,
-            "speed": 10,
+            "speed": 5,
             "velocityX": 5,
             "velocityY": 5,
             "color": "orange",
@@ -109,7 +104,7 @@ class Game:
 
     def update_ball(self):
         if (self.pause == True):
-            time.sleep(10)
+            time.sleep(15)
             self.pause = False
         self.ball['x'] += self.ball['velocityX']
         self.ball['y'] += self.ball['velocityY']
@@ -130,7 +125,6 @@ class Game:
                 self.ball['velocityX'] = direction * self.ball['speed'] * math.cos(angleRad)
                 self.ball['velocityY'] = self.ball['speed'] * math.sin(angleRad)
                 self.ball['speed'] += 0.5
-                
 
         else:
             if self.collision(self.user2):
@@ -149,6 +143,8 @@ class Game:
             self.user1['score'] += 1
             print("user1 score >> " + str(self.user1['score']))
             self.reset_ball()
+
+
 
 
 
@@ -185,8 +181,11 @@ def creat_room_name(nested_list):
             return room_name
 
 
+
 def check_players_status(players):
     return len(players) == 2
+
+
 
 def check_nested_players_status(nested_list):
     for index, room in enumerate(nested_list):
@@ -195,33 +194,75 @@ def check_nested_players_status(nested_list):
             return index
     return None
 
+
+
 def check_for_game_start(nested_list, name):
     index = check_nested_players_status(nested_list)
     if (index != None):
         nested_list[index][1].append(name)
-        print(nested_list)
         return True
     else:
         rn = creat_room_name(nested_list)
         nested_list.append([rn,[name]])
         print("Room was created succesfully : " + rn)
-        print(nested_list[0][1][0])
         return False
-        
+
+
+# found player in wich room and his position
+def find_string_in_game(game, search_string, pis):
+    for room in game:
+        room_name = room[0]
+        items = room[1]
+        if search_string in items:
+            position = items.index(search_string)
+            print ("find")
+            pis.append(room_name)
+            pis.append(position)
+            return True
+    return False
+
+def remove_room_by_index(game, index):
+    if 0 <= index < len(game):
+        del game[index]
+        return True
+    return False
+
+# The function will then update the item at the specified index in the specified room with the new string
+def update_item_in_room(game, room_name, index, new_string):
+    for room in game:
+        if room[0] == room_name:
+            if 0 <= index < len(room[1]):
+                room[1][index] = new_string
+                return True
+            else:
+                return False
+    return False
+
+
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
     
     game_room  = []
     game_object  = []
-    
+    channels: dict = {}
+    task_manager = []
+
+    @classmethod
+    def register_channel(cls, username: str, channel_name: str):
+        cls.channels[username] = channel_name
+
+    @classmethod
+    def get_channel_by_user(cls, user: str):
+        return cls.channels.get(user, None)
+
+
     async def connect(self):
         try:
             self.user: User = self.scope["user"]
-            print(self.user)
-            if self.user.is_anonymous:
+            if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
-            
             else:
+                self.register_channel(self.user.username, self.channel_name)
                 self.room_group_name = creat_room_name(self.game_room)
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
@@ -230,21 +271,68 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     self.room_group_name,
                     self.channel_name
                 )
-                
-                if (not check_for_game_start(self.game_room, self.user.username)):
-                    self.loba = Game()
-                    self.game_object.append(self.loba)
+
+                result = []
+
+                if (len(self.game_room) > 0):
+                    print("befor")
+                    print(self.game_room[0])
+                if find_string_in_game(self.game_room, self.user.username, result):
+                    
+                    update_item_in_room(self.game_room, result[0], result[1], self.user.username)
+                    
+                    print("after")
+                    print(self.game_room[0])
                     await self.send_json(content={
                         'event': 'index_player',
-                        'index': 1,
+                        'index': (result[1] + 1),
                     })
 
+
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'reconnect'
+                        }
+                    )
+
+
+                    index = get_room_index(self.game_room,self.room_group_name)
+                    obg = self.game_object[index]
+                    obg.pause = True
+                    self.task_manager[index].cancel()
+                    self.task_manager[index] = asyncio.create_task(self.send_ball_coordinates())
+
+
+
                 else:
-                    await self.send_json(content={
-                        'event': 'index_player',
-                        'index': 2,
-                    })
-                    self.game_task = asyncio.create_task(self.send_ball_coordinates())
+                    if (not check_for_game_start(self.game_room, self.user.username)):
+                        self.loba = Game()
+                        self.game_object.append(self.loba)
+                        await self.send_json(content={
+                            'event': 'index_player',
+                            'index': 1,
+                        })
+                        print(self.game_room)
+
+                    else:
+                        print(self.game_room)
+                        await self.send_json(content={
+                            'event': 'index_player',
+                            'index': 2,
+                        })
+
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                'type': 'change_state',
+                                'state': 'state'
+                            }
+                        )
+                        self.task_manager.append(asyncio.create_task(self.send_ball_coordinates()))
+
+
+
         except Exception:
             await self.close()
 
@@ -255,7 +343,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         if data.get("event") == "resize":
             obg.canvas['height'] = data.get("canvasHeight")
             obg.canvas['width'] = data.get("canvasWidth")
-            
+
 
         elif data.get("event") == "updatePaddle":
             obg.upKeyPressed = data.get("upKeyPressed")
@@ -267,18 +355,46 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 
 
-
+    async def change_state(self, event):
+        await self.send_json(content={
+                        'event': 'change_state',
+                        'state': "start",
+                    })
+    async def end_game(self, event):
+        await self.send_json(content={
+                        'event': 'end_game',
+                        'state': "end",
+                    })
+    async def reconnect(self, event):
+        await self.send_json(content={
+                        'event': 'reconnect',
+                    })
+        
     async def send_ball_coordinates(self):
-        print("allo",file=sys.stderr)
         index = get_room_index(self.game_room, self.room_group_name)
         obg = self.game_object[index]
+        await asyncio.sleep(3)
+
         while True:
+            if obg.user1['score'] == 7 or obg.user2['score'] == 7:
+                
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'end_game',
+                        'state': 'end'
+                    }
+                )
+
+
+                remove_room_by_index(self.game_room, index)
+                print("game_end")
+                break
+
             obg.update_ball()
-
-
             obg.updatePaddlePosition()
-            
-            await asyncio.sleep(0.0075)
+
+            await asyncio.sleep(0.0060)
             
             x = obg.ball['x']
             y = obg.ball['y']
@@ -293,6 +409,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 "user2_y": user2_y
             }
 
+
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -301,6 +418,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 }
             )
 
+
+
     async def update(self, event):
         message = event['message']
         await self.send_json(content={
@@ -308,6 +427,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             'message': message,
         })
 
-    async def disconnect(self, close_code):
-        if hasattr(self, 'game_task'):
-            self.game_task.cancel()
+    async def disconnect(self, code):
+        # task = self.tasks.get(self.room_group_name, None)
+        # if task:
+        #     task.cancel()
+        self.channels.pop(self.user.username, None)
+        await self.close(code)

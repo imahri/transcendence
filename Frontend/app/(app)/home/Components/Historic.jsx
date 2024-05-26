@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import Ball from "@/app/(app)/game/matching/components/match_making/ball_it";
+import Loading from "@/app/(auth)/Loading";
 
 function GameState({ User, match }) {
 	const user2 = match.enemy;
@@ -56,9 +58,6 @@ function GameState({ User, match }) {
 		</div>
 	);
 }
-
-import Ball from "@/app/(app)/matching/components/match_making/ball_it";
-import Loading from "@/app/(auth)/Loading";
 
 function EmptyHistoric() {
 	return (
