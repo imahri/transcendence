@@ -2,7 +2,10 @@
 	@apply h-screen w-[25rem] bg-[#282828] border-l-[1rem] border-[#202020];
 	@apply flex flex-col  items-center justify-end space-y-24;
 	@apply absolute right-0 rounded-l-[3rem];
+	@apply lg:h-[53rem] lg:space-y-10;
 	@apply md:h-[53rem] md:space-y-10;
+	@apply sm:h-[53rem] sm:space-y-10;
+	@apply xs:h-[53rem] xs:space-y-10;
 }
 
 .profile {
@@ -11,13 +14,19 @@
 
 .profile_img_container {
 	@apply w-48 h-48 rounded-full grid place-content-center;
+	@apply lg:w-32 lg:h-32;
 	@apply md:w-32 md:h-32;
+	@apply sm:w-32 sm:h-32;
+	@apply xs:w-32 xs:h-32;
 	@apply bg-gradient-to-l from-[#FF00E6] via-[#CB3737] to-[#7D46F2];
 }
 
 .profile_img {
 	@apply w-[11.3rem] h-[11.3rem] rounded-full;
+	@apply lg:w-[7.3rem] lg:h-[7.3rem];
 	@apply md:w-[7.3rem] md:h-[7.3rem];
+	@apply sm:w-[7.3rem] sm:h-[7.3rem];
+	@apply xs:w-[7.3rem] xs:h-[7.3rem];
 	@apply border-[0.3rem] border-[#313131];
 }
 

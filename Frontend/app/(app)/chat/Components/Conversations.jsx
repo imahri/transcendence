@@ -65,7 +65,7 @@ const TimeNotification = ({ time, unseen_msg }) => (
 	</div>
 );
 
-function Conversation({ user, info }) {
+function Conversation({ info }) {
 	const { ws } = useContext(UserContext);
 	const { name, image, last_message, unseen_msg } = info;
 	const router = useRouter();
@@ -73,6 +73,18 @@ function Conversation({ user, info }) {
 	const [convState, setConvState] = useContext(ConvChatContext);
 	const isActive = convState === name;
 	// !! For security: Change it to Image object
+
+	useEffect(() => {
+		if (ws) {
+			info.unseen_msg = 0;
+			ws.send(
+				JSON.stringify({
+					action: "markConversationAsRead",
+					id: info.id,
+				}),
+			);
+		}
+	}, [ws]);
 
 	useEffect(() => {
 		ConvRef.current.classList.toggle(styles.focus_section, isActive);
@@ -101,7 +113,7 @@ function Conversation({ user, info }) {
 			{last_message && (
 				<TimeNotification
 					time={last_message.sended_at}
-					unseen_msg={unseen_msg}
+					unseen_msg={isActive ? 0 : unseen_msg}
 				/>
 			)}
 		</button>
@@ -118,7 +130,6 @@ export default function Conversations({
 	},
 }) {
 	const {
-		user,
 		addListenerNotif,
 		messageUpdatedState: [messageUpdated, setMessageUpdated],
 	} = useContext(WsChatContext);
@@ -148,7 +159,8 @@ export default function Conversations({
 					(conv) => conv.name !== data.friendName,
 				),
 			);
-			if (data.friendName == convState) router.replace("/chat");
+			if (window.location.pathname.split("/").at(-1) == data.friendName)
+				router.replace("/chat");
 			LoadToReplace();
 		}
 	};
@@ -182,6 +194,7 @@ export default function Conversations({
 						id = conv.id;
 					}
 				});
+				// TODO: use route handler
 				const [isOk, status, data] = await fetch_jwt(
 					`${APIs.chat.last_message}${id}`,
 				);
@@ -209,8 +222,10 @@ export default function Conversations({
 				]);
 			} else {
 				const convList = [...conversationList];
+				let found = false;
 				convList.forEach((conv) => {
 					if (conv.id == e.content.conversationID) {
+						found = true;
 						if (convState !== conv.name) conv.unseen_msg += 1;
 						conv.last_message = {
 							sended_at: e.time,
@@ -218,7 +233,12 @@ export default function Conversations({
 						};
 					}
 				});
-				setConversationList(convList);
+				found
+					? setConversationList(convList)
+					: setConversationList([
+							e.content.conversation,
+							...convList,
+						]);
 			}
 		},
 		[conversationList, convState],
@@ -245,13 +265,9 @@ export default function Conversations({
 				onScroll={handleScroll}
 				className={styles.container}
 			>
-				{conversationList ? (
+				{conversationList.length != 0 ? (
 					conversationList.map((conversation, idx) => (
-						<Conversation
-							key={idx}
-							user={user}
-							info={conversation}
-						/>
+						<Conversation key={idx} info={conversation} />
 					))
 				) : (
 					<h1

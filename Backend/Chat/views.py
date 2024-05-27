@@ -52,7 +52,7 @@ class ConversationView(APIView):
         conversation_list = [  # TODO: do it in queryset
             conversation
             for conversation in conversation_list
-            if conversation.check_is_friend
+            if conversation.check_is_friend()
         ]
         PaginatorConv = Paginator(
             conversation_list, PER_PAGE, allow_empty_first_page=False

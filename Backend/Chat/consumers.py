@@ -19,8 +19,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         try:
             self.user: User = self.scope["user"]
-            print(self.user)
-            if self.user.is_anonymous:
+            if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
             else:
                 self.register_channel(self.user.username, self.channel_name)
@@ -31,8 +30,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content):
         try:
-            # type = content["type"]
-            # if type == "DM":               Currently there is Just DM Event
             await self.directMessage(content)
         except Exception as error:
             await self.send_error(str(error) + " receive_json()")
@@ -71,19 +68,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             conversation = await database_sync_to_async(Conversation.objects.get)(
                 pk=content["conversation_id"]
             )
-            # ? for handle waiting state
-            # await self.send_json(
-            #     {
-            #         "status": "sent",
-            #         "send_to": send_to,
-            #         "message": message,
-            #         "sended_at": sended_at,
-            #     },
-            # )
-
+            is_friend = await database_sync_to_async(conversation.check_is_friend)()
+            if not is_friend:
+                raise Exception("not a friend")
             receiver = self.get_channel_by_user(send_to)
-            print("receive a new message ", receiver)
-            if receiver is not None:  # is online
+            if receiver is not None:
                 await self.channel_layer.send(
                     receiver,
                     {
@@ -93,8 +82,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                         "sended_at": sended_at,
                     },
                 )
-            else:  # is offline push in notification
-                pass
             await database_sync_to_async(Message.new_message)(
                 conversation, self.user, message
             )
@@ -105,7 +92,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"type": "error", "error": error_msg})
 
     async def disconnect(self, code):
-        # self.channels.pop(str(self.user.username))
+        self.channels.pop("testuser", None)
         await self.close(code)
 
 

@@ -2,6 +2,7 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { useEffect, useState } from "react";
 
 async function getConversations([offset, setOffset]) {
+	// TODO: use route handler
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
 		offset: offset,
 	});
@@ -13,6 +14,7 @@ async function getConversations([offset, setOffset]) {
 }
 
 async function getLastConversations(offset) {
+	// TODO: use route handler
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
 		offset: offset,
 		last: true,
@@ -45,10 +47,20 @@ export const useConversations = (initialState) => {
 
 	useEffect(() => {
 		if (getMore && Offset > 0) {
-			getConversations([Offset, setOffset]).then(({ conversations }) => {
-				setConversationList([...ConversationList, ...conversations]);
-				if (ConversationList.length == 0) setIsUpdated(true);
-			});
+			getConversations([Offset, setOffset]).then(
+				({ conversations, size }) => {
+					if (size == 0) return;
+					setConversationList((oldConversationList) => {
+						if (
+							oldConversationList.at(-1).id ==
+							conversations.at(0).id
+						)
+							conversations.shift();
+						return [...ConversationList, ...conversations];
+					});
+					if (ConversationList.length == 0) setIsUpdated(true);
+				},
+			);
 			setGetMore(false);
 		}
 	}, [getMore]);
@@ -59,7 +71,16 @@ export const useConversations = (initialState) => {
 			setConversationList([conversation, ...ConversationList]);
 			setIsUpdated(true);
 		},
-		setConversationList: setConversationList,
+		setConversationList: (newState) => {
+			let newList =
+				typeof newState == "function"
+					? newState(ConversationList)
+					: newState;
+			newList.sort((f, s) =>
+				f.last_message.sended_at > s.last_message.sended_at ? -1 : 1,
+			);
+			setConversationList(newList);
+		},
 		isUpdatedState: [isUpdated, setIsUpdated],
 		LoadMoreConversation: () => setGetMore(true),
 		LoadToReplace: () => setReplaceLast(true),

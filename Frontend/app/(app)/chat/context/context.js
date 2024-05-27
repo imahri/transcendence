@@ -8,10 +8,9 @@ import { useNotification } from "../Hooks/useNotification";
 export const WsChatContext = createContext();
 
 export const WsChatProvider = ({ children, conversations }) => {
-	// [messageUpdated, setMessageUpdated]
 	const messageUpdatedState = useState(false);
 	const [socket, setSocket] = useState(null);
-	const { user, setUser } = useContext(UserContext);
+	const { user } = useContext(UserContext);
 	const { sendNotif, addListenerNotif } = useNotification();
 
 	useEffect(() => {
