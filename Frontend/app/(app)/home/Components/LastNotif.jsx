@@ -9,12 +9,23 @@ import Loading from "@/app/(auth)/Loading";
 import { UserContext } from "../../context";
 import { calculateTimeDifference } from "../../navBar/Components/Notification";
 
-function Msg({ msg }) {
+function readNotif(socket, notif) {
+	if (notif.is_read) return;
+	socket.send(
+		JSON.stringify({
+			action: "readNotif",
+			id: notif.id,
+		}),
+	);
+}
+
+function Msg({ msg, socket }) {
 	const time = calculateTimeDifference(msg.time);
 	return (
 		<Link
 			href={`/chat/${msg.user.username}`}
 			className="cursor-pointer flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]"
+			onClick={() => readNotif(socket, msg)}
 		>
 			<Image
 				className="size-[39px] rounded-full"
@@ -124,7 +135,7 @@ function LastNotif() {
 						).map((msg, index) => {
 							return (
 								<div key={index}>
-									<Msg msg={msg} />
+									<Msg msg={msg} socket={ws} />
 								</div>
 							);
 						})}
