@@ -8,7 +8,11 @@ let ycord = 0;
 let player2_y = 0;
 
 let player1_y = 0;
+
 let uid = 0;
+
+let player2_state = "not yet";
+let player1_state = "not yet";
 
 export const Gameson = ({ secondArrived }) => {
 	const cvs = useRef(null);
@@ -43,8 +47,17 @@ export const Gameson = ({ secondArrived }) => {
 			} else if (data.event == "change_state") {
 				console.log("second arrived");
 				secondArrived();
-			} else if (data.event == "end-game") {
+			} else if (data.event == "end_game") {
 				console.log("game_finish");
+
+				player1_state = data?.message?.user1;
+				player2_state = data?.message?.user2;
+
+				if (uid == 1 && player1_state === "win") console.log("win");
+				if (uid == 2 && player2_state === "win") console.log("win");
+
+				if (uid == 1 && player1_state === "lose") console.log("lose");
+				if (uid == 2 && player2_state === "lose") console.log("lose");
 			}
 		};
 

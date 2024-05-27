@@ -1,5 +1,5 @@
 from cgitb import text
-from sys import stderr
+import sys
 import math
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -19,6 +19,7 @@ class Game:
 
 
         self.paused = False
+        self.reconnect = False
         
         self.user1 = {
             "x": 3,
@@ -104,7 +105,7 @@ class Game:
 
     def update_ball(self):
         if (self.pause == True):
-            time.sleep(15)
+            time.sleep(10)
             self.pause = False
         self.ball['x'] += self.ball['velocityX']
         self.ball['y'] += self.ball['velocityY']
@@ -232,6 +233,7 @@ def update_item_in_room(game, room_name, index, new_string):
     for room in game:
         if room[0] == room_name:
             if 0 <= index < len(room[1]):
+                print(f"room value : {room[0]}")
                 room[1][index] = new_string
                 return True
             else:
@@ -256,13 +258,22 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         return cls.channels.get(user, None)
 
 
+    async def shouha(self):
+        await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'reconnect',
+                        'state': 'back'
+                    }
+                )
+
     async def connect(self):
         try:
             self.user: User = self.scope["user"]
             if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
             else:
-                self.register_channel(self.user.username, self.channel_name)
+                # self.register_channel(self.user.username, self.channel_name)
                 self.room_group_name = creat_room_name(self.game_room)
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
@@ -279,30 +290,23 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     print(self.game_room[0])
                 if find_string_in_game(self.game_room, self.user.username, result):
                     
-                    update_item_in_room(self.game_room, result[0], result[1], self.user.username)
+                    is_valid = update_item_in_room(self.game_room, result[0], result[1], self.user.username)
+                    await self.channel_layer.group_add(
+                        result[0],
+                        self.channel_name
+                    )
                     
-                    print("after")
-                    print(self.game_room[0])
                     await self.send_json(content={
                         'event': 'index_player',
                         'index': (result[1] + 1),
                     })
 
-
-                    await self.channel_layer.group_send(
-                        self.room_group_name,
-                        {
-                            'type': 'reconnect'
-                        }
-                    )
-
+                    await self.shouha()
 
                     index = get_room_index(self.game_room,self.room_group_name)
                     obg = self.game_object[index]
                     obg.pause = True
-                    self.task_manager[index].cancel()
-                    self.task_manager[index] = asyncio.create_task(self.send_ball_coordinates())
-
+                    obg.reconnect = False
 
 
                 else:
@@ -326,15 +330,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             self.room_group_name,
                             {
                                 'type': 'change_state',
-                                'state': 'state'
+                                'state': 'start'
                             }
                         )
                         self.task_manager.append(asyncio.create_task(self.send_ball_coordinates()))
 
-
-
         except Exception:
             await self.close()
+
 
     async def receive(self, text_data):
         index = get_room_index(self.game_room,self.room_group_name)
@@ -344,11 +347,11 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             obg.canvas['height'] = data.get("canvasHeight")
             obg.canvas['width'] = data.get("canvasWidth")
 
-
         elif data.get("event") == "updatePaddle":
             obg.upKeyPressed = data.get("upKeyPressed")
             obg.downKeyPressed = data.get("downKeyPressed")
             obg.uid = data.get("id")
+
         elif data.get("event") == "togglePause":
             print("pause")
             obg.pause = True
@@ -360,64 +363,82 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         'event': 'change_state',
                         'state': "start",
                     })
-    async def end_game(self, event):
-        await self.send_json(content={
-                        'event': 'end_game',
-                        'state': "end",
-                    })
+
     async def reconnect(self, event):
         await self.send_json(content={
                         'event': 'reconnect',
+                        'state': 'back'
                     })
-        
+
+
+
     async def send_ball_coordinates(self):
         index = get_room_index(self.game_room, self.room_group_name)
-        obg = self.game_object[index]
+        obg: Game = self.game_object[index]
         await asyncio.sleep(3)
 
         while True:
-            if obg.user1['score'] == 7 or obg.user2['score'] == 7:
+            if not obg.reconnect:
+                if obg.user1['score'] == 2 or obg.user2['score'] == 2:
+                    
+                    if obg.user1['score'] > obg.user2['score']:
+                        user1_st = "win"
+                        user2_st = "lose"
+                    
+                    if obg.user1['score'] < obg.user2['score']:
+                        user1_st = "lose"
+                        user2_st = "win"
+
+                    l_w = {
+                        'type': 'end_game',
+                        'user1': user1_st,
+                        'user1_res': obg.user1['score'],
+                        'user2': user2_st,
+                        'user2_res': obg.user2['score']
+                    }
+
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'end_game',
+                            'message': l_w,
+                        }
+                    )
+
+
+                    remove_room_by_index(self.game_room, index)
+                    print("end_game")
+                    break
+
+                obg.update_ball()
+                obg.updatePaddlePosition()
+
+                await asyncio.sleep(0.0060)
                 
+                x = obg.ball['x']
+                y = obg.ball['y']
+                user1_y = obg.user1['y']
+                user2_y = obg.user2['y']
+
+                message = {
+                    'event': 'update',
+                    'x': x,
+                    'y': y,
+                    "user1_y": user1_y,
+                    "user2_y": user2_y
+                }
+
+
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
-                        'type': 'end_game',
-                        'state': 'end'
+                        'type': 'update',
+                        'message': message,
                     }
-                )
-
-
-                remove_room_by_index(self.game_room, index)
-                print("game_end")
-                break
-
-            obg.update_ball()
-            obg.updatePaddlePosition()
-
-            await asyncio.sleep(0.0060)
-            
-            x = obg.ball['x']
-            y = obg.ball['y']
-            user1_y = obg.user1['y']
-            user2_y = obg.user2['y']
-
-            message = {
-                'event': 'update',
-                'x': x,
-                'y': y,
-                "user1_y": user1_y,
-                "user2_y": user2_y
-            }
-
-
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'update',
-                    'message': message,
-                }
             )
-
+            else:
+                print("reconect mode")
+                await asyncio.sleep(1)
 
 
     async def update(self, event):
@@ -427,9 +448,22 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             'message': message,
         })
 
+    async def end_game(self, event):
+        message = event['message']
+        await self.send_json(content={
+            'event': 'end_game',
+            'message': message,
+        })
+
     async def disconnect(self, code):
         # task = self.tasks.get(self.room_group_name, None)
         # if task:
         #     task.cancel()
+        index = get_room_index(self.game_room, self.room_group_name)
+        if (index != -1):
+            print(">>>>>")
+            obg: Game = self.game_object[index]
+            obg.reconnect = True
         self.channels.pop(self.user.username, None)
         await self.close(code)
+
