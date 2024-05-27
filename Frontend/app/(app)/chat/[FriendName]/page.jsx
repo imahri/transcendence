@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MessagesSection, MessageTypes } from "./Components/MessagesSection";
 import { ActiveStatusTypes, ProfileBar } from "./Components/ProfileBar";
 import { TypingBar } from "./Components/TypingBar";
@@ -24,6 +24,7 @@ async function getFriendInfo(FriendName) {
 			name: FriendName,
 			image: data.user.img,
 			level: data.user.info.level,
+			grade: data.user.info.grade.id,
 		};
 		return info;
 	}
