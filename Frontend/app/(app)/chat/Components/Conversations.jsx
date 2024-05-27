@@ -113,7 +113,7 @@ function Conversation({ info }) {
 			{last_message && (
 				<TimeNotification
 					time={last_message.sended_at}
-					unseen_msg={unseen_msg}
+					unseen_msg={isActive ? 0 : unseen_msg}
 				/>
 			)}
 		</button>
