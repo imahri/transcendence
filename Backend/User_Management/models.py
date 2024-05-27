@@ -118,7 +118,7 @@ class User(AbstractUser):
         self.get_friendship(friend).conversation.delete()
 
     def get_new_Notification(self):
-        return self.notifications.all().filter(is_hidden=False, is_read=False)
+        return self.notifications.all().filter(is_read=False)
 
     def get_last_msg_notification(self):
         return self.notifications.all().filter(type='C', is_read=False)
@@ -284,7 +284,6 @@ class Notification(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     content = models.JSONField()
     is_read = models.BooleanField(default=False)
-    is_hidden = models.BooleanField(default=False)
 
 
 
@@ -321,7 +320,7 @@ class Notification(models.Model):
         from .serializers import NotifSerializer
 
         response = []
-        allNotification = user.notifications.all().filter(is_hidden=False)
+        allNotification = user.notifications.all()
 
         if allNotification.exists():
             for notif in allNotification:
