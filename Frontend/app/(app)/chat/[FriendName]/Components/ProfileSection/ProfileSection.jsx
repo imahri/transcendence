@@ -120,7 +120,7 @@ const Footer = () => (
 export const ProfileSection = ({
 	_ref,
 	className,
-	friendinfo: { id, name, image, level },
+	friendinfo: { id, name, image, grade },
 	status,
 }) => (
 	<div ref={_ref} className={`${styles.container} ${className}`}>
@@ -129,7 +129,7 @@ export const ProfileSection = ({
 				<FriendProfile image={image} name={name} status={status} />
 				<Options name={name} id={id} />
 			</section>
-			<BadgeSection Grade={level > 0 ? level : 1} />
+			<BadgeSection Grade={grade > 0 ? grade : 1} />
 		</div>
 		<Footer />
 	</div>
