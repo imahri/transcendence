@@ -62,7 +62,6 @@ class Game:
     pause = False
     uid = 0
 
-
     def toggle_pause(self):
         self.paused = not self.paused
     
@@ -113,8 +112,6 @@ class Game:
         if (self.ball['y'] + self.ball['radius'] >= self.canvas['height'] or self.ball['y'] - self.ball['radius'] <= 0):
             self.ball['velocityY'] *= -1
 
-        # if (self.ball['x'] - self.ball['radius'] <= 0 or self.ball['x'] + self.ball['radius'] >= self.canvas['width']):
-        #     self.ball['velocityX'] *= -1
 
         if (self.ball['x'] < (self.canvas['width'] / 2)):
             if self.collision(self.user1):
@@ -240,6 +237,11 @@ def update_item_in_room(game, room_name, index, new_string):
                 return False
     return False
 
+def update_room_names(room_name, game):
+    for room in game:
+        if room[0] == room_name:
+            room[1] = [name + "_old" for name in room[1]]
+            break
 
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
@@ -273,7 +275,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
             else:
-                # self.register_channel(self.user.username, self.channel_name)
+                self.register_channel(self.user.username, self.channel_name)
                 self.room_group_name = creat_room_name(self.game_room)
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
@@ -301,6 +303,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         'index': (result[1] + 1),
                     })
 
+
                     await self.shouha()
 
                     index = get_room_index(self.game_room,self.room_group_name)
@@ -318,6 +321,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             'index': 1,
                         })
                         print(self.game_room)
+
+
 
                     else:
                         print(self.game_room)
@@ -372,6 +377,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 
 
+
     async def send_ball_coordinates(self):
         index = get_room_index(self.game_room, self.room_group_name)
         obg: Game = self.game_object[index]
@@ -384,7 +390,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     if obg.user1['score'] > obg.user2['score']:
                         user1_st = "win"
                         user2_st = "lose"
-                    
+
                     if obg.user1['score'] < obg.user2['score']:
                         user1_st = "lose"
                         user2_st = "win"
@@ -404,11 +410,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             'message': l_w,
                         }
                     )
-
-
-                    remove_room_by_index(self.game_room, index)
+                    
+                    res = get_player_room(self.game_room, self.user.username)
+                    update_room_names(res, self.game_room)
                     print("end_game")
                     break
+
 
                 obg.update_ball()
                 obg.updatePaddlePosition()
@@ -456,12 +463,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         })
 
     async def disconnect(self, code):
-        # task = self.tasks.get(self.room_group_name, None)
-        # if task:
-        #     task.cancel()
         index = get_room_index(self.game_room, self.room_group_name)
         if (index != -1):
-            print(">>>>>")
             obg: Game = self.game_object[index]
             obg.reconnect = True
         self.channels.pop(self.user.username, None)

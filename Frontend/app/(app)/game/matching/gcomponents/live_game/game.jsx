@@ -14,7 +14,7 @@ let uid = 0;
 let player2_state = "not yet";
 let player1_state = "not yet";
 
-export const Gameson = ({ secondArrived }) => {
+export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
 
@@ -53,11 +53,23 @@ export const Gameson = ({ secondArrived }) => {
 				player1_state = data?.message?.user1;
 				player2_state = data?.message?.user2;
 
-				if (uid == 1 && player1_state === "win") console.log("win");
-				if (uid == 2 && player2_state === "win") console.log("win");
+				if (uid == 1 && player1_state === "win") {
+					console.log("win");
+					checkWinner();
+				}
+				if (uid == 2 && player2_state === "win") {
+					console.log("win");
+					checkWinner();
+				}
 
-				if (uid == 1 && player1_state === "lose") console.log("lose");
-				if (uid == 2 && player2_state === "lose") console.log("lose");
+				if (uid == 1 && player1_state === "lose") {
+					console.log("lose");
+					checkLoser();
+				}
+				if (uid == 2 && player2_state === "lose") {
+					console.log("lose");
+					checkLoser();
+				}
 			}
 		};
 
@@ -227,19 +239,6 @@ export const Gameson = ({ secondArrived }) => {
 			}
 
 			game();
-
-			// setInterval(() => {
-			// 	if (socket && socket.readyState === WebSocket.OPEN) {
-			// 		socket.send(
-			// 			JSON.stringify({
-			// 				event: "resize",
-
-			// 				canvasHeight: canvas.height,
-			// 				canvasWidth: canvas.width,
-			// 			}),
-			// 		);
-			// 	}
-			// }, 1000);
 
 			return () => {
 				console.log("getting out");

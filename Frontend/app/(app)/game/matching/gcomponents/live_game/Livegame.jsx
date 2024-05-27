@@ -9,7 +9,14 @@ import Mon from "../images/music.svg";
 import Moff from "../images/no_sound.svg";
 import { Gameson } from "./game";
 
-const LGame = ({ secondArrived, loading }) => {
+const LGame = ({
+	secondArrived,
+	loading,
+	checkWinner,
+	win,
+	checkLoser,
+	lose,
+}) => {
 	return (
 		<div className={`${styles.page} ${loading ? "hidden" : "block"}`}>
 			<div className={styles.container}>
@@ -21,14 +28,11 @@ const LGame = ({ secondArrived, loading }) => {
 					<div className={styles.all_in}>
 						<div className={styles.bord_part}>
 							<div className={styles.borad}>
-								{/* <div className={styles.borad_cover}></div>
-								<div className={styles.f_borad_line}></div>
-								<div className={styles.s_borad_line}></div>
-								<div className={styles.t_borad_line}></div>
-								<div className={styles.l_borad_line}></div> */}
-								{/* <div className={styles.ppo}> */}
-
-								<Gameson secondArrived={secondArrived} />
+								<Gameson
+									checkWinner={checkWinner}
+									checkLoser={checkLoser}
+									secondArrived={secondArrived}
+								/>
 								{/* </div> */}
 							</div>
 							{/* <Res/> */}
