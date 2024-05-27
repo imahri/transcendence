@@ -43,12 +43,43 @@ function getNotifLink(notif) {
 	else return "#";
 }
 
+export function calculateTimeDifference(pastDateTime) {
+	var pastDate = new Date(pastDateTime);
+	var currentDate = new Date();
+
+	var timeDiff = currentDate - pastDate;
+
+	var seconds = Math.floor(timeDiff / 1000);
+	var minutes = Math.floor(seconds / 60);
+	var hours = Math.floor(minutes / 60);
+	var days = Math.floor(hours / 24);
+	var weeks = Math.floor(days / 7);
+	var months = Math.floor(days / 30);
+	var years = Math.floor(days / 365);
+
+	if (years > 0) {
+		return years + " year" + (years > 1 ? "s" : "") + " ago";
+	} else if (months > 0) {
+		return months + " month" + (months > 1 ? "s" : "") + " ago";
+	} else if (weeks > 0) {
+		return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+	} else if (days > 0) {
+		return days + " day" + (days > 1 ? "s" : "") + " ago";
+	} else if (hours > 0) {
+		return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+	} else if (minutes > 0) {
+		return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+	} else {
+		return seconds + " second" + (seconds > 1 ? "s" : "") + " ago";
+	}
+}
+
 function NotifSection({ notif }) {
 	const ntype = notif.type;
 	const Svg = ntype == "C" ? ChatSvg : ntype == "F" ? FriendSvg : GmaeSvg;
 	const type = setType(notif.type, notif.content);
 	const link = getNotifLink(notif);
-	const time = new Date(notif.time).toLocaleTimeString();
+	const time = calculateTimeDifference(notif.time);
 
 	return (
 		<Link
@@ -148,7 +179,7 @@ function Notification() {
 			<div
 				className={`w-[300px] bg-[#303030] absolute right-[5px] top-[35px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
 			>
-				<div className="flex justify-center items-center h-[50px] bg-greatBlue">
+				<div className="flex justify-center items-center h-[40px] bg-greatBlue">
 					<h1 className="text-white font-semibold"> Notification</h1>
 				</div>
 				<div className="max-h-[300px] mb-[20px] overflow-y-auto flex flex-col gap-[5px] pl-[5px]">

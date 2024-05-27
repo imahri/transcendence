@@ -7,9 +7,10 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { MSGNOTIF_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
 import { UserContext } from "../../context";
+import { calculateTimeDifference } from "../../navBar/Components/Notification";
 
 function Msg({ msg }) {
-	const time = new Date(msg.time).toLocaleTimeString();
+	const time = calculateTimeDifference(msg.time);
 
 	return (
 		<div className="flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]">
@@ -80,7 +81,9 @@ function LastNotif() {
 	const newMsg = (e) => {
 		const data = JSON.parse(e.data);
 		if (data.type == "notification") {
-			console.log(data);
+			setMsgs((prev) => {
+				return [...prev, data.content];
+			});
 		}
 	};
 	useEffect(() => {
