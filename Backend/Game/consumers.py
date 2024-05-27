@@ -385,7 +385,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
         while True:
             if not obg.reconnect:
-                if obg.user1['score'] == 2 or obg.user2['score'] == 2:
+                if obg.user1['score'] == 5 or obg.user2['score'] == 5:
                     
                     if obg.user1['score'] > obg.user2['score']:
                         user1_st = "win"
