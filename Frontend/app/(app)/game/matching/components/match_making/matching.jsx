@@ -7,6 +7,7 @@ import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "@/app/(app)/context";
 import Image from "next/image";
+import { IMAGE_URL } from "@/app/URLS";
 
 var count;
 
@@ -79,7 +80,7 @@ const Matching = () => {
 							<div className={`${styles.first_player}`}>
 								<div className={`${styles.player_pic}`}>
 									<Image
-										src={user.img}
+										src={`${IMAGE_URL}?path=${user.img}`}
 										height={100}
 										width={200}
 										className={`${styles.player_picture}`}

@@ -1,7 +1,9 @@
 "use client";
-// import Image from "next/image";
+import Image from "next/image";
 import Matching from "@/app/(app)/game/matching/components/match_making/matching";
 import LGame from "@/app/(app)/game/matching/gcomponents/live_game/Livegame";
+import WInter from "@/app/(app)/game/matching/components_win/live_game/Win";
+import LInter from "@/app/(app)/game/matching/components_lose/live_game/Lose";
 import { Provider } from "@/app/(app)/context/Context";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -9,47 +11,37 @@ import React, { useState, useEffect } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
 const Vim = () => {
-	// const {socket_, setSocket} = Provider()
-	// const [ready, setReady] = useState()
-	// //init socket
-	// useEffect(() => {
-	// 	const ws = new WebSocket(
-	// 		"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
-	// 	);
-	// 	ws.onopen = () => {
-	// 		console.log("opened");
-	// 		setSocket(ws);
-	// 	};
-
-	// 	ws.addEventListener('message', (event) => {
-	// 		const data = JSON.parse(event.data)
-	// 		// console.log('first msg', data);
-	// 		// if (data.event == 'change_state' && data.state == 'start')
-	// 		// 	setReady(true)
-	// 		// if (data.event == "index_player"){
-	// 		// 	console.log("please")
-	// 		// 	console.log(">>>>  ", data.index);
-	// 		// }
-	// 	});
-
-	// 	ws.onclose = () => {
-	// 		console.log("closed");
-	// 	};
-	// 	return () => {
-	// 		ws.close;
-	// 	};
-
-	// }, [])
 	const [loading, setLoading] = useState(true);
+	const [win, setWin] = useState(false);
+	const [lose, setLose] = useState(false);
+
 	const secondArrived = () => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 2000);
 	};
+
+	const checkWinner = () => {
+		setWin(true);
+	};
+
+	const checkLoser = () => {
+		setLose(true);
+	};
+
 	return (
 		<div>
-			{<LGame secondArrived={secondArrived} loading={loading} />}
+			{
+				<LGame
+					checkWinner={checkWinner}
+					checkLoser={checkLoser}
+					secondArrived={secondArrived}
+					loading={loading}
+				/>
+			}
 			{loading && <Matching />}
+			{win && <WInter />}
+			{lose && <LInter />}
 		</div>
 	);
 };
