@@ -4,20 +4,34 @@ import Link from "next/link";
 import Image from "next/image";
 import NoConv_icon from "../assets/no_conv.svg";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { MSGNOTIF_URL } from "@/app/URLS";
+import { IMAGE_URL, MSGNOTIF_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
 import { UserContext } from "../../context";
+import { calculateTimeDifference } from "../../navBar/Components/Notification";
 
-function Msg({ msg }) {
-	const time = new Date(msg.time).toLocaleTimeString();
+function readNotif(socket, notif) {
+	if (notif.is_read) return;
+	socket.send(
+		JSON.stringify({
+			action: "readNotif",
+			id: notif.id,
+		}),
+	);
+}
 
+function Msg({ msg, socket }) {
+	const time = calculateTimeDifference(msg.time);
 	return (
-		<div className="flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]">
+		<Link
+			href={`/chat/${msg.user.username}`}
+			className="cursor-pointer flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]"
+			onClick={() => readNotif(socket, msg)}
+		>
 			<Image
 				className="size-[39px] rounded-full"
 				width={39}
 				height={39}
-				src={msg.user.img}
+				src={`${IMAGE_URL}?path=${msg.user.img}`}
 				alt="sender image"
 			/>
 			<div>
@@ -25,7 +39,7 @@ function Msg({ msg }) {
 					{msg.user.username}
 				</h2>
 				<h3 className=" font-normal text-[10px] max-w-[200px] overflow-hidden  text-[#C3C3C3]">
-					{msg.content.msg}
+					{msg.content.message}
 				</h3>
 			</div>
 			<div className="absolute right-[10px] flex flex-col justify-center items-center">
@@ -33,7 +47,7 @@ function Msg({ msg }) {
 					{time}
 				</h3>
 			</div>
-		</div>
+		</Link>
 	);
 }
 
@@ -52,19 +66,15 @@ function NoMsg() {
 }
 
 async function getLastMsgs(setMsgs, setLoading) {
-	try {
-		const [isOk, status, data] = await fetch_jwt(MSGNOTIF_URL);
-
-		if (!isOk) {
-			setLoading(false);
-			console.log(data);
-			return;
-		}
-		setMsgs(data);
+	const [isOk, status, data] = await fetch_jwt(MSGNOTIF_URL);
+	if (!isOk) {
 		setLoading(false);
-	} catch (error) {
-		console.log("last msgs : ", error);
+		console.log(data);
+		return;
 	}
+	setMsgs(data);
+	setLoading(false);
+
 	setLoading(false);
 }
 
@@ -80,7 +90,9 @@ function LastNotif() {
 	const newMsg = (e) => {
 		const data = JSON.parse(e.data);
 		if (data.type == "notification") {
-			console.log(data);
+			setMsgs((prev) => {
+				return [...prev, data.content];
+			});
 		}
 	};
 	useEffect(() => {
@@ -119,7 +131,7 @@ function LastNotif() {
 						).map((msg, index) => {
 							return (
 								<div key={index}>
-									<Msg msg={msg} />
+									<Msg msg={msg} socket={ws} />
 								</div>
 							);
 						})}

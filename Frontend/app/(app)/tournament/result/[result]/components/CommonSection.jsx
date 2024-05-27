@@ -5,6 +5,7 @@ import RcolorArrow from "../../../assets/Rarrowcolor.png";
 import leftArrow from "../../../assets/arrow.png";
 import colorArrow from "../../../assets/arrowcolor.png";
 import Trophy from "../../../assets/Trophy.png";
+import { IMAGE_URL } from "@/app/URLS";
 
 function UserImage({ user, nb }) {
 	return (
@@ -16,7 +17,7 @@ function UserImage({ user, nb }) {
 					className="rounded-full size-[95%]"
 					width={70}
 					height={70}
-					src={user?.user?.img}
+					src={`${IMAGE_URL}?path=${user?.user?.img}`}
 					alt="user Image"
 				/>
 			)}
@@ -40,7 +41,7 @@ export function LastMatch({ tournament, participants }) {
 							className="rounded-full size-[95%]"
 							width={70}
 							height={70}
-							src={user1?.user?.img}
+							src={`${IMAGE_URL}?path=${user1?.user?.img}`}
 							alt="user Image"
 						/>
 					)}
@@ -56,7 +57,7 @@ export function LastMatch({ tournament, participants }) {
 							className="rounded-full size-[9%]"
 							width={70}
 							height={70}
-							src={user2?.user?.img}
+							src={`${IMAGE_URL}?path=${user2?.user?.img}`}
 							alt="user Image"
 						/>
 					)}

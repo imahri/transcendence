@@ -24,7 +24,7 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data):
         new_user = self.Meta.model(
-            email=validated_data["email"],
+            email=validated_data.get("email", ""),
             username=validated_data["username"],
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
@@ -33,10 +33,6 @@ class UserSerializer(ModelSerializer):
         new_user.save()
         new_user.set_info()
         return new_user
-
-    # def save(self, **kwargs):
-    #     # self.is_valid(raise_exception=True)
-    #     return super().save(**kwargs)
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username', instance.username)
@@ -70,7 +66,6 @@ class InfoSerializer(ModelSerializer):
             "wallet",
             "gender",
             "exp",
-            "banner_img",
             "profile_img",
             "grade",
         ]
@@ -80,16 +75,6 @@ class InfoSerializer(ModelSerializer):
         user_info = self.Meta.model(user)
         user_info.save()
         return user_info
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        if representation["profile_img"] is not None:
-            profile_path = (
-                "http://localhost:8000/user/image?path=" + representation["profile_img"]
-            )
-            representation["profile_img"] = profile_path
-        
-        return representation
 
     def save(self, **kwargs):
         self.is_valid(raise_exception=True)
@@ -102,4 +87,4 @@ class NotifSerializer(ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = ["id", "user", "type", "time", "content", "is_read", "is_hidden"]
+        fields = ["id", "user", "type", "time", "content", "is_read"]

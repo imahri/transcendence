@@ -1,6 +1,6 @@
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
-import { Block_URL } from "@/app/URLS";
+import { Block_URL, IMAGE_URL } from "@/app/URLS";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -36,7 +36,7 @@ function Friend({ friend, index, setBlockedUsers, setError }) {
 			{
 				<Image
 					className="size-[50px] rounded-full"
-					src={friend.img}
+					src={`${IMAGE_URL}?path=${friend.img}`}
 					width={50}
 					height={50}
 					alt=""

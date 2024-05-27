@@ -1,6 +1,9 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import Ball from "@/app/(app)/game/matching/components/match_making/ball_it";
+import Loading from "@/app/(auth)/Loading";
+import { IMAGE_URL } from "@/app/URLS";
 
 function GameState({ User, match }) {
 	const user2 = match.enemy;
@@ -27,8 +30,8 @@ function GameState({ User, match }) {
 					className="size-[95%] rounded-full"
 					width={0}
 					height={0}
-					src={User.img}
-					alt=""
+					src={`${IMAGE_URL}?path=${User.img}`}
+					alt="profile image"
 				/>
 			</div>
 			<div className="bg-[#696969] size-[34px] rounded-full flex justify-center items-center">
@@ -44,8 +47,8 @@ function GameState({ User, match }) {
 					className="size-[95%] rounded-full"
 					width={0}
 					height={0}
-					src={user2.img}
-					alt=""
+					src={`${IMAGE_URL}?path=${user2.img}`}
+					alt="friend image"
 				/>
 			</Link>
 			<Link href={`/profile/${user2.username}`}>
@@ -56,9 +59,6 @@ function GameState({ User, match }) {
 		</div>
 	);
 }
-
-import Ball from "@/app/(app)/matching/components/match_making/ball_it";
-import Loading from "@/app/(auth)/Loading";
 
 function EmptyHistoric() {
 	return (

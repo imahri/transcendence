@@ -41,8 +41,11 @@ class MatchView(APIView):
     def get(self, request):
         try:
             #check if user blocked
+            owner : User = request.user
             username = request.query_params.get('username')
             user : User =  User.objects.get(username=username)
+            if owner.friend_is_blocked(user):
+                return Response({'error': 'this user is blocked'}, status=400)
             last_match = Match.getLstMatch(user)
             winning = 0
             loses = 0
@@ -132,8 +135,11 @@ class ItemsView(APIView):
     def get(self, request):
         # get user items you should pass username in query
         try:
+            owner : User = request.user
             username = request.query_params.get('username')
             user : User =  User.objects.get(username=username)
+            if owner.friend_is_blocked(user):
+                return Response({'error': 'this user is blocked'}, status=400)
             objs = Items.objects.filter(user=user)
             response = {'padels' : '' , 'badges' : '', 'boards' : '' }
             for obj in objs:
@@ -175,11 +181,15 @@ class ItemsView(APIView):
         
         
 class AcheivmentView(APIView):
-
+    #get acheivment of a specific user pass user name to get it
     def get(self, request):
 
-        user : User = request.user
-
+        owner : User = request.user
+        username = request.query_params.get('username')
+        user : User =  User.objects.get(username=username)
+        if owner.friend_is_blocked(user):
+            return Response({'error': 'this user is blocked'}, status=400)
+    
         all_acheivements = Acheivement.objects.all()
         unlocked_acheivements = user.acheivements.all()
         

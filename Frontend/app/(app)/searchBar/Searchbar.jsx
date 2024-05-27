@@ -27,7 +27,6 @@ export function Searchbar({ style_ops }) {
 
 	useEffect(() => {
 		if (input) {
-			console.log("==> {input}");
 			clearTimeout(timeout);
 			timeout = setTimeout(() => searchForUsers(input, setResult), 300);
 		}

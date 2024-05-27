@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { USER_SEARCH_URL } from "@/app/URLS";
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
+import { IMAGE_URL, USER_SEARCH_URL } from "@/app/URLS";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 
 export function Result({ data }) {
 	return (
@@ -13,8 +13,8 @@ export function Result({ data }) {
 				className="size-[40px] rounded-full"
 				width={0}
 				height={0}
-				src={data.img}
-				alt=""
+				src={`${IMAGE_URL}?path=${data.img}`}
+				alt="friend image"
 			/>
 			<div className=" max-w-[170px] overflow-x-hidden">
 				<h1 className="text-white font-semibold truncate">
@@ -38,26 +38,16 @@ export function UserNotFound({ input }) {
 }
 
 export async function searchForUsers(searchText, setResult) {
-	const url = `${USER_SEARCH_URL}?search=${searchText}`;
-	const accessToken = getToken();
-
-	try {
-		let response = await fetch(url, {
-			headers: { Authorization: `Bearer  ${accessToken}` },
-		});
-		if (response.ok) {
-			const data = await response.json();
-			console.log("data : ", data);
-			if (data.length == 0) {
-				setResult(404);
-				return;
-			}
-			setResult(data);
-		} else {
-			setResult(404);
-		}
-		console.log(response);
-	} catch (error) {
-		console.error("fetch error: " + error);
+	const [isOk, status, data] = await fetch_jwt(USER_SEARCH_URL, {
+		search: searchText,
+	});
+	if (!isOk) {
+		setResult(404);
+		return;
 	}
+	if (data.length == 0) {
+		setResult(404);
+		return;
+	}
+	setResult(data);
 }

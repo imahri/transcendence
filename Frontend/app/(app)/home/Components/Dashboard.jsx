@@ -15,21 +15,17 @@ async function GameHistoric(
 	setGmaeHistoric,
 	setLoading,
 ) {
-	try {
-		setLoading(true);
-		const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
-			username: username,
-		});
-		if (!isOk) {
-			console.log(data);
-			setLoading(false);
-			return;
-		}
-		setLastGame(data.last_match);
-		setGmaeHistoric(data.all);
-	} catch (error) {
-		console.log(error);
+	setLoading(true);
+	const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
+		username: username,
+	});
+	if (!isOk) {
+		console.log(data);
+		setLoading(false);
+		return;
 	}
+	setLastGame(data.last_match);
+	setGmaeHistoric(data.all);
 	setLoading(false);
 }
 

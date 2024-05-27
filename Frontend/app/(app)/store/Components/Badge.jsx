@@ -3,6 +3,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import logo from "@/app/logo.svg";
 import { UserContext } from "../../context";
+import { IMAGE_URL } from "@/app/URLS";
 
 function Badge(props) {
 	const { user } = useContext(UserContext); // you should pass the user
@@ -14,8 +15,9 @@ function Badge(props) {
 		width: `${levelPercent}%`,
 		backgroundColor: badgeInfo.color,
 	};
+	const url = `${IMAGE_URL}?path=${badgeInfo.image_path}`;
 	const background_style = {
-		backgroundImage: `url("${badgeInfo.image}")`,
+		backgroundImage: `url("${url}")`,
 	};
 
 	return (
@@ -42,8 +44,8 @@ function Badge(props) {
 							className="rounded-[8px] size-[51px]"
 							width={0}
 							height={0}
-							src={user.info.profile_img}
-							alt=""
+							src={`${IMAGE_URL}?path=${user.info.profile_img}`}
+							alt="profile image"
 						/>
 						<div className="flex flex-col justify-center ml-[10px]">
 							<h2 className="text-[#F3F3F3] text-[9px] font-bold">

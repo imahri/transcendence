@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { GET_Friends_URL } from "@/app/URLS";
+import { GET_Friends_URL, IMAGE_URL } from "@/app/URLS";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 
 function Friend({ friend, index }) {
@@ -14,10 +14,10 @@ function Friend({ friend, index }) {
 			{
 				<Image
 					className="size-[50px] rounded-full"
-					src={friend.img}
+					src={`${IMAGE_URL}?path=${friend.img}`}
 					width={50}
 					height={50}
-					alt=""
+					alt="friend image"
 				/>
 			}
 			<div>

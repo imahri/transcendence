@@ -18,7 +18,7 @@ while i < N:
     if User.objects.filter(username=_name).first() is None:
         User.create(
             {
-                "email": f"{_name}@gmail.com",
+                # "email": f"{_name}@gmail.com",
                 "username": _name,
                 "first_name": _name,
                 "last_name": _name,

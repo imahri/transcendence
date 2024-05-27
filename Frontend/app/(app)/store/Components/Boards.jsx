@@ -2,15 +2,16 @@
 import { useState, useEffect } from "react";
 import common from "./styles/Common.module.css";
 import { buyItem, walletSvg } from "./StoreItems";
-import { BOARDES_URL } from "../../../URLS";
+import { BOARDES_URL, IMAGE_URL } from "../../../URLS";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
 
 function Board({ obj, owned, setOwned, setError }) {
 	const isOwned = owned.includes(obj.id);
 	const [show, setshow] = useState();
+	const url = `${IMAGE_URL}?path=${obj.image_path}`;
 	const style = {
-		backgroundImage: `url("${obj.image}")`,
+		backgroundImage: `url(${url})`,
 	};
 
 	return (
@@ -42,16 +43,12 @@ function Boards({ setError }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			try {
-				const [isOk, status, data] = await fetch_jwt(BOARDES_URL);
+			const [isOk, status, data] = await fetch_jwt(BOARDES_URL);
 
-				if (isOk) {
-					setBoardsObjs(data.boards);
-					setOwnedObjs(data.owned);
-					setLoading(false);
-				}
-			} catch (error) {
-				console.log(error);
+			if (isOk) {
+				setBoardsObjs(data.boards);
+				setOwnedObjs(data.owned);
+				setLoading(false);
 			}
 		};
 		getItems();

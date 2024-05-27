@@ -40,16 +40,12 @@ function Badges({ setError }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			try {
-				const [isOk, status, data] = await fetch_jwt(BADGES_URL);
+			const [isOk, status, data] = await fetch_jwt(BADGES_URL);
 
-				if (isOk) {
-					setBadgesObjs(data.badges);
-					setOwnedObjs(data.owned);
-					setLoading(false);
-				}
-			} catch (error) {
-				console.log(error);
+			if (isOk) {
+				setBadgesObjs(data.badges);
+				setOwnedObjs(data.owned);
+				setLoading(false);
 			}
 		};
 		getItems();

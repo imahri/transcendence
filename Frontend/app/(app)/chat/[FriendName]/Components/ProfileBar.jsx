@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./styles/ProfileBar.module.css";
 import ExitArrowIcon from "./assets/exit_arrow_icon";
 import { useRouter } from "next/navigation";
+import { IMAGE_URL } from "@/app/URLS";
 
 export const ActiveStatusTypes = Object.freeze({
 	Active: "Active Now",
@@ -54,7 +55,7 @@ export function ProfileBar({
 							className={styles.profileBar_Image}
 							width={100}
 							height={100}
-							src={image}
+							src={`${IMAGE_URL}?path=${image}`}
 							alt="Profile image"
 						/>
 					)}

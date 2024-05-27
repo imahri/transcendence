@@ -5,6 +5,7 @@ import Image from "next/image";
 import { errorSvg, nameInputSvg } from "@/app/(auth)/Allsvg";
 import { ChangeInfo } from "./EditUtils";
 import Loading from "@/app/(auth)/Loading";
+import { IMAGE_URL } from "@/app/URLS";
 
 function InputContainer({ type, label, id, placeHolder, error }) {
 	return (
@@ -62,7 +63,7 @@ function EditProfile({ closePopup }) {
 
 	const [error, setError] = useState();
 	const { user, setUser } = useContext(UserContext);
-	const [image, setImage] = useState(user.img);
+	const [image, setImage] = useState(`${IMAGE_URL}?path=${user.img}`);
 	const [isLoading, setLoading] = useState();
 
 	return (
@@ -132,13 +133,13 @@ function EditProfile({ closePopup }) {
 						placeHolder={user.last_name}
 						error={error?.type == "last_name"}
 					/>
-					<InputContainer
+					{/* <InputContainer
 						type={"email"}
 						id={"email"}
 						label={"Change your Email"}
 						placeHolder={user.email}
 						error={error?.type == "email"}
-					/>
+					/> */}
 
 					<button
 						className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white relative"

@@ -1,3 +1,4 @@
+import { IMAGE_URL } from "@/app/URLS";
 import Image from "next/image";
 
 export default function Display({ obj, setDemo, setResult }) {
@@ -18,7 +19,7 @@ export default function Display({ obj, setDemo, setResult }) {
 			</div>
 			<Image
 				className="size-[40px] cursor-pointer rounded-full"
-				src={obj.creator.img}
+				src={`${IMAGE_URL}?path=${obj.creator.img}`}
 				width={40}
 				height={40}
 				alt="Tournamnt owner"

@@ -5,6 +5,7 @@ import "./Profile.css";
 
 import Image from "next/image";
 import { UserContext } from "../../context";
+import { IMAGE_URL } from "@/app/URLS";
 
 function State({ number, name, color }) {
 	return (
@@ -57,7 +58,7 @@ function Profile() {
 						<div className="w-[51px] h-[47px] rounded-[5px] flex justify-center items-center">
 							<Image
 								className="rounded-[4px]"
-								src={user.info.grade.image}
+								src={`${IMAGE_URL}?path=${user.info.grade.image}`}
 								width={70}
 								height={70}
 								alt="Grade"
@@ -67,9 +68,9 @@ function Profile() {
 					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
 						{user.first_name} {user.last_name}
 					</h2>
-					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
+					{/* <h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
 						{user.email}
-					</h2>
+					</h2> */}
 				</div>
 				<h1 className="absolute top-[-20px] right-0 rotate-[-6deg] font-Mesthine text-[64px] [@media(max-width:1000px)]:hidden text-white">
 					{user.username}

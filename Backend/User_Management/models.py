@@ -14,13 +14,13 @@ class User(AbstractUser):
     Username and Email are required. Other fields are optional.
     """
 
-    email = models.EmailField(unique=True)
-    REQUIRED_FIELDS = ["email", "first_name", "last_name", "password"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
     # 2FA field
     is_2FA_active = models.BooleanField(default=False)
     uri_2FA = models.URLField(max_length=200, blank=True)
     qrcode_2FA = models.FilePathField(max_length=100, blank=True)
     secret_code_2FA = models.CharField(max_length=50, blank=True)
+    is_42_account = models.BooleanField(default=False)
 
     @staticmethod
     def create(data=None, **kwargs):
@@ -92,6 +92,13 @@ class User(AbstractUser):
     def friends(self) -> BaseManager:
         return self.friends_set.all()
 
+    def friend_is_blocked(self, friend):
+        try:
+            frindship = Friend.objects.get(user=self, friend=friend)
+            return frindship.is_block
+        except:
+            return False
+
     def get_friendship(self, friend):
         return Friend.objects.get(user=self, friend=friend)
 
@@ -111,7 +118,7 @@ class User(AbstractUser):
         self.get_friendship(friend).conversation.delete()
 
     def get_new_Notification(self):
-        return self.notifications.all().filter(is_hidden=False, is_read=False)
+        return self.notifications.all().filter(is_read=False)
 
     def get_last_msg_notification(self):
         return self.notifications.all().filter(type='C', is_read=False)
@@ -277,7 +284,6 @@ class Notification(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     content = models.JSONField()
     is_read = models.BooleanField(default=False)
-    is_hidden = models.BooleanField(default=False)
 
 
 
@@ -314,7 +320,7 @@ class Notification(models.Model):
         from .serializers import NotifSerializer
 
         response = []
-        allNotification = user.notifications.all().filter(is_hidden=False)
+        allNotification = user.notifications.all()
 
         if allNotification.exists():
             for notif in allNotification:

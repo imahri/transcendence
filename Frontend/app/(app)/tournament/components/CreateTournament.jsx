@@ -43,28 +43,24 @@ async function handleCreate(user, username, Tournament, setError) {
 		alias_name: username,
 	});
 
-	try {
-		const [isOk, status, data] = await fetch_jwt(
-			TOURNAMENT_URL,
-			{},
-			{
-				method: "POST",
-				body: body,
-				headers: { "Content-Type": "application/json" },
-			},
-		);
+	const [isOk, status, data] = await fetch_jwt(
+		TOURNAMENT_URL,
+		{},
+		{
+			method: "POST",
+			body: body,
+			headers: { "Content-Type": "application/json" },
+		},
+	);
 
-		if (!isOk) {
-			//hanedl error Tournament name or username
-			myseterror(setError, "tournament");
-			console.log(data);
-			return;
-		}
+	if (!isOk) {
+		//hanedl error Tournament name or username
+		myseterror(setError, "tournament");
 		console.log(data);
-		myseterror(setError, "success");
-	} catch (error) {
-		console.log("error", error);
+		return;
 	}
+	console.log(data);
+	myseterror(setError, "success");
 }
 
 export default function Create() {

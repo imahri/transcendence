@@ -46,7 +46,7 @@ class Conversation(models.Model):
 
     def unseen_msg(self, user):
         allNotification = user.notifications.all().filter(
-            type="C", is_read=False, is_hidden=False
+            type="C", is_read=False
         )
         counter = 0
         for Notification in allNotification:

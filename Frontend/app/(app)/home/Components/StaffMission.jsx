@@ -40,38 +40,33 @@ async function verify(setMissions, setverify) {
 	setTimeout(() => {
 		setverify(false);
 	}, 500);
-	try {
-		const [isOk, status, data] = await fetch_jwt(
-			MISSIONS_URL,
-			{},
-			{ method: "PUT" },
-		);
-		``;
 
-		if (isOk) {
-			setMissions((prev) => {
-				return {
-					...prev,
-					ChatMission: {
-						...prev.ChatMission,
-						status: data.chatMission,
-					},
-					GameMission: {
-						...prev.GameMission,
-						status: data.gameMission,
-					},
-					UserMission: {
-						...prev.UserMission,
-						status: data.userMission,
-					},
-				};
-			});
-			return;
-		}
-		console.log(data);
-	} catch (error) {
-		console.log("verify mission", error);
+	const [isOk, status, data] = await fetch_jwt(
+		MISSIONS_URL,
+		{},
+		{ method: "PUT" },
+	);
+	if (isOk) {
+		setMissions((prev) => {
+			return {
+				...prev,
+				ChatMission: {
+					...prev.ChatMission,
+					status: data.chatMission,
+				},
+				GameMission: {
+					...prev.GameMission,
+					status: data.gameMission,
+				},
+				UserMission: {
+					...prev.UserMission,
+					status: data.userMission,
+				},
+			};
+		});
+		return;
 	}
+	console.log(data);
 }
 
 function StaffMission() {

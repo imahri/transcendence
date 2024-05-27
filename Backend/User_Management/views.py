@@ -70,6 +70,7 @@ class UserView(APIView):
     @api_view(["GET"])
     def get_user(request):
         try:
+            user : User = request.user
             username = request.query_params.get("username")
             friend = User.objects.get(username=username)
             userObj = dict(UserSerializer(friend).data)
@@ -77,6 +78,8 @@ class UserView(APIView):
             # get the friendship betwen me and the user
             if request.user.pk == friend.pk:
                 userObj['friendship'] = 'owner'
+            if user.friend_is_blocked(friend):
+                return Response({"error": "user is blocked"}, status=400)
             else :
                 try :
                     userObj['friendship'] = request.user.get_friendship(friend=friend).status
@@ -125,12 +128,8 @@ def searchView(request):
             raise ObjectDoesNotExist(f"No results found for {search_text}")
         response = []
         for user in founded_users:
-            try :
-                isBlocked = request.user.get_friendship(friend=user).is_block
-                if isBlocked:
-                    continue
-            except Exception as error:
-                print(error)
+            if request.user.friend_is_blocked(friend=user):
+                continue
             userData = dict(UserSerializer(user).data)
             response.append(userData)
 
@@ -147,15 +146,16 @@ def getFriendView(request):
         user: User = request.user
         if not user.friends.exists():
             raise ObjectDoesNotExist("No results")
-        # founded_users = [friend_rl.friend for friend_rl in user.friends]
-        founded_users = [friend_rl.friend for friend_rl in user.friends if not friend_rl.is_block]
+        # founded_users = [friend_rl.friend for friend_rl in user.friends if not friend_rl.is_block]
+        founded_users = user.friends.exclude(status='B')
         if not founded_users:
             raise ObjectDoesNotExist("No results")
         response = []
-        for user in founded_users:
-            userData = dict(UserSerializer(user).data)
+        for friendship in founded_users:
+            userData = dict(UserSerializer(friendship.friend).data)
             response.append(userData)
         return Response(data=response)
+    
     except ObjectDoesNotExist as no_found:
         return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
     except Exception as error:
@@ -169,7 +169,8 @@ def getUserFriends(request):
         user : User = User.objects.get(username=username)
         if not user.friends.exists():
             raise ObjectDoesNotExist("No results")
-      
+        if request.user.friend_is_blocked(user):
+            return Response({'error': 'this friend is blocked'}, status=400)    
         founded_users = user.friends.exclude(status='B')
         if not founded_users:
             raise ObjectDoesNotExist("No results")

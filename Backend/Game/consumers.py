@@ -2,7 +2,6 @@ from cgitb import text
 from sys import stderr
 import math
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from channels.db import database_sync_to_async
 from User_Management.models import User
 import json
 import time

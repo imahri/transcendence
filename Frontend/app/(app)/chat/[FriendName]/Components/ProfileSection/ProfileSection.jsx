@@ -12,6 +12,7 @@ import { ProfileIcon } from "./icons/ProfileIcon";
 import { UserContext } from "@/app/(app)/context";
 import { useContext } from "react";
 import { ActiveStatusTypes } from "../ProfileBar";
+import { IMAGE_URL } from "@/app/URLS";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -28,7 +29,7 @@ const FriendProfile = ({ image, name, status }) => (
 			{image && (
 				<Image
 					className={styles.profile_img}
-					src={image}
+					src={`${IMAGE_URL}?path=${image}`}
 					width={200}
 					height={200}
 					alt="profile_img"
