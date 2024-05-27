@@ -24,11 +24,6 @@ async function getUser(username, setUserProfile, setisLoading, navigate) {
 			navigate.replace("/home");
 			return;
 		}
-		const friendShip = data.user.friendship;
-		if (friendShip == "B" || friendShip == "BY") {
-			navigate.replace("/home");
-			return;
-		}
 		setUserProfile(data.user);
 		setisLoading(false);
 	} catch (error) {

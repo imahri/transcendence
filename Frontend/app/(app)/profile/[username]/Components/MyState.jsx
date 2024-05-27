@@ -3,6 +3,9 @@ import LastGame from "@/app/(app)/home/Components/LastGame";
 import { useContext, useEffect, useState } from "react";
 import { UserProfileContext } from "../page";
 import Image from "next/image";
+import t from "../assets/noTrophy.png";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { ACHEIVMENTS_URL, IMAGE_URL, MATCHES_URL } from "@/app/URLS";
 
 function DisplayStatistic({ title, nb }) {
 	return (
@@ -70,10 +73,6 @@ function Status({ state }) {
 		</>
 	);
 }
-
-import t from "../assets/noTrophy.png";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { ACHEIVMENTS_URL, IMAGE_URL, MATCHES_URL } from "@/app/URLS";
 
 function ShowRoom({ title, items }) {
 	return (
@@ -145,7 +144,9 @@ export default function MyState() {
 	useEffect(() => {
 		const getAcheivments = async (setAch) => {
 			try {
-				const [isOk, status, data] = await fetch_jwt(ACHEIVMENTS_URL);
+				const [isOk, status, data] = await fetch_jwt(ACHEIVMENTS_URL, {
+					username: userProfile.username,
+				});
 				if (isOk) {
 					data.sort((a, b) => !a.unlocked);
 					setAch(data);

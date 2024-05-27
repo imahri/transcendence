@@ -92,6 +92,13 @@ class User(AbstractUser):
     def friends(self) -> BaseManager:
         return self.friends_set.all()
 
+    def friend_is_blocked(self, friend):
+        try:
+            frindship = Friend.objects.get(user=self, friend=friend)
+            return frindship.is_block
+        except:
+            return False
+
     def get_friendship(self, friend):
         return Friend.objects.get(user=self, friend=friend)
 
