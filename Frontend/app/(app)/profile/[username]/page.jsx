@@ -14,21 +14,16 @@ import EditProfile from "./Components/EditProfile";
 export const UserProfileContext = createContext();
 
 async function getUser(username, setUserProfile, setisLoading, navigate) {
-	try {
-		const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
-			username: username,
-		});
-
-		if (!isOk) {
-			console.log("error fetch");
-			navigate.replace("/home");
-			return;
-		}
-		setUserProfile(data.user);
-		setisLoading(false);
-	} catch (error) {
-		console.log(error);
+	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
+		username: username,
+	});
+	if (!isOk) {
+		console.log("error fetch");
+		navigate.replace("/home");
+		return;
 	}
+	setUserProfile(data.user);
+	setisLoading(false);
 }
 
 function Profile({ params }) {

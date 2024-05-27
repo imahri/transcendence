@@ -45,15 +45,11 @@ export default function Padlles({ setError }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			try {
-				const [isOk, status, data] = await fetch_jwt(PADDLES_URL);
-				if (isOk) {
-					setPaddlesObjs(data.paddles);
-					setOwnedObjs(data.owned);
-					setLoading(false);
-				}
-			} catch (error) {
-				console.log(error);
+			const [isOk, status, data] = await fetch_jwt(PADDLES_URL);
+			if (isOk) {
+				setPaddlesObjs(data.paddles);
+				setOwnedObjs(data.owned);
+				setLoading(false);
 			}
 		};
 		getItems();

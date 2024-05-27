@@ -6,17 +6,12 @@ import { USER_URL } from "../URLS";
 import { redirect } from "next/navigation.js";
 
 export async function fetchUser() {
-	try {
-		const [isOk, status, data] = await fetch_jwt(USER_URL);
-
-		if (!isOk) {
-			console.log("error: ", data);
-			return false;
-		}
-		return data;
-	} catch (error) {
-		console.log("fetch error : ", error);
+	const [isOk, status, data] = await fetch_jwt(USER_URL);
+	if (!isOk) {
+		console.log("error: ", data);
+		return false;
 	}
+	return data;
 }
 
 export default async function Layout({ children }) {

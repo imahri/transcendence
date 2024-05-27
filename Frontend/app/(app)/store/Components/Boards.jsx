@@ -43,16 +43,12 @@ function Boards({ setError }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			try {
-				const [isOk, status, data] = await fetch_jwt(BOARDES_URL);
+			const [isOk, status, data] = await fetch_jwt(BOARDES_URL);
 
-				if (isOk) {
-					setBoardsObjs(data.boards);
-					setOwnedObjs(data.owned);
-					setLoading(false);
-				}
-			} catch (error) {
-				console.log(error);
+			if (isOk) {
+				setBoardsObjs(data.boards);
+				setOwnedObjs(data.owned);
+				setLoading(false);
 			}
 		};
 		getItems();

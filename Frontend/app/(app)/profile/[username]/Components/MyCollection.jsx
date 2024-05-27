@@ -197,22 +197,15 @@ export default function MyCollection() {
 
 	useEffect(() => {
 		const fetchItems = async () => {
-			try {
-				const [isOk, status, data] = await fetch_jwt(ITEMS_URL, {
-					username: userProfile.username,
-				});
-				setLoading(false);
-
-				if (isOk) {
-					setBoards(data.boards);
-					setPaddles(data.padels);
-					setBadges(data.badges);
-				} else {
-					console.log(data);
-				}
-			} catch (error) {
-				console.log("error : ", error);
-			}
+			const [isOk, status, data] = await fetch_jwt(ITEMS_URL, {
+				username: userProfile.username,
+			});
+			setLoading(false);
+			if (isOk) {
+				setBoards(data.boards);
+				setPaddles(data.padels);
+				setBadges(data.badges);
+			} else console.log(data);
 		};
 
 		fetchItems();

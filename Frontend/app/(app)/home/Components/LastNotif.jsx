@@ -66,19 +66,15 @@ function NoMsg() {
 }
 
 async function getLastMsgs(setMsgs, setLoading) {
-	try {
-		const [isOk, status, data] = await fetch_jwt(MSGNOTIF_URL);
-
-		if (!isOk) {
-			setLoading(false);
-			console.log(data);
-			return;
-		}
-		setMsgs(data);
+	const [isOk, status, data] = await fetch_jwt(MSGNOTIF_URL);
+	if (!isOk) {
 		setLoading(false);
-	} catch (error) {
-		console.log("last msgs : ", error);
+		console.log(data);
+		return;
 	}
+	setMsgs(data);
+	setLoading(false);
+
 	setLoading(false);
 }
 

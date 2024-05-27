@@ -4,28 +4,24 @@ import { ITEMS_URL } from "@/app/URLS";
 export async function buyItem(item_type, item, setOwned, setError) {
 	const body = { action: "buy", item_type: item_type, item_id: item.id };
 
-	try {
-		const [isOk, status, data] = await fetch_jwt(
-			ITEMS_URL,
-			{},
-			{
-				method: "PUT",
-				body: JSON.stringify(body),
-				headers: { "Content-Type": "application/json" },
-			},
-		);
-		if (!isOk) {
-			setError(data);
-			setTimeout(() => {
-				setError(false);
-			}, 5000);
-			console.log(data);
-			return;
-		}
-		setOwned(data);
-	} catch (error) {
-		console.log("exception : ", error);
+	const [isOk, status, data] = await fetch_jwt(
+		ITEMS_URL,
+		{},
+		{
+			method: "PUT",
+			body: JSON.stringify(body),
+			headers: { "Content-Type": "application/json" },
+		},
+	);
+	if (!isOk) {
+		setError(data);
+		setTimeout(() => {
+			setError(false);
+		}, 5000);
+		console.log(data);
+		return;
 	}
+	setOwned(data);
 }
 
 export const walletSvg = (

@@ -111,17 +111,13 @@ function NotifSection({ notif }) {
 }
 
 async function getNotif(setNotif, setNbNotif) {
-	try {
-		const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
-		if (isOk) {
-			setNbNotif(data.nb_unreaded);
-			setNotif(data.allNotif);
-			return;
-		}
-		console.log("error fetch notif", data);
-	} catch (error) {
-		console.error("fetch notif : ", error);
+	const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
+	if (isOk) {
+		setNbNotif(data.nb_unreaded);
+		setNotif(data.allNotif);
+		return;
 	}
+	console.log("error fetch notif", data);
 }
 
 function handelNotif(data, setNotif, setNbNotif) {

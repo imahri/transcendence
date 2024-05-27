@@ -14,22 +14,17 @@ export default async function middleware(request) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 
-	try {
-		const [isOk, status, data] = await fetch_jwt(VERIFY_TOKEN_URL);
-
-		if (!isOk) {
-			console.log("Token verification failed");
-			if (AuthPath.some((path) => pathname.startsWith(path))) {
-				return NextResponse.next();
-			}
-			return NextResponse.redirect(new URL("/login", request.url));
-		}
+	const [isOk, status, data] = await fetch_jwt(VERIFY_TOKEN_URL);
+	if (!isOk) {
+		if (status == 500) return NextResponse.error();
+		console.log("Token verification failed");
 		if (AuthPath.some((path) => pathname.startsWith(path))) {
-			return NextResponse.redirect(new URL("/", request.url));
+			return NextResponse.next();
 		}
-	} catch (error) {
-		console.error("Network error", error);
-		return NextResponse.error();
+		return NextResponse.redirect(new URL("/login", request.url));
+	}
+	if (AuthPath.some((path) => pathname.startsWith(path))) {
+		return NextResponse.redirect(new URL("/", request.url));
 	}
 	return NextResponse.next();
 }

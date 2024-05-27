@@ -112,22 +112,19 @@ async function GameHistoric(
 	setLoading,
 	setState,
 ) {
-	try {
-		setLoading(true);
-		const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
-			username: username,
-		});
-		if (!isOk) {
-			console.log(data);
-			setLoading(false);
-			return;
-		}
-		setLastGame(data.last_match);
-		setGmaeHistoric(data.all);
-		setState({ w: data.winning, l: data.loses, p: data.played });
-	} catch (error) {
-		console.log(error);
+	setLoading(true);
+	const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
+		username: username,
+	});
+	if (!isOk) {
+		console.log(data);
+		setLoading(false);
+		return;
 	}
+	setLastGame(data.last_match);
+	setGmaeHistoric(data.all);
+	setState({ w: data.winning, l: data.loses, p: data.played });
+
 	setLoading(false);
 }
 
@@ -143,19 +140,15 @@ export default function MyState() {
 
 	useEffect(() => {
 		const getAcheivments = async (setAch) => {
-			try {
-				const [isOk, status, data] = await fetch_jwt(ACHEIVMENTS_URL, {
-					username: userProfile.username,
-				});
-				if (isOk) {
-					data.sort((a, b) => !a.unlocked);
-					setAch(data);
-					return;
-				}
-				console.log(data);
-			} catch (error) {
-				console.log("get acheivment : ", error);
+			const [isOk, status, data] = await fetch_jwt(ACHEIVMENTS_URL, {
+				username: userProfile.username,
+			});
+			if (isOk) {
+				data.sort((a, b) => !a.unlocked);
+				setAch(data);
+				return;
 			}
+			console.log(data);
 		};
 		getAcheivments(setAch);
 		GameHistoric(
