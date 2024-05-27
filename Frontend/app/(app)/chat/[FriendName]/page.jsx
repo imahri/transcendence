@@ -49,6 +49,8 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	const conversation_id = useConversationID(FriendName);
 	const { messageList, addNewMessage, isUpdatedState, LoadMoreMessages } =
 		useMessageList(conversation_id, setmessageUpdated);
+	const [ActiveStatus, setActiveStatus] = useState(ActiveStatusTypes.Offline);
+	const { ws } = useContext(UserContext);
 	const [friendinfo, setFriendinfo] = useState({
 		name: FriendName,
 		image: null,
@@ -57,16 +59,14 @@ export default function DM_Conversation({ params: { FriendName } }) {
 	const [showProfile, setShowProfile] = useState(false);
 	const _ref = useRef();
 	const router = useRouter();
-	const onReceive = useCallback(
-		(e) => {
+
+	if (socket) {
+		socket.onmessage = (e) => {
 			const message = JSON.parse(e.data);
 			if (FriendName == message.sender) addNewMessage(message);
-			console.log(message);
-		},
-		[FriendName, messageList],
-	);
+		};
+	}
 
-	if (socket) socket.onmessage = onReceive;
 	const onSend = (new_msg) => {
 		const message = {
 			conversation_id: conversation_id,
@@ -91,9 +91,6 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			info ? setFriendinfo(info) : router.replace("/not-found"),
 		);
 	}, [FriendName]);
-
-	const [ActiveStatus, setActiveStatus] = useState(ActiveStatusTypes.Offline);
-	const { ws } = useContext(UserContext);
 
 	useEffect(() => {
 		if (!ws) return;
