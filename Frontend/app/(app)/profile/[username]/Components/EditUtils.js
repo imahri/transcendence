@@ -1,5 +1,4 @@
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { isValidEmail } from "@/app/(auth)/register/registerUtils";
 import { USER_URL } from "@/app/URLS";
 
 function onlySpace(str) {
@@ -21,7 +20,6 @@ async function sent(NewInfo, setError, setUser, closePopup) {
 		: "";
 	NewInfo.last_name ? formData.append("last_name", NewInfo.last_name) : "";
 	NewInfo.first_name ? formData.append("first_name", NewInfo.first_name) : "";
-	NewInfo.email ? formData.append("email", NewInfo.email) : "";
 
 	const [isOk, status, data] = await fetch_jwt(
 		USER_URL,
@@ -33,10 +31,6 @@ async function sent(NewInfo, setError, setUser, closePopup) {
 	);
 
 	if (!isOk) {
-		console.log(data);
-		data.email
-			? errorInForm(setError, { type: "email", msg: data.email[0] })
-			: "";
 		data.first_name
 			? errorInForm(setError, {
 					type: "first_name",
@@ -71,7 +65,6 @@ export function ChangeInfo(e, Form, setError, setUser, closePopup, setLoading) {
 		profile_img: FormField["profile"].files[0],
 		first_name: FormField["firstname"].value,
 		last_name: FormField["lastname"].value,
-		email: FormField["email"].value,
 	};
 
 	NewInfo.last_name = onlySpace(NewInfo.last_name) ? "" : NewInfo.last_name;
@@ -79,22 +72,11 @@ export function ChangeInfo(e, Form, setError, setUser, closePopup, setLoading) {
 		? ""
 		: NewInfo.first_name;
 
-	if (
-		!NewInfo.first_name &&
-		!NewInfo.last_name &&
-		!NewInfo.email &&
-		!NewInfo.profile_img
-	) {
+	if (!NewInfo.first_name && !NewInfo.last_name && !NewInfo.profile_img) {
 		errorInForm(setError, {
 			type: "field",
 			msg: "You should change at least one field befor submit",
 		});
-		setLoading(false);
-		return;
-	}
-
-	if (NewInfo.email && !isValidEmail(NewInfo.email)) {
-		errorInForm(setError, { type: "email", msg: "email is invalid" });
 		setLoading(false);
 		return;
 	}
