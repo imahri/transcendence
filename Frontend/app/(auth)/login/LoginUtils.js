@@ -9,6 +9,9 @@ function ErrorLogin(setError, response) {
 	response.detail == "Wrong password"
 		? errorInForm({ type: "password", msg: response.detail }, setError)
 		: "";
+	response.detail == "you cant sign-in"
+		? errorInForm({ type: "username", msg: response.detail }, setError)
+		: "";
 }
 
 export const handleSubmit = async (
@@ -46,6 +49,9 @@ export const handleSubmit = async (
 		} else {
 			setisLoading(false);
 			ErrorLogin(setError, responseBody);
+			setTimeout(() => {
+				navigate.replace("/login");
+			}, 5000);
 			console.error("Login failed", response);
 		}
 	} catch (error) {
@@ -53,33 +59,6 @@ export const handleSubmit = async (
 		console.error("Network error:", error);
 	}
 };
-
-export async function get42Token(navigate, code, setisLoading, setError) {
-	let body = { code: code };
-	try {
-		const response = await fetch(AUTH_42, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(body),
-		});
-
-		if (response.ok) {
-			const tokens = await response.json();
-			settoken(tokens);
-			console.log("Login successful");
-			navigate.replace("/home");
-		} else {
-			setisLoading(false);
-			errorInForm(
-				{ type: "intra", msg: "Login with intra failed" },
-				setError,
-			);
-			console.error("Login failed");
-		}
-	} catch (error) {
-		console.error("Network error:", error);
-	}
-}
 
 export const handel42 = async (e) => {
 	e.preventDefault();
@@ -102,3 +81,32 @@ export const handel42 = async (e) => {
 	const redirectUrl = `${externalUrl}?${queryString}`;
 	window.location.href = redirectUrl;
 };
+
+export async function get42Token(navigate, code, setisLoading, setError) {
+	setisLoading(true);
+	let body = { code: code };
+	try {
+		const response = await fetch(AUTH_42, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(body),
+		});
+
+		if (response.ok) {
+			const tokens = await response.json();
+			settoken(tokens);
+			console.log("Login successful");
+			navigate.replace("/home");
+		} else {
+			setisLoading(false);
+			errorInForm(
+				{ type: "intra", msg: "Login with intra failed" },
+				setError,
+			);
+			console.error("Login failed");
+		}
+	} catch (error) {
+		setisLoading(false);
+		console.error("Network error:", error);
+	}
+}
