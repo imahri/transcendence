@@ -147,14 +147,11 @@ def getFriendView(request):
         user: User = request.user
         if not user.friends.exists():
             raise ObjectDoesNotExist("No results")
-        # founded_users = [friend_rl.friend for friend_rl in user.friends]
-        founded_users = [friend_rl.friend for friend_rl in user.friends if not friend_rl.is_block]
+        # founded_users = [friend_rl.friend for friend_rl in user.friends if not friend_rl.is_block]
+        founded_users = user.friends.exclude(status='B')
         if not founded_users:
             raise ObjectDoesNotExist("No results")
-        response = []
-        for user in founded_users:
-            userData = dict(UserSerializer(user).data)
-            response.append(userData)
+        response = UserSerializer(founded_users, many=True).data
         return Response(data=response)
     except ObjectDoesNotExist as no_found:
         return Response({"error": str(no_found)}, status=status.HTTP_404_NOT_FOUND)
