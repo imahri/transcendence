@@ -14,13 +14,13 @@ class User(AbstractUser):
     Username and Email are required. Other fields are optional.
     """
 
-    email = models.EmailField(unique=True)
-    REQUIRED_FIELDS = ["email", "first_name", "last_name", "password"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
     # 2FA field
     is_2FA_active = models.BooleanField(default=False)
     uri_2FA = models.URLField(max_length=200, blank=True)
     qrcode_2FA = models.FilePathField(max_length=100, blank=True)
     secret_code_2FA = models.CharField(max_length=50, blank=True)
+    is_42_account = models.BooleanField(default=False)
 
     @staticmethod
     def create(data=None, **kwargs):

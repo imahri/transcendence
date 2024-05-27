@@ -11,7 +11,6 @@ import { Error, InputContainer } from "../login/page";
 import {
 	PasswordSvg,
 	closeSvg,
-	emailInputSvg,
 	nameInputSvg,
 	usernameInputSvg,
 } from "../Allsvg";
@@ -94,7 +93,7 @@ function Register() {
 					}}
 					error={error?.type == "username"}
 				/>
-				<InputContainer
+				{/* <InputContainer
 					Info={{
 						type: "text",
 						id: "email",
@@ -102,7 +101,7 @@ function Register() {
 						Svg: emailInputSvg,
 					}}
 					error={error?.type == "email"}
-				/>
+				/> */}
 				<InputContainer
 					Info={{
 						id: "password",

@@ -60,6 +60,8 @@ class Login(APIView):
                 raise AuthenticationFailed("Wrong password")
             if user.is_2FA_active is True:
                 return JsonResponse({"success": "2FA Required"})
+            if user.is_42_account is True:
+                return JsonResponse({"detail": "you cant sign-in"}, status=401)
             access_token, refresh_token = Login.genJWT(user)
             userObj = dict(UserSerializer(user).data)
             userObj['info'] = InfoSerializer(Info.objects.get(user=user.pk)).data
@@ -196,6 +198,10 @@ class intra_auth(APIView):
 
         try:
             code = request.data.get('code')
+            # identifier = request.data.get('identifier')
+            # user = User.objects.filter(username=identifier)
+            # if user.exists():
+                # return Response({'duplicate' : 'username already exist'}, status=401)
             access_token = intra_auth.get_42access_token(code=code)
             user42_info = intra_auth.get_42user_info(access_token=access_token)
 
@@ -205,6 +211,7 @@ class intra_auth(APIView):
                 'first_name' : user42_info['first_name'],
                 'last_name' : user42_info['last_name'],
                 'password': 'none',
+                'is_42_account' : True
             }
             try:
                 user = User.objects.get(email=user42_info['email'])
@@ -215,6 +222,8 @@ class intra_auth(APIView):
                 userSerialized = UserSerializer(data=data)
                 if userSerialized.is_valid():
                     user : User = userSerialized.save()
+                    user.is_42_account = True
+                    user.save()
                     info : Info = user.info
                     img_name = data['username'] + '.jpg';
                     image_content = BytesIO(response.content)
@@ -222,7 +231,6 @@ class intra_auth(APIView):
 
                 else:
                     return Response(data=userSerialized.errors, status=401)
-
 
             access_token = AccessToken.for_user(user)
             refresh_token = RefreshToken.for_user(user)
