@@ -12,12 +12,15 @@ function setType(notifType, notifContent) {
 	const sentInvit = "Sent you a Invitation";
 	const sentAccept = "Accept your Invitation";
 	const sentGameInvit = "Sent you Game Invitation";
+	const rejectGameInvit = "Reject Your Game Invitation";
 
 	if (notifType == "C") return sentMsg;
-	else if (notifType == "G") return sentGameInvit;
 	else if (notifType == "T") return notifContent.message;
 	if (notifContent.status == "add") return sentInvit;
-	else return sentAccept;
+	else if (notifType == "G") {
+		if (notifContent.type == "invit") return sentGameInvit;
+		else return rejectGameInvit;
+	} else return sentAccept;
 }
 
 function readNotif(socket, notif, setNbNotif) {
@@ -74,7 +77,67 @@ export function calculateTimeDifference(pastDateTime) {
 	}
 }
 
-function NotifSection({ notif }) {
+function decline(ws, notif) {
+	const content = {
+		to: notif.user.username,
+		type: "G",
+		content: "reject",
+	};
+	ws.send(
+		JSON.stringify({
+			action: "send_notif",
+			content: content,
+		}),
+	);
+	ws.send(
+		JSON.stringify({
+			action: "readNotif",
+			id: notif.id,
+		}),
+	);
+}
+
+function AcceptDeclineGame({ notif, ws }) {
+	//send friend id to endpoint and send notif to user inform it friend accept your invit
+	// if decline send notif to other user user decline
+	return (
+		<div className="flex justify-between items-center gap-[10px]">
+			<button className="size-[20px] rounded-full cursor-pointer flex justify-center items-center">
+				<svg
+					width="18"
+					height="18"
+					viewBox="0 0 108 81"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M36.7442 79.0306L1.87814 44.1646C-0.216542 42.0699 -0.216542 38.6736 1.87814 36.5787L9.46381 28.9928C11.5585 26.8979 14.955 26.8979 17.0497 28.9928L40.5371 52.48L90.8445 2.17282C92.9392 0.0781353 96.3357 0.0781353 98.4304 2.17282L106.016 9.7587C108.111 11.8534 108.111 15.2497 106.016 17.3446L44.33 79.0308C42.2351 81.1255 38.8389 81.1255 36.7442 79.0306Z"
+						fill="#7D7D7D"
+					/>
+				</svg>
+			</button>
+			<button
+				onClick={() => decline(ws, notif)}
+				className="size-[20px] rounded-full cursor-pointer flex justify-center items-center"
+			>
+				<svg
+					width="15"
+					height="15"
+					viewBox="0 0 80 80"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M55.1636 40L77.9068 17.2568C80.6977 14.4659 80.6977 9.94091 77.9068 7.14773L72.8523 2.09318C70.0614 -0.697727 65.5364 -0.697727 62.7432 2.09318L40 24.8364L17.2568 2.09318C14.4659 -0.697727 9.94091 -0.697727 7.14773 2.09318L2.09318 7.14773C-0.697727 9.93864 -0.697727 14.4636 2.09318 17.2568L24.8364 40L2.09318 62.7432C-0.697727 65.5341 -0.697727 70.0591 2.09318 72.8523L7.14773 77.9068C9.93864 80.6977 14.4659 80.6977 17.2568 77.9068L40 55.1636L62.7432 77.9068C65.5341 80.6977 70.0614 80.6977 72.8523 77.9068L77.9068 72.8523C80.6977 70.0614 80.6977 65.5364 77.9068 62.7432L55.1636 40Z"
+						fill="#7D7D7D"
+					/>
+				</svg>
+			</button>
+		</div>
+	);
+}
+
+function NotifSection({ notif, ws }) {
 	const ntype = notif.type;
 	const Svg = ntype == "C" ? ChatSvg : ntype == "F" ? FriendSvg : GmaeSvg;
 	const type = setType(notif.type, notif.content);
@@ -100,11 +163,18 @@ function NotifSection({ notif }) {
 				<h1 className="text-white font-bold text-[15px]">
 					{notif.user.username}
 				</h1>
-				<h2 className="text-[#7D7D7D] text-[13px]">{type}</h2>
+				<div className="flex w-full gap-[8px]">
+					<h2 className="text-[#7D7D7D] text-[13px]">{type}</h2>
+					{!notif.is_read &&
+						ntype == "G" &&
+						notif.content?.type == "invit" && (
+							<AcceptDeclineGame notif={notif} ws={ws} />
+						)}
+				</div>
 				<h2 className="text-[#7D7D7D] text-[10px]">{time}</h2>
 			</div>
 			<div
-				className={`absolute size-[10px] bg-greatBlue rounded-full right-[10px] ${notif.is_read ? "hidden" : ""}`}
+				className={`absolute size-[10px] bg-greatBlue rounded-full right-[8px] ${notif.is_read ? "hidden" : ""}`}
 			></div>
 		</Link>
 	);
@@ -190,7 +260,7 @@ function Notification() {
 										}
 										key={index}
 									>
-										<NotifSection notif={notif} />
+										<NotifSection notif={notif} ws={ws} />
 									</div>
 								);
 							})}
