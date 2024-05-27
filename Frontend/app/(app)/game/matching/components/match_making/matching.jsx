@@ -1,63 +1,11 @@
+"use client";
 import { Linden_Hill } from "next/font/google";
 import styles from "./matching.module.css";
 import Boardskin from "@/app/(app)/game/matching/components/match_making/board_skin";
 import Ready from "@/app/(app)/game/matching/components/match_making/ready";
 import Link from "next/link";
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
-import React, { useEffect, useRef, useState, useContext } from "react";
-import { UserContext } from "@/app/(app)/context";
-import Image from "next/image";
-import { IMAGE_URL } from "@/app/URLS";
-
-var count;
 
 const Matching = () => {
-	// const [socket, setSocket] = useState(null);
-
-	// useEffect(() => {
-	// 	const ws = new WebSocket(
-	// 		"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
-	// 	);
-
-	// 	ws.onopen = () => {
-	// 		console.log("opened");
-	// 		setSocket(ws);
-	// 	};
-
-	// 	ws.onmessage = (event) => {
-	// 		const data = JSON.parse(event.data);
-	// 		if (data?.event === "update") {
-	// 			print("pass")
-	// 		}
-	// 		if (data.event == "index_player") {
-	// 			console.log(">>>>  ", data.index);
-	// 		}
-	// 	};
-
-	// 	ws.onerror = () => {
-	// 		console.log("error happened");
-	// 	};
-	// 	ws.onclose = () => {
-	// 		console.log("closed");
-	// 	};
-	// 	return () => {
-	// 		ws.close;
-	// 	};
-	// },[]);
-
-	const { user } = useContext(UserContext);
-	// useEffect(() => {
-	// 	const first_of_all = () => {
-	// 		if (socket && socket.readyState === WebSocket.OPEN) {
-	// 			console.log("itis")
-	// 			socket.send(JSON.stringify({ event: "users_data", index: count }));
-	// 			count++;
-	// 		}
-	// 	};
-
-	// 	first_of_all();
-	// }, []);
-
 	return (
 		<div className="">
 			<div className={styles.page}>
@@ -145,11 +93,12 @@ const Matching = () => {
 
 						<div className={`${styles.achivement_container}`}>
 							<div className={styles.parent}>
-								<Link href="/choice">
-									<button className={styles.back}>
-										Back
-									</button>
-								</Link>
+								<button
+									onClick={() => router.back()}
+									className={styles.back}
+								>
+									Back
+								</button>
 							</div>
 
 							<div className={`${styles.achivement_asmbler}`}>
