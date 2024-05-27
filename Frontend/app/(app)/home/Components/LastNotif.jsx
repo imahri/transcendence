@@ -11,9 +11,11 @@ import { calculateTimeDifference } from "../../navBar/Components/Notification";
 
 function Msg({ msg }) {
 	const time = calculateTimeDifference(msg.time);
-
 	return (
-		<div className="flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]">
+		<Link
+			href={`/chat/${msg.user.username}`}
+			className="cursor-pointer flex items-center gap-[10px] relative border-b-[1px] border-solid border-b-[#707070] border-l-0 border-r-0 border-t-0 pb-[10px]"
+		>
 			<Image
 				className="size-[39px] rounded-full"
 				width={39}
@@ -26,7 +28,7 @@ function Msg({ msg }) {
 					{msg.user.username}
 				</h2>
 				<h3 className=" font-normal text-[10px] max-w-[200px] overflow-hidden  text-[#C3C3C3]">
-					{msg.content.msg}
+					{msg.content.message}
 				</h3>
 			</div>
 			<div className="absolute right-[10px] flex flex-col justify-center items-center">
@@ -34,7 +36,7 @@ function Msg({ msg }) {
 					{time}
 				</h3>
 			</div>
-		</div>
+		</Link>
 	);
 }
 

@@ -24,7 +24,6 @@ export default async function middleware(request) {
 			}
 			return NextResponse.redirect(new URL("/login", request.url));
 		}
-		console.log("Token verified");
 		if (AuthPath.some((path) => pathname.startsWith(path))) {
 			return NextResponse.redirect(new URL("/", request.url));
 		}
