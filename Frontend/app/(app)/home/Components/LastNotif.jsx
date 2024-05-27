@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import NoConv_icon from "../assets/no_conv.svg";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { MSGNOTIF_URL } from "@/app/URLS";
+import { IMAGE_URL, MSGNOTIF_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
 import { UserContext } from "../../context";
 import { calculateTimeDifference } from "../../navBar/Components/Notification";
@@ -20,7 +20,7 @@ function Msg({ msg }) {
 				className="size-[39px] rounded-full"
 				width={39}
 				height={39}
-				src={msg.user.img}
+				src={`${IMAGE_URL}?path=${msg.user.img}`}
 				alt="sender image"
 			/>
 			<div>

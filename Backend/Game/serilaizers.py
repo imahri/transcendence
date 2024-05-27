@@ -29,15 +29,6 @@ class GradeSerializer(ModelSerializer):
         from .models import Grade
         model = Grade
         fields = ("id", "name", "image")
-    
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        image_path = (
-            "http://localhost:8000/user/image?path=" + representation["image"]
-        )
-        representation["image"] = image_path
-        return representation
-
 
 
 class BadgeSerializer(ModelSerializer):
@@ -46,15 +37,6 @@ class BadgeSerializer(ModelSerializer):
         model = Badge
         fields = ("id", "color", "price", "image_path")
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        image_path = (
-            "http://localhost:8000/user/image?path=" + representation["image_path"]
-        )
-        representation["image"] = image_path
-        del representation["image_path"]
-        return representation
-
 
 class BoardSerializer(ModelSerializer):
 
@@ -62,30 +44,12 @@ class BoardSerializer(ModelSerializer):
         model = Board
         fields = ("id", "name", "price", "image_path")
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        image_path = (
-            "http://localhost:8000/user/image?path=" + representation["image_path"]
-        )
-        representation["image"] = image_path
-        del representation["image_path"]
-        return representation
-
 
 class PadelSerializer(ModelSerializer):
 
     class Meta:
         model = Padel
         fields = ("id", "name", "definition", "price", "image_path")
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        image_path = (
-            "http://localhost:8000/user/image?path=" + representation["image_path"]
-        )
-        representation["image"] = image_path
-        del representation["image_path"]
-        return representation
 
 class ItemsSerializer(ModelSerializer):
     
@@ -114,11 +78,3 @@ class AcheivmentSerializer(ModelSerializer):
     class Meta:
         model = Acheivement
         fields = ("id", "name", "icon_path")
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        image_path = (
-            "http://localhost:8000/user/image?path=" + representation["icon_path"]
-        )
-        representation["icon_path"] = image_path
-        return representation

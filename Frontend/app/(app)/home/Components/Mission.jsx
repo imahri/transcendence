@@ -1,6 +1,7 @@
 import Loading from "@/app/(auth)/Loading";
 import { AboutSvg, WalletSvg, MoreSvg } from "./AllSvg";
 import Image from "next/image";
+import { IMAGE_URL } from "@/app/URLS";
 
 export function Mission({ mission, setPopup, isLoading, title }) {
 	return (
@@ -37,8 +38,8 @@ export function Mission({ mission, setPopup, isLoading, title }) {
 								className="h-[30px] w-[27px]"
 								width={27}
 								height={30}
-								src={mission.prize.Acheivment.icon_path}
-								alt=""
+								src={`${IMAGE_URL}?path=${mission.prize.Acheivment.icon_path}`}
+								alt="acheivment"
 							/>
 						</div>
 					</div>
@@ -105,8 +106,8 @@ export function GameMission({ mission, setPopup, isLoading }) {
 									className="h-[30px] w-[27px]"
 									width={27}
 									height={30}
-									src={mission.prize.Acheivment.icon_path}
-									alt=""
+									src={`${IMAGE_URL}?path=${mission.prize.Acheivment.icon_path}`}
+									alt="acheivment"
 								/>
 							</div>
 						</div>

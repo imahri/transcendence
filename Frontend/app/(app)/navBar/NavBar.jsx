@@ -15,6 +15,7 @@ import {
 	dropUpSvg,
 } from "./Components/AllSvg";
 import { UserContext } from "../context";
+import { IMAGE_URL } from "@/app/URLS";
 
 function ProfileBar() {
 	const { user } = useContext(UserContext);
@@ -33,8 +34,8 @@ function ProfileBar() {
 				>
 					<img
 						className="w-[48px] h-[48px] rounded-[5px] [@media(max-width:600px)]:rounded-full"
-						src={user.info.profile_img}
-						alt=""
+						src={`${IMAGE_URL}?path=${user.info.profile_img}`}
+						alt="user image"
 					/>
 					<div className="[@media(max-width:600px)]:hidden">
 						<h3 className="font-medium text-[20px] text-[#7D7D7D] truncate max-w-[80px]">

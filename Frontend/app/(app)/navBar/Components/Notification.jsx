@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChatSvg, GmaeSvg, FriendSvg } from "./AllSvg";
 import { UserContext } from "../../context";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { NOTIF_URL } from "@/app/URLS";
+import { IMAGE_URL, NOTIF_URL } from "@/app/URLS";
 
 function setType(notifType, notifContent) {
 	const sentMsg = "Sent you a message";
@@ -91,8 +91,8 @@ function NotifSection({ notif }) {
 					className="size-[50px] rounded-full ml-[5px]"
 					width={50}
 					height={50}
-					src={notif.user.img}
-					alt=""
+					src={`${IMAGE_URL}?path=${notif.user.img}`}
+					alt="sender Image"
 				/>
 				{Svg}
 			</div>

@@ -1,3 +1,4 @@
+import { IMAGE_URL } from "@/app/URLS";
 import { getParticipant } from "./CommonSection";
 import Image from "next/image";
 
@@ -19,7 +20,7 @@ function Historic({ user1, user2, place }) {
 						className="rounded-full size-[90%]"
 						width={50}
 						height={50}
-						src={user1?.user?.img}
+						src={`${IMAGE_URL}?path=${user1?.user?.img}`}
 						alt="user Image"
 					/>
 				)}
@@ -33,7 +34,7 @@ function Historic({ user1, user2, place }) {
 						className="rounded-full size-[90%]"
 						width={50}
 						height={50}
-						src={user2?.user?.img}
+						src={`${IMAGE_URL}?path=${user2?.user?.img}`}
 						alt="user Image"
 					/>
 				)}

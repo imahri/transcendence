@@ -70,7 +70,6 @@ class InfoSerializer(ModelSerializer):
             "wallet",
             "gender",
             "exp",
-            "banner_img",
             "profile_img",
             "grade",
         ]
@@ -80,16 +79,6 @@ class InfoSerializer(ModelSerializer):
         user_info = self.Meta.model(user)
         user_info.save()
         return user_info
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        if representation["profile_img"] is not None:
-            profile_path = (
-                "http://localhost:8000/user/image?path=" + representation["profile_img"]
-            )
-            representation["profile_img"] = profile_path
-        
-        return representation
 
     def save(self, **kwargs):
         self.is_valid(raise_exception=True)

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Badge from "@/app/(app)/store/Components/Badge";
 import { useContext, useEffect, useState } from "react";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { ITEMS_URL } from "@/app/URLS";
+import { IMAGE_URL, ITEMS_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
 import { UserProfileContext } from "../page";
 
@@ -52,7 +52,7 @@ function Paddles({ paddles, setPaddles, isLoading }) {
 								className="relative size-[120px] rounded-[7px] bg-[#00FFE0] bg-opacity-[10%] flex justify-center items-center"
 							>
 								<Image
-									src={element.image}
+									src={`${IMAGE_URL}?path=${element.image_path}`}
 									width={90}
 									height={90}
 									className="size-[90px] border-2 border-black cursor-pointer hover:size-full transition duration-1000"
@@ -105,7 +105,7 @@ function Boards({ boards, setBoards, isLoading }) {
 								<Image
 									width={212}
 									height={117}
-									src={element.image}
+									src={`${IMAGE_URL}?path=${element.image_path}`}
 									className="w-[212px] h-[117px] cursor-pointer hover:w-[100%] hover:h-[100%]  transition duration-[5000ms]"
 									alt="boards"
 									onClick={

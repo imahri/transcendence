@@ -4,6 +4,7 @@ import GameState from "./GameState";
 import Image from "next/image";
 import Loading from "@/app/(auth)/Loading";
 import Link from "next/link";
+import { IMAGE_URL } from "@/app/URLS";
 
 function State({ title, state1, state2 }) {
 	return (
@@ -37,13 +38,17 @@ function NoGameYet({ User }) {
 				className="size-[100px] rounded-full border-2 border-[#FCE155]"
 				width={100}
 				height={100}
-				src={User.img}
+				src={`${IMAGE_URL}?path=${User.img}`}
 				alt="User Image"
 			/>
 			<h1 className="text-[#7D7D7D] font-bold">
 				{User.first_name} {User.last_name}
 			</h1>
-			<Image className="w-[254px] h-[66px]" src={gameTable} alt="" />
+			<Image
+				className="w-[254px] h-[66px]"
+				src={gameTable}
+				alt="game Table"
+			/>
 			<Info title={"Level"} value={User.info.level} />
 			<Info title={"Match Played"} value={0} />
 			<Info title={"Walet"} value={User.info.wallet} />

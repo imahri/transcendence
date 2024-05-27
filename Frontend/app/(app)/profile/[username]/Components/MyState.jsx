@@ -36,7 +36,7 @@ function Circle({ info }) {
 							{level}
 						</h1>
 						<Image
-							src={info.grade.image}
+							src={`${IMAGE_URL}?path=${info.grade.image}`}
 							width={60}
 							height={60}
 							alt="Grade"
@@ -73,7 +73,7 @@ function Status({ state }) {
 
 import t from "../assets/noTrophy.png";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { ACHEIVMENTS_URL, MATCHES_URL } from "@/app/URLS";
+import { ACHEIVMENTS_URL, IMAGE_URL, MATCHES_URL } from "@/app/URLS";
 
 function ShowRoom({ title, items }) {
 	return (
@@ -86,15 +86,17 @@ function ShowRoom({ title, items }) {
 			>
 				{items &&
 					items.map((obj, index) => {
+						const src =
+							title == "Acheivment"
+								? `${IMAGE_URL}?path=${obj.icon_path}`
+								: obj;
 						return (
 							<Image
 								key={index}
 								className={`size-[70px] ${obj.unlocked ? "" : "grayscale"}`}
 								width={70}
 								height={70}
-								src={
-									title == "Acheivment" ? obj.icon_path : obj
-								}
+								src={src}
 								alt={title}
 							/>
 						);

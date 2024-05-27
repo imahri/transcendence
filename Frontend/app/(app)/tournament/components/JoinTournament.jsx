@@ -3,6 +3,7 @@ import { UserContext } from "../../context";
 import { Input } from "./CreateTournament";
 import Image from "next/image";
 import { joinTournament, startTournament } from "./TournamentMethod";
+import { IMAGE_URL } from "@/app/URLS";
 
 function UsersDemo({ participant }) {
 	return (
@@ -14,7 +15,7 @@ function UsersDemo({ participant }) {
 				className="size-[40px] cursor-pointer rounded-full"
 				width={40}
 				height={40}
-				src={participant.user.img}
+				src={`${IMAGE_URL}?path=${participant.user.img}`}
 				alt="Friend Image"
 			/>
 		</div>

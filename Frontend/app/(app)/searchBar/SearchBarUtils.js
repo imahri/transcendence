@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { USER_SEARCH_URL } from "@/app/URLS";
+import { IMAGE_URL, USER_SEARCH_URL } from "@/app/URLS";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 
 export function Result({ data }) {
@@ -13,8 +13,8 @@ export function Result({ data }) {
 				className="size-[40px] rounded-full"
 				width={0}
 				height={0}
-				src={data.img}
-				alt=""
+				src={`${IMAGE_URL}?path=${data.img}`}
+				alt="friend image"
 			/>
 			<div className=" max-w-[170px] overflow-x-hidden">
 				<h1 className="text-white font-semibold truncate">

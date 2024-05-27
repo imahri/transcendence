@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { buyItem, walletSvg } from "./StoreItems";
-import { PADDLES_URL } from "../../../URLS";
+import { IMAGE_URL, PADDLES_URL } from "../../../URLS";
 import styles from "./styles/Common.module.css";
 import Loading from "@/app/(auth)/Loading";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
@@ -9,8 +9,9 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 function Paddle({ obj, owned, setOwned, setError }) {
 	const isOwned = owned.includes(obj.id);
 	const [show, setShow] = useState();
+	const url = `${IMAGE_URL}?path=${obj.image_path}`;
 	const style = {
-		backgroundImage: `url("${obj.image}")`,
+		backgroundImage: `url(${url})`,
 	};
 
 	return (
