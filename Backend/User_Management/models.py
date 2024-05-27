@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pyotp
 import qrcode
-from Game.models import Match
 from core.settings import APP_NAME, IMAGES_ROOT, IMAGES_ROOT_
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -104,6 +103,8 @@ class User(AbstractUser):
         return Friend.objects.get(user=self, friend=friend)
 
     def last_match(self, With=None):
+        from Game.models import Match
+
         if With:
             return Match.last_match_between(self, With)
         last_match = Match.objects.filter(user=self).order_by("-played_at").first()
