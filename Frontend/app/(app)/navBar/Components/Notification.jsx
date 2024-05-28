@@ -89,12 +89,6 @@ function decline(ws, notif) {
 			content: content,
 		}),
 	);
-	ws.send(
-		JSON.stringify({
-			action: "readNotif",
-			id: notif.id,
-		}),
-	);
 }
 
 function AcceptDeclineGame({ notif, ws }) {
