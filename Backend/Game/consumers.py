@@ -282,7 +282,53 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
                 ################################################
-                self.room_group_name = creat_room_name(self.game_room)
+
+
+
+                room_name = self.scope["query_string"].decode("utf8").get('room', None)
+
+                if room_name:
+                    room = []
+                    for [name, players] in self.game_room:
+                        if room_name == name:
+                            room = [name, players]
+                    self.room_group_name = room_name
+                    [name, players] = room
+                    other_player = players[0] if players[0] != self.user.username else players[1]
+                    if not self.get_channel_by_user(other_player):
+                        self.loba = Game()
+                        self.game_object.append(self.loba)
+                        await self.send_json(
+                            content={
+                                "event": "index_player",
+                                "index": 1,
+                            }
+                        )
+                    else:
+                        await self.send_json(
+                            content={
+                                "event": "index_player",
+                                "index": 2,
+                            }
+                        )
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {"type": "change_state", "state": "start"},
+                        )
+                        asyncio.create_task(self.send_ball_coordinates())
+
+
+
+
+
+
+
+
+
+
+                ################################################
+                else:
+                    self.room_group_name = creat_room_name(self.game_room)
                 await self.channel_layer.group_add(
                     self.room_group_name, self.channel_name
                 )
