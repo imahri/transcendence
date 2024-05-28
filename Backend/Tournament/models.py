@@ -101,19 +101,33 @@ class Tournament(models.Model):
                 pass
             return message
 
+    def create_match(self, user: User, enemy: User):
+        return Match.create(user, enemy, 2, self)
+
+    def get_winner(self, players):
+        [player1, player2] = players
+        match = (
+            Match.objects.filter(user=player1, enemy=player2, tournament=self)
+            .order_by("-played_at")
+            .first()
+        )
+        if not match:
+            raise Exception("No match found")
+        return match.user if match.is_winner else match.enemy
+
     def fill_2nd(self):
         if self.schedule == None:
             return
         match_index = self.match_index + 1
         if match_index == 5:
             self.schedule["FirstSide"]["2nd"]["5"] = [
-                Match.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
-                Match.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
+                self.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
+                self.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
             ]
         elif match_index == 6:
             self.schedule["SecondSide"]["2nd"]["6"] = [
-                Match.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
-                Match.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
+                self.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
+                self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
             ]
 
     def next_match(self):

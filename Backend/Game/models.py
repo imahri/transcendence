@@ -17,7 +17,8 @@ class Match(models.Model):
         "User_Management.User", null=True, on_delete=models.SET_NULL
     )
     score = models.IntegerField(default=0)
-    enemy_match = models.OneToOneField(
+    tournament = models.ForeignKey("Tournament.Tournament", null=True, on_delete=models.CASCADE)
+    enemy_match = models.ForeignKey(
         "Game.Match", null=True, on_delete=models.SET_NULL, blank=True
     )
     played_at = models.TimeField(auto_now=True)
@@ -31,6 +32,19 @@ class Match(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+
+    @staticmethod
+    def create(user: User, enemy: User, mode: int, tournament=None):
+        match1 = Match(user=user, enemy=enemy, mode=mode)
+        match2 = Match(user=enemy, enemy=user, mode=mode)
+        if tournament and mode == 2:
+            match1.tournament = tournament
+            match2.tournament = tournament
+        match1.save()
+        match2.save()
+        match1.enemy_match = match2
+        match2.enemy_match = match1
+        return [match1, match2]
 
     @staticmethod
     def getAllMatches(user):
@@ -63,11 +77,17 @@ class Match(models.Model):
         winning_count = Match.objects.filter(user=user, score__lt=F('enemy_match__score')).count()
         return winning_count
 
-    def get_winner(self, match):
-        [player1, player2] = match
-        """Not Implemented"""
-        
-        return str()
+    @property
+    def is_winner(self):
+        return True if self.score > self.enemy_match.score else False
+
+    @staticmethod
+    def last_match_between(player1: User, player2: User):
+        matchs = Match.objects.filter(user=player1, enemy=player2)
+        last_match = matchs.order_by("-played_at").first()
+        if not last_match:
+            raise Exception("No matchs") 
+        return last_match
 
 
 class Grade(models.Model):
