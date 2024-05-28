@@ -6,97 +6,23 @@ import { ChatSvg, GmaeSvg, FriendSvg } from "./AllSvg";
 import { UserContext } from "../../context";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { IMAGE_URL, NOTIF_URL } from "@/app/URLS";
-
-function setType(notifType, notifContent) {
-	const sentMsg = "Sent you a message";
-	const sentInvit = "Sent you a Invitation";
-	const sentAccept = "Accept your Invitation";
-	const sentGameInvit = "Sent you Game Invitation";
-	const rejectGameInvit = "Reject Your Game Invitation";
-
-	if (notifType == "C") return sentMsg;
-	else if (notifType == "T") return notifContent.message;
-	if (notifContent.status == "add") return sentInvit;
-	else if (notifType == "G") {
-		if (notifContent.type == "invit") return sentGameInvit;
-		else return rejectGameInvit;
-	} else return sentAccept;
-}
-
-function readNotif(socket, notif, setNbNotif) {
-	if (notif.is_read) return;
-	socket.send(
-		JSON.stringify({
-			action: "readNotif",
-			id: notif.id,
-		}),
-	);
-	setNbNotif((prev) => {
-		if (prev <= 0) return prev;
-		else return prev - 1;
-	});
-	notif.is_read = true;
-}
-
-function getNotifLink(notif) {
-	if (notif.type == "F") return `/profile/${notif.user.username}`;
-	if (notif.type == "T")
-		return `/tournament/result/${notif.content.tournament_name}`;
-	if (notif.type == "C") return `/chat/${notif.user.username}`;
-	else return "#";
-}
-
-export function calculateTimeDifference(pastDateTime) {
-	var pastDate = new Date(pastDateTime);
-	var currentDate = new Date();
-
-	var timeDiff = currentDate - pastDate;
-
-	var seconds = Math.floor(timeDiff / 1000);
-	var minutes = Math.floor(seconds / 60);
-	var hours = Math.floor(minutes / 60);
-	var days = Math.floor(hours / 24);
-	var weeks = Math.floor(days / 7);
-	var months = Math.floor(days / 30);
-	var years = Math.floor(days / 365);
-
-	if (years > 0) {
-		return years + " year" + (years > 1 ? "s" : "") + " ago";
-	} else if (months > 0) {
-		return months + " month" + (months > 1 ? "s" : "") + " ago";
-	} else if (weeks > 0) {
-		return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
-	} else if (days > 0) {
-		return days + " day" + (days > 1 ? "s" : "") + " ago";
-	} else if (hours > 0) {
-		return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
-	} else if (minutes > 0) {
-		return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
-	} else {
-		return seconds + " second" + (seconds > 1 ? "s" : "") + " ago";
-	}
-}
-
-function decline(ws, notif) {
-	const content = {
-		to: notif.user.username,
-		type: "G",
-		content: "reject",
-	};
-	ws.send(
-		JSON.stringify({
-			action: "send_notif",
-			content: content,
-		}),
-	);
-}
+import {
+	accept,
+	calculateTimeDifference,
+	decline,
+	getNotifLink,
+	setType,
+} from "./NotifUtils";
 
 function AcceptDeclineGame({ notif, ws }) {
 	//send friend id to endpoint and send notif to user inform it friend accept your invit
 	// if decline send notif to other user user decline
 	return (
-		<div className="flex justify-between items-center gap-[10px]">
-			<button className="size-[20px] rounded-full cursor-pointer flex justify-center items-center">
+		<div className="flex justify-between items-center gap-[5px]">
+			<button
+				onClick={() => accept(notif)}
+				className="size-[20px] rounded-full cursor-pointer flex justify-center items-center"
+			>
 				<svg
 					width="18"
 					height="18"
@@ -168,7 +94,7 @@ function NotifSection({ notif, ws }) {
 				<h2 className="text-[#7D7D7D] text-[10px]">{time}</h2>
 			</div>
 			<div
-				className={`absolute size-[10px] bg-greatBlue rounded-full right-[8px] ${notif.is_read ? "hidden" : ""}`}
+				className={`absolute size-[10px] bg-greatBlue rounded-full right-[5px] ${notif.is_read || notif.content?.type == "invit" ? "hidden" : ""}`}
 			></div>
 		</Link>
 	);
