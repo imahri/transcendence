@@ -2,17 +2,19 @@ from cgitb import text
 import sys
 import math
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from Game.models import Match
 from User_Management.models import User
 import json
 import time
-from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
 import asyncio
 from urllib.parse import parse_qs
+
 
 class Game:
     def __init__(self):
         self.canvas = {"height": 1300, "width": 2560}
-
+        self.matchs: list[Match]
         self.paused = False
         self.reconnect = False
 
@@ -282,7 +284,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
 
-                room_name = parse_qs(self.scope["query_string"].decode("utf8")).get('room')
+                mode = parse_qs(self.scope["query_string"].decode("utf8")).get("mode")
+                room_name = parse_qs(self.scope["query_string"].decode("utf8")).get(
+                    "room"
+                )
                 if room_name:
                     self.room_group_name = room_name[0]
                 else:
@@ -308,6 +313,11 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 "index": 1,
                             }
                         )
+                        enemy = await database_sync_to_async( User.objects.get)(username=other_player)
+                        # current default mode is Classic
+                        self.loba.matchs = await database_sync_to_async(Match.create)(
+                            self.user, enemy, 0
+                        )
                     else:
                         await self.send_json(
                             content={
@@ -319,6 +329,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             self.room_group_name,
                             {"type": "change_state", "state": "start"},
                         )
+                        index = get_room_index(self.game_room, self.room_group_name)
+                        self.loba: Game = self.game_object[index]
                         asyncio.create_task(self.send_ball_coordinates())
                     return
                 result = []
@@ -369,7 +381,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )
-        except Exception:
+        except Exception as error:
+            print("================>", error)
             await self.close()
 
     async def receive(self, text_data):
@@ -436,6 +449,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     res = get_player_room(self.game_room, self.user.username)
                     update_room_names(res, self.game_room)
                     print("end_game")
+                    [match1, match2] = self.loba.matchs
+                    await database_sync_to_async(match1.set_score)(obg.user1["score"])
+                    await database_sync_to_async(match2.set_score)(obg.user2["score"])
                     break
 
                 obg.update_ball()

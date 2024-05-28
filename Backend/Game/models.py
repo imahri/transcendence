@@ -79,6 +79,11 @@ class Match(models.Model):
         match2.enemy_match = match1
         return [match1, match2]
 
+    def set_score(self, score, save=True):
+        self.score = score
+        if save:
+            self.save()
+
     @staticmethod
     def getAllMatches(user):
         from .serilaizers import MatchSerializer
