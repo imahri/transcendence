@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./styles/ProfileBar.module.css";
 import ExitArrowIcon from "./assets/exit_arrow_icon";
 import { useRouter } from "next/navigation";
 import { IMAGE_URL } from "@/app/URLS";
+import { UserContext } from "@/app/(app)/context";
 
 export const ActiveStatusTypes = Object.freeze({
 	Active: "Active Now",
@@ -30,13 +31,39 @@ const ExitArrow = ({ onExit }) => (
 	</button>
 );
 
-const InviteToPlay = () => (
-	<div className="w-52 h-full grid place-content-center">
-		<button className="bg-[#E1E1E1] w-40 h-10 rounded-3xl">
-			<span className="text-black font-bold text-lg">Invite To Play</span>
-		</button>
-	</div>
-);
+function invit(ws, username) {
+	const notif = {
+		to: username,
+		type: "G",
+		content: {
+			type: "invit",
+		},
+	};
+
+	ws.send(
+		JSON.stringify({
+			action: "send_notif",
+			content: notif,
+		}),
+	);
+}
+
+const InviteToPlay = ({ name }) => {
+	const { ws } = useContext(UserContext);
+
+	return (
+		<div className="w-52 h-full grid place-content-center">
+			<button
+				className="bg-[#E1E1E1] w-40 h-10 rounded-3xl"
+				onClick={() => invit(ws, name)}
+			>
+				<span className="text-black font-bold text-lg">
+					Invite To Play
+				</span>
+			</button>
+		</div>
+	);
+};
 
 export function ProfileBar({
 	friendinfo: { name, image },
@@ -65,7 +92,7 @@ export function ProfileBar({
 					</section>
 				</button>
 			</div>
-			<InviteToPlay />
+			<InviteToPlay name={name} />
 		</div>
 	);
 }

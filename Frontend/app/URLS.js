@@ -23,6 +23,8 @@ export const ITEMS_URL = `${GAME_APP}/items`;
 export const MISSIONS_URL = `${GAME_APP}/missions`;
 export const ACHEIVMENTS_URL = `${GAME_APP}/acheivement`;
 export const MATCHES_URL = `${GAME_APP}/match`;
+export const CREATEROOM_URL = `${GAME_APP}/room`;
+
 export const USER_APP = `${BASE_URL}/user`;
 
 export const USER_URL = `${USER_APP}/`;

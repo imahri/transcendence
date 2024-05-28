@@ -7,7 +7,7 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { IMAGE_URL, MSGNOTIF_URL } from "@/app/URLS";
 import Loading from "@/app/(auth)/Loading";
 import { UserContext } from "../../context";
-import { calculateTimeDifference } from "../../navBar/Components/Notification";
+import { calculateTimeDifference } from "../../navBar/Components/NotifUtils";
 
 function readNotif(socket, notif) {
 	if (notif.is_read) return;
