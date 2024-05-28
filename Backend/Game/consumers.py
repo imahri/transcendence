@@ -279,9 +279,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 raise Exception("Not Authorizer")
             else:
                 self.register_channel(self.user.username, self.channel_name)
-                self.room_group_name = creat_room_name(self.game_room)
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
+                ################################################
+                self.room_group_name = creat_room_name(self.game_room)
                 await self.channel_layer.group_add(
                     self.room_group_name, self.channel_name
                 )
