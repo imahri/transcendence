@@ -27,25 +27,8 @@ function State({ number, name, color }) {
 	);
 }
 
-function invit(ws, username) {
-	const notif = {
-		to: username,
-		type: "G",
-		content: {
-			type: "invit",
-		},
-	};
-
-	ws.send(
-		JSON.stringify({
-			action: "send_notif",
-			content: notif,
-		}),
-	);
-}
-
 function Profile() {
-	const { user, setUser, ws } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 
 	return (
 		<div className="ProfileImg w-[95%] max-w-[1700px] h-[350px] rounded-[38px] bg-center bg-cover bg-no-repeat">
@@ -57,12 +40,6 @@ function Profile() {
 						<h1 className="font-semibold text-[60px] [@media(max-width:800px)]:text-[40px] [@media(max-width:600px)]:text-[15px] [@media(max-width:600px)]:w-[70%] overflow-hidden truncate text-[#B872FE]">
 							{user.username}
 						</h1>
-					</div>
-					<div
-						onClick={() => invit(ws, "test")}
-						className="text-white"
-					>
-						Invit
 					</div>
 				</div>
 				<div className="w-auto h-[60%] pl-[70px] [@media(max-width:470px)]:pl-[20px] flex flex-col justify-center gap-[20px]">
