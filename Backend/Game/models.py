@@ -2,6 +2,9 @@ from django.db import models
 from core.settings import IMAGES_ROOT_
 from User_Management.models import User
 from django.db.models import F
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 
 
 class Acheivement(models.Model):
@@ -32,6 +35,36 @@ class Match(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+
+    @staticmethod
+    def send_accept_play(user: User , friend: User, room_name):
+        from User_Management.Consumers.Notifconsumers import NotificationConsumer
+        from User_Management.models import Notification 
+
+        #send notification to the tow user match is ready to play
+        to = [user.username, friend.username]
+        Userquery = User.objects.filter(username__in=to)
+        content = {
+            'to': Userquery,
+            'type': 'G',
+            'content': {'type': 'start', 'room_name': room_name}
+        }
+        channel_layer = get_channel_layer()
+        notification = Notification.createToMultiUsers(user, content)
+        data = notification.as_serialized()
+        for playername in to:
+            try:
+                channel_name = NotificationConsumer.get_channel_by_user(playername)
+                async_to_sync(channel_layer.send)(
+                    channel_name,
+                    {
+                        'type': "redirect",
+                        'content': data
+                    },
+                )
+            except :
+                pass
+
 
     @staticmethod
     def create(user: User, enemy: User, mode: int, tournament=None):

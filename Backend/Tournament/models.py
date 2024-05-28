@@ -99,7 +99,7 @@ class Tournament(models.Model):
                 )
             except :
                 pass
-            return message
+        return message
 
     def create_match(self, user: User, enemy: User):
         return Match.create(user, enemy, 2, self)

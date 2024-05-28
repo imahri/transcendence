@@ -1,40 +1,31 @@
+import random
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from Game.consumers import GameConsumer
 from .serilaizers import BadgeSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
 from .models import Badge, Board, Match, Padel, Items, Acheivement
-from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
 
+@api_view(['POST'])
+def create_room(request):
+    try:
+        user: User = request.user
+        username = request.query_params.get('username', None)
+        #check if user exist and is invited
+        if not username:
+            return Response({"error": "username of frined required"})
+        friend : User = User.objects.get(username=username)
 
-# ************************************************************************
+        room_name: str = f"room_{random.randint(1000, 99999999)}"
+        GameConsumer.game_room.append([room_name, [user.username,username]])
+        #send notif to the tow player
+        
+        Match.send_accept_play(user, friend, room_name=room_name)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ************************************************************************
+        return Response({"room_name": room_name})
+    except Exception as error:
+        return Response({'error' : str(error)}, status=400)
 
 class MatchView(APIView):
 

@@ -1,11 +1,11 @@
 from django.urls import path
 
 
-from .views import MatchView, BadgeView, BoardView, PadleView, ItemsView, AcheivmentView
+from .views import MatchView, BadgeView, BoardView, PadleView, ItemsView, AcheivmentView, create_room
 from .StaffMissions import MissionView
 
 urlpatterns = [
-    
+    path("room", create_room, name="new_room"),
     path("match", MatchView.as_view(), name="create"),
     path("badge", BadgeView.as_view(), name="badge"),
     # path("badge/<int:pk>", BadgeView.as_view(), name="badgeUpdate"),
