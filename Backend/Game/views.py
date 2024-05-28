@@ -1,22 +1,68 @@
 import random
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework import status
 from rest_framework.response import Response
 from Game.consumers import GameConsumer
 from .serilaizers import BadgeSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
 from .models import Badge, Board, Match, Padel, Items, Acheivement
 from User_Management.models import User
 
-@api_view(['POST'])
-def create_room(request):
-    user: User = request.user
-    username = request.query_params.get('username', None)
-    if not username:
-        return Response({"error": "username of frined required"})
-    room_name: str = f"room_{random.randint(1000, 99999999)}"
-    GameConsumer.game_room.append([room_name, [user.username,username]])
-    return Response({"room_name": room_name})
+class RoomView(APIView):
 
+    @staticmethod
+    def is_exiting(room_name: str, room):
+        for _room in GameConsumer.game_room:
+            if _room[0] == room_name:
+                room = _room[1]
+                return True
+        return False
+
+    def post(self, request):
+        user: User = request.user
+        username = request.query_params.get("username", None)
+        if not username:
+            return Response({"error": "username of frined required"})
+        
+        room_name: str = f"room_{random.randint(1000, 99999999)}"
+        GameConsumer.game_room.append([room_name, [user.username, username]])
+        return Response({"room_name": room_name})
+
+    def get(self, request):
+        user: User = request.user
+        room_name = request.query_params.get("room", None)
+        if not room_name:
+            return Response({"error": "room name required"})
+        room = []
+        if not RoomView.is_exiting(room_name, room):
+            return Response(
+                {"error": "room name required"}, status=status.HTTP_404_NOT_FOUND
+            )
+        if not user.username in room:
+            return Response(
+                {"error": "Not in the room"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        frined: User
+        with room[0] if room[1] == user.username else room[1] as username:
+            if user.friends.filter(username=username).exists():
+                frined = User.objects.get(username=username)
+            else:
+                return Response(
+                    {"error": "Not in the room"}, status=status.HTTP_400_BAD_REQUEST
+                )
+        return Response(
+            {
+                "player1": {
+                    "name": frined.username,
+                    "image": frined.info.profile_img,
+                    "exp": frined.info.exp,
+                },
+                "player2": {
+                    "name": user.username,
+                    "image": user.info.profile_img,
+                    "exp": user.info.exp,
+                },
+            }
+        )
 
 class MatchView(APIView):
 
