@@ -55,7 +55,15 @@ async function sent(NewInfo, setError, setUser, closePopup) {
 	setUser(data);
 }
 
-export function ChangeInfo(e, Form, setError, setUser, closePopup, setLoading) {
+export function ChangeInfo(
+	e,
+	Form,
+	username,
+	setError,
+	setUser,
+	closePopup,
+	setLoading,
+) {
 	e.preventDefault();
 
 	setLoading(true);
@@ -80,7 +88,18 @@ export function ChangeInfo(e, Form, setError, setUser, closePopup, setLoading) {
 		setLoading(false);
 		return;
 	}
+	if (NewInfo.profile_img.name.length > 100) {
+		const newName =
+			username +
+			"_profile_img." +
+			NewInfo.profile_img.name.split(".").pop();
+		const newFile = new File([NewInfo.profile_img], newName, {
+			type: NewInfo.profile_img.type,
+			lastModified: NewInfo.profile_img.lastModified,
+		});
 
+		NewInfo.profile_img = newFile;
+	}
 	sent(NewInfo, setError, setUser, closePopup);
 	setLoading(false);
 }
