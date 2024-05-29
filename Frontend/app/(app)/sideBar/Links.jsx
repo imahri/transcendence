@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 
 function borderLeft() {
 	return (
-		<div className="h-[30px] border border-l-3 border-purple-600 top-[-2px] left-[-23px] absolute [@media(max-width:900px)]:border-0  [@media(max-width:900px)]:border-b-[3px] [@media(max-width:900px)]:top-0 [@media(max-width:900px)]:left-[-5px] [@media(max-width:900px)]:w-[38px]"></div>
+		<div className="h-[30px] border border-l-3 border-purple-600 top-[-2px] left-[-23px] absolute [@media(max-width:900px)]:border-0  [@media(max-width:900px)]:border-b-[3px] [@media(max-width:900px)]:top-[5px] [@media(max-width:900px)]:left-[-4px] [@media(max-width:900px)]:w-[40px]"></div>
 	);
 }
 
@@ -37,25 +37,25 @@ function Links(props) {
 					</Link>
 				</ul>
 
-				<ul className="relative m-[20px] flex justify-center cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center items-center cursor-pointer">
 					<Link href="/chat">
 						{Chat && borderLeft()}
 						{LinkSvg(ChatPath(Chat), 20, 21)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center items-center  cursor-pointer">
 					<Link href="/game">
 						{Game && borderLeft()}
 						{LinkSvg(GamePath(Game), 28, 20)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center items-center  cursor-pointer">
 					<Link href="/store">
 						{Store && borderLeft()}
 						{LinkSvg(StorePath(Store), 20, 21)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center items-center  cursor-pointer">
 					<Link href="/rank">
 						{Rank && borderLeft()}
 						{LinkSvg(RankPath(Rank), 28, 20)}
