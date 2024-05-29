@@ -74,9 +74,6 @@ class Login(APIView):
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
 
-    def delete(self, request):
-        pass
-
 @api_view(["GET"])
 def check_token(request):
     """
@@ -98,7 +95,7 @@ class TwoFactorAuthView(APIView):
         Enable 2FA: no body required
         """
         try:
-            user = User.get_by_identifier(request.user.username)
+            user = request.user
             if user.is_2FA_active is True:
                 raise exceptions.NotAcceptable(detail="2FA is already on")
             qrcode_path = User.TwoFactorAuth.turn_on_2FA(user)
@@ -145,9 +142,9 @@ class TwoFactorAuthView(APIView):
         Disable 2FA: no body required
         """
         try:
-            if not request.user.is_2FA_active:
+            user = request.user
+            if not user.is_2FA_active:
                 raise NotAcceptable("2FA is already off")
-            user = User.get_by_identifier(request.user.username)
             User.TwoFactorAuth.turn_off_2FA(user)
             return Response("2FA turn off successfully")
         except NotAcceptable as error:

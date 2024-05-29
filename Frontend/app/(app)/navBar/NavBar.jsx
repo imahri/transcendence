@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { logout } from "../settings/Components/SettingsUtils";
+import { logout } from "../settings/Components/SettingsUtils.js";
 import Link from "next/link";
 import { Searchbar } from "../searchBar/Searchbar";
 import Notification from "./Components/Notification";

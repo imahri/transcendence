@@ -4,10 +4,10 @@ import { Block_URL, IMAGE_URL } from "@/app/URLS";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-function deblock(friend_id, setBlockedUsers, setError) {
+async function deblock(friend_id, setBlockedUsers, setError) {
 	const bodyData = JSON.stringify({ friend_id: friend_id });
 
-	fetch_jwt(
+	const [isOk, status, data] = await fetch_jwt(
 		Block_URL,
 		{},
 		{
@@ -15,19 +15,18 @@ function deblock(friend_id, setBlockedUsers, setError) {
 			body: bodyData,
 			headers: { "Content-Type": "application/json" },
 		},
-	).then(([isOk, status, data]) => {
-		if (isOk) {
-			setBlockedUsers((BlockedUsers) => {
-				const updatedUsers = BlockedUsers.filter(
-					(user) => user.id !== friend_id,
-				);
-				if (updatedUsers.length != 0) return updatedUsers;
-				setError(true);
-			});
+	);
+	if (isOk) {
+		setBlockedUsers((BlockedUsers) => {
+			const updatedUsers = BlockedUsers.filter(
+				(user) => user.id !== friend_id,
+			);
+			if (updatedUsers.length != 0) return updatedUsers;
+			setError(true);
+		});
 
-			console.log(data);
-		}
-	});
+		console.log(data);
+	}
 }
 
 function Friend({ friend, index, setBlockedUsers, setError }) {

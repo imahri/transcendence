@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { TowFaHandler, getCodeQr } from "./SettingsUtils";
+import { TowFaHandler, getCodeQr } from "./SettingsUtils.js";
 import { UserContext } from "../../context";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { USER_URL } from "@/app/URLS";

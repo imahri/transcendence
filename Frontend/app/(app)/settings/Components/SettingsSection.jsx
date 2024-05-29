@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Security from "./Security";
-import { logout } from "./SettingsUtils";
+import { logout } from "./SettingsUtils.js";
 
 import { AccountSvg, AboutSvg, SecuritySvg, LogoutSvg } from "./Icons";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
