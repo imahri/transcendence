@@ -5,12 +5,9 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { GET_Friends_URL, IMAGE_URL } from "@/app/URLS";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 
-function Friend({ friend, index }) {
+function Friend({ friend }) {
 	return (
-		<div
-			className=" flex items-center gap-[20px] cursor-pointer"
-			key={index}
-		>
+		<div className="flex items-center gap-[20px] cursor-pointer">
 			{
 				<Image
 					className="size-[50px] rounded-full"
@@ -59,7 +56,9 @@ export default function Friendspopup({ DisplayFriends, username }) {
 				<div className="w-[90%] max-h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">
 					{friends &&
 						friends.map((friend, index) => (
-							<Friend friend={friend} index={index} />
+							<div key={index}>
+								<Friend friend={friend} />
+							</div>
 						))}
 					<h1
 						className={`${error ? "" : "hidden"} text-white text-center`}

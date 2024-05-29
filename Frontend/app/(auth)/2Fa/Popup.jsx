@@ -62,7 +62,7 @@ export function PopupSetup2Fa(props) {
 				<div className="animate-shake bg-red-600 w-[60%] h-[40px] rounded-[5px] flex justify-center items-center [@media(max-width:560px)]:w-[80%]">
 					{errorSvg}
 					<span className=" p-[5px] text-white [@media(max-width:460px)]:text-[14px] [@media(max-width:360px)]:text-[10px]">
-						Can't Get the codeQr now ! try it later
+						{"Can't Get the codeQr now ! try it later"}
 					</span>
 				</div>
 			)}
@@ -73,7 +73,7 @@ export function PopupSetup2Fa(props) {
 					height={0}
 					fill={false}
 					src={QrImage}
-					alt=""
+					alt="Qr Image"
 				/>
 			)}
 			<h2 className=" font-semibold text-[20px] text-gray-300 text-opacity-60 [@media(max-width:560px]:text-[15px] [@media(max-width:560px]:font-medium [@media(max-width:460px]:text-[12px]">

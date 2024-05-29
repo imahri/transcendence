@@ -29,7 +29,7 @@ async function getTournament(
 	setIsLoding(false);
 }
 
-function page({ params }) {
+function Page({ params }) {
 	const [isLoading, setIsLoding] = useState(true);
 	const [tournament, setTournament] = useState();
 	const [isSmall, setIsSmall] = useState(false);
@@ -87,4 +87,4 @@ function page({ params }) {
 	);
 }
 
-export default page;
+export default Page;

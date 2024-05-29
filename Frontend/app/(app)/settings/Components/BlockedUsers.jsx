@@ -29,9 +29,9 @@ async function deblock(friend_id, setBlockedUsers, setError) {
 	}
 }
 
-function Friend({ friend, index, setBlockedUsers, setError }) {
+function Friend({ friend, setBlockedUsers, setError }) {
 	return (
-		<div className=" flex items-center gap-[20px] relative" key={index}>
+		<div className=" flex items-center gap-[20px] relative">
 			{
 				<Image
 					className="size-[50px] rounded-full"
@@ -86,12 +86,13 @@ function BlockedUsers({ setPopUp }) {
 			<div className="w-[80%] max-h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">
 				{BlockedUsers &&
 					BlockedUsers.map((friend, index) => (
-						<Friend
-							friend={friend}
-							index={index}
-							setBlockedUsers={setBlockedUsers}
-							setError={setError}
-						/>
+						<div key={index}>
+							<Friend
+								friend={friend}
+								setBlockedUsers={setBlockedUsers}
+								setError={setError}
+							/>
+						</div>
 					))}
 				<h1
 					className={`${error ? "" : "hidden"} text-white text-center`}
