@@ -54,7 +54,11 @@ function Profile() {
 							name={"lvl"}
 							color={"#E55D10"}
 						/>
-						<State number={12} name={"games"} color={"#8710E5"} />
+						<State
+							number={user.info.nb_game}
+							name={"games"}
+							color={"#8710E5"}
+						/>
 						<div className="w-[51px] h-[47px] rounded-[5px] flex justify-center items-center">
 							<Image
 								className="rounded-[4px]"
@@ -68,9 +72,6 @@ function Profile() {
 					<h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
 						{user.first_name} {user.last_name}
 					</h2>
-					{/* <h2 className=" font-bold text-[25px] [@media(max-width:800px)]:text-[20px] text-white w-[550px] [@media(max-width:800px)]:w-[70%] overflow-hidden truncate">
-						{user.email}
-					</h2> */}
 				</div>
 				<h1 className="absolute top-[-20px] right-0 rotate-[-6deg] font-Mesthine text-[64px] [@media(max-width:1000px)]:hidden text-white">
 					{user.username}

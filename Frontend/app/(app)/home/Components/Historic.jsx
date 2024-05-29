@@ -12,9 +12,9 @@ function GameState({ User, match }) {
 	const lose = "bg-red-600";
 	const draw = "bg-green-600";
 
-	let result1_color = match.score > match.enemy_match.score ? win : lose;
+	let result1_color = match?.score > match.enemy_match?.score ? win : lose;
 	result1_color =
-		match.score == match.enemy_match.score ? draw : result1_color;
+		match?.score == match.enemy_match?.score ? draw : result1_color;
 	let result2_color = result1_color == win ? lose : win;
 	result2_color = result1_color == draw ? draw : result2_color;
 
@@ -36,7 +36,7 @@ function GameState({ User, match }) {
 			</div>
 			<div className="bg-[#696969] size-[34px] rounded-full flex justify-center items-center">
 				<h2 className=" font-bold text-[10px] text-white">
-					{match.score} : {match.enemy_match.score}
+					{match?.score} : {match.enemy_match?.score}
 				</h2>
 			</div>
 			<Link

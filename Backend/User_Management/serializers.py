@@ -57,6 +57,7 @@ class InfoSerializer(ModelSerializer):
     from Game.serilaizers import GradeSerializer
 
     grade = GradeSerializer()
+    nb_game = serializers.SerializerMethodField()
 
     class Meta:
         model = Info
@@ -64,12 +65,15 @@ class InfoSerializer(ModelSerializer):
             "level",
             "energy",
             "wallet",
-            "gender",
             "exp",
             "profile_img",
             "grade",
+            "nb_game",
         ]
 
+    def get_nb_game(self, obj: Info):
+        return len(obj.user.matches.all())
+    
     def create(self, validated_data):
         user = validated_data["user"]
         user_info = self.Meta.model(user)

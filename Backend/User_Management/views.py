@@ -33,9 +33,7 @@ class UserView(APIView):
     def get(self, request):
         try:
             userObj = dict(UserSerializer(request.user).data)
-            userObj["info"] = InfoSerializer(
-                Info.objects.get(user=request.user.pk)
-            ).data
+            userObj["info"] = InfoSerializer(request.user.info).data
             return Response(userObj)
         except Exception as error:
             return Response({"error": str(error)}, status=400)

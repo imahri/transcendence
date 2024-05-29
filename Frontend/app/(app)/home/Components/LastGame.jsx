@@ -79,7 +79,7 @@ function LastGame({ User, lastgame, isLoading }) {
 						user1={User}
 						user2={lastgame.enemy}
 						score1={lastgame.score}
-						score2={lastgame.enemy_match.score}
+						score2={lastgame.enemy_match?.score}
 					/>
 					<Image
 						className="w-[254px] h-[66px]"
