@@ -12,8 +12,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
 import requests
-from io import BytesIO
-
 from User_Management.serializers import UserSerializer
 
 # ! Use request.user
@@ -76,9 +74,6 @@ class Login(APIView):
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
 
-    def delete(self, request):
-        pass
-
 @api_view(["GET"])
 def check_token(request):
     """
@@ -100,7 +95,7 @@ class TwoFactorAuthView(APIView):
         Enable 2FA: no body required
         """
         try:
-            user = User.get_by_identifier(request.user.username)
+            user = request.user
             if user.is_2FA_active is True:
                 raise exceptions.NotAcceptable(detail="2FA is already on")
             qrcode_path = User.TwoFactorAuth.turn_on_2FA(user)
@@ -147,9 +142,9 @@ class TwoFactorAuthView(APIView):
         Disable 2FA: no body required
         """
         try:
-            if not request.user.is_2FA_active:
+            user = request.user
+            if not user.is_2FA_active:
                 raise NotAcceptable("2FA is already off")
-            user = User.get_by_identifier(request.user.username)
             User.TwoFactorAuth.turn_off_2FA(user)
             return Response("2FA turn off successfully")
         except NotAcceptable as error:
@@ -179,7 +174,7 @@ class intra_auth(APIView):
         data = {
             'grant_type': 'authorization_code',
             'client_id': 'u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259',
-            'client_secret': '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',
+            'client_secret': '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',
             'code': code,
             'redirect_uri': 'http://localhost:3000/login'
         }
@@ -187,10 +182,8 @@ class intra_auth(APIView):
         response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
         
         data = response.json()
-
         if response.status_code != 200:
             raise Exception(data.get('error'))
-        
         access_token = data.get('access_token')
         return access_token
 
@@ -198,39 +191,14 @@ class intra_auth(APIView):
 
         try:
             code = request.data.get('code')
-            # identifier = request.data.get('identifier')
-            # user = User.objects.filter(username=identifier)
-            # if user.exists():
-                # return Response({'duplicate' : 'username already exist'}, status=401)
             access_token = intra_auth.get_42access_token(code=code)
             user42_info = intra_auth.get_42user_info(access_token=access_token)
 
-            data : dict = {
-                'email' : user42_info['email'],
-                'username' : user42_info['login'],
-                'first_name' : user42_info['first_name'],
-                'last_name' : user42_info['last_name'],
-                'password': 'none',
-                'is_42_account' : True
-            }
-            try:
-                user = User.objects.get(email=user42_info['email'])
-            except User.DoesNotExist :
-                imageUrl = user42_info['image']['link']
-                response = requests.request("GET", imageUrl)
-                
-                userSerialized = UserSerializer(data=data)
-                if userSerialized.is_valid():
-                    user : User = userSerialized.save()
-                    user.is_42_account = True
-                    user.save()
-                    info : Info = user.info
-                    img_name = data['username'] + '.jpg';
-                    image_content = BytesIO(response.content)
-                    info.profile_img.save(img_name, image_content, save=True)
+            returnValue = User.create42User(user42_info)
+            if not returnValue[0]:
+                return Response(data=returnValue[1], status=401)
 
-                else:
-                    return Response(data=userSerialized.errors, status=401)
+            user : User = returnValue[1]
 
             access_token = AccessToken.for_user(user)
             refresh_token = RefreshToken.for_user(user)

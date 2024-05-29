@@ -81,6 +81,7 @@ function EditProfile({ closePopup }) {
 						ChangeInfo(
 							e,
 							Form,
+							user.username,
 							setError,
 							setUser,
 							closePopup,
@@ -101,7 +102,7 @@ function EditProfile({ closePopup }) {
 					<input
 						onChange={(e) => displayNewImage(e, setImage)}
 						type="file"
-						accept="image/png, "
+						accept="image/png"
 						id="profile"
 						className="hidden"
 					/>
@@ -109,7 +110,7 @@ function EditProfile({ closePopup }) {
 					<div
 						className={
 							error
-								? "animate-shake bg-red-600 mx-[50px] w-[90%]  h-[40px] rounded-[5px] flex justify-center items-center"
+								? "animate-shake bg-red-600 mx-[50px] w-[90%] rounded-[5px] flex justify-center items-center"
 								: "hidden"
 						}
 					>
@@ -133,14 +134,6 @@ function EditProfile({ closePopup }) {
 						placeHolder={user.last_name}
 						error={error?.type == "last_name"}
 					/>
-					{/* <InputContainer
-						type={"email"}
-						id={"email"}
-						label={"Change your Email"}
-						placeHolder={user.email}
-						error={error?.type == "email"}
-					/> */}
-
 					<button
 						className="w-[138px] h-[37px] bg-green-500 bg-opacity-70 rounded-[10px]  font-bold text-[16px] cursor-pointer text-white relative"
 						type="submit"

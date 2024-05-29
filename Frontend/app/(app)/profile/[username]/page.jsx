@@ -61,7 +61,7 @@ function Profile({ params }) {
 									EditProfile={setEditProfile}
 								/>
 							</div>
-							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px] mb-[10px]">
 								<Dashboard />
 							</div>
 						</div>

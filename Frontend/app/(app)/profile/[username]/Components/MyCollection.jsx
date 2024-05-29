@@ -46,11 +46,8 @@ function Paddles({ paddles, setPaddles, isLoading }) {
 			{paddles &&
 				paddles.owned_items.map((element, index) => {
 					return (
-						<div>
-							<div
-								key={index}
-								className="relative size-[120px] rounded-[7px] bg-[#00FFE0] bg-opacity-[10%] flex justify-center items-center"
-							>
+						<div key={index}>
+							<div className="relative size-[120px] rounded-[7px] bg-[#00FFE0] bg-opacity-[10%] flex justify-center items-center">
 								<Image
 									src={`${IMAGE_URL}?path=${element.image_path}`}
 									width={90}
@@ -97,11 +94,8 @@ function Boards({ boards, setBoards, isLoading }) {
 			{boards &&
 				boards.owned_items.map((element, index) => {
 					return (
-						<div>
-							<div
-								key={index}
-								className="relative w-[250px] h-[150px] rounded-[10px] bg-[#2846E6] bg-opacity-[19%] flex justify-center items-center backdrop-blur-sm"
-							>
+						<div key={index}>
+							<div className="relative w-[250px] h-[150px] rounded-[10px] bg-[#2846E6] bg-opacity-[19%] flex justify-center items-center backdrop-blur-sm">
 								<Image
 									width={212}
 									height={117}
@@ -148,11 +142,8 @@ function Badges({ badges, setBadges, isLoading }) {
 			{badges &&
 				badges.owned_items.map((obj, index) => {
 					return (
-						<div>
-							<div
-								key={index}
-								className="relative w-[260px] h-[160px] bg-[#E628C7] bg-opacity-[20%] flex justify-center items-center rounded-[20px]"
-							>
+						<div key={index}>
+							<div className="relative w-[260px] h-[160px] bg-[#E628C7] bg-opacity-[20%] flex justify-center items-center rounded-[20px]">
 								<div
 									className="w-[222px] h-[135px] relative cursor-pointer hover:size-full"
 									onClick={

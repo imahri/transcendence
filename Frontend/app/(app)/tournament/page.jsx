@@ -60,7 +60,7 @@ async function getMyTornament(setResult) {
 
 let timeout;
 
-function page() {
+function Page() {
 	const [create, setCreate] = useState();
 	const [searchResult, setResult] = useState();
 	const [demo, setDemo] = useState();
@@ -132,4 +132,4 @@ function page() {
 	);
 }
 
-export default page;
+export default Page;

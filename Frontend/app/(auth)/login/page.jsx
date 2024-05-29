@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import logo from "@/app/logo.svg";
 import { PopupEnternumber } from "../2Fa/Popup.jsx";
 import { showPassword } from "../AuthTools/LoginRegisterTools";
+import { get42Token, handel42, handleSubmit } from "./LoginUtils";
+import Loading from "../Loading.jsx";
+import { getcookie } from "../AuthTools/tokenManagment.jsx";
 import {
 	IntraSvg,
 	PasswordSvg,
@@ -14,9 +16,6 @@ import {
 	errorSvg,
 	usernameInputSvg,
 } from "../Allsvg";
-
-import { get42Token, handel42, handleSubmit } from "./LoginUtils";
-import Loading from "../Loading.jsx";
 
 export function InputContainer({ Info, error }) {
 	return (
@@ -35,6 +34,7 @@ export function InputContainer({ Info, error }) {
 				type={Info.type}
 				id={Info.id}
 				placeholder=""
+				defaultValue={Info?.value}
 			/>
 			{Info.Svg}
 		</div>
@@ -54,12 +54,11 @@ export function Error({ error }) {
 
 export default function Login() {
 	const navigate = useRouter();
-
+	const RememberdUsername = getcookie("rememberMe");
 	const Form = useRef(null);
 	const [error, setError] = useState();
 	const [popUp2Fa, setPopUp2Fa] = useState();
 	const [isLoading, setisLoading] = useState();
-	// const [log42, setLog42] = useState();
 
 	useEffect(() => {
 		const queryString = window.location.search;
@@ -68,7 +67,6 @@ export default function Login() {
 
 		if (code) {
 			setisLoading(true);
-			// setLog42(code)
 			get42Token(navigate, code, setisLoading, setError);
 		}
 	}, []);
@@ -110,6 +108,7 @@ export default function Login() {
 						type: "text",
 						Svg: usernameInputSvg,
 						label: "Enter your username",
+						value: RememberdUsername,
 					}}
 					error={error?.type == "username"}
 				/>
@@ -163,7 +162,6 @@ export default function Login() {
 			{popUp2Fa && (
 				<PopupEnternumber update={setPopUp2Fa} username={popUp2Fa} />
 			)}
-			{/* {log42 && <Login42 code={log42}/>} */}
 		</>
 	);
 }

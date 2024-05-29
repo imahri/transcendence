@@ -16,6 +16,7 @@ const LGame = ({
 	win,
 	checkLoser,
 	lose,
+	room_name,
 }) => {
 	return (
 		<div className={`${styles.page} ${loading ? "hidden" : "block"}`}>
@@ -32,6 +33,7 @@ const LGame = ({
 									checkWinner={checkWinner}
 									checkLoser={checkLoser}
 									secondArrived={secondArrived}
+									room_name={room_name}
 								/>
 								{/* </div> */}
 							</div>

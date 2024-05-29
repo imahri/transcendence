@@ -7,6 +7,10 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from core.settings import DEFAULT_BANNER_IMG, DEFAULT_PROFILE_IMG
 from django.db.models.manager import BaseManager
+import requests
+from io import BytesIO
+import random
+
 
 
 class User(AbstractUser):
@@ -135,7 +139,43 @@ class User(AbstractUser):
 
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
+    
+    @staticmethod
+    def create42User(user42_info):
+        from User_Management.serializers import UserSerializer
 
+        data : dict = {
+            'email' : user42_info['email'],
+            'username' : user42_info['login'],
+            'first_name' : user42_info['first_name'],
+            'last_name' : user42_info['last_name'],
+            'password': 'none',
+            'is_42_account' : True
+        }
+        user: User
+        try:
+            user = User.objects.get(email=user42_info['email'])
+        except User.DoesNotExist :
+            imageUrl = user42_info['image']['link']
+            response = requests.request("GET", imageUrl)
+            
+            breakValue = True
+            while breakValue:
+                userSerialized = UserSerializer(data=data)
+                if userSerialized.is_valid():
+                    user = userSerialized.save()
+                    user.save()
+                    info : Info = user.info
+                    img_name = data['username'] + '.jpg';
+                    image_content = BytesIO(response.content)
+                    info.profile_img.save(img_name, image_content, save=True)
+                    break
+                elif userSerialized.errors['username']:
+                    data['username'] = f"{user42_info['login']}{random.randint(1000, 99999999)}"
+                else:
+                    return [False, userSerialized.errors]
+
+        return [True, user]
     class TwoFactorAuth:
 
         @staticmethod

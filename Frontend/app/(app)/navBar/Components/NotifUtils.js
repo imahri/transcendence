@@ -40,7 +40,7 @@ export function getNotifLink(notif) {
 		return `/tournament/result/${notif.content.tournament_name}`;
 	if (notif.type == "C") return `/chat/${notif.user.username}`;
 	if (notif.type == "G" && notif.content.type == "start")
-		return `/game/${notif.content.room_name}`;
+		return `/game/matching?room=${notif.content.room_name}`;
 	else return "#";
 }
 

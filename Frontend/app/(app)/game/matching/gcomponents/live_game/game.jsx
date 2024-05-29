@@ -14,13 +14,20 @@ let uid = 0;
 let player2_state = "not yet";
 let player1_state = "not yet";
 
-export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
+export const Gameson = ({
+	secondArrived,
+	checkWinner,
+	checkLoser,
+	room_name,
+}) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
-
+	console.log(room_name);
 	useEffect(() => {
 		const ws = new WebSocket(
-			"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
+			"ws://localhost:8000/ws/game?" +
+				`token=${getToken()}` +
+				`${room_name ? `&room=${room_name}` : ""}`,
 		);
 
 		ws.onopen = () => {

@@ -93,15 +93,6 @@ function Register() {
 					}}
 					error={error?.type == "username"}
 				/>
-				{/* <InputContainer
-					Info={{
-						type: "text",
-						id: "email",
-						label: "Enter your Email",
-						Svg: emailInputSvg,
-					}}
-					error={error?.type == "email"}
-				/> */}
 				<InputContainer
 					Info={{
 						id: "password",

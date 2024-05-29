@@ -5,25 +5,25 @@ import {
 	getRefreshToken,
 	removeTokens,
 } from "../../../(auth)/AuthTools/tokenManagment.jsx";
+import { fetch_jwt } from "@/Tools/fetch_jwt_client.js";
 
 export async function logout(navigate) {
-	try {
-		const requestBody = { refresh: getRefreshToken() };
-		removeTokens();
-		localStorage.removeItem("user");
-		const response = await fetch(LOGOUT_URL, {
+	const requestBody = { refresh: getRefreshToken() };
+
+	const [isOk, status, data] = await fetch_jwt(
+		LOGOUT_URL,
+		{},
+		{
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(requestBody),
-		});
-		if (response.ok) {
-			console.log("logout success");
-		} else {
-			console.error("response error :", response);
-		}
-	} catch (error) {
-		console.error("network error :", error);
+		},
+	);
+	if (!isOk) {
+		console.log(data);
+		return;
 	}
+	removeTokens();
 	navigate.replace("/welcome");
 }
 

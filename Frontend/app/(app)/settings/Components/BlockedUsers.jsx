@@ -4,10 +4,10 @@ import { Block_URL, IMAGE_URL } from "@/app/URLS";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-function deblock(friend_id, setBlockedUsers, setError) {
+async function deblock(friend_id, setBlockedUsers, setError) {
 	const bodyData = JSON.stringify({ friend_id: friend_id });
 
-	fetch_jwt(
+	const [isOk, status, data] = await fetch_jwt(
 		Block_URL,
 		{},
 		{
@@ -15,24 +15,23 @@ function deblock(friend_id, setBlockedUsers, setError) {
 			body: bodyData,
 			headers: { "Content-Type": "application/json" },
 		},
-	).then(([isOk, status, data]) => {
-		if (isOk) {
-			setBlockedUsers((BlockedUsers) => {
-				const updatedUsers = BlockedUsers.filter(
-					(user) => user.id !== friend_id,
-				);
-				if (updatedUsers.length != 0) return updatedUsers;
-				setError(true);
-			});
+	);
+	if (isOk) {
+		setBlockedUsers((BlockedUsers) => {
+			const updatedUsers = BlockedUsers.filter(
+				(user) => user.id !== friend_id,
+			);
+			if (updatedUsers.length != 0) return updatedUsers;
+			setError(true);
+		});
 
-			console.log(data);
-		}
-	});
+		console.log(data);
+	}
 }
 
-function Friend({ friend, index, setBlockedUsers, setError }) {
+function Friend({ friend, setBlockedUsers, setError }) {
 	return (
-		<div className=" flex items-center gap-[20px] relative" key={index}>
+		<div className=" flex items-center gap-[20px] relative">
 			{
 				<Image
 					className="size-[50px] rounded-full"
@@ -87,12 +86,13 @@ function BlockedUsers({ setPopUp }) {
 			<div className="w-[80%] max-h-[400px] flex flex-col gap-[20px] overflow-auto mb-[20px]">
 				{BlockedUsers &&
 					BlockedUsers.map((friend, index) => (
-						<Friend
-							friend={friend}
-							index={index}
-							setBlockedUsers={setBlockedUsers}
-							setError={setError}
-						/>
+						<div key={index}>
+							<Friend
+								friend={friend}
+								setBlockedUsers={setBlockedUsers}
+								setError={setError}
+							/>
+						</div>
 					))}
 				<h1
 					className={`${error ? "" : "hidden"} text-white text-center`}
