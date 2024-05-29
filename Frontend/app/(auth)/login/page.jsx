@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -60,7 +59,6 @@ export default function Login() {
 	const [error, setError] = useState();
 	const [popUp2Fa, setPopUp2Fa] = useState();
 	const [isLoading, setisLoading] = useState();
-	// const [log42, setLog42] = useState();
 
 	useEffect(() => {
 		const queryString = window.location.search;
@@ -69,7 +67,6 @@ export default function Login() {
 
 		if (code) {
 			setisLoading(true);
-			// setLog42(code)
 			get42Token(navigate, code, setisLoading, setError);
 		}
 	}, []);
@@ -165,7 +162,6 @@ export default function Login() {
 			{popUp2Fa && (
 				<PopupEnternumber update={setPopUp2Fa} username={popUp2Fa} />
 			)}
-			{/* {log42 && <Login42 code={log42}/>} */}
 		</>
 	);
 }
