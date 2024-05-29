@@ -1,6 +1,6 @@
 import { AUTH_42, LOGIN_URL } from "../../URLS.js";
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools.jsx";
-import { settoken } from "../AuthTools/tokenManagment.jsx";
+import { setcookie, settoken } from "../AuthTools/tokenManagment.jsx";
 
 function ErrorLogin(setError, response) {
 	response.detail == "user not found"
@@ -27,6 +27,7 @@ export const handleSubmit = async (
 	const FormField = Form.current;
 	const username = FormField["username"].value;
 	const password = FormField["password"].value;
+	const checkBox = FormField["rememberMe"].checked;
 
 	const requestBody = {
 		identifier: username,
@@ -37,6 +38,7 @@ export const handleSubmit = async (
 		const response = await postRequest(LOGIN_URL, requestBody);
 		const responseBody = await response.json();
 		if (response.ok) {
+			if (checkBox) setcookie("rememberMe", username);
 			if (responseBody.success != undefined) {
 				console.log("OTP required");
 				setPopUp2Fa(username);
