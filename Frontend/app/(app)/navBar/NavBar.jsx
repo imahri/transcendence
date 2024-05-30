@@ -85,13 +85,15 @@ function ProfileBar() {
 
 function NavBar() {
 	return (
-		<nav className="fixed z-10 flex justify-between bg-[#202020] mx-px-20 items-center h-[80px] w-[95%] mx-[20px] max-[500px]:mx-0">
-			<div className="w-[300px] h-[50px]">
-				<Searchbar style_ops="user" />
-			</div>
-			<div className="flex items-center justify-between gap-[30px]  pr-[50px] [@media(max-width:1200px)]:pr-[80px] [@media(max-width:900px)]:pr-0">
-				<Notification />
-				<ProfileBar />
+		<nav className="fixed z-10 flex justify-center items-center bg-[#202020] h-[80px] w-[calc(100vw-90px)] [@media(max-width:900px)]:w-full">
+			<div className=" bg-transparent flex justify-between items-center max-w-[1700px] w-[95%]">
+				<div className="w-[300px] [@media(max-width:600px)]:w-[200px] h-[50px]">
+					<Searchbar style_ops="user" />
+				</div>
+				<div className="flex items-center justify-between gap-[30px] [@media(max-width:600px)]:gap-[15px]">
+					<Notification />
+					<ProfileBar />
+				</div>
 			</div>
 		</nav>
 	);
