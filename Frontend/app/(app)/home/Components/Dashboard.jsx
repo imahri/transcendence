@@ -55,7 +55,7 @@ function Dashboard() {
 					/>
 				</div>
 			</div>
-			<div className="w-full flex justify-between gap-[20px] [@media(max-width:1500px)]:flex-wrap [@media(max-width:1500px)]:justify-center [@media(max-width:1500px)]:gap-x-[0px] [@media(max-width:1500px)]:gap-y-[20px]">
+			<div className="w-full flex justify-between gap-[20px] [@media(max-width:710px)]:flex-col [@media(max-width:710px)]:items-center">
 				<LastNotif />
 				<StaffMission />
 			</div>

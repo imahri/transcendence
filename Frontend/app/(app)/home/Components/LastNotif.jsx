@@ -106,7 +106,7 @@ function LastNotif() {
 	}, [ws]);
 
 	return (
-		<div className="bg-[#353535] py-[15px] w-[50%] rounded-[15px] flex flex-col items-center gap-[10px] [@media(max-width:710px)]:w-[90%]">
+		<div className="bg-[#353535] py-[15px] w-[50%] rounded-[15px] flex flex-col items-center gap-[10px] [@media(max-width:710px)]:w-full">
 			<div className="flex items-center justify-between w-[60%] [@media(max-width:1990px)]:w-[80%]">
 				<h1 className="font-normal text-[18px] text-[#C3C3C3]">
 					Message
