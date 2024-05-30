@@ -5,19 +5,10 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_server";
 import { USER_URL } from "../URLS";
 import { redirect } from "next/navigation.js";
 
-export async function fetchUser() {
-	const [isOk, status, data] = await fetch_jwt(USER_URL);
-	if (!isOk) {
-		console.log("error: ", data);
-		return false;
-	}
-	return data;
-}
-
 export default async function Layout({ children }) {
-	const data = await fetchUser();
+	const [isOk, status, data] = await fetch_jwt(USER_URL);
 
-	if (!data) {
+	if (!isOk) {
 		redirect("/login"); //for now redirect to login men be3d rendri error
 	}
 	return (
