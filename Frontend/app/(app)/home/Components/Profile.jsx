@@ -37,7 +37,7 @@ function Profile() {
 
 				<div className="ml-[150px] [@media(max-width:470px)]:ml-[100px] w-auto h-[40%] flex items-center">
 					<div className="ml-10px">
-						<h1 className="font-semibold text-[60px] [@media(max-width:800px)]:text-[40px] [@media(max-width:600px)]:text-[15px] [@media(max-width:600px)]:w-[70%] overflow-hidden truncate text-[#B872FE]">
+						<h1 className="font-semibold w-[550px] text-[60px] [@media(max-width:800px)]:text-[40px] [@media(max-width:600px)]:text-[15px] [@media(max-width:750px)]:w-[200px] overflow-hidden truncate text-[#B872FE]">
 							{user.username}
 						</h1>
 					</div>
