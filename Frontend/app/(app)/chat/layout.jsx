@@ -14,7 +14,19 @@ async function getConversations() {
 	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
 		offset: 1,
 	});
-	if (isOk) return data;
+	if (isOk) {
+		const seen = new Set();
+		const newList = [];
+		for (const obj of data.conversations) {
+			const id = obj.id;
+			if (!seen.has(id)) {
+				seen.add(id);
+				newList.push(obj);
+			}
+		}
+		data.conversations = newList;
+		return data;
+	}
 	console.error("Fetch Error:", status);
 	return { conversations: [] };
 }

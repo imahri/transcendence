@@ -72,10 +72,19 @@ export const useConversations = (initialState) => {
 			setIsUpdated(true);
 		},
 		setConversationList: (newState) => {
-			let newList =
+			let _newList =
 				typeof newState == "function"
 					? newState(ConversationList)
 					: newState;
+			const seen = new Set();
+			const newList = [];
+			for (const obj of _newList) {
+				const id = obj.id;
+				if (!seen.has(id)) {
+					seen.add(id);
+					newList.push(obj);
+				}
+			}
 			newList.sort((f, s) =>
 				f.last_message.sended_at > s.last_message.sended_at ? -1 : 1,
 			);
