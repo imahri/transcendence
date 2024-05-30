@@ -24,7 +24,8 @@ class Match(models.Model):
     enemy_match = models.ForeignKey(
         "Game.Match", null=True, on_delete=models.SET_NULL, blank=True
     )
-    played_at = models.TimeField(auto_now=True)
+    played_at = models.TimeField(auto_now_add=True)
+    is_played = models.BooleanField(default=False)
 
     MATCH_MODES = ((0, "Classic"), (1, "Ranked"), (2, "Tournement"))
     mode = models.IntegerField(choices=MATCH_MODES)
@@ -81,6 +82,7 @@ class Match(models.Model):
 
     def set_score(self, score, save=True):
         self.score = score
+        self.is_played = True
         if save:
             self.save()
 
