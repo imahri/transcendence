@@ -49,6 +49,7 @@ export function StartConversation({
 	};
 
 	const onStartConv = (friend) => {
+		setVisible(false);
 		if (convList && !convList.some((conv) => conv.name === friend.username))
 			getConversation(friend.username).then((conv) =>
 				addNewConversation(conv),
