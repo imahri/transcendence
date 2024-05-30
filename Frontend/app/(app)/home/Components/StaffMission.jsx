@@ -84,7 +84,7 @@ function StaffMission() {
 					setLoading(false);
 					return;
 				}
-				isLoading(false);
+				setLoading(false);
 			};
 			getMission(setMissions);
 		}
