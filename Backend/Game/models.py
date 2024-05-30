@@ -90,7 +90,7 @@ class Match(models.Model):
     def getAllMatches(user):
         from .serilaizers import MatchSerializer
         
-        matches = Match.objects.filter(user=user).order_by('-played_at')
+        matches = Match.objects.filter(user=user, is_played=True).order_by('-played_at')
         matches_serialized = MatchSerializer(matches, many=True).data
         return matches_serialized
 
