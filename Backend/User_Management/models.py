@@ -150,7 +150,6 @@ class User(AbstractUser):
             'first_name' : user42_info['first_name'],
             'last_name' : user42_info['last_name'],
             'password': 'none',
-            'is_42_account' : True
         }
         user: User
         try:
@@ -164,6 +163,7 @@ class User(AbstractUser):
                 userSerialized = UserSerializer(data=data)
                 if userSerialized.is_valid():
                     user = userSerialized.save()
+                    user.is_42_account = True
                     user.save()
                     info : Info = user.info
                     img_name = data['username'] + '.jpg';
