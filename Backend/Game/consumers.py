@@ -1,8 +1,5 @@
-from cgitb import text
-import sys
 import math
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from Tournament.models import Tournament
 from Game.models import Match
 from User_Management.models import User
 import json
@@ -276,6 +273,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def connect(self):
+        from Tournament.models import Tournament
         try:
             self.user: User = self.scope["user"]
             if not self.user.is_authenticated:
@@ -285,23 +283,32 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
                 try:
-                    tournament = Tournament.objects.get(
-                        name=parse_qs(self.scope["query_string"].decode("utf8")).get(
+                    [_n] = parse_qs(self.scope["query_string"].decode("utf8")).get(
                             "tournament"
-                        )
+                        ) # type: ignore
+                    tournament = await database_sync_to_async(Tournament.objects.get)(
+                        name=_n
                     )
-                except:
+                    
+                except Exception as error:
+                    print(error)
                     tournament = None
-                mode = parse_qs(self.scope["query_string"].decode("utf8")).get(
+                [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "mode", "Classic"
                 )
-                match mode:
-                    case "Classic":
-                        mode = 0
-                    case "Ranked":
-                        mode = 1
-                    case "Tournement":
-                        mode = 2
+                # match mode:
+                #     case "Classic":
+                #         mode = 0
+                #     case "Ranked":
+                #         mode = 1
+                #     case "Tournement":
+                #         mode = 2
+                if _mode == "Classic":
+                    mode = 0
+                elif _mode == "Ranked":
+                    mode = 1
+                elif _mode == 'Tournament' :
+                    mode = 2
                 room_name = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "room", None
                 )
@@ -333,6 +340,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         enemy = await database_sync_to_async(User.objects.get)(
                             username=other_player
                         )
+                        print(mode, tournament)
                         self.loba.matchs = await database_sync_to_async(Match.create)(
                             self.user, enemy, mode, tournament
                         )
@@ -471,7 +479,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     await database_sync_to_async(match1.set_score)(obg.user1["score"])
                     await database_sync_to_async(match2.set_score)(obg.user2["score"])
                     if match1.mode == 2 and match1.tournament:
-                        match1.tournament.next_match()
+                        await database_sync_to_async(match1.tournament.next_match)()
                     break
 
                 obg.update_ball()

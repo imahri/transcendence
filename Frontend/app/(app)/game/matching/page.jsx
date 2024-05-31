@@ -9,9 +9,10 @@ import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { CREATEROOM_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 
-async function GetRoom(room_name) {
+async function GetRoom(room_name, is_tournament) {
 	const [isOk, status, data] = await fetch_jwt(CREATEROOM_URL, {
 		room: room_name,
+		tournament: is_tournament,
 	});
 	if (!isOk) {
 		return false;
@@ -26,7 +27,6 @@ const Vim = () => {
 	const [win, setWin] = useState(false);
 	const [lose, setLose] = useState(false);
 	const navigate = useRouter();
-	let tournament_name = "";
 
 	//check query param if it's none normal  else check if room exist && send it to connect socket
 	const searchParams = useSearchParams();
@@ -34,11 +34,12 @@ const Vim = () => {
 		const room_name = searchParams.get("room");
 		if (!room_name) return setCheckRoom(false);
 		const CheckRoom = async () => {
-			const data = await GetRoom(room_name);
+			const tournament_name = searchParams.get("tournament");
+			const data = await GetRoom(room_name, tournament_name != "");
 			console.log(data);
-			if (!data) return navigate.push("/404"); //hardcoded for now
+			// if (!data) return navigate.push("/404"); //hardcoded for now
+			if (!data) return; //hardcoded for now
 			setRoomName(room_name);
-			tournament_name = searchParams.get("tournament");
 			setCheckRoom(false);
 		};
 		CheckRoom();
@@ -69,8 +70,6 @@ const Vim = () => {
 						checkLoser={checkLoser}
 						secondArrived={secondArrived}
 						loading={loading}
-						room_name={RoomName}
-						tournament_name={tournament_name}
 					/>
 					{loading && <Matching />}
 					{win && <WInter />}

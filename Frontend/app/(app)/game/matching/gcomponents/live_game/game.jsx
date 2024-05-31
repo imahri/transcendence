@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import bg from "./borad2.jpg";
+import { useSearchParams } from "next/navigation";
 
 let xcord = 0;
 let ycord = 0;
@@ -14,17 +15,15 @@ let uid = 0;
 let player2_state = "not yet";
 let player1_state = "not yet";
 
-export const Gameson = ({
-	secondArrived,
-	checkWinner,
-	checkLoser,
-	room_name,
-	tournament_name,
-}) => {
+export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
-	console.log(room_name);
+	const searchParams = useSearchParams();
+
 	useEffect(() => {
+		const tournament_name = searchParams.get("tournament");
+		const room_name = searchParams.get("room");
+
 		const ws = new WebSocket(
 			"ws://localhost:8000/ws/game?" +
 				`token=${getToken()}` +

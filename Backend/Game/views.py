@@ -50,6 +50,7 @@ class RoomView(APIView):
     def get(self, request):
         user: User = request.user
         room_name = request.query_params.get("room", None)
+        is_tournament = request.query_params.get("tournament", 'false')
         if not room_name:
             return Response({"error": "room name required"})
         room = RoomView.is_exiting(room_name)
@@ -61,13 +62,16 @@ class RoomView(APIView):
             return Response(
                 {"error": "User Not in the room"}, status=status.HTTP_400_BAD_REQUEST
             )
+
+
         friend: User
         username = room[0] if room[1] == user.username else room[1]
         friend = User.objects.get(username=username)
-        if not user.friends.filter(friend=friend).exists():
-            return Response(
-                {"error": "Not Friend"}, status=status.HTTP_400_BAD_REQUEST
-            )
+        if is_tournament == 'false':
+            if not user.friends.filter(friend=friend).exists():
+                return Response(
+                    {"error": "Not Friend"}, status=status.HTTP_400_BAD_REQUEST
+                )
 
         return Response(
             {

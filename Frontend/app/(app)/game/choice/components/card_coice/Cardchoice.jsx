@@ -37,7 +37,7 @@ const Cardchoice = () => {
 							<div className={styles.shad}></div>
 						</div>
 
-						<div className={`${styles.item}`}>
+						<Link href={"/tournament"} className={`${styles.item}`}>
 							<div className={`${styles.card} ${styles.third}`}>
 								<p className={`${styles.graf}`}>Tournament</p>
 							</div>
@@ -48,7 +48,7 @@ const Cardchoice = () => {
 							</span>
 
 							<div className={styles.shad}></div>
-						</div>
+						</Link>
 					</div>
 				</div>
 

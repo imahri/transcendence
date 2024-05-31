@@ -44,7 +44,7 @@ export function getNotifLink(notif) {
 	if (notif.type == "G" && notif.content.type == "start")
 		return `/game/matching?room=${notif.content.room_name}`;
 	if (notif.type == "T" && notif.content.type == "match")
-		return `/game/matching?room=${notif.content.room_name}?tournament=${notif.content.tournament_name}`;
+		return `/game/matching?room=${notif.content.room_name}&tournament=${notif.content.tournament_name}`;
 	if (notif.type == "T")
 		return `/tournament/result/${notif.content.tournament_name}`;
 	else return "#";
