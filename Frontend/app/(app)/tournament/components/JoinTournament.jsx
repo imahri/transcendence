@@ -45,7 +45,7 @@ function WhatButton(user, Tournament) {
 	if (full && IamOwner) return "Start";
 	if (!full && IamOwner) return "Owner";
 	else if (full && !alreadyIn) return "Full";
-	else if (full && alreadyIn) return "Quit";
+	else if (alreadyIn) return "Quit";
 	else if (!full && !alreadyIn) return "Join";
 }
 
@@ -54,20 +54,30 @@ export default function Demo({ Tournament, setDemo }) {
 	const users = Tournament.participants;
 
 	const [nickname, setNickName] = useState();
+	const [Info, setInfo] = useState();
 	const [error, setError] = useState();
-	const button = WhatButton(user, Tournament);
+	const [button, setButton] = useState(WhatButton(user, Tournament));
 
 	const callBack = {
 		Start: () => {
-			startTournament(Tournament.id, setError);
+			startTournament(Tournament.id, setError, setButton, setInfo);
 		},
 		Owner: () => {},
+		Started: () => {},
 		Full: () => {},
 		Quit: () => {
 			console.log("quit");
 		},
 		Join: () => {
-			joinTournament(Tournament.id, user, nickname, setError, setDemo);
+			joinTournament(
+				Tournament.id,
+				user,
+				nickname,
+				setError,
+				setDemo,
+				setInfo,
+				setButton,
+			);
 		},
 	};
 
@@ -94,7 +104,14 @@ export default function Demo({ Tournament, setDemo }) {
 						setter={setNickName}
 					/>
 				)}
-				<Button text={button} callBack={callBack[button]} />
+				{button != "Owner" && (
+					<Button text={button} callBack={callBack[button]} />
+				)}
+			</div>
+			<div
+				className={`${Info ? "" : "hidden"} w-full h-full absolute backdrop-blur-sm top-0 left-0 flex justify-center items-center`}
+			>
+				<h1 className="text-white font-semibold text-[14px]">{Info}</h1>
 			</div>
 			<div
 				className={`${error?.error ? "" : "hidden"} w-full h-full absolute backdrop-blur-sm top-0 left-0 flex justify-center items-center`}

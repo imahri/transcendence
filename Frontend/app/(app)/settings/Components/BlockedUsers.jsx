@@ -4,6 +4,7 @@ import { Block_URL, IMAGE_URL } from "@/app/URLS";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
+//convert to socket
 async function deblock(friend_id, setBlockedUsers, setError) {
 	const bodyData = JSON.stringify({ friend_id: friend_id });
 
@@ -53,7 +54,7 @@ function Friend({ friend, setBlockedUsers, setError }) {
 				className="absolute right-[20px] bg-greatBlue w-[100px] h-[37px] rounded-[5px] font-bold text-[16px] text-white cursor-pointer"
 				onClick={() => deblock(friend.id, setBlockedUsers, setError)}
 			>
-				Deblock
+				Unblock
 			</button>
 		</div>
 	);
