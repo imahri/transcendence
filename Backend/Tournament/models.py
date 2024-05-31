@@ -1,4 +1,6 @@
+import random
 from django.db import models
+from Game.consumers import GameConsumer
 from Game.models import Match
 from User_Management.models import User, Notification
 from asgiref.sync import async_to_sync
@@ -73,7 +75,7 @@ class Tournament(models.Model):
         channel_layer = get_channel_layer()
         uri: str = f"/tournament/{self.name}"
         message: str = f"Tournament {self.name} is Started"
-        #create notification for each user and send it
+        # create notification for each user and send it
         content = {
             "type": "T",
             "to": self.participants.all(),
@@ -92,12 +94,9 @@ class Tournament(models.Model):
                 channel_name = NotificationConsumer.get_channel_by_user(user.username)
                 async_to_sync(channel_layer.send)(
                     channel_name,
-                    {
-                        'type': "redirect",
-                        'content': data
-                    },
+                    {"type": "redirect", "content": data},
                 )
-            except :
+            except:
                 pass
         return message
 
@@ -106,8 +105,10 @@ class Tournament(models.Model):
 
     def get_winner(self, players):
         [player1, player2] = players
+        user1 = User.objects.get(id=player1["user_id"])
+        user2 = User.objects.get(id=player2["user_id"])
         match = (
-            Match.objects.filter(user=player1, enemy=player2, tournament=self)
+            Match.objects.filter(user=user1, enemy=user2, tournament=self)
             .order_by("-played_at")
             .first()
         )
@@ -130,46 +131,120 @@ class Tournament(models.Model):
                 self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
             ]
 
-    def next_match(self):
+    def fill_1nd(self):
+        pass
+
+    def next_match(self, start=False):
         if self.schedule == None:
             return
+        next_players: list[Participant]
+        if start == False:
+            if self.match_index == 1:
+                next_players = self.schedule["FirstSide"]["3rd"]["1"]
+            elif self.match_index == 2:
+                next_players = self.schedule["SecondSide"]["3rd"]["2"]
+            elif self.match_index == 3:
+                next_players = self.schedule["FirstSide"]["3rd"]["3"]
+            elif self.match_index == 4:
+                next_players = self.schedule["SecondSide"]["3rd"]["4"]
+            elif self.match_index == 5:
+                next_players = self.schedule["FirstSide"]["2nd"]["5"]
+            elif self.match_index == 6:
+                next_players = self.schedule["SecondSide"]["2nd"]["6"]
+            elif self.match_index == 7:
+                next_players = [
+                    self.schedule["FirstSide"]["1st"],
+                    self.schedule["SecondSide"]["1st"],
+                ]
+            winner = self.get_winner(next_players)
+            content = {
+                "type": "G",
+                "to": self.participants.values_list("user", flat=True),
+                "content": {
+                    "type": "Tournament",
+                    "action": "winner",
+                    "message": f"{winner} is the win in {self.name}",
+                },
+            }
+            notification = Notification.createToMultiUsers(self.creator, content)
+            data = notification.as_serialized()
+
+            channel_layer = get_channel_layer()
+            for participant in self.participants.all():
+                user: User = participant.user
+                try:
+                    channel_name = NotificationConsumer.get_channel_by_user(
+                        user.username
+                    )
+                    async_to_sync(channel_layer.send)(
+                        channel_name,
+                        {"type": "redirect", "content": data},
+                    )
+                except:
+                    pass
+
         self.match_index += 1
-        # match self.match_index:
-        #     case 1:
-        #         return self.schedule["FirstSide"]["3rd"]["1"]
-        #     case 2:
-        #         return self.schedule["SecondSide"]["3rd"]["2"]
-        #     case 3:
-        #         return self.schedule["FirstSide"]["3rd"]["3"]
-        #     case 4:
-        #         return self.schedule["SecondSide"]["3rd"]["4"]
-        #     case 5:
-        #         return self.schedule["FirstSide"]["2nd"]["5"]
-        #     case 6:
-        #         return self.schedule["SecondSide"]["2nd"]["6"]
-        #     case 7:
-        #         return [
-        #             self.schedule["FirstSide"]["1st"],
-        #             self.schedule["SecondSide"]["1st"],
-        #         ]
+        self.save()
         if self.match_index == 1:
-            return self.schedule["FirstSide"]["3rd"]["1"]
+            next_players = self.schedule["FirstSide"]["3rd"]["1"]
         elif self.match_index == 2:
-            return self.schedule["SecondSide"]["3rd"]["2"]
+            next_players = self.schedule["SecondSide"]["3rd"]["2"]
         elif self.match_index == 3:
-            return self.schedule["FirstSide"]["3rd"]["3"]
+            next_players = self.schedule["FirstSide"]["3rd"]["3"]
         elif self.match_index == 4:
-            return self.schedule["SecondSide"]["3rd"]["4"]
+            next_players = self.schedule["SecondSide"]["3rd"]["4"]
         elif self.match_index == 5:
-            return self.schedule["FirstSide"]["2nd"]["5"]
+            self.fill_2nd()
+            next_players = self.schedule["FirstSide"]["2nd"]["5"]
         elif self.match_index == 6:
-            return self.schedule["SecondSide"]["2nd"]["6"]
+            next_players = self.schedule["SecondSide"]["2nd"]["6"]
         elif self.match_index == 7:
-            return [
+            self.fill_1nd()
+            next_players = [
                 self.schedule["FirstSide"]["1st"],
                 self.schedule["SecondSide"]["1st"],
             ]
-        self.save()
+        players = [
+            self.participants.get(id=next_players[0]["id"]),
+            self.participants.get(id=next_players[1]["id"]),
+        ]
+        room_name: str = f"room_{random.randint(1000, 99999999)}"
+        players_name = [players[0].user.username, players[1].user.username]
+        GameConsumer.game_room.append([room_name, players_name])
+        notification = Notification.createToMultiUsers(
+            self.creator,
+            content={
+                "type": "G",
+                "to": self.participants.filter(
+                    pk__in=[
+                        players[0].id,
+                        players[1].id,
+                    ]
+                ),
+                "content": {
+                    "type": "Tournament",
+                    "room_name": room_name,
+                },
+            },
+        )
+        data = notification.as_serialized()
+        for participant in players:
+            try:
+                channel_name = NotificationConsumer.get_channel_by_user(
+                    participant.user.username
+                )
+                async_to_sync(channel_layer.send)(
+                    channel_name,
+                    {"type": "redirect", "content": data},
+                )
+            except:
+                pass
+        return next_players
+
+    def getPlayerByName(self, arrNames):
+        user1 = self.participants.get(name=arrNames[0])
+        user2 = self.participants.get(name=arrNames[1])
+        return [user1, user2]
 
 
 class Participant(models.Model):

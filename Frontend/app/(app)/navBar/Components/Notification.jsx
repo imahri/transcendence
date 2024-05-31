@@ -91,6 +91,7 @@ async function getNotif(setNotif, setNbNotif) {
 }
 
 function handelNotif(data, setNotif, setNbNotif) {
+	if (data.content.type == "T") console.log(data.content);
 	setNotif((prev) => {
 		if (prev) {
 			prev.unshift(data.content);

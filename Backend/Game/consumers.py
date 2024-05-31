@@ -452,6 +452,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     [match1, match2] = self.loba.matchs
                     await database_sync_to_async(match1.set_score)(obg.user1["score"])
                     await database_sync_to_async(match2.set_score)(obg.user2["score"])
+                    if match1.mode == 2 and match1.tournament:
+                        match1.tournament.next_match()
                     break
 
                 obg.update_ball()

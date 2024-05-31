@@ -103,6 +103,7 @@ def StartTournament(request):
             {"error": "need more participants"}, status=status.HTTP_403_FORBIDDEN
         )
     message = tournament.make_schedule().start_tournament_notif()
+    tournament.next_match(True)
     return Response({"message": message})
 
 
