@@ -129,9 +129,14 @@ class Tournament(models.Model):
                 self.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
                 self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
             ]
+        self.save()
 
     def fill_1nd(self):
-        pass
+        if self.schedule == None:
+            return
+        self.schedule["FirstSide"]["1st"] = self.get_winner(self.schedule["FirstSide"]["2nd"]["5"])
+        self.schedule["SecondSide"]["1st"] = self.get_winner(self.schedule["SecondSide"]["2nd"]["6"])
+        self.save()
 
     def next_match(self, start=False):
         if self.schedule == None:

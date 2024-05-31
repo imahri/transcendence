@@ -2,6 +2,7 @@ from cgitb import text
 import sys
 import math
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from Tournament.models import Tournament
 from Game.models import Match
 from User_Management.models import User
 import json
@@ -283,10 +284,26 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 self.register_channel(self.user.username, self.channel_name)
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
-
-                mode = parse_qs(self.scope["query_string"].decode("utf8")).get("mode")
+                try:
+                    tournament = Tournament.objects.get(
+                        name=parse_qs(self.scope["query_string"].decode("utf8")).get(
+                            "tournament"
+                        )
+                    )
+                except:
+                    tournament = None
+                mode = parse_qs(self.scope["query_string"].decode("utf8")).get(
+                    "mode", "Classic"
+                )
+                match mode:
+                    case "Classic":
+                        mode = 0
+                    case "Ranked":
+                        mode = 1
+                    case "Tournement":
+                        mode = 2
                 room_name = parse_qs(self.scope["query_string"].decode("utf8")).get(
-                    "room"
+                    "room", None
                 )
                 if room_name:
                     self.room_group_name = room_name[0]
@@ -313,10 +330,11 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 "index": 1,
                             }
                         )
-                        enemy = await database_sync_to_async( User.objects.get)(username=other_player)
-                        # current default mode is Classic
+                        enemy = await database_sync_to_async(User.objects.get)(
+                            username=other_player
+                        )
                         self.loba.matchs = await database_sync_to_async(Match.create)(
-                            self.user, enemy, 0
+                            self.user, enemy, mode, tournament
                         )
                     else:
                         await self.send_json(
