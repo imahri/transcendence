@@ -38,9 +38,10 @@ function AcceptDeclineGame({ notif, ws }) {
 }
 
 function NotifSection({ notif, ws }) {
+	const { user } = useContext(UserContext);
 	const ntype = notif.type;
 	const Svg = ntype == "C" ? ChatSvg : ntype == "F" ? FriendSvg : GmaeSvg;
-	const type = setType(notif.type, notif.content);
+	const type = setType(notif.type, notif.content, user.username);
 	const link = getNotifLink(notif);
 	const time = calculateTimeDifference(notif.time);
 

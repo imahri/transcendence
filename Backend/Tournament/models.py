@@ -137,6 +137,8 @@ class Tournament(models.Model):
         if self.schedule == None:
             return
         next_players: list[Participant]
+        channel_layer = get_channel_layer()
+
         if start == False:
             if self.match_index == 1:
                 next_players = self.schedule["FirstSide"]["3rd"]["1"]
@@ -157,7 +159,7 @@ class Tournament(models.Model):
                 ]
             winner = self.get_winner(next_players)
             content = {
-                "type": "G",
+                "type": "T",
                 "to": self.participants.values_list("user", flat=True),
                 "content": {
                     "type": "Tournament",
@@ -168,7 +170,6 @@ class Tournament(models.Model):
             notification = Notification.createToMultiUsers(self.creator, content)
             data = notification.as_serialized()
 
-            channel_layer = get_channel_layer()
             for participant in self.participants.all():
                 user: User = participant.user
                 try:
@@ -213,7 +214,7 @@ class Tournament(models.Model):
         notification = Notification.createToMultiUsers(
             self.creator,
             content={
-                "type": "G",
+                "type": "T",
                 "to": self.participants.filter(
                     pk__in=[
                         players[0].id,
@@ -221,22 +222,23 @@ class Tournament(models.Model):
                     ]
                 ),
                 "content": {
-                    "type": "Tournament",
+                    "type": "match",
                     "room_name": room_name,
+                    players_name[0] : players_name[1], 
+                    players_name[1] : players_name[0],
                 },
             },
         )
         data = notification.as_serialized()
-        for participant in players:
+        for username in players_name:
             try:
-                channel_name = NotificationConsumer.get_channel_by_user(
-                    participant.user.username
-                )
+                channel_name = NotificationConsumer.get_channel_by_user(username)
                 async_to_sync(channel_layer.send)(
                     channel_name,
                     {"type": "redirect", "content": data},
                 )
             except:
+                print('amakayench : ', username)
                 pass
         return next_players
 

@@ -1,21 +1,25 @@
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { CREATEROOM_URL } from "@/app/URLS";
 
-export function setType(notifType, notifContent) {
+export function setType(notifType, notifContent, username) {
 	const sentMsg = "Sent you a message";
 	const sentInvit = "Sent you a Invitation";
 	const sentAccept = "Accept your Invitation";
 	const sentGameInvit = "Sent you Game Invitation";
 	const rejectGameInvit = "Reject Your Game Invitation";
 	const StartPlay = "You Can Play now";
+	const TournamentMatch = "You have match with ";
 
 	if (notifType == "C") return sentMsg;
-	else if (notifType == "T") return notifContent.message;
 	if (notifContent.status == "add") return sentInvit;
 	else if (notifType == "G") {
 		if (notifContent.type == "invit") return sentGameInvit;
 		if (notifContent.type == "start") return StartPlay;
 		else return rejectGameInvit;
+	} else if (notifType == "T") {
+		if (notifContent.type == "match")
+			return TournamentMatch + notifContent[username];
+		else return notifContent.message;
 	} else return sentAccept;
 }
 
@@ -36,11 +40,13 @@ export function readNotif(socket, notif, setNbNotif) {
 
 export function getNotifLink(notif) {
 	if (notif.type == "F") return `/profile/${notif.user.username}`;
-	if (notif.type == "T")
-		return `/tournament/result/${notif.content.tournament_name}`;
 	if (notif.type == "C") return `/chat/${notif.user.username}`;
 	if (notif.type == "G" && notif.content.type == "start")
 		return `/game/matching?room=${notif.content.room_name}`;
+	if (notif.type == "T" && notif.content.type == "match")
+		return `/game/matching?room=${notif.content.room_name}`;
+	if (notif.type == "T")
+		return `/tournament/result/${notif.content.tournament_name}`;
 	else return "#";
 }
 
