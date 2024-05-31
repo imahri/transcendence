@@ -162,9 +162,9 @@ class Tournament(models.Model):
                 "type": "T",
                 "to": self.participants.values_list("user", flat=True),
                 "content": {
-                    "type": "Tournament",
-                    "action": "winner",
-                    "message": f"{winner} is the win in {self.name}",
+                    "type": "winner",
+                    "message": f"{winner} win his match in {self.name}",
+                    'tournament_name' : self.name,
                 },
             }
             notification = Notification.createToMultiUsers(self.creator, content)
@@ -226,6 +226,7 @@ class Tournament(models.Model):
                     "room_name": room_name,
                     players_name[0] : players_name[1], 
                     players_name[1] : players_name[0],
+                    'tournament_name' : self.name,
                 },
             },
         )

@@ -19,6 +19,7 @@ export const Gameson = ({
 	checkWinner,
 	checkLoser,
 	room_name,
+	tournament_name,
 }) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
@@ -27,7 +28,8 @@ export const Gameson = ({
 		const ws = new WebSocket(
 			"ws://localhost:8000/ws/game?" +
 				`token=${getToken()}` +
-				`${room_name ? `&room=${room_name}` : ""}`,
+				`${room_name ? `&room=${room_name}` : ""}` +
+				`${tournament_name ? `&tournament=${tournament_name}&mode=Tournament` : ""}`,
 		);
 
 		ws.onopen = () => {

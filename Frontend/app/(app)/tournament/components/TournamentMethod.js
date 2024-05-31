@@ -49,7 +49,6 @@ export async function startTournament(id, setError, setButton, setInfo) {
 	}
 	myseterror(setInfo, "Tournament is Stareted");
 	setButton("Stareted");
-	console.log(data);
 }
 
 export async function quitTournament(id, setError) {

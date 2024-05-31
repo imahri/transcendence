@@ -26,6 +26,7 @@ const Vim = () => {
 	const [win, setWin] = useState(false);
 	const [lose, setLose] = useState(false);
 	const navigate = useRouter();
+	let tournament_name = "";
 
 	//check query param if it's none normal  else check if room exist && send it to connect socket
 	const searchParams = useSearchParams();
@@ -37,6 +38,7 @@ const Vim = () => {
 			console.log(data);
 			if (!data) return navigate.push("/404"); //hardcoded for now
 			setRoomName(room_name);
+			tournament_name = searchParams.get("tournament");
 			setCheckRoom(false);
 		};
 		CheckRoom();
@@ -68,6 +70,7 @@ const Vim = () => {
 						secondArrived={secondArrived}
 						loading={loading}
 						room_name={RoomName}
+						tournament_name={tournament_name}
 					/>
 					{loading && <Matching />}
 					{win && <WInter />}
