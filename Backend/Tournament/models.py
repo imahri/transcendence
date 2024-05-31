@@ -113,22 +113,19 @@ class Tournament(models.Model):
         )
         if not match:
             raise Exception("No match found")
-        return match.user if match.is_winner else match.enemy
+        return player1 if match.is_winner else player2
 
     def fill_2nd(self):
         if self.schedule == None:
             return
-        match_index = self.match_index + 1
-        if match_index == 5:
-            self.schedule["FirstSide"]["2nd"]["5"] = [
-                self.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
-                self.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
-            ]
-        elif match_index == 6:
-            self.schedule["SecondSide"]["2nd"]["6"] = [
-                self.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
-                self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
-            ]
+        self.schedule["FirstSide"]["2nd"]["5"] = [
+            self.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
+            self.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
+        ]
+        self.schedule["SecondSide"]["2nd"]["6"] = [
+            self.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
+            self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
+        ]
         self.save()
 
     def fill_1nd(self):
@@ -168,7 +165,7 @@ class Tournament(models.Model):
                 "to": self.participants.values_list("user", flat=True),
                 "content": {
                     "type": "winner",
-                    "message": f"{winner} win his match in {self.name}",
+                    "message": f"{self.participants.get(pk=winner['id']).user.username} win his match in {self.name}",
                     'tournament_name' : self.name,
                 },
             }
@@ -220,7 +217,7 @@ class Tournament(models.Model):
             self.creator,
             content={
                 "type": "T",
-                "to": self.participants.filter(
+                "to": User.objects.filter(
                     pk__in=[
                         players[0].user.pk,
                         players[1].user.pk,
