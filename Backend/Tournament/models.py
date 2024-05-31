@@ -222,8 +222,8 @@ class Tournament(models.Model):
                 "type": "T",
                 "to": self.participants.filter(
                     pk__in=[
-                        players[0].id,
-                        players[1].id,
+                        players[0].user.pk,
+                        players[1].user.pk,
                     ]
                 ),
                 "content": {
