@@ -36,7 +36,6 @@ class Tournament(models.Model):
         )
         return tournament
 
-    # CHECK IF ALREADY ADDED TO TOURNAMENT
     def join(self, user: User, unique_name: str):
 
         is_participant = self.participants.filter(user=user).exists()
