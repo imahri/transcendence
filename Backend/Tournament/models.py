@@ -208,6 +208,10 @@ class Tournament(models.Model):
                 self.schedule["FirstSide"]["1st"],
                 self.schedule["SecondSide"]["1st"],
             ]
+        elif self.match_index == 8:
+            self.isEnd = True
+            self.save()
+            return
         players = [
             self.participants.get(id=next_players[0]["id"]),
             self.participants.get(id=next_players[1]["id"]),
@@ -245,7 +249,6 @@ class Tournament(models.Model):
             except:
                 print('amakayench : ', username)
                 pass
-        return next_players
 
     def getPlayerByName(self, arrNames):
         user1 = self.participants.get(name=arrNames[0])

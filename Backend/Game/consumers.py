@@ -408,7 +408,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         )
         except Exception as error:
             print("================>", error)
-            await self.close()
+            await self.disconnect(None)
 
     async def receive(self, text_data):
         index = get_room_index(self.game_room, self.room_group_name)

@@ -26,7 +26,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 await self.accept()
                 await self.send_json(content={"type": "Connected"})
         except Exception:
-            await self.close()
+            await self.disconnect(None)
 
     async def receive_json(self, content):
         try:
@@ -92,7 +92,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"type": "error", "error": error_msg})
 
     async def disconnect(self, code):
-        self.channels.pop("testuser", None)
+        self.channels.pop(self.user.username, None)
         await self.close(code)
 
 
