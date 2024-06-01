@@ -291,10 +291,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     )
                     
                 except Exception as error:
-                    print(error)
                     tournament = None
                 [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
-                    "mode", "Classic"
+                    "mode", ["Classic"]
                 )
                 # match mode:
                 #     case "Classic":
