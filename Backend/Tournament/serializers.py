@@ -18,4 +18,4 @@ class TournamentSerializer(ModelSerializer):
 
     class Meta:
         model = Tournament
-        fields = ["id", "name", "schedule", "isEnd", "created_at", "creator", "participants"]
+        fields = ["id", "name", "schedule", "isEnd", "isStarted", "created_at", "creator", "participants"]

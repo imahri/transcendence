@@ -104,6 +104,8 @@ def StartTournament(request):
         )
     message = tournament.make_schedule().start_tournament_notif()
     tournament.next_match(True)
+    tournament.isStarted = True
+    tournament.save()
     return Response({"message": message})
 
 

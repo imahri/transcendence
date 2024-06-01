@@ -19,6 +19,7 @@ class Tournament(models.Model):
     )
     match_index = models.IntegerField(default=0)
     schedule = models.JSONField(null=True, blank=True)
+    isStarted = models.BooleanField(default=False)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 

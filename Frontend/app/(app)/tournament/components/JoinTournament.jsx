@@ -36,6 +36,8 @@ function Button({ text, callBack }) {
 function WhatButton(user, Tournament) {
 	const full = Tournament.participants.length == 8;
 	const IamOwner = Tournament.creator.id == user.id;
+	if (Tournament.isEnd) return "Ended";
+	if (Tournament.isStarted) return "Started";
 	const alreadyIn = Tournament.participants.find(
 		(obj) => obj.user.id == user.id,
 	)
@@ -62,6 +64,7 @@ export default function Demo({ Tournament, setDemo }) {
 		Start: () => {
 			startTournament(Tournament.id, setError, setButton, setInfo);
 		},
+		Ended: () => {},
 		Owner: () => {},
 		Started: () => {},
 		Full: () => {},
