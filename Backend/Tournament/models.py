@@ -75,9 +75,11 @@ class Tournament(models.Model):
         uri: str = f"/tournament/{self.name}"
         message: str = f"Tournament {self.name} is Started"
         # create notification for each user and send it
+        players_id = self.participants.values_list("user", flat=True)
+        players = User.objects.filter(pk__in=players_id)
         content = {
             "type": "T",
-            "to": self.participants.all(),
+            "to": players,
             "content": {
                 "uri": uri,
                 "message": message,
@@ -85,10 +87,9 @@ class Tournament(models.Model):
             },
         }
         notification = Notification.createToMultiUsers(self.creator, content)
-        data = notification.as_serialized()
+        data = notification.as_serialized() 
 
-        for participant in self.participants.all():
-            user: User = participant.user
+        for user in players:
             try:
                 channel_name = NotificationConsumer.get_channel_by_user(user.username)
                 async_to_sync(channel_layer.send)(
