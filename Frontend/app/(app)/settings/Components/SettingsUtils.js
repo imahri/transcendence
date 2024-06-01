@@ -27,16 +27,6 @@ export async function logout(navigate) {
 	navigate.replace("/welcome");
 }
 
-async function desactivate2FA() {
-	const token = getToken();
-	const response = await fetch(TOWFACTOR_URL, {
-		method: "DELETE",
-		headers: { Authorization: "Bearer " + token },
-	});
-
-	return response;
-}
-
 async function fetchCodeQr() {
 	const token = getToken();
 	const response = await fetch(TOWFACTOR_URL, {
@@ -57,8 +47,10 @@ async function refetchCodeQr() {
 export async function TowFaHandler(TowFa, setTowFa, setQrImage) {
 	try {
 		if (TowFa) {
-			const resonse = await desactivate2FA();
-			if (resonse.ok) {
+			const [isOk, status, resonse] = await fetch_jwt(TOWFACTOR_URL, {
+				method: "DELETE",
+			});
+			if (isOk) {
 				console.log("2Fa desactivated");
 				setTowFa(false);
 			} else {

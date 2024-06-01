@@ -67,14 +67,17 @@ function BlockedUsers({ setPopUp }) {
 	useEffect(() => {
 		if (!BlockedUsers) {
 			//fetch all blocked users
-			fetch_jwt(Block_URL).then(([isOk, status, data]) => {
+			const getUsers = async () => {
+				const [isOk, status, data] = await fetch_jwt(Block_URL);
+
 				if (!isOk) {
 					setError(true);
 					return;
 				}
 				setBlockedUsers(data);
 				console.log(data);
-			});
+			};
+			getUsers();
 		}
 	}, [BlockedUsers]);
 
