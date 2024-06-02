@@ -103,7 +103,7 @@ const Matching = () => {
 
 						<div className={`${styles.achivement_container}`}>
 							<div className={styles.parent}>
-								<Link href="/choice">
+								<Link href="/game/choice">
 									<button className={styles.back}>
 										Back
 									</button>
@@ -119,8 +119,6 @@ const Matching = () => {
 
 					<div className={`${styles.layer}`}></div>
 				</div>
-
-				<Ready />
 			</div>
 		</div>
 	);
