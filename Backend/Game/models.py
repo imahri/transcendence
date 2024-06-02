@@ -80,8 +80,10 @@ class Match(models.Model):
         match2.enemy_match = match1
         return [match1, match2]
 
-    def set_score(self, score, save=True):
+    def set_score(self, score, exp, save=True):
         self.score = score
+        if self.user:
+            self.user.info.exp = self.user.info.exp + exp
         self.is_played = True
         if save:
             self.save()

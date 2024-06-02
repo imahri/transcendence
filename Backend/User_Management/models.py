@@ -81,7 +81,7 @@ class User(AbstractUser):
 
     @property
     def info(self):
-        return Info.objects.get(user=self)
+        return self.info_set
 
     def get_info(self):
         """

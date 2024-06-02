@@ -1,11 +1,13 @@
 import random
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
 from Game.consumers import GameConsumer
 from .serilaizers import BadgeSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
 from .models import Badge, Board, Match, Padel, Items, Acheivement
-from User_Management.models import User
+from User_Management.models import Info, User
+from User_Management.serializers import UserSerializer
 
 def catch_view_exception(func):
 
@@ -254,3 +256,9 @@ class AcheivmentView(APIView):
                 achievement['unlocked'] = False
 
         return Response(data=acheivements_data)
+
+
+@api_view(['GET'])
+def get_rank(request):
+    users_info = Info.objects.all().order_by('-exp')
+    return Response([UserSerializer(info.user) for info in users_info])
