@@ -12,13 +12,13 @@ class Tournament(models.Model):
 
     name = models.CharField(max_length=20, unique=True)
     creator = models.ForeignKey(
-        "User_Management.User", null=True, on_delete=models.CASCADE
+        "User_Management.User", on_delete=models.CASCADE
     )
     participants = models.ManyToManyField(
         "Tournament.Participant", related_name="tournaments"
     )
     match_index = models.IntegerField(default=0)
-    schedule = models.JSONField(null=True, blank=True)
+    schedule = models.JSONField(default=dict)
     isStarted = models.BooleanField(default=False)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
@@ -104,7 +104,7 @@ class Tournament(models.Model):
     def create_match(self, user: User, enemy: User):
         return Match.create(user, enemy, 2, self)
 
-    def get_winner(self, players):
+    def get_winner(self, players: list[dict]):
         [player1, player2] = players
         user1 = User.objects.get(id=player1["user_id"])
         user2 = User.objects.get(id=player2["user_id"])
@@ -140,7 +140,7 @@ class Tournament(models.Model):
     def next_match(self, start=False):
         if self.schedule == None:
             return
-        next_players: list[Participant]
+        next_players: list[dict]
         channel_layer = get_channel_layer()
 
         if start == False:
@@ -161,7 +161,7 @@ class Tournament(models.Model):
                     self.schedule["FirstSide"]["1st"],
                     self.schedule["SecondSide"]["1st"],
                 ]
-            winner = self.get_winner(next_players)
+            winner: dict = self.get_winner(next_players)
             content = {
                 "type": "T",
                 "to": self.participants.values_list("user", flat=True),
@@ -210,6 +210,9 @@ class Tournament(models.Model):
             ]
         elif self.match_index == 8:
             self.isEnd = True
+            winner_user = User.objects.get(pk=winner['user_id'])
+            winner_user.info.tournament_win += 1
+            winner_user.info.save()
             self.save()
             return
         players = [

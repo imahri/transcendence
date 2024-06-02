@@ -227,6 +227,7 @@ class Info(models.Model):
     energy = models.IntegerField(default=10)
     exp = models.IntegerField(default=0)
     wallet = models.IntegerField(default=500)
+    tournament_win = models.IntegerField(default=0)
 
     profile_img = models.ImageField(
         upload_to=IMAGES_ROOT_, default=DEFAULT_PROFILE_IMG, blank=True

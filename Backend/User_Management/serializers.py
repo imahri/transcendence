@@ -69,10 +69,11 @@ class InfoSerializer(ModelSerializer):
             "profile_img",
             "grade",
             "nb_game",
+            "tournament_win"
         ]
 
     def get_nb_game(self, obj: Info):
-        return len(obj.user.matches.all())
+        return len(obj.user.matches.filter(is_played=True))
     
     def create(self, validated_data):
         user = validated_data["user"]
