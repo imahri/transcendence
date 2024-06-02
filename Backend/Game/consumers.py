@@ -291,15 +291,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     )
                     
                 except Exception as error:
-                    print(error)
                     tournament = None
-                
-                # [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
-                #     "mode", "Classic"
-                # )
-                print("welll well")
-                
-                _mode = "Classic"
+                [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
+                    "mode", ["Classic"]
+                )
                 # match mode:
                 #     case "Classic":
                 #         mode = 0
@@ -417,8 +412,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         )
         except Exception as error:
             print("================>", error)
-            await self.close()
-            exit(10)
+            await self.disconnect(None)
 
     async def receive(self, text_data):
         print("3>>>>> "+ str(self.room_group_name))

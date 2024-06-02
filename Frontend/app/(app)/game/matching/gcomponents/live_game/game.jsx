@@ -89,9 +89,7 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 			console.log("closed");
 		};
 
-		return () => {
-			ws.close();
-		};
+		return () => ws.close();
 	}, []);
 
 	useEffect(() => {

@@ -2,6 +2,7 @@ import { Linden_Hill } from "next/font/google";
 import styles from "./matching.module.css";
 import Boardskin from "@/app/(app)/game/matching/components/match_making/board_skin";
 import Ready from "@/app/(app)/game/matching/components/match_making/ready";
+import Random from "@/app/(app)/game/matching/components/match_making/random";
 import Link from "next/link";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import React, { useEffect, useRef, useState, useContext } from "react";
@@ -53,7 +54,9 @@ const Matching = () => {
 							<div className={styles.versus}>vs</div>
 
 							<div className={`${styles.first_player}`}>
-								<div className={`${styles.player_pic}`}></div>
+								<div className={`${styles.player_pic}`}>
+									<Random />
+								</div>
 								<div className={`${styles.username}`}>
 									FiddlerX
 								</div>

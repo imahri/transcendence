@@ -1,0 +1,4 @@
+Dockerfile
+db.sqlite
+__pycache__
+migrations

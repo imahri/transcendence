@@ -34,16 +34,18 @@ export default function Friendspopup({ DisplayFriends, username }) {
 	const [error, setError] = useState();
 
 	useEffect(() => {
-		fetch_jwt(GET_Friends_URL, { username: username }).then(
-			([isOk, status, data]) => {
-				if (!isOk) {
-					setError(true);
-					return;
-				}
-				setFriends(data);
-				console.log(data);
-			},
-		);
+		const getFriends = async () => {
+			const [isOk, status, data] = await fetch_jwt(GET_Friends_URL, {
+				username: username,
+			});
+			if (!isOk) {
+				setError(true);
+				return;
+			}
+			setFriends(data);
+			console.log(data);
+		};
+		getFriends();
 	}, []);
 
 	return (

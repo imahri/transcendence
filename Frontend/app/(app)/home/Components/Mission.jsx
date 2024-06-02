@@ -12,16 +12,16 @@ export function Mission({ mission, setPopup, isLoading, title }) {
 			{!isLoading && (
 				<>
 					<div
-						onClick={() => setPopup(mission.task)}
+						onClick={() => setPopup(mission?.task)}
 						className="cursor-pointer size-[11px] bg-[#4F4F4F] rounded-full absolute top-[10px] right-[10px] flex justify-center items-center"
 					>
 						{AboutSvg}
 					</div>
 					<h3 className=" font-bold text-[15px] text-white">
-						{mission.title}
+						{mission?.title}
 					</h3>
 					<h1 className=" font-bold text-[30px] text-white">
-						{mission.exp}
+						{mission?.exp}
 						<span className=" font-bold text-[14px] text-white">
 							Exp
 						</span>
@@ -32,33 +32,33 @@ export function Mission({ mission, setPopup, isLoading, title }) {
 						</h3>
 						<div className="w-[85px] bg-[#D9D9D9] bg-opacity-[19%] rounded-[2px] flex  items-center justify-center gap-[10px] ml-[10px]">
 							<h3 className=" font-bold text-[14px] text-white flex justify-center items-center gap-[5px]">
-								{mission.prize.wallet} {WalletSvg}
+								{mission?.prize.wallet} {WalletSvg}
 							</h3>
 							<Image
 								className="h-[30px] w-[27px]"
 								width={27}
 								height={30}
-								src={`${IMAGE_URL}?path=${mission.prize.Acheivment.icon_path}`}
+								src={`${IMAGE_URL}?path=${mission?.prize.Acheivment.icon_path}`}
 								alt="acheivment"
 							/>
 						</div>
 					</div>
 					<div
 						className="cursor-pointer w-[95%] h-[30px] flex items-center justify-between"
-						onClick={() => setPopup(mission.task)}
+						onClick={() => setPopup(mission?.task)}
 					>
 						<div>
 							<h1 className="font-bold text-[11px] text-white">
-								{mission.owner.userName}
+								{mission?.owner.userName}
 							</h1>
 							<h2 className="font-bold text-[9px] text-[#C8C8C8]">
-								{mission.owner.fullName}
+								{mission?.owner.fullName}
 							</h2>
 						</div>
 						{MoreSvg}
 					</div>
 					<div
-						className={`${mission.status == "completed" ? "" : "hidden"} size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
+						className={`${mission?.status == "completed" ? "" : "hidden"} size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
 					>
 						completed
 					</div>
@@ -77,17 +77,17 @@ export function GameMission({ mission, setPopup, isLoading }) {
 			{!isLoading && (
 				<>
 					<div
-						onClick={() => setPopup(mission.task)}
+						onClick={() => setPopup(mission?.task)}
 						className="cursor-pointer size-[11px] bg-[#4F4F4F] rounded-full absolute top-[10px] right-[10px] flex justify-center items-center"
 					>
 						{AboutSvg}
 					</div>
 					<div className="pl-[20px]">
 						<h3 className=" font-bold text-[15px] text-white">
-							{mission.title}
+							{mission?.title}
 						</h3>
 						<h1 className=" font-bold text-[48px] [@media(max-width:1706px)]:text-[30px] text-white">
-							{mission.exp}
+							{mission?.exp}
 							<span className=" font-bold text-[14px] text-white">
 								Exp
 							</span>
@@ -100,34 +100,34 @@ export function GameMission({ mission, setPopup, isLoading }) {
 							</h3>
 							<div className="w-[85px] bg-[#D9D9D9] bg-opacity-[19%] rounded-[2px] flex  items-center justify-center gap-[10px] ml-[10px]">
 								<h3 className=" font-bold text-[14px] text-white flex justify-center items-center gap-[5px]">
-									{mission.prize.wallet} {WalletSvg}
+									{mission?.prize.wallet} {WalletSvg}
 								</h3>
 								<Image
 									className="h-[30px] w-[27px]"
 									width={27}
 									height={30}
-									src={`${IMAGE_URL}?path=${mission.prize.Acheivment.icon_path}`}
+									src={`${IMAGE_URL}?path=${mission?.prize.Acheivment.icon_path}`}
 									alt="acheivment"
 								/>
 							</div>
 						</div>
 						<div
 							className="w-[95%] h-[30px] flex items-center justify-between cursor-pointer"
-							onClick={() => setPopup(mission.task)}
+							onClick={() => setPopup(mission?.task)}
 						>
 							<div>
 								<h1 className=" font-bold text-[11px] text-white">
-									{mission.owner.userName}
+									{mission?.owner.userName}
 								</h1>
 								<h2 className=" font-bold text-[9px] text-[#C8C8C8]">
-									{mission.owner.fullName}
+									{mission?.owner.fullName}
 								</h2>
 							</div>
 							{MoreSvg}
 						</div>
 					</div>
 					<div
-						className={`${mission.status == "completed" ? "" : "hidden"} size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
+						className={`${mission?.status == "completed" ? "" : "hidden"} size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
 					>
 						completed
 					</div>

@@ -19,6 +19,7 @@ class Tournament(models.Model):
     )
     match_index = models.IntegerField(default=0)
     schedule = models.JSONField(null=True, blank=True)
+    isStarted = models.BooleanField(default=False)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 
@@ -75,9 +76,11 @@ class Tournament(models.Model):
         uri: str = f"/tournament/{self.name}"
         message: str = f"Tournament {self.name} is Started"
         # create notification for each user and send it
+        players_id = self.participants.values_list("user", flat=True)
+        players = User.objects.filter(pk__in=players_id)
         content = {
             "type": "T",
-            "to": self.participants.all(),
+            "to": players,
             "content": {
                 "uri": uri,
                 "message": message,
@@ -85,10 +88,9 @@ class Tournament(models.Model):
             },
         }
         notification = Notification.createToMultiUsers(self.creator, content)
-        data = notification.as_serialized()
+        data = notification.as_serialized() 
 
-        for participant in self.participants.all():
-            user: User = participant.user
+        for user in players:
             try:
                 channel_name = NotificationConsumer.get_channel_by_user(user.username)
                 async_to_sync(channel_layer.send)(
@@ -113,22 +115,19 @@ class Tournament(models.Model):
         )
         if not match:
             raise Exception("No match found")
-        return match.user if match.is_winner else match.enemy
+        return player1 if match.is_winner else player2
 
     def fill_2nd(self):
         if self.schedule == None:
             return
-        match_index = self.match_index + 1
-        if match_index == 5:
-            self.schedule["FirstSide"]["2nd"]["5"] = [
-                self.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
-                self.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
-            ]
-        elif match_index == 6:
-            self.schedule["SecondSide"]["2nd"]["6"] = [
-                self.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
-                self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
-            ]
+        self.schedule["FirstSide"]["2nd"]["5"] = [
+            self.get_winner(self.schedule["FirstSide"]["3rd"]["1"]),
+            self.get_winner(self.schedule["FirstSide"]["3rd"]["3"]),
+        ]
+        self.schedule["SecondSide"]["2nd"]["6"] = [
+            self.get_winner(self.schedule["SecondSide"]["3rd"]["2"]),
+            self.get_winner(self.schedule["SecondSide"]["3rd"]["4"]),
+        ]
         self.save()
 
     def fill_1nd(self):
@@ -168,7 +167,7 @@ class Tournament(models.Model):
                 "to": self.participants.values_list("user", flat=True),
                 "content": {
                     "type": "winner",
-                    "message": f"{winner} win his match in {self.name}",
+                    "message": f"{self.participants.get(pk=winner['id']).user.username} win his match in {self.name}",
                     'tournament_name' : self.name,
                 },
             }
@@ -209,6 +208,10 @@ class Tournament(models.Model):
                 self.schedule["FirstSide"]["1st"],
                 self.schedule["SecondSide"]["1st"],
             ]
+        elif self.match_index == 8:
+            self.isEnd = True
+            self.save()
+            return
         players = [
             self.participants.get(id=next_players[0]["id"]),
             self.participants.get(id=next_players[1]["id"]),
@@ -220,7 +223,7 @@ class Tournament(models.Model):
             self.creator,
             content={
                 "type": "T",
-                "to": self.participants.filter(
+                "to": User.objects.filter(
                     pk__in=[
                         players[0].user.pk,
                         players[1].user.pk,
@@ -246,7 +249,6 @@ class Tournament(models.Model):
             except:
                 print('amakayench : ', username)
                 pass
-        return next_players
 
     def getPlayerByName(self, arrNames):
         user1 = self.participants.get(name=arrNames[0])

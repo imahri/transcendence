@@ -48,7 +48,7 @@ export async function startTournament(id, setError, setButton, setInfo) {
 		return;
 	}
 	myseterror(setInfo, "Tournament is Stareted");
-	setButton("Stareted");
+	setButton("Started");
 }
 
 export async function quitTournament(id, setError) {

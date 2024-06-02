@@ -98,16 +98,18 @@ function Friend({ displayFriends, username }) {
 	const [nbFriend, setnbFriend] = useState(0);
 
 	useEffect(() => {
-		fetch_jwt(GET_5Friends_URL, { username: username }).then(
-			([isOk, status, data]) => {
-				if (!isOk) {
-					// setError(true); /// error
-					return;
-				}
-				setFriends(data.friends);
-				setnbFriend(data.nb - data.friends.length);
-			},
-		);
+		const get5Friends = async () => {
+			const [isOk, status, data] = await fetch_jwt(GET_5Friends_URL, {
+				username: username,
+			});
+			if (!isOk) {
+				// setError(true); /// error
+				return;
+			}
+			setFriends(data.friends);
+			setnbFriend(data.nb - data.friends.length);
+		};
+		get5Friends();
 	}, []);
 
 	return (
