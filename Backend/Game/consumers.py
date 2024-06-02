@@ -450,10 +450,14 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     if obg.user1["score"] > obg.user2["score"]:
                         user1_st = "win"
                         user2_st = "lose"
+                        user1_earned_exp = 500
+                        user2_earned_exp = 10
 
                     if obg.user1["score"] < obg.user2["score"]:
                         user1_st = "lose"
                         user2_st = "win"
+                        user1_earned_exp = 10
+                        user2_earned_exp = 500
 
                     l_w = {
                         "type": "end_game",
@@ -470,13 +474,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             "message": l_w,
                         },
                     )
-
                     res = get_player_room(self.game_room, self.user.username)
                     update_room_names(res, self.game_room)
                     print("end_game")
                     [match1, match2] = self.loba.matchs
-                    await database_sync_to_async(match1.set_score)(obg.user1["score"])
-                    await database_sync_to_async(match2.set_score)(obg.user2["score"])
+                    await database_sync_to_async(match1.set_score)(obg.user1["score"], user1_earned_exp)
+                    await database_sync_to_async(match2.set_score)(obg.user2["score"], user2_earned_exp)
                     if match1.mode == 2 and match1.tournament:
                         await database_sync_to_async(match1.tournament.next_match)()
                     break
