@@ -6,6 +6,7 @@ import { ChatSvg, GmaeSvg, FriendSvg, AccepSvg, DeclineSvg } from "./AllSvg";
 import { UserContext } from "../../context";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { IMAGE_URL, NOTIF_URL } from "@/app/URLS";
+import trophy from "@/app/(app)/tournament/assets/trophy.png";
 import {
 	accept,
 	calculateTimeDifference,
@@ -46,6 +47,8 @@ function NotifSection({ notif, ws }) {
 	const link = getNotifLink(notif);
 	const time = calculateTimeDifference(notif.time);
 	const isRead = checkReadNotif(notif, user.id);
+	const SrcImage =
+		ntype == "T" ? trophy : `${IMAGE_URL}?path=${notif.user.img}`;
 	return (
 		<Link
 			href={link}
@@ -56,14 +59,16 @@ function NotifSection({ notif, ws }) {
 					className="size-[50px] rounded-full ml-[5px]"
 					width={50}
 					height={50}
-					src={`${IMAGE_URL}?path=${notif.user.img}`}
+					src={SrcImage}
 					alt="sender Image"
 				/>
 				{Svg}
 			</div>
 			<div>
 				<h1 className="text-white font-bold text-[15px]">
-					{notif.user.username}
+					{ntype == "T"
+						? notif.content.tournament_name
+						: notif.user.username}
 				</h1>
 				<div className="flex w-full gap-[8px]">
 					<h2 className="text-[#7D7D7D] text-[13px]">{type}</h2>
