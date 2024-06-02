@@ -8,7 +8,12 @@ let ycord = 0;
 let x_com = 0;
 let c_com = "black";
 let gaa = false;
-export const Gameson = ({ setBotScore, setUserScore }) => {
+export const Gameson = ({
+	setBotScore,
+	setUserScore,
+	checkWinner,
+	checkLoser,
+}) => {
 	const cvs = useRef(null);
 
 	useEffect(() => {
@@ -23,7 +28,7 @@ export const Gameson = ({ setBotScore, setUserScore }) => {
 			x: canvas.width / 2,
 			y: canvas.height / 2,
 			radius: 20,
-			speed: 15,
+			speed: 20,
 			velocityX: 5,
 			velocityY: 5,
 			color: "orange",
@@ -49,6 +54,7 @@ export const Gameson = ({ setBotScore, setUserScore }) => {
 			score: 0,
 		};
 
+		let end_game = false;
 		let paused = false;
 		let upKeyPressed = false;
 		let downKeyPressed = false;
@@ -142,13 +148,6 @@ export const Gameson = ({ setBotScore, setUserScore }) => {
 		}
 
 		function render() {
-			// drawText(user.score, canvas.width / 4, canvas.height / 5, "white");
-			// drawText(
-			// 	com.score,
-			// 	(3 * canvas.width) / 4,
-			// 	canvas.height / 5,
-			// 	"white",
-			// );
 			drawRect(user.x, user.y, user.width, user.height, user.color, 1);
 			drawRect(com.x, com.y, com.width, com.height, com.color, 1);
 
@@ -192,8 +191,8 @@ export const Gameson = ({ setBotScore, setUserScore }) => {
 				ball.velocityY = ball.speed * Math.sin(angleRad);
 				ball.speed += 0.5;
 			}
+
 			if (ball.x - ball.radius < 0) {
-				console.log("hereeeeee33eeee");
 				com.score++;
 				setBotScore((prev) => prev + 1);
 				resetBall();
@@ -202,27 +201,44 @@ export const Gameson = ({ setBotScore, setUserScore }) => {
 				setUserScore((prev) => prev + 1);
 				resetBall();
 			}
+			if (com.score === 3 || user.score === 3) {
+				if (com.score > user.score) {
+					checkLoser();
+				} else {
+					checkWinner();
+				}
+				resetBall();
+				// setBotScore((prev) => prev = 0);
+				// setUserScore((prev) => prev = 0);
+				end_game = true;
+				user.score = 0;
+				com.score = 0;
+			}
 		}
 
 		function game() {
-			if (!paused) {
-				canvas.width = document.documentElement.clientWidth;
-				canvas.height = document.documentElement.clientHeight;
-				com.x = canvas.width - 31;
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				window.requestAnimationFrame(game);
-				update();
-				updatePaddlePosition();
-				render();
+			if (!end_game) {
+				if (!paused) {
+					canvas.width = document.documentElement.clientWidth;
+					canvas.height = document.documentElement.clientHeight;
+					com.x = canvas.width - 31;
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					window.requestAnimationFrame(game);
+					update();
+					updatePaddlePosition();
+					render();
+				} else {
+					const text = "Pause";
+					drawText(
+						text,
+						canvas.width / 2 - 60,
+						canvas.height / 2,
+						"orange",
+					);
+					timeoutId = setTimeout(game, 300);
+				}
 			} else {
-				const text = "Pause";
-				drawText(
-					text,
-					canvas.width / 2 - 60,
-					canvas.height / 2,
-					"orange",
-				);
-				timeoutId = setTimeout(game, 300);
+				console.log("end game");
 			}
 		}
 

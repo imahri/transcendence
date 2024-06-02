@@ -4,6 +4,7 @@ import Image from "next/image";
 import First_Ranking from "./first";
 import Second_Ranking from "./second";
 import Third_Ranking from "./third";
+import Player_rank from "./players_rank";
 
 const Ranking = () => {
 	return (
@@ -22,7 +23,26 @@ const Ranking = () => {
 					<Third_Ranking />
 				</div>
 
-				<div className={`${styles.layer} ${styles.rank}`}></div>
+				<div className={`${styles.layer} ${styles.rank}`}>
+					<table className={styles.table}>
+						<thead className={styles.thead}>
+							<tr>
+								<th className={styles.tco}></th>
+								<th className={styles.tco}>Full Name</th>
+								<th className={styles.tco}>Lvl</th>
+								<th className={styles.tco}>Rank</th>
+								<th className={styles.tco}>Exp</th>
+								<th className={styles.tco}>Match</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td className={styles.tco}></td>
+							</tr>
+							<Player_rank />
+						</tbody>
+					</table>
+				</div>
 				<div className={`${styles.layer} ${styles.last}`}></div>
 			</div>
 		</div>
