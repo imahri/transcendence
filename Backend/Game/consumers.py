@@ -293,9 +293,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 except Exception as error:
                     print(error)
                     tournament = None
-                [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
-                    "mode", "Classic"
-                )
+                
+                # [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
+                #     "mode", "Classic"
+                # )
+                print("welll well")
+                
+                _mode = "Classic"
                 # match mode:
                 #     case "Classic":
                 #         mode = 0
@@ -303,6 +307,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 #         mode = 1
                 #     case "Tournement":
                 #         mode = 2
+                
                 if _mode == "Classic":
                     mode = 0
                 elif _mode == "Ranked":
@@ -312,6 +317,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 room_name = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "room", None
                 )
+                
                 if room_name:
                     self.room_group_name = room_name[0]
                 else:
@@ -355,6 +361,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             self.room_group_name,
                             {"type": "change_state", "state": "start"},
                         )
+                        print("1>>>>> "+ str(self.room_group_name))
                         index = get_room_index(self.game_room, self.room_group_name)
                         self.loba: Game = self.game_object[index]
                         asyncio.create_task(self.send_ball_coordinates())
@@ -375,6 +382,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         }
                     )
                     await self.shouha()
+                    print("2>>>>> "+ str(self.room_group_name))
                     index = get_room_index(self.game_room, self.room_group_name)
                     obg = self.game_object[index]
                     obg.pause = True
@@ -410,8 +418,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         except Exception as error:
             print("================>", error)
             await self.close()
+            exit(10)
 
     async def receive(self, text_data):
+        print("3>>>>> "+ str(self.room_group_name))
         index = get_room_index(self.game_room, self.room_group_name)
         obg = self.game_object[index]
         data = json.loads(text_data)
@@ -440,6 +450,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"event": "reconnect", "state": "back"})
 
     async def send_ball_coordinates(self):
+        print("4>>>>> "+ str(self.room_group_name))
         index = get_room_index(self.game_room, self.room_group_name)
         obg: Game = self.game_object[index]
         await asyncio.sleep(3)
@@ -530,6 +541,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
+        print("5>>>>> "+ str(self.room_group_name))
         index = get_room_index(self.game_room, self.room_group_name)
         if index != -1:
             obg: Game = self.game_object[index]

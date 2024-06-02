@@ -90,7 +90,7 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 		};
 
 		return () => {
-			ws.close;
+			ws.close();
 		};
 	}, []);
 

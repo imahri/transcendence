@@ -12,52 +12,7 @@ import { IMAGE_URL } from "@/app/URLS";
 var count;
 
 const Matching = () => {
-	// const [socket, setSocket] = useState(null);
-
-	// useEffect(() => {
-	// 	const ws = new WebSocket(
-	// 		"ws://localhost:8000/ws/game?" + `token=${getToken()}`,
-	// 	);
-
-	// 	ws.onopen = () => {
-	// 		console.log("opened");
-	// 		setSocket(ws);
-	// 	};
-
-	// 	ws.onmessage = (event) => {
-	// 		const data = JSON.parse(event.data);
-	// 		if (data?.event === "update") {
-	// 			print("pass")
-	// 		}
-	// 		if (data.event == "index_player") {
-	// 			console.log(">>>>  ", data.index);
-	// 		}
-	// 	};
-
-	// 	ws.onerror = () => {
-	// 		console.log("error happened");
-	// 	};
-	// 	ws.onclose = () => {
-	// 		console.log("closed");
-	// 	};
-	// 	return () => {
-	// 		ws.close;
-	// 	};
-	// },[]);
-
 	const { user } = useContext(UserContext);
-	// useEffect(() => {
-	// 	const first_of_all = () => {
-	// 		if (socket && socket.readyState === WebSocket.OPEN) {
-	// 			console.log("itis")
-	// 			socket.send(JSON.stringify({ event: "users_data", index: count }));
-	// 			count++;
-	// 		}
-	// 	};
-
-	// 	first_of_all();
-	// }, []);
-
 	return (
 		<div className="">
 			<div className={styles.page}>
