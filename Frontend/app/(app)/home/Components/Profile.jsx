@@ -29,7 +29,6 @@ function State({ number, name, color }) {
 
 function Profile() {
 	const { user, setUser } = useContext(UserContext);
-
 	return (
 		<div className="ProfileImg w-[95%] max-w-[1700px] h-[350px] rounded-[38px] bg-center bg-cover bg-no-repeat">
 			<div className="size-full rounded-[38px] relative bg-gradient-to-r from-[#150A1E] to-transparent">

@@ -131,8 +131,14 @@ class User(AbstractUser):
     def delete_friend(self, friend):
         self.get_friendship(friend).conversation.delete()
 
-    def get_new_Notification(self):
-        return self.notifications.all().filter(is_read=False)
+    def get_nb_notification(self):
+        # query = Q(is_read=False) | Q(is_multicast=True,content__readed__contains=self.pk)
+        Unreaded : int =  self.notifications.all().filter(is_read=False).count()
+        multicast = self.notifications.all().filter(is_multicast=True)
+        for notification in multicast :
+            if self.pk not in notification.content['readed']:
+                Unreaded += 1;
+        return Unreaded
 
     def get_last_msg_notification(self):
         return self.notifications.all().filter(type="C", is_read=False)
@@ -329,6 +335,7 @@ class Notification(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     content = models.JSONField()
     is_read = models.BooleanField(default=False)
+    is_multicast = models.BooleanField(default=False)
 
     @staticmethod
     def create(user: User, content: dict):
@@ -342,9 +349,11 @@ class Notification(models.Model):
     @staticmethod
     def createToMultiUsers(user: User, content: dict):
         sended_to = content["to"]
+        notifContent = content["content"]
+        notifContent['readed'] = []
         friends_ids = sended_to.values_list("id", flat=True)
-        notification = Notification(user=user, type=content["type"])
-        notification.content = content["content"]
+        notification = Notification(user=user, type=content["type"], is_read=True, is_multicast=True)
+        notification.content = notifContent
         notification.save()
         notification.sended_to.add(*friends_ids)
         return notification
@@ -354,10 +363,10 @@ class Notification(models.Model):
 
         return NotifSerializer(self).data
 
-    @staticmethod
-    def getNBUnreadedNotif(user: User):
-        unreadedNotif = user.get_new_Notification()
-        return len(unreadedNotif)
+    # @staticmethod
+    # def getNBUnreadedNotif(user: User):
+    #     unreadedNotif = user.get_new_Notification()
+    #     return len(unreadedNotif)
 
     @staticmethod
     def allNotifSerialised(user):

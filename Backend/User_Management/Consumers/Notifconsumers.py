@@ -106,8 +106,12 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         
 
     async def markAsRead(self, id):
-        obj =  await database_sync_to_async(Notification.objects.get)(id=id)
-        obj.is_read = True
+        user : User = self.user
+        obj : Notification =  await database_sync_to_async(Notification.objects.get)(id=id)
+        if obj.is_multicast:
+            obj.content['readed'].append(user.pk)
+        else:
+            obj.is_read = True
         await database_sync_to_async(obj.save)()
 
     async def send_Onlinestatus(self, event):

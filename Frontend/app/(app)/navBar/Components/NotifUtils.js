@@ -23,8 +23,16 @@ export function setType(notifType, notifContent, username) {
 	} else return sentAccept;
 }
 
-export function readNotif(socket, notif, setNbNotif) {
-	if (notif.is_read) return;
+export function checkReadNotif(notif, userId) {
+	if (notif.is_multicast) return notif.content.readed.includes(userId);
+	if (notif.is_read || notif.content?.type == "invit") return true;
+	return false;
+}
+
+export function readNotif(socket, notif, setNbNotif, userId) {
+	if (notif.is_multicast && notif.content.readed.includes(userId)) return;
+	if (notif.is_read && !notif.is_multicast) return;
+
 	socket.send(
 		JSON.stringify({
 			action: "readNotif",

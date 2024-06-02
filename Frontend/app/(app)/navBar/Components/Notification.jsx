@@ -9,6 +9,7 @@ import { IMAGE_URL, NOTIF_URL } from "@/app/URLS";
 import {
 	accept,
 	calculateTimeDifference,
+	checkReadNotif,
 	decline,
 	getNotifLink,
 	readNotif,
@@ -44,7 +45,7 @@ function NotifSection({ notif, ws }) {
 	const type = setType(notif.type, notif.content, user.username);
 	const link = getNotifLink(notif);
 	const time = calculateTimeDifference(notif.time);
-
+	const isRead = checkReadNotif(notif, user.id);
 	return (
 		<Link
 			href={link}
@@ -75,7 +76,7 @@ function NotifSection({ notif, ws }) {
 				<h2 className="text-[#7D7D7D] text-[10px]">{time}</h2>
 			</div>
 			<div
-				className={`absolute size-[10px] bg-greatBlue rounded-full right-[15px] ${notif.is_read || notif.content?.type == "invit" ? "hidden" : ""}`}
+				className={`absolute size-[10px] bg-greatBlue rounded-full right-[15px] ${isRead ? "hidden" : ""}`}
 			></div>
 		</Link>
 	);
@@ -107,7 +108,7 @@ function Notification() {
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
 
-	const { ws } = useContext(UserContext);
+	const { user, ws } = useContext(UserContext);
 
 	useEffect(() => {
 		if (!notif) {
@@ -158,7 +159,12 @@ function Notification() {
 								return (
 									<div
 										onClick={() =>
-											readNotif(ws, notif, setnbNotif)
+											readNotif(
+												ws,
+												notif,
+												setnbNotif,
+												user.id,
+											)
 										}
 										key={index}
 									>

@@ -259,7 +259,7 @@ class NotifView(APIView):
         try:
             user : User = request.user
             all_notif = Notification.allNotifSerialised(user)
-            nbUnreadedNotif = Notification.getNBUnreadedNotif(user)
+            nbUnreadedNotif = user.get_nb_notification()
             return Response({"allNotif" : all_notif, "nb_unreaded" : nbUnreadedNotif})
 
         except Exception as error:
