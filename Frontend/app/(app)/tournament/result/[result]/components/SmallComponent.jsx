@@ -1,6 +1,7 @@
 import { IMAGE_URL } from "@/app/URLS";
 import { getParticipant } from "./CommonSection";
 import Image from "next/image";
+import Trophy from "../../../assets/Trophy.png";
 
 function Historic({ user1, user2, place }) {
 	const color =
@@ -13,30 +14,44 @@ function Historic({ user1, user2, place }) {
 	return (
 		<div className="w-[60%] flex justify-around items-center">
 			<div
-				className={`${color} rounded-full size-[60px] flex justify-center items-center`}
+				className={`${color} rounded-full size-[60px] flex justify-center items-center cursor-pointer relative group`}
 			>
 				{user1 && (
-					<Image
-						className="rounded-full size-[90%]"
-						width={50}
-						height={50}
-						src={`${IMAGE_URL}?path=${user1?.user?.img}`}
-						alt="user Image"
-					/>
+					<>
+						<Image
+							className="rounded-full size-[90%]"
+							width={50}
+							height={50}
+							src={`${IMAGE_URL}?path=${user1?.user?.img}`}
+							alt="user Image"
+						/>
+						<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+							<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
+								{user1?.name}
+							</h1>
+						</div>
+					</>
 				)}
 			</div>
 			<h1 className="text-white">Vs</h1>
 			<div
-				className={`${color} rounded-full size-[60px] flex justify-center items-center`}
+				className={`${color} rounded-full size-[60px] flex justify-center items-center cursor-pointer group relative`}
 			>
 				{user2 && (
-					<Image
-						className="rounded-full size-[90%]"
-						width={50}
-						height={50}
-						src={`${IMAGE_URL}?path=${user2?.user?.img}`}
-						alt="user Image"
-					/>
+					<>
+						<Image
+							className="rounded-full size-[90%]"
+							width={50}
+							height={50}
+							src={`${IMAGE_URL}?path=${user2?.user?.img}`}
+							alt="user Image"
+						/>
+						<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+							<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
+								{user1?.name}
+							</h1>
+						</div>
+					</>
 				)}
 			</div>
 		</div>
@@ -144,6 +159,33 @@ function getSchedule(participants, schedule) {
 	return result;
 }
 
+function Winner({ winner }) {
+	return (
+		<div className="size-[100px] flex flex-col justify-center items-center">
+			<div className="rounded-full size-full bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
+				<Image
+					className="rounded-full size-[95%]"
+					width={70}
+					height={70}
+					src={`${IMAGE_URL}?path=${winner?.user?.img}`}
+					alt="user Image"
+				/>
+				<Image
+					className="size-[60px] absolute bottom-[-5px] right-[-20px]"
+					src={Trophy}
+					alt="Trophy image"
+				/>
+				<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+					<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
+						{winner?.name}
+					</h1>
+				</div>
+			</div>
+			<h1 className="text-[#FFD700] font-semibold text-[20px]">Winner</h1>
+		</div>
+	);
+}
+
 export default function SmallComponnent({ tournament }) {
 	const participants = tournament.participants;
 
@@ -151,6 +193,7 @@ export default function SmallComponnent({ tournament }) {
 
 	return (
 		<div className="w-[95%] rounded-[45px] flex flex-col justify-center items-center gap-[20px] p-[20px]">
+			{tournament.winner && <Winner winner={tournament.winner} />}
 			<Round
 				round={"1st"}
 				match1={Schedule[1]}

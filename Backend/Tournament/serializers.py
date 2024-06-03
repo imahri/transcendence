@@ -15,7 +15,8 @@ class TournamentSerializer(ModelSerializer):
     
     creator = UserSerializer()
     participants = ParticipantSerializer(many=True)
+    winner = ParticipantSerializer()
 
     class Meta:
         model = Tournament
-        fields = ["id", "name", "schedule", "isEnd", "isStarted", "created_at", "creator", "participants"]
+        fields = ["id", "name", "schedule", "isEnd", "isStarted", "created_at", "creator", "participants", "winner"]
