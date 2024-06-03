@@ -14,6 +14,9 @@ class Tournament(models.Model):
     creator = models.ForeignKey(
         "User_Management.User", on_delete=models.CASCADE
     )
+    winner = models.ForeignKey(
+        "Tournament.Participant", on_delete=models.CASCADE, blank=True, null=True
+    )
     participants = models.ManyToManyField(
         "Tournament.Participant", related_name="tournaments"
     )
@@ -22,6 +25,7 @@ class Tournament(models.Model):
     isStarted = models.BooleanField(default=False)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
+
 
     def as_serialized(self):
         from .serializers import TournamentSerializer
@@ -210,6 +214,7 @@ class Tournament(models.Model):
             ]
         elif self.match_index == 8:
             self.isEnd = True
+            self.winner = self.participants.get(id=winner['id'])
             winner_user = User.objects.get(pk=winner['user_id'])
             winner_user.info.tournament_win += 1
             winner_user.info.save()

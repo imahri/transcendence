@@ -3,7 +3,8 @@ import LastGame from "@/app/(app)/home/Components/LastGame";
 import { useContext, useEffect, useState } from "react";
 import { UserProfileContext } from "../page";
 import Image from "next/image";
-import t from "../assets/noTrophy.png";
+import noTrophy from "../assets/noTrophy.png";
+import Trophy from "../assets/Trophy.png";
 import { fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ACHEIVMENTS_URL, IMAGE_URL, MATCHES_URL } from "@/app/URLS";
 
@@ -74,32 +75,49 @@ function Status({ state }) {
 	);
 }
 
-function ShowRoom({ title, items }) {
+function ShowRoom({ items }) {
 	return (
 		<div className="w-full flex flex-col items-center gap-[5px]">
 			<h1 className="font-Chakra font-bold text-[#BABABA] text-[20px]">
-				{title}
+				Acheivment
 			</h1>
-			<div
-				className={`flex ${title == "Trophy" ? "justify-center" : ""}  w-[90%] overflow-x-scroll pb-[10px]`}
-			>
+			<div className="flex w-[90%] overflow-x-scroll pb-[10px]">
 				{items &&
 					items.map((obj, index) => {
-						const src =
-							title == "Acheivment"
-								? `${IMAGE_URL}?path=${obj.icon_path}`
-								: obj;
 						return (
 							<Image
 								key={index}
 								className={`size-[70px] ${obj.unlocked ? "" : "grayscale"}`}
 								width={70}
 								height={70}
-								src={src}
-								alt={title}
+								src={`${IMAGE_URL}?path=${obj.icon_path}`}
+								alt="Acheivment"
 							/>
 						);
 					})}
+			</div>
+		</div>
+	);
+}
+
+function Trournament({ nb }) {
+	const src = nb ? Trophy : noTrophy;
+	return (
+		<div className="w-full flex flex-col items-center gap-[5px]">
+			<h1 className="font-Chakra font-bold text-[#BABABA] text-[20px]">
+				Tournament
+			</h1>
+			<div className="flex justify-center pb-[10px] relative  cursor-pointer group">
+				<Image
+					className="size-[70px]"
+					width={70}
+					height={70}
+					src={src}
+					alt="Trophy"
+				/>
+				<div className="scale-0 group-hover:scale-100 transition-all duration-300 rounded-full absolute right-[-10px] top-[-20px] px-[10px] py-[5px] bg-[#353535] shadow-lg text-white z-10">
+					{nb}
+				</div>
 			</div>
 		</div>
 	);
@@ -129,8 +147,6 @@ async function GameHistoric(
 }
 
 export default function MyState() {
-	const Trophy = [t];
-
 	const [ach, setAch] = useState();
 	const [state, setState] = useState();
 	const [lastGame, setLastGame] = useState();
@@ -165,8 +181,8 @@ export default function MyState() {
 			<div className="h-full pb-[15px] w-[30%] [@media(max-width:1400px)]:w-[95%] bg-[#2F2F2F] rounded-[10px] flex flex-col items-center gap-[20px]">
 				<Status state={state} />
 				<div className="[@media(max-width:1400px)]:flex [@media(max-width:650px)]:flex-col">
-					<ShowRoom items={ach} title={"Acheivment"} />
-					<ShowRoom items={Trophy} title={"Trophy"} />
+					<ShowRoom items={ach} />
+					<Trournament nb={userProfile.info.tournament_win} />
 				</div>
 			</div>
 			<div className="h-full w-[70%] [@media(max-width:1400px)]:w-[95%] rounded-[10px] bg-[#2F2F2F] flex justify-center items-center [@media(max-width:900px)]:flex-col">
