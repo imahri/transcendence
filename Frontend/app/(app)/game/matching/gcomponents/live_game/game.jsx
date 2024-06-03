@@ -23,8 +23,6 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 	const searchParams = useSearchParams();
 
 	useEffect(() => {
-		// if (socket) return
-
 		const tournament_name = searchParams.get("tournament");
 		const room_name = searchParams.get("room");
 		const ws = new WebSocket(
@@ -149,14 +147,7 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 
 			function keyDownHandler(event) {
 				if (event.keyCode === 32) {
-					if (uid === 1 && pause1 === 0) {
-						togglePause();
-						pause1++;
-					}
-					if (uid === 2 && pause2 === 0) {
-						togglePause();
-						pause2++;
-					}
+					togglePause();
 				}
 				if (event.keyCode === 87) {
 					upKeyPressed = true;
@@ -219,7 +210,9 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 
 			const togglePause = () => {
 				if (socket && socket.readyState === WebSocket.OPEN) {
-					socket.send(JSON.stringify({ event: "togglePause" }));
+					socket.send(
+						JSON.stringify({ event: "togglePause", id: uid }),
+					);
 				}
 			};
 
