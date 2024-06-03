@@ -166,9 +166,10 @@ class Tournament(models.Model):
                     self.schedule["SecondSide"]["1st"],
                 ]
             winner: dict = self.get_winner(next_players)
+            players_id = self.participants.values_list("user", flat=True)
             content = {
                 "type": "T",
-                "to": self.participants.values_list("user", flat=True),
+                "to": User.objects.filter(pk__in=players_id),
                 "content": {
                     "type": "winner",
                     "message": f"{self.participants.get(pk=winner['id']).user.username} win his match in {self.name}",
