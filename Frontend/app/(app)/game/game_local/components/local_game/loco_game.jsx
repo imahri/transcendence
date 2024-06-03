@@ -11,7 +11,7 @@ import Moff from "../images/no_sound.svg";
 import React, { useEffect, useState } from "react";
 import { Gameson } from "./lgame";
 import Res from "./res";
-const LGame = () => {
+const LGame = ({ checkWinner, checkLoser }) => {
 	const [botScore, setBotScore] = useState(0);
 	const [userScore, setUserScore] = useState(0);
 	return (
@@ -34,6 +34,8 @@ const LGame = () => {
 									<Gameson
 										setBotScore={setBotScore}
 										setUserScore={setUserScore}
+										checkWinner={checkWinner}
+										checkLoser={checkLoser}
 									/>
 								</div>
 							</div>
