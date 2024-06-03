@@ -177,7 +177,7 @@ class User(AbstractUser):
                     info.profile_img.save(img_name, image_content, save=True)
                     break
                 elif userSerialized.errors['username']:
-                    data['username'] = f"{user42_info['login']}{random.randint(1000, 99999999)}"
+                    data['username'] = f"{user42_info['login']}#{random.randint(1000, 9999)}"
                 else:
                     return [False, userSerialized.errors]
 
