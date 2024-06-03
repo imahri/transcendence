@@ -105,6 +105,25 @@ function ShowRoom({ title, items }) {
 	);
 }
 
+function Trournament({ nb }) {
+	return (
+		<div className="w-full flex flex-col items-center gap-[5px]">
+			<h1 className="font-Chakra font-bold text-[#BABABA] text-[20px]">
+				Tournament
+			</h1>
+			<div className="flex justify-center  w-[90%] overflow-x-scroll pb-[10px]">
+				<Image
+					className={`size-[70px] ${nb ? "grayscale" : ""}`}
+					width={70}
+					height={70}
+					src={t}
+					alt="title"
+				/>
+			</div>
+		</div>
+	);
+}
+
 async function GameHistoric(
 	username,
 	setLastGame,
@@ -129,8 +148,6 @@ async function GameHistoric(
 }
 
 export default function MyState() {
-	const Trophy = [t];
-
 	const [ach, setAch] = useState();
 	const [state, setState] = useState();
 	const [lastGame, setLastGame] = useState();
@@ -166,7 +183,8 @@ export default function MyState() {
 				<Status state={state} />
 				<div className="[@media(max-width:1400px)]:flex [@media(max-width:650px)]:flex-col">
 					<ShowRoom items={ach} title={"Acheivment"} />
-					<ShowRoom items={Trophy} title={"Trophy"} />
+					{/* <ShowRoom items={Trophy} title={"Trophy"} /> */}
+					<Trournament nb={userProfile.info.tournament_win} />
 				</div>
 			</div>
 			<div className="h-full w-[70%] [@media(max-width:1400px)]:w-[95%] rounded-[10px] bg-[#2F2F2F] flex justify-center items-center [@media(max-width:900px)]:flex-col">
