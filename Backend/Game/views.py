@@ -7,7 +7,7 @@ from Game.consumers import GameConsumer
 from .serilaizers import BadgeSerializer, PadelSerializer, BoardSerializer, ItemsSerializer, AcheivmentSerializer
 from .models import Badge, Board, Match, Padel, Items, Acheivement
 from User_Management.models import Info, User
-from User_Management.serializers import UserSerializer
+from User_Management.serializers import InfoSerializer, UserSerializer
 
 def catch_view_exception(func):
 
@@ -261,4 +261,12 @@ class AcheivmentView(APIView):
 @api_view(['GET'])
 def get_rank(request):
     users_info = Info.objects.all().order_by('-exp')
-    return Response([UserSerializer(info.user) for info in users_info])
+    res = []
+    for info in users_info:
+        data = dict(UserSerializer(info.user).data)
+        info_data = dict(InfoSerializer(info).data)
+        data['grade_img'] = info_data['grade']['image']
+        data['level'] = info_data['level']
+        data['exp'] = info_data['exp']
+        res.append(data)
+    return Response(res)

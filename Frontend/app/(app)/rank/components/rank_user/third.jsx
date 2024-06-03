@@ -3,7 +3,7 @@ import Image from "next/image";
 import first_grade from "../images/first.svg";
 import third_grade from "../images/third.svg";
 
-const Cards_Ranking = () => {
+const Cards_Ranking = ({ username, full_name }) => {
 	return (
 		<div className={`${styles.box} ${styles.fp}`}>
 			<div className={`${styles.pic_holder}`}>
@@ -12,8 +12,8 @@ const Cards_Ranking = () => {
 
 			<div className={`${styles.data}`}>
 				<div className={`${styles.data_content1}`}>
-					<h1>FiddlerX</h1>
-					<span>Mahri Imad-Eddine</span>
+					<h1>{username}</h1>
+					<span>{full_name}</span>
 				</div>
 				<div className={`${styles.data_content2}`}>
 					<div className={`${styles.set_top}`}>

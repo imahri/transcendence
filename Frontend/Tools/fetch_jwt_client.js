@@ -10,7 +10,9 @@ export const APIs = {
 	user: {
 		friends: `${BASE_URL}/user/friends`,
 	},
-	// ....
+	game: {
+		rank: `${BASE_URL}/Game/rank`,
+	},
 };
 
 /**
