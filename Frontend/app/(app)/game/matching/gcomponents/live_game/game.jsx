@@ -11,6 +11,8 @@ let player2_y = 0;
 let player1_y = 0;
 
 let uid = 0;
+let pause1 = 0;
+let pause2 = 0;
 
 let player2_state = "not yet";
 let player1_state = "not yet";
@@ -21,9 +23,10 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 	const searchParams = useSearchParams();
 
 	useEffect(() => {
+		// if (socket) return
+
 		const tournament_name = searchParams.get("tournament");
 		const room_name = searchParams.get("room");
-
 		const ws = new WebSocket(
 			"ws://localhost:8000/ws/game?" +
 				`token=${getToken()}` +
@@ -42,6 +45,11 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 			if (data.event == "reconnect") {
 				console.log("reconnect");
 				secondArrived();
+			}
+			if (data.event == "forfeited") {
+				console.log("forfeited");
+				checkWinner();
+				// secondArrived();
 			}
 
 			if (data?.event === "update") {
@@ -89,7 +97,11 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 			console.log("closed");
 		};
 
-		return () => ws.close();
+		return () => {
+			ws.close();
+			setSocket(null);
+			console.log("bazzzzzaf");
+		};
 	}, []);
 
 	useEffect(() => {
@@ -137,7 +149,14 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 
 			function keyDownHandler(event) {
 				if (event.keyCode === 32) {
-					togglePause();
+					if (uid === 1 && pause1 === 0) {
+						togglePause();
+						pause1++;
+					}
+					if (uid === 2 && pause2 === 0) {
+						togglePause();
+						pause2++;
+					}
 				}
 				if (event.keyCode === 87) {
 					upKeyPressed = true;

@@ -15,6 +15,7 @@ class Game:
         self.matchs: list[Match]
         self.paused = False
         self.reconnect = False
+        self.reconnect_counter = 0
 
         self.user1 = {
             "x": 3,
@@ -28,6 +29,7 @@ class Game:
             "user_name": "",
             "exp": 100,
         }
+
 
         self.user2 = {
             "x": self.canvas["width"] - 31,
@@ -212,7 +214,7 @@ def check_for_game_start(nested_list, name):
 
 
 # found player in wich room and his position
-def find_string_in_game(game, search_string, pis):
+def find_player_in_game(game, search_string, pis):
     for room in game:
         room_name = room[0]
         items = room[1]
@@ -356,16 +358,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             self.room_group_name,
                             {"type": "change_state", "state": "start"},
                         )
-                        print("1>>>>> "+ str(self.room_group_name))
+                        
                         index = get_room_index(self.game_room, self.room_group_name)
                         self.loba: Game = self.game_object[index]
                         asyncio.create_task(self.send_ball_coordinates())
                     return
                 result = []
-                if len(self.game_room) > 0:
-                    print("befor")
-                    print(self.game_room[0])
-                if find_string_in_game(self.game_room, self.user.username, result):
+                if find_player_in_game(self.game_room, self.user.username, result):
                     is_valid = update_item_in_room(
                         self.game_room, result[0], result[1], self.user.username
                     )
@@ -376,12 +375,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             "index": (result[1] + 1),
                         }
                     )
-                    await self.shouha()
-                    print("2>>>>> "+ str(self.room_group_name))
+                    
                     index = get_room_index(self.game_room, self.room_group_name)
                     obg = self.game_object[index]
                     obg.pause = True
                     obg.reconnect = False
+                    # xrr = len(self.game_room[index][1])
+                    await self.shouha()
                 else:
                     # User 1
                     if not check_for_game_start(self.game_room, self.user.username):
@@ -415,7 +415,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             await self.disconnect(None)
 
     async def receive(self, text_data):
-        print("3>>>>> "+ str(self.room_group_name))
+
         index = get_room_index(self.game_room, self.room_group_name)
         obg = self.game_object[index]
         data = json.loads(text_data)
@@ -444,7 +444,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"event": "reconnect", "state": "back"})
 
     async def send_ball_coordinates(self):
-        print("4>>>>> "+ str(self.room_group_name))
+
         index = get_room_index(self.game_room, self.room_group_name)
         obg: Game = self.game_object[index]
         await asyncio.sleep(3)
@@ -518,6 +518,31 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             else:
                 print("reconect mode")
                 await asyncio.sleep(1)
+                obg.reconnect_counter += 1
+                if obg.reconnect_counter == 10:
+                    obg.reconnect_counter = 0
+                    checker = []
+                    if find_player_in_game(self.game_room, self.user.username, checker):
+                        found = get_room_index(self.game_room,checker[0])
+                        if (len(self.game_room[found][1]) == 2):
+                            self.game_room[found][1][0] = self.game_room[found][1][0] + "_old"
+                            self.game_room[found][1][1] = self.game_room[found][1][1] + "_old"
+                            print("rodrygoo + " + str(self.game_room[found][1]))
+                            stop_game = {
+                                "type": "forfeited",
+                                "end_it": True
+                            }
+
+                            await self.channel_layer.group_send(
+                                self.room_group_name,
+                                {
+                                    "type": "forfeited",
+                                    "message": stop_game,
+                                },
+                            )
+                            self.task_manager[index].cancel()
+                            break
+
 
     async def update(self, event):
         message = event["message"]
@@ -536,12 +561,32 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 "message": message,
             }
         )
+    async def forfeited(self, event):
+        message = event["message"]
+        await self.send_json(
+            content={
+                "event": "forfeited",
+                "message": message,
+            }
+        )
+
 
     async def disconnect(self, code):
-        print("5>>>>> "+ str(self.room_group_name))
+        print("mcha")
         index = get_room_index(self.game_room, self.room_group_name)
         if index != -1:
             obg: Game = self.game_object[index]
             obg.reconnect = True
+            checker = []
+            print("mcha555")
+            if find_player_in_game(self.game_room, self.user.username, checker):
+                found = get_room_index(self.game_room,checker[0])
+                if (len(self.game_room[found][1]) == 1):
+                    self.game_room[found][1][0] = self.user.username + "_old"
+                    self.game_room[found][1].append("odin_old")
+                    print("fama 7aja + " + str(self.game_room[found][1]))
+        
+
         self.channels.pop(self.user.username, None)
         await self.close(code)
+
