@@ -70,6 +70,7 @@ function Page({ params }) {
 								participants={tournament.participants}
 							/>
 							<LastMatch
+								winner={tournament.winner}
 								tournament={tournament.schedule}
 								participants={tournament.participants}
 							/>
