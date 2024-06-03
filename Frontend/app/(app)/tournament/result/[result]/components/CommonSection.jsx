@@ -32,6 +32,33 @@ function UserImage({ user, nb }) {
 	);
 }
 
+function Winner({ winner }) {
+	return (
+		<div className="absolute top-[80px] size-[100px] flex flex-col justify-center items-center">
+			<div className="rounded-full size-full bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
+				<Image
+					className="rounded-full size-[95%]"
+					width={70}
+					height={70}
+					src={`${IMAGE_URL}?path=${winner?.user?.img}`}
+					alt="user Image"
+				/>
+				<Image
+					className="size-[60px] absolute bottom-[-5px] right-[-20px]"
+					src={Trophy}
+					alt="Trophy image"
+				/>
+				<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+					<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
+						{winner?.name}
+					</h1>
+				</div>
+			</div>
+			<h1 className="text-[#FFD700] font-semibold text-[20px]">Winner</h1>
+		</div>
+	);
+}
+
 export function LastMatch({ tournament, participants, winner }) {
 	const first = tournament?.FirstSide["1st"];
 	const second = tournament?.SecondSide["1st"];
@@ -41,36 +68,7 @@ export function LastMatch({ tournament, participants, winner }) {
 
 	return (
 		<div className="h-full w-[40%] relative flex justify-center items-center">
-			<div className="absolute top-[80px] size-[100px] flex flex-col justify-center items-center">
-				<div
-					className={`${winner ? "" : "hidden"} rounded-full size-full bg-[#FFD700] flex justify-center items-center cursor-pointer group relative`}
-				>
-					{winner && (
-						<>
-							<Image
-								className="rounded-full size-[95%]"
-								width={70}
-								height={70}
-								src={`${IMAGE_URL}?path=${winner?.user?.img}`}
-								alt="user Image"
-							/>
-							<Image
-								className="size-[60px] absolute bottom-[-5px] right-[-20px]"
-								src={Trophy}
-								alt="Trophy image"
-							/>
-							<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
-								<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
-									{winner?.name}
-								</h1>
-							</div>
-						</>
-					)}
-				</div>
-				<h1 className="text-[#FFD700] font-semibold text-[20px]">
-					Winner
-				</h1>
-			</div>
+			{winner && <Winner winner={winner} />}
 			<div className="w-full flex justify-around items-center">
 				<div className="rounded-full [@media(max-width:1250px)]:size-[70px] size-[80px] bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
 					{user1 && (
