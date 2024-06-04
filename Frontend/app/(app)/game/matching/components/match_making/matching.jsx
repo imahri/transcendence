@@ -67,8 +67,8 @@ const Matching = () => {
 						</div>
 					</div>
 
-					<div className={`${styles.layer} ${styles.four}`}>
-						{/* choice */}
+					{/* choice */}
+					{/* <div className={`${styles.layer} ${styles.four}`}>
 						<div className={styles.choice_container}>
 							<div
 								className={`${styles.boxes} ${styles.box_pic1}`}
@@ -86,7 +86,8 @@ const Matching = () => {
 								<div className={styles.box_overall}></div>
 							</div>
 						</div>
-					</div>
+					</div> */}
+
 					<div className={`${styles.layer} ${styles.five}`}>
 						{/* borad */}
 
@@ -103,7 +104,7 @@ const Matching = () => {
 
 						<div className={`${styles.achivement_container}`}>
 							<div className={styles.parent}>
-								<Link href="/game/choice">
+								<Link href="/game">
 									<button className={styles.back}>
 										Back
 									</button>

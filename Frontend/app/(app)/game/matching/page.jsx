@@ -63,6 +63,7 @@ const Vim = () => {
 
 	return (
 		<div>
+			{/* <LGame /> */}
 			{checkRoom ? (
 				<div>Loading ...</div>
 			) : (

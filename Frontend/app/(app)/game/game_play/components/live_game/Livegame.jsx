@@ -32,9 +32,9 @@ const LGame = () => {
 								{/* </div> */}
 							</div>
 							{/* <Res/> */}
-							<div className={styles.all_ferno}>
+							{/* <div className={styles.all_ferno}>
 								<div className={styles.ferno}>Bazoooooka</div>
-							</div>
+							</div> */}
 						</div>
 
 						<div className={styles.mode_part}>

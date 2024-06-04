@@ -8,6 +8,7 @@ import Soff from "../images/mute.svg";
 import Mon from "../images/music.svg";
 import Moff from "../images/no_sound.svg";
 import { Gameson } from "./game";
+import Res from "./res";
 
 const LGame = ({
 	secondArrived,
@@ -33,15 +34,14 @@ const LGame = ({
 									checkLoser={checkLoser}
 									secondArrived={secondArrived}
 								/>
-								{/* </div> */}
 							</div>
-							{/* <Res/> */}
-							<div className={styles.all_ferno}>
+							<Res />
+							{/* <div className={styles.all_ferno}>
 								<div className={styles.ferno}>Bazoooooka</div>
-							</div>
+							</div> */}
 						</div>
 
-						<div className={styles.mode_part}>
+						{/* <div className={styles.mode_part}>
 							<div className={styles.all_in_two}>
 								<h1 className={styles.mode_title}>Mode</h1>
 								<h2 className={styles.cla_title}>Classic</h2>
@@ -57,42 +57,8 @@ const LGame = ({
 										Bazoooooka
 									</div>
 								</div>
-								{/* <div className={styles.tool_box}>
-									<div className={styles.tool_box_right}>
-										<span>up</span>
-										<div className={styles.tool_box_but}>
-											<div className={styles.inside}>
-												<Image
-													src={Aup}
-													width={15}
-													height={15}
-													alt="immmm"
-												/>
-											</div>
-											<div className={styles.inside}>
-												W
-											</div>
-										</div>
-									</div>
-									<div className={styles.tool_box_right}>
-										<span>down</span>
-										<div className={styles.tool_box_but}>
-											<div className={styles.inside}>
-												<Image
-													src={Ado}
-													width={15}
-													height={15}
-													alt="immmm"
-												/>
-											</div>
-											<div className={styles.inside}>
-												S
-											</div>
-										</div>
-									</div>
-								</div> */}
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 				<div className={`${styles.layer} ${styles.third}`}></div>
