@@ -159,10 +159,14 @@ class Game:
             self.user2["score"] += 1
             print("user2 score >> " + str(self.user2["score"]))
             self.reset_ball()
+            return True
         elif self.ball["x"] + self.ball["radius"] > self.canvas["width"]:
             self.user1["score"] += 1
             print("user1 score >> " + str(self.user1["score"]))
             self.reset_ball()
+            return True
+        else:
+            return False
 
 
 # in wich room
@@ -349,11 +353,16 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         )
                         enemy = await database_sync_to_async(User.objects.get)(
                             username=other_player
-                        )
-                        print(mode, tournament)
+                        )                        
                         self.loba.matchs = await database_sync_to_async(Match.create)(
                             self.user, enemy, mode, tournament
                         )
+                        self.loba.user1['user_name'] = self.loba.matchs[0].user.username
+                        info1 = await self.loba.matchs[0].user.info_async()
+                        self.loba.user1['img'] = info1.profile_img.url
+                        self.loba.user2['user_name'] = self.loba.matchs[1].user.username
+                        info2 = await self.loba.matchs[1].user.info_async()
+                        self.loba.user2['img'] = info2.profile_img.url
                     else:
                         await self.send_json(
                             content={
@@ -405,7 +414,32 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         print(self.game_room)
                     # User 2
                     else:
-                        print(self.game_room)
+                        index = get_room_index(self.game_room, self.room_group_name)
+                        self.loba: Game = self.game_object[index]
+                        
+                        room = []
+                        for [name, players] in self.game_room:
+                            if self.room_group_name == name:
+                                room = [name, players]
+                        [name, players] = room
+                        other_player = (
+                            players[0] if players[0] != self.user.username else players[1]
+                        )
+
+                        user = await database_sync_to_async(User.objects.get)(
+                            username=other_player
+                        ) 
+                        enemy = self.user            
+                        self.loba.matchs = await database_sync_to_async(Match.create)(
+                            user, enemy, mode, tournament
+                        )
+                        self.loba.user1['user_name'] = self.loba.matchs[0].user.username
+                        info1 = await self.loba.matchs[0].user.info_async()
+                        self.loba.user1['img'] = info1.profile_img.url
+                        self.loba.user2['user_name'] = self.loba.matchs[1].user.username
+                        info2 = await self.loba.matchs[1].user.info_async()
+                        self.loba.user2['img'] = info2.profile_img.url
+
                         await self.send_json(
                             content={
                                 "event": "index_player",
@@ -450,13 +484,31 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             }
         )
 
+    async def send_info(self, event):
+        user1 = event['user1']
+        user2 = event['user2']
+        await self.send_json(
+            content={
+                "event": "send_info",
+                'user1': user1,
+                'user2': user2
+            }
+        )
+
     async def reconnect(self, event):
         await self.send_json(content={"event": "reconnect", "state": "back"})
 
     async def send_ball_coordinates(self):
-
         index = get_room_index(self.game_room, self.room_group_name)
         obg: Game = self.game_object[index]
+        await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "send_info",
+                    "user1": {"username": obg.user1['user_name'], 'image': obg.user1['img']},
+                    "user2": {"username": obg.user2['user_name'], 'image': obg.user2['img']}   
+                },
+            )
         await asyncio.sleep(3)
 
         while True:
@@ -500,7 +552,17 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         await database_sync_to_async(match1.tournament.next_match)()
                     break
 
-                obg.update_ball()
+                if obg.update_ball():
+                    await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                "type": "goal",
+                                "score": {'score1': obg.user1['score'], 'score2': obg.user2['score']},
+                            },
+                        )
+
+
+
                 obg.updatePaddlePosition()
 
                 await asyncio.sleep(0.0060)
@@ -578,6 +640,15 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             content={
                 "event": "forfeited",
                 "message": message,
+            }
+        )
+
+    async def goal(self, event):
+        score = event["score"]
+        await self.send_json(
+            content={
+                "event": "goal",
+                "score": score,
             }
         )
 

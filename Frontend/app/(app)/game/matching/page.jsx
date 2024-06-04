@@ -29,6 +29,8 @@ const Vim = () => {
 	const [win, setWin] = useState(false);
 	const [lose, setLose] = useState(false);
 	const navigate = useRouter();
+	const [player1, setPlayer1] = useState();
+	const [player2, setPlayer2] = useState();
 
 	//check query param if it's none normal  else check if room exist && send it to connect socket
 	const searchParams = useSearchParams();
@@ -73,8 +75,16 @@ const Vim = () => {
 						checkLoser={checkLoser}
 						secondArrived={secondArrived}
 						loading={loading}
+						players={{
+							player1: player1,
+							player2: player2,
+							setPlayer1: setPlayer1,
+							setPlayer2: setPlayer2,
+						}}
 					/>
-					{loading && <Matching />}
+					{loading && (
+						<Matching player1={player1} player2={player2} />
+					)}
 					{win && <WInter />}
 					{lose && <LInter />}
 				</>

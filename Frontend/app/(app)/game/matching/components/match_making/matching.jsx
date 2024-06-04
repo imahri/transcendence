@@ -12,8 +12,18 @@ import { IMAGE_URL } from "@/app/URLS";
 
 var count;
 
-const Matching = () => {
+function getOtherPlayer(player1, player2, user) {
+	if (!player1 || !player2) return null;
+
+	if (user.username == player1.username) return player2;
+	return player1;
+}
+
+const Matching = ({ player1, player2 }) => {
 	const { user } = useContext(UserContext);
+
+	const other = getOtherPlayer(player1, player2, user);
+
 	return (
 		<div className="">
 			<div className={styles.page}>
@@ -45,24 +55,33 @@ const Matching = () => {
 								<div className={`${styles.username}`}>
 									{user.username}
 								</div>
-								<div className={`${styles.exp}`}>
+								{/* <div className={`${styles.exp}`}>
 									{user.info.exp}
 									<span> exp</span>
-								</div>
+								</div> */}
 							</div>
 
 							<div className={styles.versus}>vs</div>
 
 							<div className={`${styles.first_player}`}>
 								<div className={`${styles.player_pic}`}>
-									<Random />
+									{other ? (
+										<Image
+											src={`${IMAGE_URL}?path=${other.image}`}
+											height={100}
+											width={200}
+											className={`${styles.player_picture}`}
+										/>
+									) : (
+										<Random />
+									)}
 								</div>
 								<div className={`${styles.username}`}>
-									FiddlerX
+									{other ? other.username : "XXXXXX"}
 								</div>
-								<div className={`${styles.exp}`}>
+								{/* <div className={`${styles.exp}`}>
 									2564789 exp
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>

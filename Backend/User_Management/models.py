@@ -10,6 +10,7 @@ from django.db.models.manager import BaseManager
 import requests
 from io import BytesIO
 import random
+from channels.db import database_sync_to_async
 
 
 
@@ -82,6 +83,11 @@ class User(AbstractUser):
     @property
     def info(self):
         return self.info_set
+    
+    async def info_async(self):
+        return await database_sync_to_async(Info.objects.get)(user=self)
+
+
 
     def get_info(self):
         """

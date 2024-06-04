@@ -1,23 +1,25 @@
 import styles from "./LGame.module.css";
-import Image from "next/image";
-import Link from "next/link";
-import Aup from "../images/up.svg";
-import Ado from "../images/down.svg";
-import Son from "../images/sound.svg";
-import Soff from "../images/mute.svg";
-import Mon from "../images/music.svg";
-import Moff from "../images/no_sound.svg";
+// import Image from "next/image";
+// import Link from "next/link";
+// import Aup from "../images/up.svg";
+// import Ado from "../images/down.svg";
+// import Son from "../images/sound.svg";
+// import Soff from "../images/mute.svg";
+// import Mon from "../images/music.svg";
+// import Moff from "../images/no_sound.svg";
 import { Gameson } from "./game";
 import Res from "./res";
+import { useState } from "react";
 
 const LGame = ({
 	secondArrived,
 	loading,
 	checkWinner,
-	win,
 	checkLoser,
-	lose,
+	players,
 }) => {
+	const [Score, setScore] = useState({ score1: 0, score2: 0 });
+
 	return (
 		<div className={`${styles.page} ${loading ? "hidden" : "block"}`}>
 			<div className={styles.container}>
@@ -30,12 +32,21 @@ const LGame = ({
 						<div className={styles.bord_part}>
 							<div className={styles.borad}>
 								<Gameson
+									setScore={setScore}
 									checkWinner={checkWinner}
 									checkLoser={checkLoser}
 									secondArrived={secondArrived}
+									setPlayer1={players.setPlayer1}
+									setPlayer2={players.setPlayer2}
 								/>
 							</div>
-							<Res />
+							{players.player1 && players.player2 && (
+								<Res
+									score={Score}
+									player1={players.player1}
+									player2={players.player2}
+								/>
+							)}
 							{/* <div className={styles.all_ferno}>
 								<div className={styles.ferno}>Bazoooooka</div>
 							</div> */}

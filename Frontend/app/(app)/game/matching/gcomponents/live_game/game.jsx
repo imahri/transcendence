@@ -17,7 +17,14 @@ let pause2 = 0;
 let player2_state = "not yet";
 let player1_state = "not yet";
 
-export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
+export const Gameson = ({
+	secondArrived,
+	checkWinner,
+	checkLoser,
+	setScore,
+	setPlayer1,
+	setPlayer2,
+}) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
 	const searchParams = useSearchParams();
@@ -43,11 +50,17 @@ export const Gameson = ({ secondArrived, checkWinner, checkLoser }) => {
 			if (data.event == "reconnect") {
 				console.log("reconnect");
 				secondArrived();
-			}
-			if (data.event == "forfeited") {
+			} else if (data.event == "forfeited") {
 				console.log("forfeited");
 				checkWinner();
 				// secondArrived();
+			} else if (data.event == "goal") {
+				console.log(data.score);
+				setScore(data.score);
+			} else if (data.event == "send_info") {
+				console.log(data);
+				setPlayer1(data.user1);
+				setPlayer2(data.user2);
 			}
 
 			if (data?.event === "update") {
