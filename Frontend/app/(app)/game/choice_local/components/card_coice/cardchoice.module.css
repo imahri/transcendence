@@ -120,7 +120,7 @@
 }
 
 .second{
-    background-image: url('../images/freind.png');
+    background-image: url('../images/classic.png');
     background-size: cover;
     background-position: center;
     filter: grayscale(75%);
@@ -133,7 +133,7 @@
 }
 
 .third{
-    background-image: url('../images/bot.png');
+    background-image: url('../images/chapion.png');
     background-size: cover;
     background-position: center;
     filter: grayscale(75%);

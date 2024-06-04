@@ -58,14 +58,14 @@
 }
 
 .bot{
-    background-image: url('../images/bot.png');
+    background-image: url('../images/ofline.png');
     background-size: cover;
     background-position:center;
     background-repeat: no-repeat;
 }
 
 .friend{
-    background-image: url('../images/friend.png');
+    background-image: url('../images/online.png');
     background-size: cover;
     background-position:center;
     background-repeat: no-repeat;
@@ -89,4 +89,33 @@
     color: #7B7B7B;
     font-weight: 600;
     transition: 0.5s;
+}
+
+@media (max-width: 1300px) {
+    .bor{
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 1000px) {
+    .card{
+        width: 250px;
+        height: 250px;
+    }
+    .card:hover{
+        width: 275px;
+        height: 275px;
+    }
+    .made{
+        margin-top: 5%;
+        background-attachment: fixed;
+        position: absolute;
+        bottom: 10%;
+        width: 200px;
+    }
+
+    .title{
+        margin-bottom: 0%;
+        top: 5%;
+    }
 }
