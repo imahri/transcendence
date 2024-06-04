@@ -43,40 +43,39 @@ function ProfileBar() {
 					</div>
 					{more ? dropUpSvg : dropDownSvg}
 				</div>
-				{more && (
-					<div className="w-[170px] p-[20px] gap-[20px] flex flex-col bg-[#303030] absolute [@media(max-width:600px)]:right-0 [@media(max-width:600px)]:top-[60px] [@media(min-width:600px)]:left-0 rounded-b-[10px]">
-						<div className="flex w-full items-center justify-between gap-2 cursor-pointer ">
-							{WalletSvg}{" "}
-							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
-								{" "}
-								Wallet{" "}
-							</h1>{" "}
-							<span className=" font-medium text-[18px] text-[#7D7D7D] flex items-center gap-1">
-								{user.info.wallet} {WalletLogo}
-							</span>
-						</div>
-
-						<Link
-							href={"/profile"}
-							className="flex w-full items-center justify-start gap-2 cursor-pointer"
-						>
-							{AccountSvg}
-							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
-								View Profile
-							</h1>
-						</Link>
-
-						<div
-							className="flex w-full items-center justify-start gap-2 cursor-pointer "
-							onClick={() => logout(navigate)}
-						>
-							{logoutSvg}{" "}
-							<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
-								Logout
-							</h1>
-						</div>
+				<div
+					className={`${more ? "" : "scale-0"} w-[170px] p-[20px] gap-[20px] flex flex-col bg-[#303030] absolute [@media(max-width:600px)]:right-0 [@media(max-width:600px)]:top-[60px] [@media(min-width:600px)]:left-0 rounded-b-[10px]`}
+				>
+					<div className="flex w-full items-center justify-between gap-2 cursor-pointer ">
+						{WalletSvg}
+						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
+							Wallet
+						</h1>
+						<span className=" font-medium text-[18px] text-[#7D7D7D] flex items-center gap-1">
+							{user.info.wallet} {WalletLogo}
+						</span>
 					</div>
-				)}
+
+					<Link
+						href={"/profile"}
+						className="flex w-full items-center justify-start gap-2 cursor-pointer"
+					>
+						{AccountSvg}
+						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
+							View Profile
+						</h1>
+					</Link>
+
+					<div
+						className="flex w-full items-center justify-start gap-2 cursor-pointer "
+						onClick={() => logout(navigate)}
+					>
+						{logoutSvg}
+						<h1 className=" font-medium text-[18px] text-[#7D7D7D]">
+							Logout
+						</h1>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
