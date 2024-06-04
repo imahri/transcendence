@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./LGame.module.css";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "@/app/(app)/context";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import op from "@/app/(app)/game/game_local_fr/components/images/oponent.png";
@@ -14,7 +14,7 @@ const Res = ({ playerOne, playerTwo }) => {
 				<div className={styles.fi_players}>
 					<div className={styles.pr_player}>
 						<Image
-							src={`${IMAGE_URL}?path=${user.img}`}
+							src={APIs.image(user.info.profile_img)}
 							height={100}
 							width={200}
 							className={`${styles.player_picture}`}

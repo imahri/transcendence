@@ -67,7 +67,7 @@ const Matching = ({ player1, player2 }) => {
 								<div className={`${styles.player_pic}`}>
 									{other ? (
 										<Image
-											src={`${IMAGE_URL}?path=${other.image}`}
+											src={APIs.image(other.image)}
 											height={100}
 											width={200}
 											className={`${styles.player_picture}`}
