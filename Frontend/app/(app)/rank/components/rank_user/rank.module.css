@@ -343,11 +343,13 @@
     width: 95%;
     height: 800px;
     margin: auto;
-    border-radius: 15px;
+    border-radius: 10px;
     background: #444444;
     overflow: scroll;
     display: flex;
     flex-direction: column;
+    position: relative;
+
 }
 
 .head{
@@ -366,4 +368,13 @@
 .pictu{
     margin-left: 50%;
     transform: translate(-50%,0);
+}
+
+.top_one{
+    width: 100%;
+    position: sticky;
+    top:0;
+    left: 0;
+    background: #444444;
+    z-index: 1;
 }

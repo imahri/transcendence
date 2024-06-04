@@ -45,13 +45,21 @@ const Ranking = async () => {
 
 				<div className={`${styles.layer} ${styles.rank}`}>
 					<div className={styles.container_player}>
-						<div className={styles.head}>
+						<div className={`${styles.head} ${styles.top_one}`}>
 							<div className={styles.pack}>Rank</div>
 							<div className={styles.pack}>Full Name</div>
 							<div className={styles.pack}>Level</div>
 							<div className={styles.pack}>Grade</div>
 							<div className={styles.pack}>Exp</div>
 						</div>
+						{/* <div className={styles.head}>
+							<div className={styles.pack}>55</div>
+							<div className={styles.pack}>weqweqe</div>
+							<div className={styles.pack}>qweqweqweq</div>
+							<div className={`${styles.pack}`}>eeee</div>
+							<div className={styles.pack}>3132</div>
+						</div> */}
+
 						{data.map((info, idx) => (
 							<Player_rank key={idx} idx={idx} info={info} />
 						))}
