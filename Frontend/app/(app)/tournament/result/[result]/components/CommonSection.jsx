@@ -5,7 +5,7 @@ import RcolorArrow from "../../../assets/Rarrowcolor.png";
 import leftArrow from "../../../assets/arrow.png";
 import colorArrow from "../../../assets/arrowcolor.png";
 import Trophy from "../../../assets/Trophy.png";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 function UserImage({ user, nb }) {
 	return (
@@ -18,7 +18,7 @@ function UserImage({ user, nb }) {
 						className="rounded-full size-[95%]"
 						width={70}
 						height={70}
-						src={`${IMAGE_URL}?path=${user?.user?.img}`}
+						src={APIs.image(user?.user?.img)}
 						alt="user Image"
 					/>
 					<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
@@ -40,7 +40,7 @@ function Winner({ winner }) {
 					className="rounded-full size-[95%]"
 					width={70}
 					height={70}
-					src={`${IMAGE_URL}?path=${winner?.user?.img}`}
+					src={APIs.image(winner?.user?.img)}
 					alt="user Image"
 				/>
 				<Image
@@ -77,7 +77,7 @@ export function LastMatch({ tournament, participants, winner }) {
 								className="rounded-full size-[95%]"
 								width={70}
 								height={70}
-								src={`${IMAGE_URL}?path=${user1?.user?.img}`}
+								src={APIs.image(user1?.user?.img)}
 								alt="user Image"
 							/>
 
@@ -101,7 +101,7 @@ export function LastMatch({ tournament, participants, winner }) {
 								className="rounded-full size-[95%]"
 								width={70}
 								height={70}
-								src={`${IMAGE_URL}?path=${user2?.user?.img}`}
+								src={APIs.image(user2?.user?.img)}
 								alt="user Image"
 							/>
 

@@ -2,7 +2,6 @@
 import Script from "next/script";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import styles from "./LGame.module.css";
-import { BOARDES_URL } from "@/app/URLS";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import bg from "./borad2.jpg";
 // import { UserContextss } from "../../../layout";

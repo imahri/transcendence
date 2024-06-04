@@ -3,8 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NoConv_icon from "../assets/no_conv.svg";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { IMAGE_URL, MSGNOTIF_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
 import { UserContext } from "../../context";
 import { calculateTimeDifference } from "../../navBar/Components/NotifUtils";
@@ -31,7 +30,7 @@ function Msg({ msg, socket }) {
 				className="size-[39px] rounded-full"
 				width={39}
 				height={39}
-				src={`${IMAGE_URL}?path=${msg.user.img}`}
+				src={APIs.image(msg.user.img)}
 				alt="sender image"
 			/>
 			<div>
@@ -66,7 +65,7 @@ function NoMsg() {
 }
 
 async function getLastMsgs(setMsgs, setLoading) {
-	const [isOk, status, data] = await fetch_jwt(MSGNOTIF_URL);
+	const [isOk, status, data] = await fetch_jwt(APIs.user.msg_notification);
 	if (!isOk) {
 		setLoading(false);
 		console.log(data);

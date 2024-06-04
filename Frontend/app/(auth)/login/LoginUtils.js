@@ -1,6 +1,6 @@
-import { AUTH_42, LOGIN_URL } from "../../URLS.js";
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools.jsx";
 import { setcookie, settoken } from "../AuthTools/tokenManagment.jsx";
+import { APIs } from "@/Tools/fetch_jwt_client.js";
 
 function ErrorLogin(setError, response) {
 	response.detail == "user not found"
@@ -35,7 +35,7 @@ export const handleSubmit = async (
 	};
 
 	try {
-		const response = await postRequest(LOGIN_URL, requestBody);
+		const response = await postRequest(APIs.auth.login, requestBody);
 		const responseBody = await response.json();
 		if (response.ok) {
 			if (checkBox) setcookie("rememberMe", username);
@@ -88,7 +88,7 @@ export async function get42Token(navigate, code, setisLoading, setError) {
 	setisLoading(true);
 	let body = { code: code };
 	try {
-		const response = await fetch(AUTH_42, {
+		const response = await fetch(APIs.auth.login_42, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(body),

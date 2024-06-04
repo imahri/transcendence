@@ -1,5 +1,4 @@
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { CREATEROOM_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 export function setType(notifType, notifContent, username) {
 	const sentMsg = "Sent you a message";
@@ -101,7 +100,7 @@ export function decline(ws, notif) {
 
 export async function accept(notif) {
 	const [isOk, status, data] = await fetch_jwt(
-		CREATEROOM_URL,
+		APIs.game.create_room,
 		{ username: notif.user.username },
 		{ method: "POST" },
 	);

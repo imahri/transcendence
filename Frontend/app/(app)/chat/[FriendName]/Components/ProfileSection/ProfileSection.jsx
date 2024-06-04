@@ -12,7 +12,7 @@ import { ProfileIcon } from "./icons/ProfileIcon";
 import { UserContext } from "@/app/(app)/context";
 import { useContext } from "react";
 import { ActiveStatusTypes } from "../ProfileBar";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 export const Grades = [
 	{ grade: "bronze", image: g_bronze },
@@ -29,7 +29,7 @@ const FriendProfile = ({ image, name, status }) => (
 			{image && (
 				<Image
 					className={styles.profile_img}
-					src={`${IMAGE_URL}?path=${image}`}
+					src={APIs.image(image)}
 					width={200}
 					height={200}
 					alt="profile_img"

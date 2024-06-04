@@ -1,6 +1,5 @@
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
-import { Block_URL, IMAGE_URL } from "@/app/URLS";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -9,7 +8,7 @@ async function deblock(friend_id, setBlockedUsers, setError) {
 	const bodyData = JSON.stringify({ friend_id: friend_id });
 
 	const [isOk, status, data] = await fetch_jwt(
-		Block_URL,
+		APIs.user.block,
 		{},
 		{
 			method: "PUT",
@@ -36,7 +35,7 @@ function Friend({ friend, setBlockedUsers, setError }) {
 			{
 				<Image
 					className="size-[50px] rounded-full"
-					src={`${IMAGE_URL}?path=${friend.img}`}
+					src={APIs.image(friend.img)}
 					width={50}
 					height={50}
 					alt=""
@@ -68,7 +67,7 @@ function BlockedUsers({ setPopUp }) {
 		if (!BlockedUsers) {
 			//fetch all blocked users
 			const getUsers = async () => {
-				const [isOk, status, data] = await fetch_jwt(Block_URL);
+				const [isOk, status, data] = await fetch_jwt(APIs.user.block);
 
 				if (!isOk) {
 					setError(true);

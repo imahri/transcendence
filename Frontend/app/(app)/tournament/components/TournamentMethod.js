@@ -1,5 +1,4 @@
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { STARTOUR_URL, TOURNAMENT_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { myseterror } from "./CreateTournament";
 
 export async function joinTournament(
@@ -16,7 +15,7 @@ export async function joinTournament(
 	const body = JSON.stringify({ tournament_id: id, alias_name: nickname });
 
 	const [isOk, status, data] = await fetch_jwt(
-		TOURNAMENT_URL,
+		APIs.tournament.tournament,
 		{},
 		{
 			method: "PUT",
@@ -37,7 +36,7 @@ export async function joinTournament(
 
 export async function startTournament(id, setError, setButton, setInfo) {
 	const [isOk, status, data] = await fetch_jwt(
-		STARTOUR_URL,
+		APIs.tournament.start,
 		{ id: id },
 		{ method: "POST" },
 	);

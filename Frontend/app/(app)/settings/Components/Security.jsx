@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { TowFaHandler, getCodeQr } from "./SettingsUtils.js";
 import { UserContext } from "../../context";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { USER_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 function Security({ setShowQr }) {
 	const { user, setUser } = useContext(UserContext);
@@ -13,7 +12,7 @@ function Security({ setShowQr }) {
 	useEffect(() => {
 		const refetchUser = async () => {
 			//refetch user after update 2Fa state
-			const [isOk, status, data] = await fetch_jwt(USER_URL);
+			const [isOk, status, data] = await fetch_jwt(APIs.user.user);
 
 			if (isOk) {
 				setUser(data);

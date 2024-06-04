@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../context";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { TOURNAMENT_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 export function Input({ label, setter, error }) {
 	return (
@@ -44,7 +43,7 @@ async function handleCreate(user, username, Tournament, setError) {
 	});
 
 	const [isOk, status, data] = await fetch_jwt(
-		TOURNAMENT_URL,
+		APIs.tournament.tournament,
 		{},
 		{
 			method: "POST",

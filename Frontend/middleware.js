@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetch_jwt } from "./Tools/fetch_jwt_server";
-import { VERIFY_TOKEN_URL } from "./app/URLS";
+import { APIs } from "./Tools/fetch_jwt_client";
 
 export default async function middleware(request) {
 	const isAuthenticated = request.cookies.get("access_token")?.value;
@@ -14,7 +14,7 @@ export default async function middleware(request) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 
-	const [isOk, status, data] = await fetch_jwt(VERIFY_TOKEN_URL);
+	const [isOk, status, data] = await fetch_jwt(APIs.auth.verify_token);
 	if (!isOk) {
 		if (status == 500) return NextResponse.error();
 		console.log("Token verification failed");

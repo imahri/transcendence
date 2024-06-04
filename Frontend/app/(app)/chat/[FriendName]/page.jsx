@@ -8,14 +8,13 @@ import { WsChatContext } from "../context/context";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { ProfileSection } from "./Components/ProfileSection/ProfileSection";
 import useConversationID from "../Hooks/useConversationID";
-import { GET_USER_URL } from "@/app/URLS";
 import { useRouter } from "next/navigation";
 import { useMessageList } from "../Hooks/useMessages";
 import { UserContext } from "../../context";
 
 async function getFriendInfo(FriendName) {
 	// TODO: use route handler
-	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.user.get_user, {
 		username: FriendName,
 	});
 	if (isOk) {

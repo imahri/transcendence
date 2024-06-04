@@ -2,6 +2,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getToken } from "../(auth)/AuthTools/tokenManagment";
 import Settings from "./settings/Settings";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 export const UserContext = createContext();
 
@@ -13,7 +14,7 @@ export const UserContextProvider = ({ children, value }) => {
 	useEffect(() => {
 		if (!socket) {
 			const ws = new WebSocket(
-				"ws://localhost:8000/ws/notif" + `?token=${getToken()}`,
+				`${APIs.user.notif_ws}?token=${getToken()}`,
 			);
 
 			ws.onopen = () => {

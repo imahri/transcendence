@@ -1,15 +1,14 @@
 import Image from "next/image";
 import Badge from "@/app/(app)/store/Components/Badge";
 import { useContext, useEffect, useState } from "react";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { IMAGE_URL, ITEMS_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
 import { UserProfileContext } from "../page";
 
 async function equipItem(item_id, items_id, setter) {
 	const body = { action: "equip", item_id: item_id, items_id: items_id };
 	const [isOk, status, data] = await fetch_jwt(
-		ITEMS_URL,
+		APIs.game.items,
 		{},
 		{
 			method: "PUT",
@@ -49,7 +48,7 @@ function Paddles({ paddles, setPaddles, isLoading }) {
 						<div key={index}>
 							<div className="relative size-[120px] rounded-[7px] bg-[#00FFE0] bg-opacity-[10%] flex justify-center items-center">
 								<Image
-									src={`${IMAGE_URL}?path=${element.image_path}`}
+									src={APIs.image(element.image_path)}
 									width={90}
 									height={90}
 									className="size-[90px] border-2 border-black cursor-pointer hover:size-full transition duration-1000"
@@ -99,7 +98,7 @@ function Boards({ boards, setBoards, isLoading }) {
 								<Image
 									width={212}
 									height={117}
-									src={`${IMAGE_URL}?path=${element.image_path}`}
+									src={APIs.image(element.image_path)}
 									className="w-[212px] h-[117px] cursor-pointer hover:w-[100%] hover:h-[100%]  transition duration-[5000ms]"
 									alt="boards"
 									onClick={
@@ -188,7 +187,7 @@ export default function MyCollection() {
 
 	useEffect(() => {
 		const fetchItems = async () => {
-			const [isOk, status, data] = await fetch_jwt(ITEMS_URL, {
+			const [isOk, status, data] = await fetch_jwt(APIs.game.items, {
 				username: userProfile.username,
 			});
 			setLoading(false);

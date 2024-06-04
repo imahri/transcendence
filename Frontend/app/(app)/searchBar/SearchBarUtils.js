@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { IMAGE_URL, USER_SEARCH_URL } from "@/app/URLS";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 export function Result({ data }) {
 	return (
@@ -13,7 +12,7 @@ export function Result({ data }) {
 				className="size-[40px] rounded-full"
 				width={0}
 				height={0}
-				src={`${IMAGE_URL}?path=${data.img}`}
+				src={APIs.image(data.img)}
 				alt="friend image"
 			/>
 			<div className=" max-w-[170px] overflow-x-hidden">
@@ -38,7 +37,7 @@ export function UserNotFound({ input }) {
 }
 
 export async function searchForUsers(searchText, setResult) {
-	const [isOk, status, data] = await fetch_jwt(USER_SEARCH_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.user.search, {
 		search: searchText,
 	});
 	if (!isOk) {

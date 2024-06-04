@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { useState, useContext, useEffect } from "react";
 import { UserContext } from "@/app/(app)/context";
-import { GET_5Friends_URL, IMAGE_URL } from "@/app/URLS";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { UserProfileContext } from "../page";
 
 async function callBack(action, friend_id, ws) {
@@ -99,9 +98,12 @@ function Friend({ displayFriends, username }) {
 
 	useEffect(() => {
 		const get5Friends = async () => {
-			const [isOk, status, data] = await fetch_jwt(GET_5Friends_URL, {
-				username: username,
-			});
+			const [isOk, status, data] = await fetch_jwt(
+				APIs.user.five_friends,
+				{
+					username: username,
+				},
+			);
 			if (!isOk) {
 				// setError(true); /// error
 				return;
@@ -119,7 +121,7 @@ function Friend({ displayFriends, username }) {
 					return (
 						<Image
 							key={index}
-							src={`${IMAGE_URL}?path=${fr.img}`}
+							src={APIs.image(fr.img)}
 							width={35}
 							height={35}
 							className={`size-[35px] [@media(max-width:850px)]:size-[30px] rounded-full cursor-pointer ${friends.length > 1 ? "mr-[-10px]" : ""}`}
@@ -185,7 +187,7 @@ function ProfileInfo({ displayFriends, EditProfile }) {
 			<div className="rounded-full size-[160px] md:size-[130px] sm:size-[150px] absolute left-[50px] lg:left-[20px] md:left-[20px] top-[-30px] flex justify-center items-center bg-[#353535] sm:relative xs:relative sm:top-0 xs:top-0 sm:left-0 xs:left-0">
 				<Image
 					className="rounded-full size-[90%]"
-					src={`${IMAGE_URL}?path=${user.info.profile_img}`}
+					src={APIs.image(user.info.profile_img)}
 					width={0}
 					height={0}
 					alt="profile image"

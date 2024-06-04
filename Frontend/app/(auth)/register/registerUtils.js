@@ -1,5 +1,4 @@
-import { REGISTER_URL } from "../../URLS";
-
+import { APIs } from "@/Tools/fetch_jwt_client";
 import { postRequest, errorInForm } from "../AuthTools/LoginRegisterTools";
 
 function onlySpace(str) {
@@ -91,7 +90,7 @@ export const registerSubmit = async (
 	};
 
 	try {
-		const response = await postRequest(REGISTER_URL, requestBody);
+		const response = await postRequest(APIs.auth.register, requestBody);
 
 		if (response.ok) {
 			console.log("Login successful");

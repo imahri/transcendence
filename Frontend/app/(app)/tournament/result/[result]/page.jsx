@@ -5,8 +5,7 @@ import CommonSection, {
 	getParticipant,
 } from "./components/CommonSection";
 import { useEffect, useState } from "react";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { GETTOURNAMENT_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import SmallComponnent from "./components/SmallComponent";
@@ -18,7 +17,7 @@ async function getTournament(
 	navigate,
 ) {
 	const [isOk, status, data] = await fetch_jwt(
-		GETTOURNAMENT_URL + tournamentName,
+		APIs.tournament.get_tournament + tournamentName,
 	);
 
 	if (!isOk) {

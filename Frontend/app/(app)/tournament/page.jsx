@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import Create from "./components/CreateTournament";
 import Display from "./components/Display";
 import Demo from "./components/JoinTournament";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { TOURNAMENT_SEARCH_URL, TOURNAMENT_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { UserNotFound } from "../searchBar/SearchBarUtils";
 
 function PlusSvg(setCreate, setDemo) {
@@ -37,7 +36,7 @@ async function searchTournament(input, setResult, setCreate, setDemo) {
 		return;
 	}
 
-	const [isOk, status, data] = await fetch_jwt(TOURNAMENT_SEARCH_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.tournament.search, {
 		search: input,
 	});
 
@@ -49,7 +48,9 @@ async function searchTournament(input, setResult, setCreate, setDemo) {
 }
 
 async function getMyTornament(setResult) {
-	const [isOk, status, data] = await fetch_jwt(TOURNAMENT_URL);
+	const [isOk, status, data] = await fetch_jwt(
+		APIs.tournament.get_tournament,
+	);
 
 	if (!isOk) {
 		console.log(data);

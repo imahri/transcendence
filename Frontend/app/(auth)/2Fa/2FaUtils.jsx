@@ -1,12 +1,12 @@
 import { settoken } from "../AuthTools/tokenManagment";
-import { TOWFACTOR_URL, TOWFACTOR_QR_URL } from "../../URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 async function sendNumber(username, code) {
 	let params = new URLSearchParams();
 	params.append("user", username);
 	params.append("OTP", code);
 
-	const url = TOWFACTOR_URL + "?" + params.toString();
+	const url = APIs.auth.towfactor + "?" + params.toString();
 
 	const response = await fetch(url);
 	return response;

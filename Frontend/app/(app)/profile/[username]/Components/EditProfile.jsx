@@ -5,7 +5,7 @@ import Image from "next/image";
 import { errorSvg, nameInputSvg } from "@/app/(auth)/Allsvg";
 import { ChangeInfo } from "./EditUtils";
 import Loading from "@/app/(auth)/Loading";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 function InputContainer({ type, label, id, placeHolder, error }) {
 	return (
@@ -63,7 +63,7 @@ function EditProfile({ closePopup }) {
 
 	const [error, setError] = useState();
 	const { user, setUser } = useContext(UserContext);
-	const [image, setImage] = useState(`${IMAGE_URL}?path=${user.img}`);
+	const [image, setImage] = useState(APIs.image(user.img));
 	const [isLoading, setLoading] = useState();
 
 	return (

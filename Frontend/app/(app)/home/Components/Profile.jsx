@@ -5,7 +5,7 @@ import "./Profile.css";
 
 import Image from "next/image";
 import { UserContext } from "../../context";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 function State({ number, name, color }) {
 	return (
@@ -61,7 +61,7 @@ function Profile() {
 						<div className="w-[51px] h-[47px] rounded-[5px] flex justify-center items-center">
 							<Image
 								className="rounded-[4px]"
-								src={`${IMAGE_URL}?path=${user.info.grade.image}`}
+								src={APIs.image(user.info.grade.image)}
 								width={70}
 								height={70}
 								alt="Grade"

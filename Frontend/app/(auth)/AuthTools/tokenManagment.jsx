@@ -1,5 +1,4 @@
 import { setCookie, getCookie, deleteCookie } from "cookies-next";
-// import { REFRESH_TOKEN_URL } from "../../URLS.js";
 
 export function settoken(tokens) {
 	setCookie("access_token", tokens.access, { sameSite: "strict" });

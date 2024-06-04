@@ -37,25 +37,25 @@ function Links(props) {
 					</Link>
 				</ul>
 
-				<ul className="relative m-[20px] flex justify-center items-center cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center cursor-pointer">
 					<Link href="/chat">
 						{Chat && borderLeft()}
 						{LinkSvg(ChatPath(Chat), 20, 21)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center items-center  cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center  cursor-pointer">
 					<Link href="/game">
 						{Game && borderLeft()}
 						{LinkSvg(GamePath(Game), 28, 20)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center items-center  cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center  cursor-pointer">
 					<Link href="/store">
 						{Store && borderLeft()}
 						{LinkSvg(StorePath(Store), 20, 21)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center items-center  cursor-pointer">
+				<ul className="relative m-[20px] flex justify-center  cursor-pointer">
 					<Link href="/rank">
 						{Rank && borderLeft()}
 						{LinkSvg(RankPath(Rank), 28, 20)}

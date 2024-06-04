@@ -3,7 +3,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import logo from "@/app/logo.svg";
 import { UserContext } from "../../context";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 function Badge(props) {
 	const { user } = useContext(UserContext); // you should pass the user
@@ -15,7 +15,7 @@ function Badge(props) {
 		width: `${levelPercent}%`,
 		backgroundColor: badgeInfo.color,
 	};
-	const url = `${IMAGE_URL}?path=${badgeInfo.image_path}`;
+	const url = APIs.image(badgeInfo.image_path);
 	const background_style = {
 		backgroundImage: `url("${url}")`,
 	};
@@ -44,7 +44,7 @@ function Badge(props) {
 							className="rounded-[8px] size-[51px]"
 							width={0}
 							height={0}
-							src={`${IMAGE_URL}?path=${user.info.profile_img}`}
+							src={APIs.image(user.info.profile_img)}
 							alt="profile image"
 						/>
 						<div className="flex flex-col justify-center ml-[10px]">
