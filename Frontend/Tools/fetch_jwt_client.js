@@ -29,6 +29,7 @@ export const APIs = {
 		return `${USER_APP}/image?path=${path}`;
 	},
 	user: {
+		notif_ws: `${WS}/ws/notif`,
 		user: `${USER_APP}/`,
 		search: `${USER_APP}/search`,
 		get_user: `${USER_APP}/user`,
