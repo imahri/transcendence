@@ -1,11 +1,10 @@
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { ITEMS_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 export async function buyItem(item_type, item, setOwned, setError) {
 	const body = { action: "buy", item_type: item_type, item_id: item.id };
 
 	const [isOk, status, data] = await fetch_jwt(
-		ITEMS_URL,
+		APIs.game.items,
 		{},
 		{
 			method: "PUT",
