@@ -83,8 +83,7 @@ class Match(models.Model):
     def set_score(self, score, exp, save=True):
         self.score = score
         if self.user:
-            self.user.info.exp += exp
-            self.user.info.save()
+            self.user.info.add_exp(exp)
         self.is_played = True
         if save:
             self.save()

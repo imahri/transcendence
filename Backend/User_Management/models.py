@@ -244,6 +244,25 @@ class Info(models.Model):
     def create(user: User):
         Info(user=user).save()
 
+    def add_exp(self, exp, save=True):
+        from Game.models import Grade
+        #! Add level
+        self.exp += exp
+        if self.exp >= 500 and self.exp < 1500 and self.grade.name != "Silver":
+            self.grade = Grade.objects.get(pk=2)
+        elif self.exp >= 1500 and self.exp < 3000 and self.grade.name != "Gold":
+            self.grade = Grade.objects.get(pk=3)
+        elif self.exp >= 3000 and self.exp < 5000 and self.grade.name != "Platinum":
+            self.grade = Grade.objects.get(pk=4)
+        elif self.exp >= 5000 and self.exp < 9000 and self.grade.name != "Diamond":
+            self.grade = Grade.objects.get(pk=5)
+        elif self.exp >= 9000 and self.exp < 15000 and self.grade.name != "Master":
+            self.grade = Grade.objects.get(pk=6)
+        elif self.exp >= 15000 and self.grade.name != "Grand Master":
+            self.grade = Grade.objects.get(pk=7)
+        if save:
+            self.save()
+
 
 class Friend(models.Model):
     """
