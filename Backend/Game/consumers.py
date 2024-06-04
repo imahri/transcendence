@@ -624,6 +624,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
             print("nooooo")
+        if len(self.game_room[index][1]) == 1:
+            self.game_room[index][1][0] = self.game_room[index][1][0] + "_old"
+            self.game_room[index][1].append("odin_old")
+            print(self.game_room)
         obg: Game = self.game_object[index]
         obg.reconnect = True
         obg.reconnect_counter = 0
