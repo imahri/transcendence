@@ -104,21 +104,6 @@
 } */
 
 
-
-.first{
-    background-image: url('../images/kakashi.png');
-    background-size: cover;
-    background-position: center;
-    filter: grayscale(75%);
-    transition: 0.5s;
-}
-
-.first:hover{
-    opacity: 1;
-    filter: grayscale(0%);
-    
-}
-
 .second{
     background-image: url('../images/classic.png');
     background-size: cover;

@@ -14,15 +14,6 @@ const Cardchoice = () => {
 				</div>
 				<div className={`${styles.rows_exac} ${styles.fliko}`}>
 					<div className={styles.content}>
-						{/* <div className={`${styles.item}`}>
-							<div className={`${styles.card} ${styles.first}`}>
-								<p className={`${styles.graf}`}>Ninjutsu</p>
-							</div>
-							<span className={styles.ti_n}>Ninjutsu</span>
-
-							<div className={styles.shad}></div>
-						</div> */}
-
 						<div className={`${styles.item}`}>
 							<div
 								className={`${styles.card} ${styles.second} ${styles.middle_it}`}
@@ -31,7 +22,7 @@ const Cardchoice = () => {
 									href="/game/matching"
 									className={styles.lunin}
 								></Link>
-								<p className={`${styles.graf}`}>Classic</p>
+								<p className={`${styles.graf}`}>Matching</p>
 							</div>
 							<span className={styles.ti_n}>Classic</span>
 							<div className={styles.shad}></div>

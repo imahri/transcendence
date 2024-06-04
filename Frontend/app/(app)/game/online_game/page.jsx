@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import Cardchoice from "@/app/(app)/game/choice/components/card_coice/Cardchoice";
+import Cardchoice from "@/app/(app)/game/online_game/components/card_coice/Cardchoice";
 
 const Choice = () => {
 	return (

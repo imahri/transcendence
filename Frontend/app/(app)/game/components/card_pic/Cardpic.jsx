@@ -11,7 +11,7 @@ const Cardpic = () => {
 			<div className={`${styles.container}`}>
 				<div className={styles.title}>Mode</div>
 				<div className={`${styles.bor}`}>
-					<Link href="game/choice_local">
+					<Link href="game/choice">
 						<div className={styles.all_in}>
 							<div
 								className={`${styles.card} ${styles.bot}`}
@@ -20,7 +20,7 @@ const Cardpic = () => {
 						</div>
 					</Link>
 
-					<Link href="game/choice">
+					<Link href="game/online_game">
 						<div className={styles.all_in}>
 							<div
 								className={`${styles.card} ${styles.friend}`}
