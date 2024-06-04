@@ -373,12 +373,19 @@
     color: #181818;
 }
 
+.player_picture{
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
 
 .pr_player{
     height: 4rem;
     width: 4rem;
     border-radius: 50%;
     background: cyan;
+    overflow: hidden;
 }
 
 .versus{

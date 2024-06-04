@@ -44,11 +44,6 @@ const Cardchoice = () => {
 							<div className={`${styles.card} ${styles.third}`}>
 								<p className={`${styles.graf}`}>Bot</p>
 							</div>
-							<span
-								className={`${styles.ti_n} ${styles.lastOne}`}
-							>
-								Tournament
-							</span>
 
 							<div className={styles.shad}></div>
 						</Link>
