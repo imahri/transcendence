@@ -5,20 +5,21 @@ import { IMAGE_URL } from "@/app/URLS";
 
 const Player_rank = ({ idx, info: { username, level, grade_img, exp } }) => {
 	return (
-		<tr>
-			<td className={`${styles.tco} ${styles.paco}`}>{idx}</td>
-			<td className={styles.tco}>{username}</td>
-			<td className={styles.tco}>{level}</td>
-			<td className={`${styles.tco} w-10`}>
+		<div className={styles.head}>
+			<div className={styles.pack}>{idx}</div>
+			<div className={styles.pack}>{username}</div>
+			<div className={styles.pack}>{level}</div>
+			<div className={`${styles.pack}`}>
 				<Image
 					src={`${IMAGE_URL}?path=${grade_img}`}
-					width={200}
-					height={200}
+					width={50}
+					height={100}
 					alt="grade badge"
+					className={styles.pictu}
 				/>
-			</td>
-			<td className={styles.tco}>{exp}</td>
-		</tr>
+			</div>
+			<div className={styles.pack}>{exp}</div>
+		</div>
 	);
 };
 

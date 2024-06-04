@@ -301,22 +301,8 @@
     }
 }
 
-.table{
-    width: 90%;
-    margin: auto;
-    font-weight: 500;
-    color: white;
-    background: #444444;
-    border-radius: 10px;
-}
 
 
-.tco{
-    padding: 20px 0;
-    height: 100%;
-    text-align: center;
-    align-items: center;
-}
 
 
 .histo{
@@ -350,4 +336,34 @@
 
 .paco{
     width: 10%;
+}
+
+
+.container_player{
+    width: 95%;
+    height: 800px;
+    margin: auto;
+    border-radius: 15px;
+    background: #444444;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+}
+
+.head{
+    display: flex;
+    font-size: 20px;
+    font-weight: 500;
+    width: 100%;
+    color: white;
+    padding: 15px 0;
+}
+.pack{
+    width: 20%;
+    text-align: center;
+}
+
+.pictu{
+    margin-left: 50%;
+    transform: translate(-50%,0);
 }

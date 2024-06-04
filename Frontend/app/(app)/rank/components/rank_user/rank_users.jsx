@@ -44,25 +44,18 @@ const Ranking = async () => {
 				</div>
 
 				<div className={`${styles.layer} ${styles.rank}`}>
-					<table className={styles.table}>
-						<thead className={styles.thead}>
-							<tr>
-								<th className={styles.tco}>Rank</th>
-								<th className={styles.tco}>Full Name</th>
-								<th className={styles.tco}>Level</th>
-								<th className={styles.tco}>Grade</th>
-								<th className={styles.tco}>Exp</th>
-							</tr>
-						</thead>
-						<tbody className="overflow-x-auto">
-							{/* <tr>
-								<td className={styles.tco}></td>
-							</tr> */}
-							{data.map((info, idx) => (
-								<Player_rank key={idx} idx={idx} info={info} />
-							))}
-						</tbody>
-					</table>
+					<div className={styles.container_player}>
+						<div className={styles.head}>
+							<div className={styles.pack}>Rank</div>
+							<div className={styles.pack}>Full Name</div>
+							<div className={styles.pack}>Level</div>
+							<div className={styles.pack}>Grade</div>
+							<div className={styles.pack}>Exp</div>
+						</div>
+						{data.map((info, idx) => (
+							<Player_rank key={idx} idx={idx} info={info} />
+						))}
+					</div>
 				</div>
 				<div className={`${styles.layer} ${styles.last}`}></div>
 			</div>
