@@ -2,9 +2,8 @@
 import { useState, useEffect } from "react";
 import Badge from "./Badge";
 import common from "./styles/Common.module.css";
-import { BADGES_URL } from "../../../URLS";
 import { buyItem, walletSvg } from "./StoreItems";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
 
 function BadgeItem({ obj, owned, setOwned, setError }) {
@@ -40,7 +39,7 @@ function Badges({ setError }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			const [isOk, status, data] = await fetch_jwt(BADGES_URL);
+			const [isOk, status, data] = await fetch_jwt(APIs.game.badges);
 
 			if (isOk) {
 				setBadgesObjs(data.badges);

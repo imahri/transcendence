@@ -5,8 +5,7 @@ import { UserContext } from "../../context";
 import Banner from "./Components/Banner";
 import ProfileInfo from "./Components/ProfileInfo";
 import Dashboard from "./Components/Dashboard";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { GET_USER_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
 import Friendspopup from "./Components/DisplayFreinds";
 import EditProfile from "./Components/EditProfile";
@@ -14,7 +13,7 @@ import EditProfile from "./Components/EditProfile";
 export const UserProfileContext = createContext();
 
 async function getUser(username, setUserProfile, setisLoading, navigate) {
-	const [isOk, status, data] = await fetch_jwt(GET_USER_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.user.get_user, {
 		username: username,
 	});
 	if (!isOk) {

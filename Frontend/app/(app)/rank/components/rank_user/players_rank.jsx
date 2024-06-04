@@ -1,7 +1,7 @@
 import styles from "./rank.module.css";
 import Image from "next/image";
 import first_grade from "../images/first.svg";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 const Player_rank = ({ idx, info: { username, level, grade_img, exp } }) => {
 	return (
@@ -11,7 +11,7 @@ const Player_rank = ({ idx, info: { username, level, grade_img, exp } }) => {
 			<div className={styles.pack}>{level}</div>
 			<div className={`${styles.pack}`}>
 				<Image
-					src={`${IMAGE_URL}?path=${grade_img}`}
+					src={APIs.image(grade_img)}
 					width={50}
 					height={100}
 					alt="grade badge"

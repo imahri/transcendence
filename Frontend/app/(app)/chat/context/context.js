@@ -1,6 +1,6 @@
 "use client";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
-import { wsChat } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
 import { useNotification } from "../Hooks/useNotification";
@@ -15,7 +15,7 @@ export const WsChatProvider = ({ children, conversations }) => {
 
 	useEffect(() => {
 		if (!socket) {
-			setSocket(new WebSocket(wsChat + `?token=${getToken()}`));
+			setSocket(new WebSocket(APIs.chat.ws + `?token=${getToken()}`));
 			return;
 		}
 		socket.onopen = () => console.log("Connected with ws/chat");

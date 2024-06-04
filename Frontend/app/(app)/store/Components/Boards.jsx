@@ -2,14 +2,13 @@
 import { useState, useEffect } from "react";
 import common from "./styles/Common.module.css";
 import { buyItem, walletSvg } from "./StoreItems";
-import { BOARDES_URL, IMAGE_URL } from "../../../URLS";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
 
 function Board({ obj, owned, setOwned, setError }) {
 	const isOwned = owned.includes(obj.id);
 	const [show, setshow] = useState();
-	const url = `${IMAGE_URL}?path=${obj.image_path}`;
+	const url = APIs.image(obj.image_path);
 	const style = {
 		backgroundImage: `url(${url})`,
 	};
@@ -43,7 +42,7 @@ function Boards({ setError }) {
 
 	useEffect(() => {
 		const getItems = async () => {
-			const [isOk, status, data] = await fetch_jwt(BOARDES_URL);
+			const [isOk, status, data] = await fetch_jwt(APIs.game.boards);
 
 			if (isOk) {
 				setBoardsObjs(data.boards);

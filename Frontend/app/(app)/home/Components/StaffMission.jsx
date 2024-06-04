@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { Mission, GameMission } from "./Mission";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { MISSIONS_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
 
 function Task({ tasks }) {
@@ -42,7 +41,7 @@ async function verify(setMissions, setverify) {
 	}, 500);
 
 	const [isOk, status, data] = await fetch_jwt(
-		MISSIONS_URL,
+		APIs.game.missions,
 		{},
 		{ method: "PUT" },
 	);
@@ -78,7 +77,9 @@ function StaffMission() {
 	useEffect(() => {
 		if (!missions) {
 			const getMission = async (setMissions) => {
-				const [isOk, status, data] = await fetch_jwt(MISSIONS_URL);
+				const [isOk, status, data] = await fetch_jwt(
+					APIs.game.missions,
+				);
 				if (isOk) {
 					setMissions(data);
 					setLoading(false);

@@ -1,4 +1,4 @@
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,7 +22,7 @@ function GameState({ user1, user2, score1, score2 }) {
 						className="size-[95%] rounded-full"
 						height={0}
 						width={0}
-						src={`${IMAGE_URL}?path=${user1.img}`}
+						src={APIs.image(user1.img)}
 						alt="User Image"
 					/>
 				</div>
@@ -46,7 +46,7 @@ function GameState({ user1, user2, score1, score2 }) {
 						width={0}
 						height={0}
 						className="size-[95%] rounded-full"
-						src={`${IMAGE_URL}?path=${user2.img}`}
+						src={APIs.image(user2.img)}
 						alt="Friend Image"
 					/>
 				</div>

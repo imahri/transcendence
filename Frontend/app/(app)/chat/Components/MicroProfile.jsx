@@ -1,4 +1,4 @@
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import Image from "next/image";
 
 export const MicroProfile = ({ onClick, user }) => (
@@ -8,7 +8,7 @@ export const MicroProfile = ({ onClick, user }) => (
 	>
 		<Image
 			className={"h-12 w-12 rounded-full mr-3"}
-			src={`${IMAGE_URL}?path=${user.info.profile_img}`}
+			src={APIs.image(user.info.profile_img)}
 			width={200}
 			height={200}
 			alt="profile image"
@@ -29,7 +29,7 @@ export const MicroProfileFriend = ({ onClick, friend }) => (
 	>
 		<Image
 			className={"h-10 w-10 rounded-full mr-3"}
-			src={`${IMAGE_URL}?path=${friend.img}`}
+			src={APIs.image(friend.img)}
 			width={200}
 			height={200}
 			alt="profile image"

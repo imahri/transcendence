@@ -1,13 +1,12 @@
 "use client";
+import { useContext, useEffect, useState } from "react";
+import "./Dashboard.css";
 import LastGame from "./LastGame";
 import Historic from "./Historic";
 import StaffMission from "./StaffMission";
 import LastNotif from "./LastNotif";
-import "./Dashboard.css";
-import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { MATCHES_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 async function GameHistoric(
 	username,
@@ -16,7 +15,7 @@ async function GameHistoric(
 	setLoading,
 ) {
 	setLoading(true);
-	const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.game.matches, {
 		username: username,
 	});
 	if (!isOk) {

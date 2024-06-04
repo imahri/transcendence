@@ -1,5 +1,4 @@
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { USER_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 function onlySpace(str) {
 	return str.trim().length == 0;
@@ -22,7 +21,7 @@ async function sent(NewInfo, setError, setUser, closePopup) {
 	NewInfo.first_name ? formData.append("first_name", NewInfo.first_name) : "";
 
 	const [isOk, status, data] = await fetch_jwt(
-		USER_URL,
+		APIs.user.user,
 		{},
 		{
 			method: "POST",

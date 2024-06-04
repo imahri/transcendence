@@ -5,8 +5,7 @@ import { UserProfileContext } from "../page";
 import Image from "next/image";
 import noTrophy from "../assets/noTrophy.png";
 import Trophy from "../assets/Trophy.png";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { ACHEIVMENTS_URL, IMAGE_URL, MATCHES_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 function DisplayStatistic({ title, nb }) {
 	return (
@@ -40,7 +39,7 @@ function Circle({ info }) {
 							{level}
 						</h1>
 						<Image
-							src={`${IMAGE_URL}?path=${info.grade.image}`}
+							src={APIs.image(info.grade.image)}
 							width={60}
 							height={60}
 							alt="Grade"
@@ -90,7 +89,7 @@ function ShowRoom({ items }) {
 								className={`size-[70px] ${obj.unlocked ? "" : "grayscale"}`}
 								width={70}
 								height={70}
-								src={`${IMAGE_URL}?path=${obj.icon_path}`}
+								src={APIs.image(obj.icon_path)}
 								alt="Acheivment"
 							/>
 						);
@@ -131,7 +130,7 @@ async function GameHistoric(
 	setState,
 ) {
 	setLoading(true);
-	const [isOk, status, data] = await fetch_jwt(MATCHES_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.game.matches, {
 		username: username,
 	});
 	if (!isOk) {
@@ -156,9 +155,12 @@ export default function MyState() {
 
 	useEffect(() => {
 		const getAcheivments = async (setAch) => {
-			const [isOk, status, data] = await fetch_jwt(ACHEIVMENTS_URL, {
-				username: userProfile.username,
-			});
+			const [isOk, status, data] = await fetch_jwt(
+				APIs.game.acheivments,
+				{
+					username: userProfile.username,
+				},
+			);
 			if (isOk) {
 				data.sort((a, b) => !a.unlocked);
 				setAch(data);

@@ -31,7 +31,7 @@ export function StartConversation({
 	useEffect(() => {
 		if (visible)
 			// TODO: use route handler
-			fetch_jwt(APIs.user.friends).then(([isOk, status, data]) => {
+			fetch_jwt(APIs.user.my_friends).then(([isOk, status, data]) => {
 				if (isOk) setFriendList(data);
 				_ref.current.classList.toggle("h-[10rem]", !isOk);
 				_ref.current.classList.toggle("h-[33rem]", isOk);

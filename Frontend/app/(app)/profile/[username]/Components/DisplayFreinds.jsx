@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { GET_Friends_URL, IMAGE_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 
 function Friend({ friend }) {
@@ -11,7 +10,7 @@ function Friend({ friend }) {
 			{
 				<Image
 					className="size-[50px] rounded-full"
-					src={`${IMAGE_URL}?path=${friend.img}`}
+					src={APIs.image(friend.img)}
 					width={50}
 					height={50}
 					alt="friend image"
@@ -22,7 +21,7 @@ function Friend({ friend }) {
 					{friend.username}
 				</h2>
 				<h3 className="font-Chakra font-bold text-[14px] text-[#C8C8C8]">
-					{friend.first_name} {friend.last_name}{" "}
+					{friend.first_name} {friend.last_name}
 				</h3>
 			</div>
 		</div>
@@ -35,9 +34,12 @@ export default function Friendspopup({ DisplayFriends, username }) {
 
 	useEffect(() => {
 		const getFriends = async () => {
-			const [isOk, status, data] = await fetch_jwt(GET_Friends_URL, {
-				username: username,
-			});
+			const [isOk, status, data] = await fetch_jwt(
+				APIs.user.other_friends,
+				{
+					username: username,
+				},
+			);
 			if (!isOk) {
 				setError(true);
 				return;

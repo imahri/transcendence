@@ -15,11 +15,10 @@ import {
 	dropUpSvg,
 } from "./Components/AllSvg";
 import { UserContext } from "../context";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 function ProfileBar() {
 	const { user } = useContext(UserContext);
-
 	const [more, setMore] = useState();
 	const navigate = useRouter();
 
@@ -34,7 +33,7 @@ function ProfileBar() {
 				>
 					<img
 						className="w-[48px] h-[48px] rounded-[5px] [@media(max-width:600px)]:rounded-full"
-						src={`${IMAGE_URL}?path=${user.info.profile_img}`}
+						src={APIs.image(user.info.profile_img)}
 						alt="user image"
 					/>
 					<div className="[@media(max-width:600px)]:hidden">

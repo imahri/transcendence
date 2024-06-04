@@ -7,12 +7,11 @@ import WInter from "@/app/(app)/game/game_local/game_win/live_game/Win";
 import LInter from "@/app/(app)/game/game_local/game_lose/live_game/Lose";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { CREATEROOM_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
 
 async function GetRoom(room_name, is_tournament) {
-	const [isOk, status, data] = await fetch_jwt(CREATEROOM_URL, {
+	const [isOk, status, data] = await fetch_jwt(APIs.game.create_room, {
 		room: room_name,
 		tournament: is_tournament,
 	});

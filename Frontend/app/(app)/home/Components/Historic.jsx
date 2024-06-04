@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Ball from "@/app/(app)/game/matching/components/match_making/ball_it";
 import Loading from "@/app/(auth)/Loading";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 function GameState({ User, match }) {
 	const user2 = match.enemy;
@@ -30,7 +30,7 @@ function GameState({ User, match }) {
 					className="size-[95%] rounded-full"
 					width={0}
 					height={0}
-					src={`${IMAGE_URL}?path=${User.img}`}
+					src={APIs.image(User.img)}
 					alt="profile image"
 				/>
 			</div>
@@ -47,7 +47,7 @@ function GameState({ User, match }) {
 					className="size-[95%] rounded-full"
 					width={0}
 					height={0}
-					src={`${IMAGE_URL}?path=${user2.img}`}
+					src={APIs.image(user2.img)}
 					alt="friend image"
 				/>
 			</Link>

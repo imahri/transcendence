@@ -1,4 +1,4 @@
-import { TOWFACTOR_URL, TOWFACTOR_QR_URL, LOGOUT_URL } from "../../../URLS.js";
+import { APIs } from "@/Tools/fetch_jwt_client.js";
 
 import {
 	getToken,
@@ -11,7 +11,7 @@ export async function logout(navigate) {
 	const requestBody = { refresh: getRefreshToken() };
 
 	const [isOk, status, data] = await fetch_jwt(
-		LOGOUT_URL,
+		APIs.auth.logout,
 		{},
 		{
 			method: "POST",
@@ -29,7 +29,7 @@ export async function logout(navigate) {
 
 async function fetchCodeQr() {
 	const token = getToken();
-	const response = await fetch(TOWFACTOR_URL, {
+	const response = await fetch(APIs.auth.towfactor, {
 		method: "POST",
 		headers: { Authorization: "Bearer " + token },
 	});
@@ -38,7 +38,7 @@ async function fetchCodeQr() {
 
 async function refetchCodeQr() {
 	const token = getToken();
-	const response = await fetch(TOWFACTOR_QR_URL, {
+	const response = await fetch(APIs.auth.towfactor_qr, {
 		headers: { Authorization: "Bearer " + token },
 	});
 	return response;
@@ -47,9 +47,12 @@ async function refetchCodeQr() {
 export async function TowFaHandler(TowFa, setTowFa, setQrImage) {
 	try {
 		if (TowFa) {
-			const [isOk, status, resonse] = await fetch_jwt(TOWFACTOR_URL, {
-				method: "DELETE",
-			});
+			const [isOk, status, resonse] = await fetch_jwt(
+				APIs.auth.towfactor,
+				{
+					method: "DELETE",
+				},
+			);
 			if (isOk) {
 				console.log("2Fa desactivated");
 				setTowFa(false);

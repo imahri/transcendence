@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChatSvg, GmaeSvg, FriendSvg, AccepSvg, DeclineSvg } from "./AllSvg";
 import { UserContext } from "../../context";
-import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-import { IMAGE_URL, NOTIF_URL } from "@/app/URLS";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import trophy from "@/app/(app)/tournament/assets/trophy.png";
+
 import {
 	accept,
 	calculateTimeDifference,
@@ -47,8 +47,7 @@ function NotifSection({ notif, ws }) {
 	const link = getNotifLink(notif);
 	const time = calculateTimeDifference(notif.time);
 	const isRead = checkReadNotif(notif, user.id);
-	const SrcImage =
-		ntype == "T" ? trophy : `${IMAGE_URL}?path=${notif.user.img}`;
+	const SrcImage = ntype == "T" ? trophy : APIs.image(notif.user.img);
 	return (
 		<Link
 			href={link}
@@ -88,7 +87,7 @@ function NotifSection({ notif, ws }) {
 }
 
 async function getNotif(setNotif, setNbNotif) {
-	const [isOk, status, data] = await fetch_jwt(NOTIF_URL);
+	const [isOk, status, data] = await fetch_jwt(APIs.user.notification);
 	if (isOk) {
 		setNbNotif(data.nb_unreaded);
 		setNotif(data.allNotif);

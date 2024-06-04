@@ -8,7 +8,7 @@ import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "@/app/(app)/context";
 import Image from "next/image";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
 var count;
 
@@ -36,7 +36,7 @@ const Matching = () => {
 							<div className={`${styles.first_player}`}>
 								<div className={`${styles.player_pic}`}>
 									<Image
-										src={`${IMAGE_URL}?path=${user.img}`}
+										src={APIs.image(user.img)}
 										height={100}
 										width={200}
 										className={`${styles.player_picture}`}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Lose.module.css";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "@/app/(app)/context";
 
@@ -31,7 +31,7 @@ const LInter = () => {
 						<span className={styles.title}>unfortunately</span>
 						<div className={styles.pic}>
 							<Image
-								src={`${IMAGE_URL}?path=${user.img}`}
+								src={APIs.image(user.img)}
 								height={100}
 								width={200}
 								className={`${styles.player_picture}`}

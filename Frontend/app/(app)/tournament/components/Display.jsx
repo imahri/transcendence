@@ -1,4 +1,4 @@
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import Image from "next/image";
 
 export default function Display({ obj, setDemo, setResult }) {
@@ -19,7 +19,7 @@ export default function Display({ obj, setDemo, setResult }) {
 			</div>
 			<Image
 				className="size-[40px] cursor-pointer rounded-full"
-				src={`${IMAGE_URL}?path=${obj.creator.img}`}
+				src={APIs.image(obj.creator.img)}
 				width={40}
 				height={40}
 				alt="Tournamnt owner"

@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import styles from "./styles/ProfileBar.module.css";
 import ExitArrowIcon from "./assets/exit_arrow_icon";
 import { useRouter } from "next/navigation";
-import { IMAGE_URL } from "@/app/URLS";
+import { APIs } from "@/Tools/fetch_jwt_client";
 import { UserContext } from "@/app/(app)/context";
 
 export const ActiveStatusTypes = Object.freeze({
@@ -82,7 +82,7 @@ export function ProfileBar({
 							className={styles.profileBar_Image}
 							width={100}
 							height={100}
-							src={`${IMAGE_URL}?path=${image}`}
+							src={APIs.image(image)}
 							alt="Profile image"
 						/>
 					)}
