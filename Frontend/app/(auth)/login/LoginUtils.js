@@ -82,7 +82,13 @@ export const handel42 = async (e) => {
 	window.location.href = redirectUrl;
 };
 
-export async function get42Token(navigate, code, setisLoading, setError) {
+export async function get42Token(
+	navigate,
+	code,
+	setisLoading,
+	setError,
+	setPopUp2Fa,
+) {
 	setisLoading(true);
 	let body = { code: code };
 	try {
@@ -93,8 +99,12 @@ export async function get42Token(navigate, code, setisLoading, setError) {
 		});
 
 		if (response.ok) {
-			const tokens = await response.json();
-			settoken(tokens);
+			setisLoading(false);
+			const data = await response.json();
+			if (data?.success == "2FA Required") {
+				return setPopUp2Fa(data.username);
+			}
+			settoken(data);
 			console.log("Login successful");
 			navigate.replace("/home");
 		} else {

@@ -29,7 +29,7 @@ export async function submitNumber(username, code, setErrorSubmit, navigate) {
 			const tokens = await response.json();
 			settoken(tokens);
 			console.log("login success");
-			navigate.replace("/home");
+			navigate.push("/home");
 		} else {
 			error();
 			console.log("error response :", response);

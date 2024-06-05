@@ -199,7 +199,8 @@ class intra_auth(APIView):
                 return Response(data=returnValue[1], status=401)
 
             user : User = returnValue[1]
-
+            if user.is_2FA_active:
+                return JsonResponse({"success": "2FA Required", "username": user.username})
             access_token = AccessToken.for_user(user)
             refresh_token = RefreshToken.for_user(user)
             return JsonResponse({'access': str(access_token), 'refresh': str(refresh_token)}, status=200)

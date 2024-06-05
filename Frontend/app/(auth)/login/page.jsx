@@ -67,7 +67,7 @@ export default function Login() {
 
 		if (code) {
 			setisLoading(true);
-			get42Token(navigate, code, setisLoading, setError);
+			get42Token(navigate, code, setisLoading, setError, setPopUp2Fa);
 		}
 	}, []);
 
