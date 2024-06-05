@@ -72,7 +72,9 @@ function Buttons({ profileUser, EditProfile }) {
 
 	return (
 		<div className="flex justify-between items-center gap-[15px]">
-			<GoChat username={profileUser.username} />
+			{profileUser.friendship == "F" && (
+				<GoChat username={profileUser.username} />
+			)}
 			<div
 				className="flex flex-col gap-[10px] mr-[50px] [@media(max-width:850px)]:mr-[20px]"
 				onClick={status == "owner" ? () => EditProfile(true) : null}
