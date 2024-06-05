@@ -261,6 +261,7 @@ class Info(models.Model):
         # level
         if self.exp >= (70 * (1.5 ** (self.level - 1))):
             self.level += 0.1
+            self.level = round(self.level,2)
         if save:
             self.save()
 
