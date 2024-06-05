@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "@/app/(app)/context";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { UserProfileContext } from "../page";
+import { GoChat } from "./GoChat";
 
 async function callBack(action, friend_id, ws) {
 	let my_action = action;
@@ -70,23 +71,26 @@ function Buttons({ profileUser, EditProfile }) {
 	}, [ws]);
 
 	return (
-		<div
-			className="flex flex-col gap-[10px] mr-[50px] [@media(max-width:850px)]:mr-[20px]"
-			onClick={status == "owner" ? () => EditProfile(true) : null}
-		>
-			{Allbuttons.filter((element) => element.status === status).map(
-				(element, index) => {
-					return (
-						<Button
-							key={index}
-							action={element.action}
-							friend_id={profileUser.id}
-							color={element.color}
-							ws={ws}
-						/>
-					);
-				},
-			)}
+		<div className="flex justify-between items-center gap-[15px]">
+			<GoChat username={profileUser.username} />
+			<div
+				className="flex flex-col gap-[10px] mr-[50px] [@media(max-width:850px)]:mr-[20px]"
+				onClick={status == "owner" ? () => EditProfile(true) : null}
+			>
+				{Allbuttons.filter((element) => element.status === status).map(
+					(element, index) => {
+						return (
+							<Button
+								key={index}
+								action={element.action}
+								friend_id={profileUser.id}
+								color={element.color}
+								ws={ws}
+							/>
+						);
+					},
+				)}
+			</div>
 		</div>
 	);
 }
