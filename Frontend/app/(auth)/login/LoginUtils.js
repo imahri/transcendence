@@ -38,14 +38,12 @@ export const handleSubmit = async (
 		const response = await postRequest(APIs.auth.login, requestBody);
 		const responseBody = await response.json();
 		if (response.ok) {
+			setisLoading(false);
 			if (checkBox) setcookie("rememberMe", username);
 			if (responseBody.success != undefined) {
-				console.log("OTP required");
 				setPopUp2Fa(username);
 				return;
 			}
-			console.log("login success");
-			setisLoading(false);
 			settoken(responseBody);
 			navigate.replace("/home");
 		} else {
