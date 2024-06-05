@@ -1,4 +1,5 @@
 "use client";
+import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { useEffect, useState } from "react";
 
 function init_socket(endpoint, query_params) {

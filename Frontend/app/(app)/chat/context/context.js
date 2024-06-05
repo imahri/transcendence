@@ -4,6 +4,7 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
 import { useNotification } from "../Hooks/useNotification";
+import { useWebsocket } from "../../hooks/useWebsocket";
 
 export const WsChatContext = createContext();
 
@@ -29,7 +30,7 @@ async function getConversations() {
 
 export const WsChatProvider = ({ children }) => {
 	const messageUpdatedState = useState(false);
-	const [socket, setSocket] = useState(null);
+	const socket = useWebsocket(APIs.chat.ws);
 	const { user } = useContext(UserContext);
 	const { sendNotif, addListenerNotif } = useNotification();
 	const [data, setData] = useState({ conversations: [] });
@@ -41,17 +42,6 @@ export const WsChatProvider = ({ children }) => {
 			setLoading(false);
 		});
 	}, []);
-
-	useEffect(() => {
-		if (!socket) {
-			setSocket(new WebSocket(APIs.chat.ws + `?token=${getToken()}`));
-			return;
-		}
-		socket.onopen = () => console.log("Connected with ws/chat");
-		socket.onerror = () => console.log("Error in ws/chat");
-		socket.onclose = () => console.log("Disconnected with ws/chat");
-		return () => socket.close();
-	}, [socket]);
 
 	return (
 		<>
