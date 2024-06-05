@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
-import bg from "./borad2.jpg";
 import { useSearchParams } from "next/navigation";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
 let xcord = 0;
 let ycord = 0;
@@ -22,6 +22,7 @@ export const Gameson = ({
 	setScore,
 	setPlayer1,
 	setPlayer2,
+	boardpic,
 }) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
@@ -213,7 +214,8 @@ export const Gameson = ({
 
 			const image = new Image(60, 45);
 			image.onload = drawImageActualSize;
-			image.src = bg.src;
+
+			image.src = APIs.image(boardpic);
 
 			function drawImageActualSize() {
 				ctx.drawImage(image, 0, 0, 2560, 1300);

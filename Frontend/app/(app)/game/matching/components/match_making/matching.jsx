@@ -16,7 +16,7 @@ function getOtherPlayer(player1, player2, user) {
 	return player1;
 }
 
-const Matching = ({ player1, player2 }) => {
+const Matching = ({ player1, player2, boardpic }) => {
 	const { user } = useContext(UserContext);
 
 	const other = getOtherPlayer(player1, player2, user);
@@ -74,40 +74,16 @@ const Matching = ({ player1, player2 }) => {
 								<div className={`${styles.username}`}>
 									{other ? other.username : "XXXXXX"}
 								</div>
-								{/* <div className={`${styles.exp}`}>
-									2564789 exp
-								</div> */}
 							</div>
 						</div>
 					</div>
-
-					{/* choice */}
-					{/* <div className={`${styles.layer} ${styles.four}`}>
-						<div className={styles.choice_container}>
-							<div
-								className={`${styles.boxes} ${styles.box_pic1}`}
-							>
-								<div className={styles.box_overall}></div>
-							</div>
-							<div
-								className={`${styles.boxes} ${styles.box_pic2}`}
-							>
-								<div className={styles.box_overall}></div>
-							</div>
-							<div
-								className={`${styles.boxes} ${styles.box_pic3}`}
-							>
-								<div className={styles.box_overall}></div>
-							</div>
-						</div>
-					</div> */}
 
 					<div className={`${styles.layer} ${styles.five}`}>
 						{/* borad */}
 
 						<div className={styles.container_board}>
 							<div className={styles.badge}></div>
-							<Boardskin />
+							<Boardskin boardpic={boardpic} />
 							<div className={styles.badge}></div>
 						</div>
 					</div>
