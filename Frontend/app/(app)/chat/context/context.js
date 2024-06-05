@@ -1,17 +1,46 @@
 "use client";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
-import { APIs } from "@/Tools/fetch_jwt_client";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
 import { useNotification } from "../Hooks/useNotification";
 
 export const WsChatContext = createContext();
 
-export const WsChatProvider = ({ children, conversations }) => {
+async function getConversations() {
+	const [isOk, status, data] = await fetch_jwt(APIs.chat.conversations, {
+		offset: 1,
+	});
+	if (isOk) {
+		const seen = new Set();
+		const newList = [];
+		for (const obj of data.conversations) {
+			const id = obj.id;
+			if (!seen.has(id)) {
+				seen.add(id);
+				newList.push(obj);
+			}
+		}
+		data.conversations = newList;
+		return data;
+	}
+	return { conversations: [] };
+}
+
+export const WsChatProvider = ({ children }) => {
 	const messageUpdatedState = useState(false);
 	const [socket, setSocket] = useState(null);
 	const { user } = useContext(UserContext);
 	const { sendNotif, addListenerNotif } = useNotification();
+	const [data, setData] = useState({ conversations: [] });
+	const [Loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		getConversations().then((_data) => {
+			setData(_data);
+			setLoading(false);
+		});
+	}, []);
 
 	useEffect(() => {
 		if (!socket) {
@@ -25,18 +54,26 @@ export const WsChatProvider = ({ children, conversations }) => {
 	}, [socket]);
 
 	return (
-		<WsChatContext.Provider
-			value={{
-				user: user,
-				socket: socket,
-				data: conversations,
-				messageUpdatedState: messageUpdatedState,
-				sendNotif: sendNotif,
-				addListenerNotif: addListenerNotif,
-			}}
-		>
-			{children}
-		</WsChatContext.Provider>
+		<>
+			{Loading ? (
+				<div className="w-screen h-screen bg-[#202020] flex justify-center items-center text-white">
+					is Loading ....
+				</div>
+			) : (
+				<WsChatContext.Provider
+					value={{
+						user: user,
+						socket: socket,
+						data: data,
+						messageUpdatedState: messageUpdatedState,
+						sendNotif: sendNotif,
+						addListenerNotif: addListenerNotif,
+					}}
+				>
+					{children}
+				</WsChatContext.Provider>
+			)}
+		</>
 	);
 };
 
