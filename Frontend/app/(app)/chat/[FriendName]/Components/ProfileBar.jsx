@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./styles/ProfileBar.module.css";
 import ExitArrowIcon from "./assets/exit_arrow_icon";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ const ExitArrow = ({ onExit }) => (
 	</button>
 );
 
-function invit(ws, username) {
+function invit(ws, username, setInvit) {
 	const notif = {
 		to: username,
 		type: "G",
@@ -46,19 +46,24 @@ function invit(ws, username) {
 			content: notif,
 		}),
 	);
+	setInvit(true);
 }
 
 const InviteToPlay = ({ name }) => {
 	const { ws } = useContext(UserContext);
+	const [invited, setInvit] = useState();
 
 	return (
 		<div className="w-52 h-full grid place-content-center">
 			<button
-				className="bg-[#E1E1E1] w-40 h-10 rounded-3xl"
-				onClick={() => invit(ws, name)}
+				className={`${invited ? "opacity-60 cursor-not-allowed" : ""} bg-[#E1E1E1] w-40 h-10 rounded-3xl`}
+				onClick={() => invit(ws, name, setInvit)}
+				disabled={invited ? true : false}
 			>
-				<span className="text-black font-bold text-lg">
-					Invite To Play
+				<span
+					className={`${invited ? "opacity-60" : ""} text-black font-bold text-lg`}
+				>
+					{invited ? "Invited" : "Invite To Play"}
 				</span>
 			</button>
 		</div>

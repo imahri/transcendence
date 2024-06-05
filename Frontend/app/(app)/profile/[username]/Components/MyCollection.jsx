@@ -156,7 +156,7 @@ function Badges({ badges, setBadges, isLoading }) {
 											: null
 									}
 								>
-									<Badge BadgeInfo={obj} />
+									<Badge BadgeInfo={obj} user={userProfile} />
 								</div>
 								{badges.current_item.id == obj.id && (
 									<div className="size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white">

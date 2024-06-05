@@ -3,10 +3,14 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
+import Link from "next/link";
 
 function Friend({ friend }) {
 	return (
-		<div className="flex items-center gap-[20px] cursor-pointer">
+		<Link
+			className="flex items-center gap-[20px] cursor-pointer"
+			href={`/profile/${friend.username}`}
+		>
 			{
 				<Image
 					className="size-[50px] rounded-full"
@@ -24,7 +28,7 @@ function Friend({ friend }) {
 					{friend.first_name} {friend.last_name}
 				</h3>
 			</div>
-		</div>
+		</Link>
 	);
 }
 

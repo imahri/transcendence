@@ -38,8 +38,8 @@ const Vim = () => {
 			const tournament_name = searchParams.get("tournament");
 			const data = await GetRoom(room_name, tournament_name != "");
 			console.log(data);
-			// if (!data) return navigate.push("/404"); //hardcoded for now
-			if (!data) return; //hardcoded for now
+			if (!data) return navigate.push("/404"); //hardcoded for now
+			// if (!data) return; //hardcoded for now
 			setRoomName(room_name);
 			setCheckRoom(false);
 		};

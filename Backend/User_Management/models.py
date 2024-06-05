@@ -229,7 +229,7 @@ class Info(models.Model):
     from Game.models import Grade
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    level = models.FloatField(default=1.5)
+    level = models.FloatField(default=1)
     energy = models.IntegerField(default=10)
     exp = models.IntegerField(default=0)
     wallet = models.IntegerField(default=500)
@@ -254,12 +254,13 @@ class Info(models.Model):
             self.grade = Grade.objects.get(pk=3)
         elif self.exp >= 3000 and self.exp < 5000 and self.grade.name != "Platinum":
             self.grade = Grade.objects.get(pk=4)
-        elif self.exp >= 5000 and self.exp < 9000 and self.grade.name != "Diamond":
+        elif self.exp >= 5000 and self.exp < 9000 and self.grade.name != "Master":
             self.grade = Grade.objects.get(pk=5)
-        elif self.exp >= 9000 and self.exp < 15000 and self.grade.name != "Master":
+        elif self.exp >= 9000 and self.grade.name != "Grand Master":
             self.grade = Grade.objects.get(pk=6)
-        elif self.exp >= 15000 and self.grade.name != "Grand Master":
-            self.grade = Grade.objects.get(pk=7)
+        # level
+        if self.exp >= (70 * (1.5 ** (self.level - 1))):
+            self.level += 0.1
         if save:
             self.save()
 
