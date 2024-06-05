@@ -1,6 +1,4 @@
 import styles from "./rank.module.css";
-import Image from "next/image";
-
 import First_Ranking from "./first";
 import Second_Ranking from "./second";
 import Third_Ranking from "./third";
@@ -30,14 +28,19 @@ const Ranking = async () => {
 
 				<div className={`${styles.layer} ${styles.cards}`}>
 					<Second_Ranking
-						username={data[0]?.username}
-						full_name={`${data[0]?.first_name} ${data[0]?.last_name}`}
-					/>
-					<First_Ranking
+						picoProfile={data[1]?.img}
 						username={data[1]?.username}
 						full_name={`${data[1]?.first_name} ${data[1]?.last_name}`}
 					/>
+
+					<First_Ranking
+						picoProfile={data[0]?.img}
+						username={data[0]?.username}
+						full_name={`${data[0]?.first_name} ${data[0]?.last_name}`}
+					/>
+
 					<Third_Ranking
+						picoProfile={data[2]?.img}
 						username={data[2]?.username}
 						full_name={`${data[2]?.first_name} ${data[2]?.last_name}`}
 					/>
@@ -52,13 +55,6 @@ const Ranking = async () => {
 							<div className={styles.pack}>Grade</div>
 							<div className={styles.pack}>Exp</div>
 						</div>
-						{/* <div className={styles.head}>
-							<div className={styles.pack}>55</div>
-							<div className={styles.pack}>weqweqe</div>
-							<div className={styles.pack}>qweqweqweq</div>
-							<div className={`${styles.pack}`}>eeee</div>
-							<div className={styles.pack}>3132</div>
-						</div> */}
 
 						{data.map((info, idx) => (
 							<Player_rank key={idx} idx={idx} info={info} />

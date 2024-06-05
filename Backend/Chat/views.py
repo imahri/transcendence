@@ -42,10 +42,10 @@ class ConversationView(APIView):
         last: bool = bool(request.query_params.get("last", False))
 
         queryset = Conversation.objects.annotate(
-            isExist=Q(owners__pk__contains=user.pk), num_messages=Count("messages")
+            isExist=Q(owners__pk__contains=user.pk)
         )
         conversation_list = (
-            queryset.filter(isExist=True, num_messages__gt=0)
+            queryset.filter(isExist=True)
             .order_by("-last_modified")
             .distinct()
         )

@@ -377,7 +377,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         
                         index = get_room_index(self.game_room, self.room_group_name)
                         self.loba: Game = self.game_object[index]
-                        print("l9wada")
                         asyncio.create_task(self.send_ball_coordinates())
                     return
                 result = []
@@ -472,7 +471,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             obg.uid = data.get("id")
 
         elif data.get("event") == "togglePause":
-            print("pause")
             obg.pause = True
             obg.uid = data.get("id")
 
@@ -652,46 +650,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             }
         )
 
-
-    # async def disconnect(self, code):
-    #     index = get_room_index(self.game_room, self.room_group_name)
-    #     if index != -1:
-    #         obg: Game = self.game_object[index]
-    #         obg.reconnect = True
-    #         checker = []
-    #         print("mcha555")
-    #         if find_player_in_game(self.game_room, self.user.username, checker):
-    #             # found = get_room_index(self.game_room,checker[0])
-    #             # if (len(self.game_room[found][1]) == 1):
-    #                 # self.game_room[found][1][0] = self.user.username + "_old"
-    #                 # self.game_room[found][1].append("odin_old")
-    #                 # print("fama 7aja + " + str(self.game_room[found][1]))
-
-    #                 is_valid = update_item_in_room(
-    #                     self.game_room, checker[0], checker[1], self.user.username
-    #                 )
-    #                 await self.channel_layer.group_add(checker[0], self.channel_name)
-    #                 await self.send_json(
-    #                     content={
-    #                         "event": "index_player",
-    #                         "index": (checker[1] + 1),
-    #                     }
-    #                 )
-
-     
-    #                 index = get_room_index(self.game_room, self.room_group_name)
-    #                 obg = self.game_object[index]
-    #                 obg.pause = True
-    #                 obg.reconnect = False
-    #                 xrr = len(self.game_room[index][1])
-                    
-        
-    #         print("mcha")
-    #         self.channels.pop(self.user.username, None)
-    #         await self.close(code)
-    
     async def disconnect(self, code):
-        print("out")
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
             print("nooooo")

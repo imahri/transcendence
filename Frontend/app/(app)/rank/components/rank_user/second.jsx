@@ -1,12 +1,21 @@
 import styles from "./rank.module.css";
 import Image from "next/image";
 import second_grade from "../images/second.svg";
+import { APIs } from "@/Tools/fetch_jwt_client";
 
-const Cards_Ranking = ({ username, full_name }) => {
+const Cards_Ranking = ({ username, full_name, picoProfile }) => {
 	return (
 		<div className={`${styles.box} ${styles.fp}`}>
 			<div className={`${styles.pic_holder}`}>
-				<div className={`${styles.pic}`}></div>
+				<div className={`${styles.pic}`}>
+					<Image
+						src={APIs.image(picoProfile)}
+						width={50}
+						height={100}
+						alt="grade badge"
+						className={styles.pic_in}
+					/>
+				</div>
 			</div>
 
 			<div className={`${styles.data}`}>
