@@ -48,6 +48,7 @@ export const APIs = {
 		boards: `${GAME_APP}/board`,
 		badges: `${GAME_APP}/badge`,
 		items: `${GAME_APP}/items`,
+		curren_item: `${GAME_APP}/equipeditem`,
 		missions: `${GAME_APP}/missions`,
 		acheivments: `${GAME_APP}/acheivement`,
 		matches: `${GAME_APP}/match`,
