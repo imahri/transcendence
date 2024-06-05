@@ -270,3 +270,22 @@ def get_rank(request):
         data['exp'] = info_data['exp']
         res.append(data)
     return Response(res)
+
+@api_view(['GET'])
+def get_equiped_item(request):
+        # get user items you should pass username in query
+        try:
+            username = request.query_params.get('username')
+            type = request.query_params.get('type')
+            user : User =  User.objects.get(username=username)
+            items = Items.objects.get(user=user, item_class=type)
+            obj = Items.check_type(items.current_item.id, type)
+            ItemSerialized : dict
+            if type == "badges":
+                ItemSerialized = BadgeSerializer(obj).data
+            elif type == "boards":
+                ItemSerialized = BoardSerializer(obj).data
+            return Response(ItemSerialized)
+
+        except Exception as error:
+            return Response(data=str(error), status=400)
