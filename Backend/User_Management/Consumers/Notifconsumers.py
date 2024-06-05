@@ -46,8 +46,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             group_name,
             {'type' : 'send_Onlinestatus', 'username': username, 'status' : 'offline'}
         )
-        if username in self.channels:
-            del self.channels[username]
+        self.channels.pop(username, None)
 
     
     async def receive_json(self, text_data):
@@ -219,7 +218,3 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             await self.send_friend_status(friend, user)
         except Exception as error :
             print(error)
-
-    async def disconnect(self, code):
-        self.channels.pop(self.user.username, None)
-        await self.close(code)
