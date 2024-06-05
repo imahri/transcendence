@@ -1,13 +1,5 @@
 "use client";
 import styles from "./LGame.module.css";
-import Image from "next/image";
-import Link from "next/link";
-import Aup from "../images/up.svg";
-import Ado from "../images/down.svg";
-import Son from "../images/sound.svg";
-import Soff from "../images/mute.svg";
-import Mon from "../images/music.svg";
-import Moff from "../images/no_sound.svg";
 import React, { useEffect, useState } from "react";
 import { Gameson } from "./lgame";
 import Res from "./res";

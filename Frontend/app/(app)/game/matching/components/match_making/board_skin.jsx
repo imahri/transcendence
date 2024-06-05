@@ -1,6 +1,7 @@
 import styles from "./matching.module.css";
 import Paddle from "@/app/(app)/game/matching/components/match_making/paddle";
 import Ball from "@/app/(app)/game/matching/components/match_making/ball_it";
+
 const Boardskin = () => {
 	return (
 		<div className={styles.bord}>

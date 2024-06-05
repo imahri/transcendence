@@ -5,7 +5,6 @@ import p2 from "../images/bachira.jpeg";
 import p3 from "../images/ichigo.jpeg";
 import p4 from "../images/jack.png";
 import p5 from "../images/nuffyy.jpeg";
-import p6 from "../images/obito.jpeg";
 import p7 from "../images/taech.jpeg";
 import p8 from "../images/vin.jpeg";
 

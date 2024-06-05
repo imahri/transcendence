@@ -1,5 +1,3 @@
-import styles from "./matching.module.css";
-
 const Paddle = ({ className }) => {
 	return (
 		<div>

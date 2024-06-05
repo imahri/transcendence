@@ -168,8 +168,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* position: absolute;
-    top: 25%; */
     z-index: 0;
 }
 

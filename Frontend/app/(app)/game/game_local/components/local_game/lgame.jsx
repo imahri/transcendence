@@ -1,13 +1,6 @@
 "use client";
-import Script from "next/script";
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./LGame.module.css";
 
-let xcord = 0;
-let ycord = 0;
-let x_com = 0;
-let c_com = "black";
-let gaa = false;
 export const Gameson = ({
 	setBotScore,
 	setUserScore,

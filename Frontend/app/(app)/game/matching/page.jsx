@@ -1,9 +1,7 @@
 "use client";
 import Matching from "@/app/(app)/game/matching/components/match_making/matching";
 import LGame from "@/app/(app)/game/matching/gcomponents/live_game/Livegame";
-// import WInter from "@/app/(app)/game/matching/components_win/live_game/Win";
 import WInter from "@/app/(app)/game/game_local/game_win/live_game/Win";
-// import LInter from "@/app/(app)/game/matching/components_lose/live_game/Lose";
 import LInter from "@/app/(app)/game/game_local/game_lose/live_game/Lose";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
