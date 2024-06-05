@@ -218,6 +218,7 @@ class Tournament(models.Model):
             self.winner = self.participants.get(id=winner['id'])
             winner_user = User.objects.get(pk=winner['user_id'])
             winner_user.info.tournament_win += 1
+            winner_user.info.wallet += 500
             winner_user.info.save()
             self.save()
             return
