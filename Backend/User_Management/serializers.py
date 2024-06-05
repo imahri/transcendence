@@ -23,6 +23,8 @@ class UserSerializer(ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
+        from Game.models import Items
+
         new_user = self.Meta.model(
             email=validated_data.get("email", ""),
             username=validated_data["username"],
@@ -32,6 +34,7 @@ class UserSerializer(ModelSerializer):
         new_user.set_password(validated_data["password"])
         new_user.save()
         new_user.set_info()
+        Items.set_default_items(new_user)
         return new_user
 
     def update(self, instance, validated_data):
