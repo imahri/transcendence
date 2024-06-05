@@ -1,14 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Badge from "./Badge";
 import common from "./styles/Common.module.css";
 import { buyItem, walletSvg } from "./StoreItems";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
+import { UserContext } from "../../context";
 
 function BadgeItem({ obj, owned, setOwned, setError }) {
 	const [show, setshow] = useState();
 	const isOwned = owned.includes(obj.id);
+	const { user } = useContext(UserContext);
 
 	return (
 		<div className="flex flex-col items-center gap-[10px]">
@@ -16,7 +18,7 @@ function BadgeItem({ obj, owned, setOwned, setError }) {
 				className="w-[360px] h-[202px] relative cursor-pointer [@media(max-width:900px)]:w-[300px] [@media(max-width:900px)]:h-[174px]"
 				onClick={() => setshow(!show)}
 			>
-				<Badge BadgeInfo={obj} />
+				<Badge BadgeInfo={obj} user={user} />
 				<div
 					className={`${show || isOwned ? "hidden" : ""} ${common.locked} rounded-[14px]  bg-center bg-cover bg-no-repeat size-full hover:opacity-0 absolute top-0`}
 				></div>

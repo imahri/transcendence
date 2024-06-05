@@ -1,21 +1,17 @@
 "use client";
-import { useContext } from "react";
 import Image from "next/image";
 import logo from "@/app/logo.svg";
-import { UserContext } from "../../context";
 import { APIs } from "@/Tools/fetch_jwt_client";
 
-function Badge(props) {
-	const { user } = useContext(UserContext); // you should pass the user
-
-	const badgeInfo = props.BadgeInfo;
+function Badge({ user, BadgeInfo }) {
+	// const { user } = useContext(UserContext); // you should pass the user
 
 	const levelPercent = user.info.level.toString().split(".")[1];
 	const progresBarstyle = {
 		width: `${levelPercent}%`,
-		backgroundColor: badgeInfo.color,
+		backgroundColor: BadgeInfo.color,
 	};
-	const url = APIs.image(badgeInfo.image_path);
+	const url = APIs.image(BadgeInfo.image_path);
 	const background_style = {
 		backgroundImage: `url("${url}")`,
 	};
@@ -27,7 +23,6 @@ function Badge(props) {
 				className="bg-center bg-cover bg-no-repeat rounded-[20px] size-full cursor-pointer"
 			>
 				<div className="size-full rounded-[20px] flex flex-col justify-center relative bg-gradient-to-r from-black bg-opacity-76 to-transparent">
-					{/* <div className={styles.gradient}> */}
 					<Image
 						className="absolute size-[40px] top-[15px] right-[5px]"
 						src={logo}
@@ -35,7 +30,7 @@ function Badge(props) {
 					/>
 					<div className="h-[20%]">
 						<h1 className="text-[#F3F3F3] flex text-[13px] font-bold pl-[25px]">
-							XXXX Profile
+							{user.username} Badge
 						</h1>
 					</div>
 
@@ -48,25 +43,22 @@ function Badge(props) {
 							alt="profile image"
 						/>
 						<div className="flex flex-col justify-center ml-[10px]">
-							<h2 className="text-[#F3F3F3] text-[9px] font-bold">
-								Name{" "}
-								<span className="text-[#C5998B] text-[10px]">
-									{" "}
-									{user.username}{" "}
+							<h2 className="text-[#F3F3F3] text-[9px] font-bold flex justify-between items-center">
+								First Name
+								<span className="ml-[5px] text-[#C5998B] text-[10px]">
+									{user.first_name}
+								</span>
+							</h2>
+							<h2 className=" text-[#F3F3F3] text-[9px] font-bold">
+								Last Name
+								<span className="ml-[5px] text-[#C5998B] text-[10px]">
+									{user.last_name}
 								</span>
 							</h2>
 							<h2 className="text-[#F3F3F3] text-[9px] font-bold">
-								Email{" "}
-								<span className="text-[#C5998B] text-[10px]">
-									{" "}
-									{user.email}{" "}
-								</span>
-							</h2>
-							<h2 className="text-[#F3F3F3] text-[9px] font-bold">
-								Rank{" "}
-								<span className="text-[#C5998B] text-[10px]">
-									{" "}
-									{user.rank}{" "}
+								Rank
+								<span className="ml-[5px] text-[#C5998B] text-[10px]">
+									{user.info.grade.name}
 								</span>
 							</h2>
 						</div>
