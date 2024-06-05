@@ -49,6 +49,7 @@ export async function TowFaHandler(TowFa, setTowFa, setQrImage) {
 		if (TowFa) {
 			const [isOk, status, resonse] = await fetch_jwt(
 				APIs.auth.towfactor,
+				null,
 				{
 					method: "DELETE",
 				},
