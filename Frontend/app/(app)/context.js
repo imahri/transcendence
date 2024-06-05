@@ -24,11 +24,9 @@ export const UserContextProvider = ({ children, value }) => {
 
 			return;
 		}
-
-		socket.onclose = () => console.log("Disconnected with ws/notif");
-		socket.onerror = () => console.log("Error in ws/notif");
 		return () => {
 			socket.close();
+			console.log("socket is disconnected");
 			setSocket(null);
 		};
 	}, [socket]);
