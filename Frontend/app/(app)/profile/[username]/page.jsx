@@ -50,7 +50,7 @@ function Profile({ params }) {
 			<UserProfileContext.Provider value={userProfile}>
 				<main className="w-full  mt-[100px] [@media(max-width:900px)]:mb-[70px] flex justify-center">
 					{isLoading ? (
-						<div>Is Loding ...</div>
+						<div>Is Loading ...</div>
 					) : (
 						<div className="w-full flex flex-col items-center gap-[20px]">
 							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">

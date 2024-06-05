@@ -8,7 +8,7 @@ import { WsChatContext } from "../context/context";
 import { useContext } from "react";
 import { useConvState } from "../Hooks/useConvState";
 import { useConversations } from "../Hooks/useConversations";
-import { BottonBar } from "./BottonBar";
+import { MicroProfile } from "./MicroProfile";
 
 export function SideBar() {
 	const { user, data } = useContext(WsChatContext);
@@ -28,12 +28,10 @@ export function SideBar() {
 					_convState={[convState, setConvState]}
 					_Conversations={_Conversations}
 				/>
-				<BottonBar
+				<MicroProfile
+					onClick={() => router.push("/profile")}
 					user={user}
-					setConvState={setConvState}
-					router={router}
-					_Conversations={_Conversations}
-				></BottonBar>
+				/>
 			</aside>
 			<Separators />
 		</>
