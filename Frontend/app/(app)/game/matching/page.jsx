@@ -80,7 +80,6 @@ const Vim = () => {
 
 	return (
 		<div>
-			{/* <LGame /> */}
 			{checkRoom || loadImage ? (
 				<div>Loading ...</div>
 			) : (

@@ -84,7 +84,6 @@
 .borad{
     height: 50rem;
     width: 90rem;
-    background: url('../images/board1.png');
     background-size: cover;
     background-position: center;
     border-radius: 20px;
@@ -92,6 +91,17 @@
     outline: 2px solid white;
     overflow: hidden;
 }
+
+.borad_picture{
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    outline: 3px solid white;
+    position: absolute;
+    background-position: center;
+    background-size: cover;
+}
+
 
 .borad_cover{
     background: rgba(0,0,0,0.5);
