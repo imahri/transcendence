@@ -13,7 +13,6 @@ import random
 from channels.db import database_sync_to_async
 
 
-
 class User(AbstractUser):
     """
     Username and Email are required. Other fields are optional.
@@ -83,11 +82,9 @@ class User(AbstractUser):
     @property
     def info(self):
         return self.info_set
-    
+
     async def info_async(self):
         return await database_sync_to_async(Info.objects.get)(user=self)
-
-
 
     def get_info(self):
         """
@@ -139,11 +136,11 @@ class User(AbstractUser):
 
     def get_nb_notification(self):
         # query = Q(is_read=False) | Q(is_multicast=True,content__readed__contains=self.pk)
-        Unreaded : int =  self.notifications.all().filter(is_read=False).count()
+        Unreaded: int = self.notifications.all().filter(is_read=False).count()
         multicast = self.notifications.all().filter(is_multicast=True)
-        for notification in multicast :
-            if self.pk not in notification.content['readed']:
-                Unreaded += 1;
+        for notification in multicast:
+            if self.pk not in notification.content["readed"]:
+                Unreaded += 1
         return Unreaded
 
     def get_last_msg_notification(self):
@@ -151,25 +148,25 @@ class User(AbstractUser):
 
     def get_all_notif(self):
         return Notification.objects.filter(user=self)
-    
+
     @staticmethod
     def create42User(user42_info):
         from User_Management.serializers import UserSerializer
 
-        data : dict = {
-            'email' : user42_info['email'],
-            'username' : user42_info['login'],
-            'first_name' : user42_info['first_name'],
-            'last_name' : user42_info['last_name'],
-            'password': 'none',
+        data: dict = {
+            "email": user42_info["email"],
+            "username": user42_info["login"],
+            "first_name": user42_info["first_name"],
+            "last_name": user42_info["last_name"],
+            "password": "none",
         }
         user: User
         try:
-            user = User.objects.get(email=user42_info['email'])
-        except User.DoesNotExist :
-            imageUrl = user42_info['image']['link']
+            user = User.objects.get(email=user42_info["email"])
+        except User.DoesNotExist:
+            imageUrl = user42_info["image"]["link"]
             response = requests.request("GET", imageUrl)
-            
+
             breakValue = True
             while breakValue:
                 userSerialized = UserSerializer(data=data)
@@ -177,28 +174,29 @@ class User(AbstractUser):
                     user = userSerialized.save()
                     user.is_42_account = True
                     user.save()
-                    info : Info = user.info
-                    img_name = data['username'] + '.jpg';
+                    info: Info = user.info
+                    img_name = data["username"] + ".jpg"
                     image_content = BytesIO(response.content)
                     info.profile_img.save(img_name, image_content, save=True)
                     break
-                elif userSerialized.errors['username']:
-                    data['username'] = f"{user42_info['login']}#{random.randint(1000, 9999)}"
+                elif userSerialized.errors["username"]:
+                    data["username"] = (
+                        f"{user42_info['login']}#{random.randint(1000, 9999)}"
+                    )
                 else:
                     return [False, userSerialized.errors]
-
         return [True, user]
+
     class TwoFactorAuth:
 
         @staticmethod
         def turn_on_2FA(user):
-            from django.utils.crypto import get_random_string
 
-            secret_code_2FA = user.username  #! Hash this secret key
+            secret_code_2FA = pyotp.random_base32()
             uri = pyotp.totp.TOTP(secret_code_2FA).provisioning_uri(
                 name=user.username, issuer_name=APP_NAME
             )
-            otp_qrcode_path = f"{IMAGES_ROOT}/{user.username}_totp.png"
+            otp_qrcode_path = f"{IMAGES_ROOT}/2FA/{user.username}_totp.png"
             qrcode.make(uri).save(otp_qrcode_path)
             user.uri_2FA = uri
             user.qrcode_2FA = otp_qrcode_path
@@ -217,6 +215,8 @@ class User(AbstractUser):
 
         @staticmethod
         def verify(user, code: str) -> bool:
+            if not user.is_2FA_active:
+                raise Exception("2FA not activated")
             totp = pyotp.TOTP(user.secret_code_2FA)
             return totp.verify(code)
 
@@ -246,6 +246,7 @@ class Info(models.Model):
 
     def add_exp(self, exp, save=True):
         from Game.models import Grade
+
         #! Add level
         self.exp += exp
         if self.exp >= 500 and self.exp < 1500 and self.grade.name != "Silver":
@@ -261,7 +262,7 @@ class Info(models.Model):
         # level
         if self.exp >= (70 * (1.5 ** (self.level - 1))):
             self.level += 0.1
-            self.level = round(self.level,2)
+            self.level = round(self.level, 2)
         if save:
             self.save()
 
@@ -378,9 +379,11 @@ class Notification(models.Model):
     def createToMultiUsers(user: User, content: dict):
         sended_to = content["to"]
         notifContent = content["content"]
-        notifContent['readed'] = []
+        notifContent["readed"] = []
         friends_ids = sended_to.values_list("id", flat=True)
-        notification = Notification(user=user, type=content["type"], is_read=True, is_multicast=True)
+        notification = Notification(
+            user=user, type=content["type"], is_read=True, is_multicast=True
+        )
         notification.content = notifContent
         notification.save()
         notification.sended_to.add(*friends_ids)
