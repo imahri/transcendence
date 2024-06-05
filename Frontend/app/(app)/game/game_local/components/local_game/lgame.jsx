@@ -40,7 +40,6 @@ export const Gameson = ({
 			y: canvas.height / 2 - 200 / 2,
 			width: 30,
 			height: 200,
-			// height : canvas.height,
 			color: "orange",
 			score: 0,
 		};
@@ -63,7 +62,6 @@ export const Gameson = ({
 		document.addEventListener("keyup", keyUpHandler);
 
 		function keyDownHandler(event) {
-			console.log(event.keyCode);
 			if (event.keyCode === 38) {
 				upKeyPressed = true;
 			}
@@ -208,8 +206,6 @@ export const Gameson = ({
 					checkWinner();
 				}
 				resetBall();
-				// setBotScore((prev) => prev = 0);
-				// setUserScore((prev) => prev = 0);
 				end_game = true;
 				user.score = 0;
 				com.score = 0;

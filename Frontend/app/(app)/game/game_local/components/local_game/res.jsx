@@ -18,6 +18,7 @@ const Res = ({ botScore, userScore }) => {
 							height={100}
 							width={200}
 							className={`${styles.player_picture}`}
+							alt="Profile image"
 						/>
 					</div>
 					<div className={styles.sc_player}>{userScore}</div>
@@ -30,6 +31,7 @@ const Res = ({ botScore, userScore }) => {
 							height={100}
 							width={200}
 							className={`${styles.player_picture}`}
+							alt="Profile image"
 						/>
 					</div>
 					<div className={styles.sc_player}>{botScore}</div>

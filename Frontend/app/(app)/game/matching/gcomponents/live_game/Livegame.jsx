@@ -1,12 +1,4 @@
 import styles from "./LGame.module.css";
-// import Image from "next/image";
-// import Link from "next/link";
-// import Aup from "../images/up.svg";
-// import Ado from "../images/down.svg";
-// import Son from "../images/sound.svg";
-// import Soff from "../images/mute.svg";
-// import Mon from "../images/music.svg";
-// import Moff from "../images/no_sound.svg";
 import { Gameson } from "./game";
 import Res from "./res";
 import { useState } from "react";
@@ -47,29 +39,7 @@ const LGame = ({
 									player2={players.player2}
 								/>
 							)}
-							{/* <div className={styles.all_ferno}>
-								<div className={styles.ferno}>Bazoooooka</div>
-							</div> */}
 						</div>
-
-						{/* <div className={styles.mode_part}>
-							<div className={styles.all_in_two}>
-								<h1 className={styles.mode_title}>Mode</h1>
-								<h2 className={styles.cla_title}>Classic</h2>
-
-								<div className={styles.box}>
-									<div className={styles.profile}></div>
-									<span>FiddlerX</span>
-									<p>Mahri Imad-eddine</p>
-								</div>
-
-								<div className={styles.but}>
-									<div className={styles.bazoka}>
-										Bazoooooka
-									</div>
-								</div>
-							</div>
-						</div> */}
 					</div>
 				</div>
 				<div className={`${styles.layer} ${styles.third}`}></div>

@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { Gameson } from "./lgame";
 import Res from "./res";
 
-const LGame = () => {
+const LGame = ({ checkEnd }) => {
 	const [playerOne, setPlayerone] = useState(0);
 	const [playerTwo, setPlayertwo] = useState(0);
 
@@ -36,66 +36,11 @@ const LGame = () => {
 									<Gameson
 										setPlayerone={setPlayerone}
 										setPlayertwo={setPlayertwo}
+										checkEnd={checkEnd}
 									/>
 								</div>
 							</div>
 							<Res playerOne={playerOne} playerTwo={playerTwo} />
-							<div className={styles.all_ferno}>
-								<div className={styles.ferno}>Bazoooooka</div>
-							</div>
-						</div>
-
-						<div className={styles.mode_part}>
-							<div className={styles.all_in_two}>
-								<h1 className={styles.mode_title}>Mode</h1>
-								<h2 className={styles.cla_title}>Classic</h2>
-
-								<div className={styles.box}>
-									<div className={styles.profile}></div>
-									<span>FiddlerX</span>
-									<p>Mahri Imad-eddine</p>
-								</div>
-
-								<div className={styles.but}>
-									<div className={styles.bazoka}>
-										Bazoooooka
-									</div>
-								</div>
-								<div className={styles.tool_box}>
-									<div className={styles.tool_box_right}>
-										<span>up</span>
-										<div className={styles.tool_box_but}>
-											<div className={styles.inside}>
-												<Image
-													src={Aup}
-													width={15}
-													height={15}
-													alt="immmm"
-												/>
-											</div>
-											<div className={styles.inside}>
-												W
-											</div>
-										</div>
-									</div>
-									<div className={styles.tool_box_right}>
-										<span>down</span>
-										<div className={styles.tool_box_but}>
-											<div className={styles.inside}>
-												<Image
-													src={Ado}
-													width={15}
-													height={15}
-													alt="immmm"
-												/>
-											</div>
-											<div className={styles.inside}>
-												S
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>

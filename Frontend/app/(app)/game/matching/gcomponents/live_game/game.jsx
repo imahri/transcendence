@@ -40,7 +40,6 @@ export const Gameson = ({
 		);
 
 		ws.onopen = () => {
-			console.log("opened");
 			setSocket(ws);
 		};
 
@@ -48,17 +47,12 @@ export const Gameson = ({
 			const data = JSON.parse(event.data);
 
 			if (data.event == "reconnect") {
-				console.log("reconnect");
 				secondArrived();
 			} else if (data.event == "forfeited") {
-				console.log("forfeited");
 				checkWinner();
-				// secondArrived();
 			} else if (data.event == "goal") {
-				console.log(data.score);
 				setScore(data.score);
 			} else if (data.event == "send_info") {
-				console.log(data);
 				setPlayer1(data.user1);
 				setPlayer2(data.user2);
 			}
@@ -70,53 +64,39 @@ export const Gameson = ({
 				player2_y = data?.message?.user2_y;
 			} else if (data.event == "index_player") {
 				uid = parseInt(data.index);
-				console.log(">>>>  ", uid);
 			} else if (data.event == "change_state") {
-				console.log("second arrived");
 				secondArrived();
 			} else if (data.event == "end_game") {
-				console.log("game_finish");
-
 				player1_state = data?.message?.user1;
 				player2_state = data?.message?.user2;
 
 				if (uid == 1 && player1_state === "win") {
-					console.log("win");
 					checkWinner();
 				}
 				if (uid == 2 && player2_state === "win") {
-					console.log("win");
 					checkWinner();
 				}
 
 				if (uid == 1 && player1_state === "lose") {
-					console.log("lose");
 					checkLoser();
 				}
 				if (uid == 2 && player2_state === "lose") {
-					console.log("lose");
 					checkLoser();
 				}
 			}
 		};
 
-		ws.onerror = () => {
-			console.log("error happened");
-		};
+		ws.onerror = () => {};
 
-		ws.onclose = () => {
-			console.log("closed");
-		};
+		ws.onclose = () => {};
 
 		return () => {
 			ws.close();
 			setSocket(null);
-			console.log("bazzzzzaf");
 		};
 	}, []);
 
 	useEffect(() => {
-		console.log("aaa");
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			const canvas = cvs.current;
 			const ctx = canvas.getContext("2d");
@@ -164,22 +144,18 @@ export const Gameson = ({
 				}
 				if (event.keyCode === 87) {
 					upKeyPressed = true;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 				if (event.keyCode === 83) {
 					downKeyPressed = true;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 				if (event.keyCode === 38) {
 					upKeyPressed = true;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 				if (event.keyCode === 40) {
 					downKeyPressed = true;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 			}
@@ -187,28 +163,23 @@ export const Gameson = ({
 			function keyUpHandler(event) {
 				if (event.keyCode === 87) {
 					upKeyPressed = false;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 				if (event.keyCode === 83) {
 					downKeyPressed = false;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 				if (event.keyCode === 38) {
 					upKeyPressed = false;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 				if (event.keyCode === 40) {
 					downKeyPressed = false;
-					console.log("event");
 					sendPaddleUpdate();
 				}
 			}
 
 			function sendPaddleUpdate() {
-				console.log(typeof uid);
 				if (socket && socket.readyState === WebSocket.OPEN) {
 					socket.send(
 						JSON.stringify({
@@ -271,9 +242,7 @@ export const Gameson = ({
 
 			game();
 
-			return () => {
-				console.log("getting out");
-			};
+			return () => {};
 		}
 	}, [socket]);
 

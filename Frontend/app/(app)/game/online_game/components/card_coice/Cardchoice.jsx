@@ -1,12 +1,10 @@
 import styles from "./cardchoice.module.css";
-import Image from "next/image";
 import Link from "next/link";
 
 const Cardchoice = () => {
 	return (
 		<div>
 			<div className={styles.page}>
-				{/* page */}
 				<div className={styles.rows_exac}></div>
 
 				<div className={`${styles.rows_exac} ${styles.titles}`}>

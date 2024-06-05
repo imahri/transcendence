@@ -1,12 +1,9 @@
 import Image from "next/image";
 import styles from "./LGame.module.css";
 import React, { useEffect, useRef, useState, useContext } from "react";
-import { UserContext } from "@/app/(app)/context";
-import bot from "../images/bot.png";
 import { APIs } from "@/Tools/fetch_jwt_client";
 
 const Res = ({ score, player1, player2 }) => {
-	// const { user } = useContext(UserContext);
 	return (
 		<div className={styles.score}>
 			<div className={styles.score_first}></div>
@@ -18,6 +15,7 @@ const Res = ({ score, player1, player2 }) => {
 							height={100}
 							width={200}
 							className={`${styles.player_picture}`}
+							alt="Profile image"
 						/>
 					</div>
 					<div className={styles.sc_player}>{score.score1}</div>
@@ -30,6 +28,7 @@ const Res = ({ score, player1, player2 }) => {
 							height={100}
 							width={200}
 							className={`${styles.player_picture}`}
+							alt="Profile image"
 						/>
 					</div>
 					<div className={styles.sc_player}>{score.score2}</div>

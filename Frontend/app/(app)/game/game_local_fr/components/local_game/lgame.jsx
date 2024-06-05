@@ -9,7 +9,7 @@ let x_com = 0;
 let c_com = "black";
 let gaa = false;
 
-export const Gameson = ({ setPlayerone, setPlayertwo }) => {
+export const Gameson = ({ setPlayerone, setPlayertwo, checkEnd }) => {
 	const cvs = useRef(null);
 
 	useEffect(() => {
@@ -247,6 +247,7 @@ export const Gameson = ({ setPlayerone, setPlayertwo }) => {
 				if (user2.score === 7) {
 					pauseGame();
 					resetScores();
+					checkEnd();
 				} else {
 					resetBall();
 				}
@@ -256,6 +257,7 @@ export const Gameson = ({ setPlayerone, setPlayertwo }) => {
 				if (user1.score === 7) {
 					pauseGame();
 					resetScores();
+					checkEnd();
 				} else {
 					resetBall();
 				}

@@ -1,15 +1,26 @@
+/* .page{
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    color:white
+} */
+
+
 .container{
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+    /* background-color: rgb(94, 94, 94); */
     display: flex;
     justify-content: center;
     align-items: center;
     color:white
 
 }
+
+
 
 .holder{
     position: absolute;
@@ -27,6 +38,8 @@
 
 .first_part{
     width: 80%;
+    /* flex-grow: 1; */
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,6 +48,8 @@
 
 .second_part{
     width: 80%;
+    /* flex-grow: 1; */
+
 }
 
 .title{
@@ -45,20 +60,32 @@
 .pic{
     height: 200px;
     width: 200px;
-    background: rgba(255, 255, 255, 0.406);
     border-radius: 50%;
     box-shadow: 5px 5px 1px black;
+    border: 3px solid rgb(90, 201, 231);
+    overflow: hidden;
 }
+
+.player_picture{
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 
 .state{
     font-size: 3.5rem;
     font-weight: 500;
-    color: rgb(255, 48, 48);
+    color: rgb(90, 201, 231);
 }
 .result{
     font-size: 2.5rem;
     font-weight: 500;
-    color: rgb(255, 48, 48);
+    color: rgb(90, 201, 231);
+    text-align: center;
+    text-transform: capitalize;
 }
 
 .btbt{

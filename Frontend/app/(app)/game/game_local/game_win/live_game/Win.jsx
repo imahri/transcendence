@@ -6,7 +6,6 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "@/app/(app)/context";
 
 const WInter = () => {
-	let a = "";
 	const { user } = useContext(UserContext);
 
 	return (
@@ -21,6 +20,7 @@ const WInter = () => {
 								height={100}
 								width={200}
 								className={`${styles.player_picture}`}
+								alt="Profile image"
 							/>
 						</div>
 						<span className={styles.state}>You Won</span>

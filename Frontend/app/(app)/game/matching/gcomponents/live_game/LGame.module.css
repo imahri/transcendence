@@ -8,7 +8,7 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     position: relative;
-    /* z-index: 0; */
+
 }
 
 .container{
@@ -25,7 +25,7 @@
     height: 10;
     width: 100%;
     margin: auto;
-    /* background: rgba(19, 142, 68, 0.816); */
+
     text-align: center;
 }
 
@@ -78,30 +78,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* gap: 20px; */
-    /* background: red; */
 }
 
 .mode_part{
     height: 100%;
-    
-    /* background: rgba(224, 192, 255, 0.543); */
 }
 
 .borad{
-    /* background: red; */
     height:100%;
     width: 90%;
     padding: 0 1%;
     overflow: hidden;
     position: relative;
-    /* background: url('../images/board1.png'); */
-    /* background-size: cover; */
-    /* background-position: center; */
-    /* border-radius: 20px; */
-    /* position: relative; */
-    /* outline: 2px solid white; */
-    /* overflow: hidden; */
 }
 
 .borad_cover{
@@ -111,8 +99,6 @@
     border-radius: 20px;
     outline: 3px solid white;
     filter: blur(3px);
-    /* position: absolute; */
-    /* z-index: -1; */
 }
 
 .f_borad_line{
@@ -198,10 +184,6 @@
     font-weight: 400;
 }
 
-/* .but{
-    position: absolute;
-    top: 65%;
-} */
 
 .bazoka{
     padding: 10px 20px;
@@ -216,7 +198,7 @@
     position: absolute;
     left: 50%;
     transform: translate(-50%,0);
-    /* top: 60%; */
+
 }
 
 .all_ferno{
@@ -248,7 +230,7 @@
 }
 
 .tool_box{
-    /* height: 100%; */
+
     display: flex;
     gap: 30px;
     position: absolute;
@@ -272,7 +254,6 @@
 }
 
 .tool_box_right{
-/* background: red; */
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -299,10 +280,6 @@
     padding: 20px 10px;
     border-radius: 10px;
 }
-/* 
-.Image{
-    opacity: 0.5;
-} */
 
 .mode_title{
     position: absolute;
@@ -403,34 +380,11 @@
     background-color: red;
 }
 
-/* .ppo{
-    position: absolute;
-    height:100%;
-    width: 100%;
-    background: green;
-} */
 
 .canvas{
-    /* background: rebeccapurple; */
-    /* position: absolute; */
     left:0;
 }
 
-/* .canvasWithBackground {
-    background-image: url('./borad2.jpg');
-    background-size: cover;
-    background-position: center;
-} */
-
-/* .faker{
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: red;
-    object-fit:contain;
-} */
 
 .pr_player{
     height: 4rem;

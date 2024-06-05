@@ -17,48 +17,56 @@ const Random = () => {
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m1}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p2}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m2}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p3}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m3}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p4}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m4}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p5}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m5}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p7}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m7}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p8}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m8}`}
+				alt="Profile random image"
 			/>
 			<Image
 				src={p1}
 				height={100}
 				width={200}
 				className={`${styles.im} ${styles.m1}`}
+				alt="Profile random image"
 			/>
 		</div>
 	);

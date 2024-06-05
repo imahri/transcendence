@@ -50,15 +50,12 @@ const Matching = ({ player1, player2 }) => {
 										height={100}
 										width={200}
 										className={`${styles.player_picture}`}
+										alt="Profile image"
 									/>
 								</div>
 								<div className={`${styles.username}`}>
 									{user.username}
 								</div>
-								{/* <div className={`${styles.exp}`}>
-									{user.info.exp}
-									<span> exp</span>
-								</div> */}
 							</div>
 
 							<div className={styles.versus}>vs</div>
@@ -71,6 +68,7 @@ const Matching = ({ player1, player2 }) => {
 											height={100}
 											width={200}
 											className={`${styles.player_picture}`}
+											alt="Profile image"
 										/>
 									) : (
 										<Random />
