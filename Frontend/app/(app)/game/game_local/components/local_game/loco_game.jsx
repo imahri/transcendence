@@ -3,6 +3,7 @@ import styles from "./LGame.module.css";
 import React, { useEffect, useState } from "react";
 import { Gameson } from "./lgame";
 import Res from "./res";
+
 const LGame = ({ checkWinner, checkLoser }) => {
 	const [botScore, setBotScore] = useState(0);
 	const [userScore, setUserScore] = useState(0);

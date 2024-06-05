@@ -1,10 +1,7 @@
-import { Linden_Hill } from "next/font/google";
 import styles from "./matching.module.css";
 import Boardskin from "@/app/(app)/game/matching/components/match_making/board_skin";
-import Ready from "@/app/(app)/game/matching/components/match_making/ready";
 import Random from "@/app/(app)/game/matching/components/match_making/random";
 import Link from "next/link";
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "@/app/(app)/context";
 import Image from "next/image";

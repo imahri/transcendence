@@ -11,8 +11,6 @@ let player2_y = 0;
 let player1_y = 0;
 
 let uid = 0;
-let pause1 = 0;
-let pause2 = 0;
 
 let player2_state = "not yet";
 let player1_state = "not yet";

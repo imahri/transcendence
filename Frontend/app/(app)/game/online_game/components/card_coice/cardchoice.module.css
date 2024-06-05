@@ -11,7 +11,6 @@
 }
 
 .rows_exac{
-    /* background: rgb(255, 132, 0); */
     height: 10vh;
     width: 100%;
     margin-top: 10px;
@@ -19,7 +18,6 @@
 
 .fliko{
     flex:1;
-    /* background: red; */
 }
 
 .content{
@@ -34,10 +32,8 @@
 
 }
 .item{
-  /* background: green; */
     height: 100%;
     width: 360px;
-    /* background: rgb(71, 71, 71); */
     border-radius: 25px;
     display: flex;
     justify-content: center;
@@ -55,8 +51,6 @@
     font-size: 45px;
     font-weight: 700;
     color: white;
-    /* color: #7B7B7B; */
-    /* background: red; */
 
 
 }
@@ -67,9 +61,7 @@
     cursor: pointer;
     height: 70%;
     width: 75%;
-    /* background: green; */
     border-radius: 20px;
-    /* box-shadow: 10px 10px 10px black; */
     z-index: 1;
     transition: 0.5s;
 }
@@ -96,13 +88,6 @@
   color: #7B7B7B;
   top:110%;
 }
-
-
-/* @media (min-width: 1301px){
-
-
-} */
-
 
 .second{
     background-image: url('../images/classic.png');
@@ -149,7 +134,6 @@
 }
 
 .graf{
-  /* font-family: sans-serif; */
   position: absolute;
   top: 105%;
   left: 50%;
@@ -191,7 +175,7 @@
   }
   
   .card {
-    animation: move_it 3s linear infinite; /* Increase the duration to slow down */
+    animation: move_it 3s linear infinite;
   }
 
 @keyframes shad_in {
@@ -213,7 +197,7 @@
   }
   
   .shad {
-    animation: shad_in 3s linear infinite; /* Increase the duration to slow down */
+    animation: shad_in 3s linear infinite;
   }
   
   @media (min-width: 2000px) {
@@ -251,7 +235,6 @@
   .item{
       height: 100%;
       width: 360px;
-      /* background: rgb(71, 71, 71); */
       border-radius: 25px;
       display: flex;
       justify-content: flex-start;
@@ -381,6 +364,5 @@
   background: red;
   background: transparent;
   text-align: center;
-  /* color: transparent; */
 
 }

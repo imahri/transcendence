@@ -24,7 +24,6 @@
     height: 10;
     width: 80%;
     margin: auto;
-    /* background: rgba(19, 142, 68, 0.816); */
     text-align: center;
 }
 
@@ -52,7 +51,6 @@
 .all_in{
     width: 100%;
     height: 100%;
-    /* background: rgba(255, 0, 0, 0.421); */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -63,7 +61,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    /* background: rgba(255, 0, 0, 0.421); */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,19 +70,15 @@
 .bord_part{
     height: 100%;
     width: 100%;
-    /* background: rgba(255, 192, 203, 0.543); */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 20px;
-    /* background: red; */
 }
 
 .mode_part{
     height: 100%;
-    
-    /* background: rgba(224, 192, 255, 0.543); */
 }
 
 .borad{
@@ -108,7 +101,6 @@
     outline: 3px solid white;
     filter: blur(3px);
     position: absolute;
-    /* z-index: -1; */
 }
 
 .f_borad_line{
@@ -178,8 +170,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* position: absolute;
-    top: 25%; */
     z-index: 0;
 }
 
@@ -194,11 +184,6 @@
     font-weight: 400;
 }
 
-/* .but{
-    position: absolute;
-    top: 65%;
-} */
-
 .bazoka{
     padding: 10px 20px;
     background: brow;
@@ -212,7 +197,6 @@
     position: absolute;
     left: 50%;
     transform: translate(-50%,0);
-    /* top: 60%; */
 }
 
 .all_ferno{
@@ -244,7 +228,6 @@
 }
 
 .tool_box{
-    /* height: 100%; */
     display: flex;
     gap: 30px;
     position: absolute;
@@ -268,7 +251,6 @@
 }
 
 .tool_box_right{
-/* background: red; */
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -295,10 +277,6 @@
     padding: 20px 10px;
     border-radius: 10px;
 }
-/* 
-.Image{
-    opacity: 0.5;
-} */
 
 .mode_title{
     position: absolute;
@@ -351,7 +329,6 @@
     border-radius: 25px;
     color: white;
     width: 100%;
-    /* left: 5%; */
 }
 
 .fi_players{

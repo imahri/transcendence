@@ -1,13 +1,5 @@
 "use client";
-import Script from "next/script";
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./LGame.module.css";
-
-let xcord = 0;
-let ycord = 0;
-let x_com = 0;
-let c_com = "black";
-let gaa = false;
 
 export const Gameson = ({ setPlayerone, setPlayertwo, checkEnd }) => {
 	const cvs = useRef(null);
@@ -36,7 +28,6 @@ export const Gameson = ({ setPlayerone, setPlayertwo, checkEnd }) => {
 			y: canvas.height / 2 - 200 / 2,
 			width: 30,
 			height: 200,
-			// height : canvas.height,
 			color: "red",
 			score: 0,
 		};
@@ -177,43 +168,6 @@ export const Gameson = ({ setPlayerone, setPlayertwo, checkEnd }) => {
 			ball.speed = 10;
 			ball.velocityX *= -1;
 		}
-
-		// function update() {
-		// 	ball.x += ball.velocityX;
-		// 	ball.y += ball.velocityY;
-
-		// 	if (
-		// 		ball.y + ball.radius > canvas.height ||
-		// 		ball.y - ball.radius < 0
-		// 	) {
-		// 		ball.velocityY *= -1;
-		// 	}
-
-		// 	let player = ball.x < canvas.width / 2 ? user1 : user2;
-
-		// 	if (collision(ball, player)) {
-		// 		let collpoint = ball.y - (player.y + player.height / 2);
-
-		// 		collpoint = collpoint / (player.height / 2);
-
-		// 		let angleRad = (collpoint * Math.PI) / 4;
-
-		// 		let direction = ball.x < canvas.width / 2 ? 1 : -1;
-
-		// 		ball.velocityX = direction * ball.speed * Math.cos(angleRad);
-		// 		ball.velocityY = ball.speed * Math.sin(angleRad);
-		// 		ball.speed += 0.5;
-		// 	}
-		// 	if (ball.x - ball.radius < 0) {
-		// 		user2.score++;
-		// 		setPlayerone((prev) => prev + 1);
-		// 		resetBall();
-		// 	} else if (ball.x + ball.radius > canvas.width) {
-		// 		user1.score++;
-		// 		setPlayertwo((prev) => prev + 1);
-		// 		resetBall();
-		// 	}
-		// }
 
 		function update() {
 			ball.x += ball.velocityX;
