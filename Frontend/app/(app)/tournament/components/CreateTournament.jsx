@@ -5,10 +5,10 @@ import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 export function Input({ label, setter, error }) {
 	return (
 		<div
-			className={`${error ? "animate-shake" : ""} w-[80%] h-[55px]  bg-[#343434] rounded-[5px] pt-[5px] flex`}
+			className={`${error ? "animate-shake" : ""} w-[80%] [@media(max-width:600px)]:w-[95%] h-[55px]  bg-[#343434] rounded-[5px] pt-[5px] flex`}
 		>
 			<label
-				className={`absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]`}
+				className={`absolute text-[#8C8C8C] text-sm  mt-[-2px] ml-[19px]`}
 			>
 				{label}
 			</label>
@@ -69,8 +69,8 @@ export default function Create() {
 	const { user } = useContext(UserContext);
 
 	return (
-		<div className="size-full flex flex-col items-center justify-center gap-[20px] p-[20px]">
-			<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
+		<div className="size-full flex flex-col items-center justify-center gap-[20px] pt-[20px]">
+			<h1 className="text-white text-opacity-40 font-semibold text-[20px] [@media(max-width:470px)]:text-[13px]">
 				Creat Tournament
 			</h1>
 
