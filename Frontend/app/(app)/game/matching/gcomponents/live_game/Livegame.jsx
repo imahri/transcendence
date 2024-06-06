@@ -10,6 +10,7 @@ const LGame = ({
 	checkLoser,
 	players,
 	boardpic,
+	checkEnd,
 }) => {
 	const [Score, setScore] = useState({ score1: 0, score2: 0 });
 
@@ -32,6 +33,7 @@ const LGame = ({
 									setPlayer1={players.setPlayer1}
 									setPlayer2={players.setPlayer2}
 									boardpic={boardpic}
+									checkEnd={checkEnd}
 								/>
 							</div>
 							{players.player1 && players.player2 && (

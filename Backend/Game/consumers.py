@@ -624,7 +624,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 print("reconect mode")
                 await asyncio.sleep(1)
                 obg.reconnect_counter += 1
-                if obg.reconnect_counter == 30:
+                if obg.reconnect_counter == 15:
                     obg.reconnect_counter = 0
                     checker = []
                     if find_player_in_game(self.game_room, self.user.username, checker):
@@ -638,6 +638,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             )
                             print("rodrygoo + " + str(self.game_room[found][1]))
                             stop_game = {"type": "forfeited", "end_it": True}
+                            
 
                             await self.channel_layer.group_send(
                                 self.room_group_name,
@@ -646,6 +647,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                     "message": stop_game,
                                 },
                             )
+                            obg.matchs[0].delete()
+                            obg.matchs[1].delete()
                             self.task_manager[index].cancel()
                             break
 
@@ -686,6 +689,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
+        self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
             print("nooooo")
