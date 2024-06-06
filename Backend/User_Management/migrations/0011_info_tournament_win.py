@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('User_Management', '0010_notification_is_multicast'),
+        ("User_Management", "0010_notification_is_multicast"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='info',
-            name='tournament_win',
+            model_name="info",
+            name="tournament_win",
             field=models.IntegerField(default=0),
         ),
     ]

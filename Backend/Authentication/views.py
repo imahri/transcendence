@@ -27,12 +27,16 @@ class Register(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else :
-                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(
+                    data=serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                )
 
         except Exception as error:
             print(error)
-            return JsonResponse({"failure" :str(error)}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(
+                {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 @permission_classes([AllowAny])
@@ -62,7 +66,7 @@ class Login(APIView):
                 return JsonResponse({"detail": "you cant sign-in"}, status=401)
             access_token, refresh_token = Login.genJWT(user)
             userObj = dict(UserSerializer(user).data)
-            userObj['info'] = InfoSerializer(Info.objects.get(user=user.pk)).data
+            userObj["info"] = InfoSerializer(Info.objects.get(user=user.pk)).data
 
             return JsonResponse(
                 {
@@ -73,6 +77,7 @@ class Login(APIView):
             )
         except Exception as error:
             raise exceptions.AuthenticationFailed(str(error))
+
 
 @api_view(["GET"])
 def check_token(request):
@@ -154,43 +159,42 @@ class TwoFactorAuthView(APIView):
                 {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
             )
 
+
 @permission_classes([AllowAny])
 class intra_auth(APIView):
 
     @staticmethod
     def get_42user_info(access_token):
-        headers = {
-            'Authorization': f'Bearer {access_token}'
-        }
-        response = requests.get('https://api.intra.42.fr/v2/me', headers=headers)
+        headers = {"Authorization": f"Bearer {access_token}"}
+        response = requests.get("https://api.intra.42.fr/v2/me", headers=headers)
         data = response.json()
         if response.status_code != 200:
-            raise Exception(data.get('error'))
+            raise Exception(data.get("error"))
         return data
-    
+
     @staticmethod
-    def get_42access_token(code : str):
-        
+    def get_42access_token(code: str):
+
         data = {
-            'grant_type': 'authorization_code',
-            'client_id': 'u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259',
-            'client_secret': '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',
-            'code': code,
-            'redirect_uri': 'http://localhost:3000/login'
+            "grant_type": "authorization_code",
+            "client_id": "u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259",
+            "client_secret": "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",
+            "code": code,
+            "redirect_uri": "http://localhost:3000/login",
         }
-   
-        response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
-        
+
+        response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
+
         data = response.json()
         if response.status_code != 200:
-            raise Exception(data.get('error'))
-        access_token = data.get('access_token')
+            raise Exception(data.get("error"))
+        access_token = data.get("access_token")
         return access_token
 
     def post(self, request):
 
         try:
-            code = request.data.get('code')
+            code = request.data.get("code")
             access_token = intra_auth.get_42access_token(code=code)
             user42_info = intra_auth.get_42user_info(access_token=access_token)
 
@@ -198,12 +202,16 @@ class intra_auth(APIView):
             if not returnValue[0]:
                 return Response(data=returnValue[1], status=401)
 
-            user : User = returnValue[1]
+            user: User = returnValue[1]
             if user.is_2FA_active:
-                return JsonResponse({"success": "2FA Required", "username": user.username})
+                return JsonResponse(
+                    {"success": "2FA Required", "username": user.username}
+                )
             access_token = AccessToken.for_user(user)
             refresh_token = RefreshToken.for_user(user)
-            return JsonResponse({'access': str(access_token), 'refresh': str(refresh_token)}, status=200)
-        
+            return JsonResponse(
+                {"access": str(access_token), "refresh": str(refresh_token)}, status=200
+            )
+
         except Exception as error:
-            return JsonResponse({'register' : str(error)}, status=401)
+            return JsonResponse({"register": str(error)}, status=401)

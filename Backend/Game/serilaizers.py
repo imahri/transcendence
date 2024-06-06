@@ -5,11 +5,13 @@ from .models import Badge, Match, Board, Padel, Items, Acheivement
 from rest_framework import serializers
 from User_Management.serializers import UserSerializer
 
+
 class EnemyMatchSerializer(ModelSerializer):
 
     class Meta:
         model = Match
         fields = ("id", "score")
+
 
 class MatchSerializer(ModelSerializer):
 
@@ -19,14 +21,23 @@ class MatchSerializer(ModelSerializer):
 
     class Meta:
         model = Match
-        fields = ("id", "enemy", "score", "played_at", "mode", "mode_display",  "user", "enemy_match")
+        fields = (
+            "id",
+            "enemy",
+            "score",
+            "played_at",
+            "mode",
+            "mode_display",
+            "user",
+            "enemy_match",
+        )
 
 
 class GradeSerializer(ModelSerializer):
 
-
     class Meta:
         from .models import Grade
+
         model = Grade
         fields = ("id", "name", "image")
 
@@ -51,25 +62,24 @@ class PadelSerializer(ModelSerializer):
         model = Padel
         fields = ("id", "name", "definition", "price", "image_path")
 
+
 class ItemsSerializer(ModelSerializer):
-    
+
     class Meta:
         model = Items
         fields = ("id", "item_class", "owned_items", "current_item", "user")
-    
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        
-        
-    
-        obj : Items = instance
 
-        current_item = obj.SerializeItem(obj.current_item.id)    
-        data['current_item'] = current_item.data
-        
+        obj: Items = instance
+
+        current_item = obj.SerializeItem(obj.current_item.id)
+        data["current_item"] = current_item.data
+
         owned_items = obj.Serialize_owned_items()
-        data['owned_items'] = owned_items
-        
+        data["owned_items"] = owned_items
+
         return data
 
 

@@ -1,7 +1,14 @@
 from django.urls import path
 
 from .views import ImageView, UserView, InfoView, searchView
-from .views import getFriendView, getFewFriend, getUserFriends, BlockView, NotifView, getUnseenMsgs
+from .views import (
+    getFriendView,
+    getFewFriend,
+    getUserFriends,
+    BlockView,
+    NotifView,
+    getUnseenMsgs,
+)
 
 urlpatterns = [
     path("", UserView.as_view(), name="user"),

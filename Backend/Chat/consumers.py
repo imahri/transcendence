@@ -96,12 +96,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.close(code)
 
 
-
-
-
-
-
-
 # view(req)
 
 #  user1 = req.GET.get(user1)
