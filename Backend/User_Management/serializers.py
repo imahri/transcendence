@@ -4,9 +4,10 @@ from rest_framework.serializers import ModelSerializer
 from .models import User, Info, Notification
 from rest_framework import serializers
 
+
 class UserSerializer(ModelSerializer):
 
-    img = serializers.SerializerMethodField();
+    img = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -38,25 +39,24 @@ class UserSerializer(ModelSerializer):
         return new_user
 
     def update(self, instance, validated_data):
-        instance.username = validated_data.get('username', instance.username)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        
+        instance.username = validated_data.get("username", instance.username)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+
         # Check if password is provided before updating
-        password = validated_data.get('password', None)
+        password = validated_data.get("password", None)
         if password:
             instance.set_password(password)
-        
+
         instance.save()
         return instance
 
-
     def get_img(self, obj):
-        return obj.get_info()['profile_img']
+        return obj.get_info()["profile_img"]
 
 
 class InfoSerializer(ModelSerializer):
-    
+
     from Game.serilaizers import GradeSerializer
 
     grade = GradeSerializer()
@@ -72,12 +72,12 @@ class InfoSerializer(ModelSerializer):
             "profile_img",
             "grade",
             "nb_game",
-            "tournament_win"
+            "tournament_win",
         ]
 
     def get_nb_game(self, obj: Info):
         return len(obj.user.matches.filter(is_played=True))
-    
+
     def create(self, validated_data):
         user = validated_data["user"]
         user_info = self.Meta.model(user)

@@ -45,9 +45,7 @@ class ConversationView(APIView):
             isExist=Q(owners__pk__contains=user.pk)
         )
         conversation_list = (
-            queryset.filter(isExist=True)
-            .order_by("-last_modified")
-            .distinct()
+            queryset.filter(isExist=True).order_by("-last_modified").distinct()
         )
         conversation_list = [  # TODO: do it in queryset
             conversation
