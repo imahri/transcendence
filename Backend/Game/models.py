@@ -14,6 +14,9 @@ class Acheivement(models.Model):
         "User_Management.User", related_name="acheivements", blank=True
     )
 
+    @staticmethod
+    def owner_of(user: User, acheivement_name: str) -> bool:
+        return user.acheivements.filter(name=acheivement_name).exists()
 
 class Match(models.Model):
 

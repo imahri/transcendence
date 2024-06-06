@@ -307,3 +307,28 @@ def get_equiped_item(request):
 
     except Exception as error:
         return Response(data=str(error), status=400)
+
+
+@api_view(["GET"])
+def check_achievement(request):
+    try:
+        user: User = request.user
+        if not Acheivement.owner_of(user, "The Ghost"):
+            if len(Match.objects.filter(user=user, score=5)) == 20:
+                Acheivement.objects.get(name="The Ghost").users.add(user)
+        if not Acheivement.owner_of(user, "The Killer"):
+            if len(Match.objects.filter(user=user, score=5)) == 15:
+                Acheivement.objects.get(name="The Killer").users.add(user)
+        if not Acheivement.owner_of(user, "The Death"):
+            if len(Match.objects.filter(user=user, score=5)) == 10:
+                Acheivement.objects.get(name="The Death").users.add(user)
+        if not Acheivement.owner_of(user, "Fiddler"):  # ! Create use with the same name
+            if Match.objects.filter(
+                user=user, enemy=User.objects.get(username="Fiddler")
+            ).exists():
+                Acheivement.objects.get(name="Fiddler").users.add(user)
+        if not Acheivement.owner_of(user, "SUDO"):
+            if user.is_staff:
+                Acheivement.objects.get(name="SUDO").users.add(user)
+    except:
+        pass
