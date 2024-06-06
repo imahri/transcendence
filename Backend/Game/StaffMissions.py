@@ -57,7 +57,7 @@ class MissionView(APIView):
 		    {"task" : "Win Tow games", "state" : WinTowGame},
 		    {"task" : "Join a tournoumant", "state" : Tournament},
         ]
-       
+
         return tasks
 
     def getChatTask(self):
@@ -203,11 +203,11 @@ class MissionView(APIView):
             request.user.info.add_exp(750)
             acheivment : Acheivement  =  Acheivement.objects.get(name="the_smart")
             acheivment.users.add(self.request.user)
-        if chatMission == "completed" :
-            acheivment : Acheivement  =  Acheivement.objects.get(name="the_mortal")
+        if chatMission == "completed":
+            acheivment: Acheivement = Acheivement.objects.get(name="the_mortal")
             acheivment.users.add(self.request.user)
-        if gameMission == "completed" :
-            acheivment : Acheivement  =  Acheivement.objects.get(name="Volcano")
+        if gameMission == "completed":
+            acheivment: Acheivement = Acheivement.objects.get(name="Volcano")
             acheivment.users.add(self.request.user)
 
         return Response(
