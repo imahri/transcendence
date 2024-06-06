@@ -14,7 +14,7 @@ async function get_rank() {
 }
 
 const Ranking = () => {
-	const [Loading, setLoading] = useState(false);
+	const [Loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 
 	useEffect(() => {
