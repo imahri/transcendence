@@ -1,22 +1,34 @@
+"use client";
 import styles from "./rank.module.css";
 import First_Ranking from "./first";
 import Second_Ranking from "./second";
 import Third_Ranking from "./third";
 import Player_rank from "./players_rank";
-import { fetch_jwt } from "@/Tools/fetch_jwt_server";
-import { APIs } from "@/Tools/fetch_jwt_client";
-import { redirect } from "next/navigation";
+import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { useEffect, useState } from "react";
 
 async function get_rank() {
 	const [isOk, status, data] = await fetch_jwt(APIs.game.rank);
-	if (!isOk) redirect("/404");
-	return data;
+	if (isOk) return data;
+	return [];
 }
 
-const Ranking = async () => {
-	const data = await get_rank();
+const Ranking = () => {
+	const [Loading, setLoading] = useState(false);
+	const [data, setData] = useState([]);
 
-	return (
+	useEffect(() => {
+		get_rank().then((data) => {
+			setData(data);
+			setLoading(false);
+		});
+	}, []);
+
+	return Loading ? (
+		<div className="w-full h-screen bg-[#202020] flex justify-center items-center text-white">
+			Loading ....
+		</div>
+	) : (
 		<div className={styles.page}>
 			<div className={styles.container}>
 				{/* navbar */}
