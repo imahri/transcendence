@@ -48,14 +48,9 @@ async function searchTournament(input, setResult, setCreate, setDemo) {
 }
 
 async function getMyTornament(setResult) {
-	const [isOk, status, data] = await fetch_jwt(
-		APIs.tournament.get_tournament,
-	);
+	const [isOk, status, data] = await fetch_jwt(APIs.tournament.tournament);
 
-	if (!isOk) {
-		console.log(data);
-		return;
-	}
+	if (!isOk) return;
 	setResult(data);
 }
 

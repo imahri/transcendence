@@ -106,54 +106,54 @@ function getSchedule(participants, schedule) {
 	const FirstSide = schedule.FirstSide;
 	const SecondSide = schedule.SecondSide;
 
-	result[1].user1 = FirstSide["3rd"]
-		? getParticipant(participants, FirstSide["3rd"]["1"]?.[0])
+	result[1].user1 = FirstSide?.["3rd"]
+		? getParticipant(participants, FirstSide?.["3rd"]["1"]?.[0])
 		: null;
 
-	result[1].user2 = FirstSide["3rd"]
-		? getParticipant(participants, FirstSide["3rd"]["1"]?.[1])
+	result[1].user2 = FirstSide?.["3rd"]
+		? getParticipant(participants, FirstSide?.["3rd"]["1"]?.[1])
 		: null;
 
-	result[2].user1 = SecondSide["3rd"]
-		? getParticipant(participants, SecondSide["3rd"]["2"]?.[0])
+	result[2].user1 = SecondSide?.["3rd"]
+		? getParticipant(participants, SecondSide?.["3rd"]["2"]?.[0])
 		: null;
-	result[2].user2 = SecondSide["3rd"]
-		? getParticipant(participants, SecondSide["3rd"]["2"]?.[1])
-		: null;
-
-	result[3].user1 = FirstSide["3rd"]
-		? getParticipant(participants, FirstSide["3rd"]["3"]?.[0])
-		: null;
-	result[3].user2 = FirstSide["3rd"]
-		? getParticipant(participants, FirstSide["3rd"]["3"]?.[1])
+	result[2].user2 = SecondSide?.["3rd"]
+		? getParticipant(participants, SecondSide?.["3rd"]["2"]?.[1])
 		: null;
 
-	result[4].user1 = SecondSide["3rd"]
-		? getParticipant(participants, SecondSide["3rd"]["4"]?.[0])
+	result[3].user1 = FirstSide?.["3rd"]
+		? getParticipant(participants, FirstSide?.["3rd"]["3"]?.[0])
 		: null;
-	result[4].user2 = SecondSide["3rd"]
-		? getParticipant(participants, SecondSide["3rd"]["4"]?.[1])
-		: null;
-
-	result[5].user1 = FirstSide["2nd"]
-		? getParticipant(participants, FirstSide["2nd"]["5"]?.[0])
-		: null;
-	result[5].user2 = FirstSide["2nd"]
-		? getParticipant(participants, FirstSide["2nd"]["5"]?.[1])
+	result[3].user2 = FirstSide?.["3rd"]
+		? getParticipant(participants, FirstSide?.["3rd"]["3"]?.[1])
 		: null;
 
-	result[6].user1 = SecondSide["2nd"]
-		? getParticipant(participants, SecondSide["2nd"]["6"]?.[0])
+	result[4].user1 = SecondSide?.["3rd"]
+		? getParticipant(participants, SecondSide?.["3rd"]["4"]?.[0])
 		: null;
-	result[6].user2 = SecondSide["2nd"]
-		? getParticipant(participants, SecondSide["2nd"]["6"]?.[1])
+	result[4].user2 = SecondSide?.["3rd"]
+		? getParticipant(participants, SecondSide?.["3rd"]["4"]?.[1])
 		: null;
 
-	result[7].user1 = FirstSide["1st"]
-		? getParticipant(participants, FirstSide["1st"])
+	result[5].user1 = FirstSide?.["2nd"]
+		? getParticipant(participants, FirstSide?.["2nd"]["5"]?.[0])
 		: null;
-	result[7].user2 = SecondSide["1st"]
-		? getParticipant(participants, SecondSide["1st"])
+	result[5].user2 = FirstSide?.["2nd"]
+		? getParticipant(participants, FirstSide?.["2nd"]["5"]?.[1])
+		: null;
+
+	result[6].user1 = SecondSide?.["2nd"]
+		? getParticipant(participants, SecondSide?.["2nd"]["6"]?.[0])
+		: null;
+	result[6].user2 = SecondSide?.["2nd"]
+		? getParticipant(participants, SecondSide?.["2nd"]["6"]?.[1])
+		: null;
+
+	result[7].user1 = FirstSide?.["1st"]
+		? getParticipant(participants, FirstSide?.["1st"])
+		: null;
+	result[7].user2 = SecondSide?.["1st"]
+		? getParticipant(participants, SecondSide?.["1st"])
 		: null;
 
 	return result;

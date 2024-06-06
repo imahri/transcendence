@@ -6,8 +6,6 @@ import Link from "next/link";
 const Cardpic = () => {
 	return (
 		<div>
-			<div className={`${styles.top_f}`}></div>
-
 			<div className={`${styles.container}`}>
 				<div className={styles.title}>Mode</div>
 				<div className={`${styles.bor}`}>
@@ -29,8 +27,10 @@ const Cardpic = () => {
 						</div>
 					</Link>
 				</div>
-				<div className={`${styles.made}`}>
-					<Image src={Fooo} width={337} height={89} alt="immmm" />
+				<div
+					className={`${styles.made} [@media(max-width:1014px)]:hidden`}
+				>
+					<Image src={Fooo} width={200} height={89} alt="immmm" />
 				</div>
 			</div>
 		</div>

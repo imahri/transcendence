@@ -44,7 +44,6 @@ class TournamentView(APIView):
 
     @catch_view_exception
     def get(self, request: Request):
-        """?all=True get all Conversation"""
         all: bool = bool(request.query_params.get("all", False))
         tournaments = (
             Tournament.objects.all().order_by("created_at")

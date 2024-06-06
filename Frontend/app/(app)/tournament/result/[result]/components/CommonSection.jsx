@@ -60,8 +60,8 @@ function Winner({ winner }) {
 }
 
 export function LastMatch({ tournament, participants, winner }) {
-	const first = tournament?.FirstSide["1st"];
-	const second = tournament?.SecondSide["1st"];
+	const first = tournament?.FirstSide?.["1st"];
+	const second = tournament?.SecondSide?.["1st"];
 
 	const user1 = first ? getParticipant(participants, first) : null;
 	const user2 = second ? getParticipant(participants, second) : null;

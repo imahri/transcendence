@@ -80,11 +80,8 @@ const Matching = ({ player1, player2, boardpic }) => {
 
 					<div className={`${styles.layer} ${styles.five}`}>
 						{/* borad */}
-
 						<div className={styles.container_board}>
-							<div className={styles.badge}></div>
 							<Boardskin boardpic={boardpic} />
-							<div className={styles.badge}></div>
 						</div>
 					</div>
 					<div className={`${styles.layer} ${styles.smal}`}></div>
@@ -99,11 +96,6 @@ const Matching = ({ player1, player2, boardpic }) => {
 										Back
 									</button>
 								</Link>
-							</div>
-
-							<div className={`${styles.achivement_asmbler}`}>
-								<div className={`${styles.pico}`}></div>
-								<span>win 15 match in your last chance</span>
 							</div>
 						</div>
 					</div>
