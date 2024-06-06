@@ -6,7 +6,7 @@ function layout({ children }) {
 		<>
 			<NavBar />
 			<div
-				className={`relative w-full min-h-[calc(100vh-90px)] mt-[90px] flex justify-center items-center bg-no-repeat bg-cover bg-center ${styles.GameBk}`}
+				className={`relative w-full min-h-[calc(100vh-90px)] mt-[90px] [@media(max-width:900px)]:mb-[90px]  flex justify-center items-center bg-no-repeat bg-cover bg-center ${styles.GameBk}`}
 			>
 				{children}
 			</div>

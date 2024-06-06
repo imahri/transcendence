@@ -1,13 +1,8 @@
 "use client";
-
-import CommonSection, {
-	LastMatch,
-	getParticipant,
-} from "./components/CommonSection";
+import CommonSection, { LastMatch } from "./components/CommonSection";
 import { useEffect, useState } from "react";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import SmallComponnent from "./components/SmallComponent";
 
 async function getTournament(
