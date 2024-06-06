@@ -7,7 +7,7 @@ import { useWebsocket } from "./hooks/useWebsocket";
 
 export const UserContext = createContext();
 
-export const UserContextProvider = ({ children, value }) => {
+export const UserContextProvider = ({ children, value, setUpdate }) => {
 	const [socket, setSocket] = useState(null);
 	const [user, setUser] = useState(value);
 	const [settings, setSettings] = useState(false);
@@ -18,9 +18,13 @@ export const UserContextProvider = ({ children, value }) => {
 		setSocket(ws);
 	}, [ws]);
 
+	useEffect(() => {
+		if (value) setUser(value);
+	}, [value]);
+
 	return (
 		<UserContext.Provider
-			value={{ ws: socket, user, setUser, setSettings }}
+			value={{ ws: socket, user, setUser, setSettings, setUpdate }}
 		>
 			{children}
 			{settings && <Settings showSettings={setSettings} />}

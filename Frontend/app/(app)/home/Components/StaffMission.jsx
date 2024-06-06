@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Mission, GameMission } from "./Mission";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
+import { UserContext } from "../../context";
 
 function Task({ tasks }) {
 	return (
@@ -34,7 +35,7 @@ function Task({ tasks }) {
 	);
 }
 
-async function verify(setMissions, setverify) {
+async function verify(setMissions, setverify, setUpdate) {
 	setverify(true);
 	setTimeout(() => {
 		setverify(false);
@@ -63,6 +64,7 @@ async function verify(setMissions, setverify) {
 				},
 			};
 		});
+		setUpdate(true);
 		return;
 	}
 	console.log(data);
@@ -73,6 +75,7 @@ function StaffMission() {
 	const [missions, setMissions] = useState();
 	const [isLoading, setLoading] = useState(true);
 	const [verifyLoading, setverify] = useState();
+	const { setUpdate } = useContext(UserContext);
 
 	useEffect(() => {
 		if (!missions) {
@@ -123,7 +126,7 @@ function StaffMission() {
 			<button
 				className="w-[90%] h-[70px] bg-[#4FA1EC] bg-opacity-[61%] rounded-[7px] font-bold text-[20px] text-white [@media(max-width:710px)]:w-[100%] relative"
 				onClick={() => {
-					verify(setMissions, setverify);
+					verify(setMissions, setverify, setUpdate);
 				}}
 			>
 				Verify
@@ -131,7 +134,7 @@ function StaffMission() {
 			</button>
 
 			<div
-				className={`${popUp ? "" : "hidden"} w-[90%] h-[282px] bg-[#353535] absolute top-[60px] rounded-[7px] animate-pop`}
+				className={`${popUp ? "" : "hidden"} w-[90%] [@media(max-width:710px)]:w-[100%] h-[282px] bg-[#353535] absolute top-[60px] rounded-[7px] animate-pop`}
 			>
 				{closePopopupSvg(setPopup)}
 				{popUp && <Task tasks={popUp} />}

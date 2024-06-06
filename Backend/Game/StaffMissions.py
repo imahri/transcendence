@@ -48,7 +48,7 @@ class MissionView(APIView):
         user : User = self.request.user
         exist = Participant.objects.filter(user=user).exists()
         matchPlayed = user.matches.filter(is_played=True)
-        PlayFourGame = "incompleted" if matchPlayed.count() < 5 else "completed" 
+        PlayFourGame = "incompleted" if matchPlayed.count() < 4 else "completed" 
         WinTowGame = "incompleted" if matchPlayed.filter(score=5).count() < 2 else "completed"
         Tournament = "incompleted" if exist is False else "completed"
 
@@ -127,7 +127,7 @@ class MissionView(APIView):
         exist = Participant.objects.filter(user=user).exists()
         matchPlayed = user.matches.filter(is_played=True)
       
-        PlayFourGame = "incompleted" if matchPlayed.count() < 5 else "completed" 
+        PlayFourGame = "incompleted" if matchPlayed.count() < 4 else "completed" 
         WinTowGame = "incompleted" if matchPlayed.filter(score=5).count() < 2 else "completed"
         Tournament = "incompleted" if exist is False else "completed"
 
@@ -193,22 +193,26 @@ class MissionView(APIView):
 
         if userMission == "incompleted":
             userMission = self.checkUserMission()
+            if userMission == "completed" :
+                request.user.info.wallet += 350
+                request.user.info.add_exp(750)
+                acheivment : Acheivement  =  Acheivement.objects.get(name="the_smart")
+                acheivment.users.add(self.request.user)
         if chatMission == "incompleted":
             chatMission = self.checkChatMission()
+            if chatMission == "completed":
+                request.user.info.wallet += 300
+                request.user.info.add_exp(800)
+                acheivment: Acheivement = Acheivement.objects.get(name="the_mortal")
+                acheivment.users.add(self.request.user)
         if gameMission == "incompleted":
             gameMission = self.checkGameMission()
+            if gameMission == "completed":
+                request.user.info.wallet += 500
+                request.user.info.add_exp(1110)
+                acheivment: Acheivement = Acheivement.objects.get(name="Volcano")
+                acheivment.users.add(self.request.user)
 
-        if userMission == "completed" :
-            request.user.info.wallet += 350
-            request.user.info.add_exp(750)
-            acheivment : Acheivement  =  Acheivement.objects.get(name="the_smart")
-            acheivment.users.add(self.request.user)
-        if chatMission == "completed":
-            acheivment: Acheivement = Acheivement.objects.get(name="the_mortal")
-            acheivment.users.add(self.request.user)
-        if gameMission == "completed":
-            acheivment: Acheivement = Acheivement.objects.get(name="Volcano")
-            acheivment.users.add(self.request.user)
 
         return Response(
             {

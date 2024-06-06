@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 export default function Layout({ children }) {
 	const [data, setData] = useState();
 	const [Loading, setisLoading] = useState(true);
+	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
 		const getUser = async () => {
@@ -17,10 +18,14 @@ export default function Layout({ children }) {
 				return;
 			}
 			setData(data);
+			setUpdate(false);
 			setisLoading(false);
 		};
-		getUser();
-	}, []);
+		if (!data || update) {
+			getUser();
+			console.log("called");
+		}
+	}, [update]);
 
 	return (
 		<>
@@ -29,7 +34,7 @@ export default function Layout({ children }) {
 					is Loading ....
 				</div>
 			) : (
-				<UserContextProvider value={data}>
+				<UserContextProvider value={data} setUpdate={setUpdate}>
 					<div className="w-full h-full flex">
 						<SideBar />
 						<main className="bg-[#202020] w-full min-h-screen ml-[80px] [@media(max-width:900px)]:ml-0">
