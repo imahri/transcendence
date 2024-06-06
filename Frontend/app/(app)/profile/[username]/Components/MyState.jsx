@@ -74,9 +74,28 @@ function Status({ state }) {
 	);
 }
 
+function getDetails(id) {
+	const instruction = {
+		1: "Finish the missons",
+		2: "Finish the missons",
+		3: "Finish the missons",
+		4: "Send message to redmega",
+		5: "Win 10 match in a row",
+		6: "Win against all staff",
+		7: "Play against fiddler and win",
+		8: "Win 20 match in a row",
+		9: "Win 15 match in row",
+		10: "Ask sakawi for it",
+		11: "only staff",
+	};
+	return instruction[id];
+}
+
 function ShowRoom({ items }) {
+	const [details, setDetails] = useState();
+
 	return (
-		<div className="w-full flex flex-col items-center gap-[5px]">
+		<div className="w-full flex flex-col items-center gap-[5px] relative">
 			<h1 className="font-Chakra font-bold text-[#BABABA] text-[20px]">
 				Acheivment
 			</h1>
@@ -86,15 +105,22 @@ function ShowRoom({ items }) {
 						return (
 							<Image
 								key={index}
-								className={`size-[70px] ${obj.unlocked ? "" : "grayscale"}`}
+								className={`size-[70px] ${obj.unlocked ? "" : "grayscale"} cursor-pointer`}
 								width={70}
 								height={70}
 								src={APIs.image(obj.icon_path)}
 								alt="Acheivment"
+								onMouseEnter={() => setDetails(obj.id)}
+								onMouseLeave={() => setDetails(false)}
 							/>
 						);
 					})}
 			</div>
+			<span
+				className={`${details ? "scale-100" : ""} absolute top-[-10px] w-auto p-2 m-2 min-w-max  rounded-md shadow-md text-white bg-gray-900 text-xs font-bold transistion-all duration-100 scale-0 origin-bottom`}
+			>
+				{getDetails(details)}
+			</span>
 		</div>
 	);
 }
