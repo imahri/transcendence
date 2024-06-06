@@ -9,12 +9,14 @@ from .views import (
     ItemsView,
     AcheivmentView,
     RoomView,
+    check_achievement,
     get_rank,
     get_equiped_item,
 )
 from .StaffMissions import MissionView
 
 urlpatterns = [
+    path("achievement/check", check_achievement, name="check_achievement"),
     path("rank", get_rank, name="get_rank"),
     path("room", RoomView.as_view(), name="new_room"),
     path("match", MatchView.as_view(), name="create"),
