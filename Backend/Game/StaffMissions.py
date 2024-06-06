@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from Tournament.models import Participant
+
 from .serilaizers import  AcheivmentSerializer
-from .models import  Acheivement, Items
+from .models import  Acheivement
 from Chat.models import  Message, Conversation
-from django.core.exceptions import ObjectDoesNotExist
 from User_Management.models import User
 
 
@@ -39,12 +40,18 @@ class MissionView(APIView):
         return tasks
        
     def getGameTask(self):
+        user : User = self.request.user
+        exist = Participant.objects.filter(user=user).exists()
+        matchPlayed = user.matches.filter(is_played=True)
+        PlayFourGame = "incompleted" if matchPlayed.count() < 5 else "completed" 
+        WinTowGame = "incompleted" if matchPlayed.filter(score=5).count() < 2 else "completed"
+        Tournament = "incompleted" if exist is False else "completed"
+
         tasks = [
-            {"task" : "Play Four games", "state" : "incompleted"},
-		    {"task" : "Win Tow games", "state" : "incompleted"},
-		    {"task" : "Play in a tournoumant", "state" : "incompleted"},
+            {"task" : "Play Four games", "state" : PlayFourGame},
+		    {"task" : "Win Tow games", "state" : WinTowGame},
+		    {"task" : "Join a tournoumant", "state" : Tournament},
         ]
-       
         return tasks
         
 
@@ -89,6 +96,17 @@ class MissionView(APIView):
         return mission
 
     def checkGameMission(self):
+        user : User = self.request.user
+        exist = Participant.objects.filter(user=user).exists()
+        matchPlayed = user.matches.filter(is_played=True)
+      
+        PlayFourGame = "incompleted" if matchPlayed.count() < 5 else "completed" 
+        WinTowGame = "incompleted" if matchPlayed.filter(score=5).count() < 2 else "completed"
+        Tournament = "incompleted" if exist is False else "completed"
+
+        if PlayFourGame == "completed" and WinTowGame == "completed" and Tournament == "completed":
+            return "completed"
+
         return "incompleted"
 
 
@@ -152,12 +170,18 @@ class MissionView(APIView):
             gameMission = self.checkGameMission()
 
         if userMission == "completed" :
+            request.user.info.wallet += 350
+            request.user.info.add_exp(750)
             acheivment : Acheivement  =  Acheivement.objects.get(name="the_smart")
             acheivment.users.add(self.request.user)
         if chatMission == "completed" :
+            request.user.info.wallet += 300
+            request.user.info.add_exp(800)
             acheivment : Acheivement  =  Acheivement.objects.get(name="the_mortal")
             acheivment.users.add(self.request.user)
         if gameMission == "completed" :
+            request.user.info.wallet += 500
+            request.user.info.add_exp(1110)
             acheivment : Acheivement  =  Acheivement.objects.get(name="Volcano")
             acheivment.users.add(self.request.user)
         

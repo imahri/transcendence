@@ -126,7 +126,7 @@ function StaffMission() {
 					verify(setMissions, setverify);
 				}}
 			>
-				Verefiy
+				Verify
 				{verifyLoading && <Loading />}
 			</button>
 
