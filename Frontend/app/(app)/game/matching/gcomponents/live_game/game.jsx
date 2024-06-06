@@ -14,6 +14,8 @@ let uid = 0;
 
 let player2_state = "not yet";
 let player1_state = "not yet";
+let player2_for = "not yet";
+let player1_for = "not yet";
 
 export const Gameson = ({
 	secondArrived,
@@ -23,6 +25,7 @@ export const Gameson = ({
 	setPlayer1,
 	setPlayer2,
 	boardpic,
+	checkEnd,
 }) => {
 	const cvs = useRef(null);
 	const [socket, setSocket] = useState(null);
@@ -48,7 +51,21 @@ export const Gameson = ({
 			if (data.event == "reconnect") {
 				secondArrived();
 			} else if (data.event == "forfeited") {
-				checkWinner();
+				// console.log(data);
+				// player1_for = data?.message?.user1;
+				// player2_for = data?.message?.user2;
+				// if (uid == 1 && player1_for === "win") {
+				checkEnd();
+				// }
+				// if (uid == 2 && player2_for === "win") {
+				// 	checkWinner();
+				// }
+				// if (uid == 1 && player1_for === "lose") {
+				// 	checkLoser();
+				// }
+				// if (uid == 2 && player2_for === "lose") {
+				// 	checkLoser();
+				// }
 			} else if (data.event == "goal") {
 				setScore(data.score);
 			} else if (data.event == "send_info") {

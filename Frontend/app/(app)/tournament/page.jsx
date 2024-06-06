@@ -78,13 +78,13 @@ function Page() {
 
 	return (
 		<div className="absolute py-[30px] [@media(max-width:570px)]:w-[90%] w-[500px] min-h-[530px] bg-gradient-to-b from-[#343434] via-[rgba(52,52,52,0.398496)] to-[#343434] shadow-[0_4px_40px_5px_rgba(0,0,0,0.7)] flex flex-col items-center gap-[20px] rounded-md">
-			<h1 className="text-white text-opacity-40 font-semibold text-[20px]">
+			<h1 className="text-white text-opacity-40 font-semibold text-[20px] [@media(max-width:370px)]:text-[15px] [@media(max-width:270px)]:text-[10px]">
 				Search Tournament or Creat it
 			</h1>
-			<div className="bg-[#252525] rounded-md p-[10px] w-[70%] h-[50px] flex items-center justify-between">
+			<div className="bg-[#252525] rounded-md p-[10px] w-[70%] [@media(max-width:600px)]:w-[90%] h-[50px] flex items-center justify-between">
 				<input
 					type="text"
-					className="bg-transparent h-full focus:outline-none font-bold text-[17px] text-[#cccccc] placeholder:text-[#cccccc] placeholder:cursor-default"
+					className="bg-transparent w-[90%] h-full focus:outline-none font-bold text-[17px] text-[#cccccc] placeholder:text-[#cccccc] placeholder:cursor-default"
 					placeholder="Search Tournament"
 					onChange={(e) => {
 						setInput(e.target.value);
@@ -93,7 +93,7 @@ function Page() {
 				{PlusSvg(setCreate, setDemo)}
 			</div>
 			<div
-				className={`bg-[#252525] w-[70%] min-h-[350px] p-[10px] rounded-lg relative`}
+				className={`bg-[#252525] w-[70%] [@media(max-width:600px)]:w-[90%] min-h-[350px] p-[10px] rounded-lg relative`}
 			>
 				<div
 					className={`${searchResult && !create ? "" : "hidden"} flex flex-col items-center gap-[20px] overflow-y-scroll w-full h-[340px]`}

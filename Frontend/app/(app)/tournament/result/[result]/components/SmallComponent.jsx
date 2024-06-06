@@ -48,7 +48,7 @@ function Historic({ user1, user2, place }) {
 						/>
 						<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
 							<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
-								{user1?.name}
+								{user2?.name}
 							</h1>
 						</div>
 					</>
@@ -161,8 +161,8 @@ function getSchedule(participants, schedule) {
 
 function Winner({ winner }) {
 	return (
-		<div className="size-[100px] flex flex-col justify-center items-center">
-			<div className="rounded-full size-full bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
+		<div className="flex flex-col justify-center items-center">
+			<div className="rounded-full size-[100px] bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
 				<Image
 					className="rounded-full size-[95%]"
 					width={70}

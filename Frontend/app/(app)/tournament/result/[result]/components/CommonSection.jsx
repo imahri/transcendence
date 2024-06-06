@@ -32,10 +32,10 @@ function UserImage({ user, nb }) {
 	);
 }
 
-function Winner({ winner }) {
+export function Winner({ winner }) {
 	return (
-		<div className="absolute top-[80px] size-[100px] flex flex-col justify-center items-center">
-			<div className="rounded-full size-full bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
+		<div className="absolute top-[80px] flex flex-col justify-center items-center">
+			<div className="rounded-full size-[100px] bg-[#FFD700] flex justify-center items-center cursor-pointer group relative">
 				<Image
 					className="rounded-full size-[95%]"
 					width={70}

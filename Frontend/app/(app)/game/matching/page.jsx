@@ -3,6 +3,7 @@ import Matching from "@/app/(app)/game/matching/components/match_making/matching
 import LGame from "@/app/(app)/game/matching/gcomponents/live_game/Livegame";
 import WInter from "@/app/(app)/game/game_local/game_win/live_game/Win";
 import LInter from "@/app/(app)/game/game_local/game_lose/live_game/Lose";
+import EInter from "@/app/(app)/game/game_local_fr/live_game/End";
 import { useSearchParams } from "next/navigation";
 import React, { useContext, useState, useEffect } from "react";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
@@ -37,6 +38,7 @@ const Vim = () => {
 	const [checkRoom, setCheckRoom] = useState(true);
 	const [win, setWin] = useState(false);
 	const [lose, setLose] = useState(false);
+	const [end, setEnd] = useState(false);
 	const navigate = useRouter();
 	const [player1, setPlayer1] = useState();
 	const [player2, setPlayer2] = useState();
@@ -77,6 +79,9 @@ const Vim = () => {
 	const checkLoser = () => {
 		setLose(true);
 	};
+	const checkEnd = () => {
+		setEnd(true);
+	};
 
 	return (
 		<div>
@@ -85,6 +90,7 @@ const Vim = () => {
 			) : (
 				<>
 					<LGame
+						checkEnd={checkEnd}
 						checkWinner={checkWinner}
 						checkLoser={checkLoser}
 						secondArrived={secondArrived}
@@ -106,6 +112,7 @@ const Vim = () => {
 					)}
 					{win && <WInter />}
 					{lose && <LInter />}
+					{end && <EInter />}
 				</>
 			)}
 		</div>
