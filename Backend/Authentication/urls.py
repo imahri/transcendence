@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import (
     token_refresh as jwt_token_refresh,
-    token_blacklist as jwt_token_blacklist
+    token_blacklist as jwt_token_blacklist,
 )
 from .views import Register, Login, TwoFactorAuthView, intra_auth, check_token
 

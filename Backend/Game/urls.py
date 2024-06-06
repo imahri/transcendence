@@ -1,7 +1,17 @@
 from django.urls import path
 
 
-from .views import MatchView, BadgeView, BoardView, PadleView, ItemsView, AcheivmentView, RoomView, get_rank,get_equiped_item
+from .views import (
+    MatchView,
+    BadgeView,
+    BoardView,
+    PadleView,
+    ItemsView,
+    AcheivmentView,
+    RoomView,
+    get_rank,
+    get_equiped_item,
+)
 from .StaffMissions import MissionView
 
 urlpatterns = [
@@ -14,11 +24,9 @@ urlpatterns = [
     # path("board/<int:pk>/", BoardView.as_view(), name="boardUpdate"),
     path("padle", PadleView.as_view(), name="padle"),
     # path("padle/<int:pk>/", PadleView.as_view(), name="padleUpdate"),
-    #user collection of items
+    # user collection of items
     path("items", ItemsView.as_view(), name="items"),
     path("missions", MissionView.as_view(), name="missions"),
     path("acheivement", AcheivmentView.as_view(), name="acheivement"),
     path("equipeditem", get_equiped_item, name="equipeditem"),
-    
-
 ]

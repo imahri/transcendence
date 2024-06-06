@@ -11,9 +11,7 @@ from User_Management.Consumers.Notifconsumers import NotificationConsumer
 class Tournament(models.Model):
 
     name = models.CharField(max_length=20, unique=True)
-    creator = models.ForeignKey(
-        "User_Management.User", on_delete=models.CASCADE
-    )
+    creator = models.ForeignKey("User_Management.User", on_delete=models.CASCADE)
     winner = models.ForeignKey(
         "Tournament.Participant", on_delete=models.CASCADE, blank=True, null=True
     )
@@ -25,7 +23,6 @@ class Tournament(models.Model):
     isStarted = models.BooleanField(default=False)
     isEnd = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
-
 
     def as_serialized(self):
         from .serializers import TournamentSerializer
@@ -44,6 +41,9 @@ class Tournament(models.Model):
     def join(self, user: User, unique_name: str):
 
         is_participant = self.participants.filter(user=user).exists()
+        if is_participant:
+            return False
+        is_participant = self.participants.filter(name=unique_name).exists()
         if is_participant:
             return False
         self.participants.add(Participant.objects.create(name=unique_name, user=user))
@@ -92,7 +92,7 @@ class Tournament(models.Model):
             },
         }
         notification = Notification.createToMultiUsers(self.creator, content)
-        data = notification.as_serialized() 
+        data = notification.as_serialized()
 
         for user in players:
             try:
@@ -137,8 +137,12 @@ class Tournament(models.Model):
     def fill_1nd(self):
         if self.schedule == None:
             return
-        self.schedule["FirstSide"]["1st"] = self.get_winner(self.schedule["FirstSide"]["2nd"]["5"])
-        self.schedule["SecondSide"]["1st"] = self.get_winner(self.schedule["SecondSide"]["2nd"]["6"])
+        self.schedule["FirstSide"]["1st"] = self.get_winner(
+            self.schedule["FirstSide"]["2nd"]["5"]
+        )
+        self.schedule["SecondSide"]["1st"] = self.get_winner(
+            self.schedule["SecondSide"]["2nd"]["6"]
+        )
         self.save()
 
     def next_match(self, start=False):
@@ -173,7 +177,7 @@ class Tournament(models.Model):
                 "content": {
                     "type": "winner",
                     "message": f"{self.participants.get(pk=winner['id']).user.username} win his match in {self.name}",
-                    'tournament_name' : self.name,
+                    "tournament_name": self.name,
                 },
             }
             notification = Notification.createToMultiUsers(self.creator, content)
@@ -215,8 +219,8 @@ class Tournament(models.Model):
             ]
         elif self.match_index == 8:
             self.isEnd = True
-            self.winner = self.participants.get(id=winner['id'])
-            winner_user = User.objects.get(pk=winner['user_id'])
+            self.winner = self.participants.get(id=winner["id"])
+            winner_user = User.objects.get(pk=winner["user_id"])
             winner_user.info.tournament_win += 1
             winner_user.info.wallet += 500
             winner_user.info.save()
@@ -242,9 +246,9 @@ class Tournament(models.Model):
                 "content": {
                     "type": "match",
                     "room_name": room_name,
-                    players_name[0] : players_name[1], 
-                    players_name[1] : players_name[0],
-                    'tournament_name' : self.name,
+                    players_name[0]: players_name[1],
+                    players_name[1]: players_name[0],
+                    "tournament_name": self.name,
                 },
             },
         )
@@ -257,7 +261,7 @@ class Tournament(models.Model):
                     {"type": "redirect", "content": data},
                 )
             except:
-                print('amakayench : ', username)
+                print("amakayench : ", username)
                 pass
 
     def getPlayerByName(self, arrNames):

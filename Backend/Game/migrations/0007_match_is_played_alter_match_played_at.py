@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Game', '0006_match_tournament_alter_match_enemy_match'),
+        ("Game", "0006_match_tournament_alter_match_enemy_match"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='match',
-            name='is_played',
+            model_name="match",
+            name="is_played",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='match',
-            name='played_at',
+            model_name="match",
+            name="played_at",
             field=models.TimeField(auto_now_add=True),
         ),
     ]
