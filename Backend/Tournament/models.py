@@ -46,6 +46,9 @@ class Tournament(models.Model):
         is_participant = self.participants.filter(user=user).exists()
         if is_participant:
             return False
+        is_participant = self.participants.filter(name=unique_name).exists()
+        if is_participant:
+            return False
         self.participants.add(Participant.objects.create(name=unique_name, user=user))
         return True
 

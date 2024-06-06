@@ -338,7 +338,7 @@
 
 .container_player{
     width: 95%;
-    height: 800px;
+    max-height: 800px;
     margin: auto;
     border-radius: 10px;
     background: #444444;
