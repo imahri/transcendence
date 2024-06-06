@@ -31,7 +31,7 @@ export async function joinTournament(
 	}
 	setDemo(data);
 	myseterror(setInfo, "User Joined the Tournament");
-	setButton("Quit");
+	setButton("Already In");
 }
 
 export async function startTournament(id, setError, setButton, setInfo) {
