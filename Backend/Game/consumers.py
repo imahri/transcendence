@@ -377,7 +377,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         
                         index = get_room_index(self.game_room, self.room_group_name)
                         self.loba: Game = self.game_object[index]
-                        asyncio.create_task(self.send_ball_coordinates())
+                        self.task_manager.append(
+                            asyncio.create_task(self.send_ball_coordinates())
+                        )
                     return
                 result = []
                 if find_player_in_game(self.game_room, self.user.username, result):
@@ -396,6 +398,21 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     obg = self.game_object[index]
                     obg.pause = True
                     obg.reconnect = False
+                    await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                "type": "send_info",
+                                "user1": {"username": obg.user1['user_name'], 'image': obg.user1['img']},
+                                "user2": {"username": obg.user2['user_name'], 'image': obg.user2['img']}   
+                            },
+                        )
+                    await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                "type": "goal",
+                                "score": {'score1': obg.user1['score'], 'score2': obg.user2['score']},
+                            },
+                        )
                     xrr = len(self.game_room[index][1])
                     if (xrr == 2):
                         await self.shouha()
