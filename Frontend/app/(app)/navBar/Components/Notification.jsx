@@ -93,7 +93,6 @@ async function getNotif(setNotif, setNbNotif) {
 		setNotif(data.allNotif);
 		return;
 	}
-	console.log("error fetch notif", data);
 }
 
 function handelNotif(data, setNotif, setNbNotif) {
@@ -150,7 +149,7 @@ function Notification() {
 				<span className="text-white text-[13px]">{nbNotif}</span>
 			</div>
 			<div
-				className={`w-[300px] bg-[#303030] absolute right-[5px] top-[35px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
+				className={`w-[300px] bg-[#303030] absolute [@media(max-width:400px)]:w-[290px] right-[5px] top-[35px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
 			>
 				<div className="flex justify-center items-center h-[40px] bg-greatBlue">
 					<h1 className="text-white font-semibold"> Notification</h1>
