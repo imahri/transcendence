@@ -65,7 +65,7 @@
     border-radius: 20px;
     width: 30%;
     height: 90%;
-    background: #444444;
+    background: #303030;
     overflow: hidden;
     box-shadow: 2px 2px black;
 }
@@ -341,7 +341,7 @@
     max-height: 800px;
     margin: auto;
     border-radius: 10px;
-    background: #444444;
+    background: #303030;
     overflow: scroll;
     display: flex;
     flex-direction: column;
@@ -373,7 +373,7 @@
     position: sticky;
     top:0;
     left: 0;
-    background: #444444;
+    background: #303030;
     z-index: 1;
 }
 

@@ -39,23 +39,29 @@ const Ranking = () => {
 				</div>
 
 				<div className={`${styles.layer} ${styles.cards}`}>
-					<Second_Ranking
-						picoProfile={data[1]?.img}
-						username={data[1]?.username}
-						full_name={`${data[1]?.first_name} ${data[1]?.last_name}`}
-					/>
+					{data[1] && (
+						<Second_Ranking
+							picoProfile={data[1]?.img}
+							username={data[1]?.username}
+							full_name={`${data[1]?.first_name} ${data[1]?.last_name}`}
+						/>
+					)}
 
-					<First_Ranking
-						picoProfile={data[0]?.img}
-						username={data[0]?.username}
-						full_name={`${data[0]?.first_name} ${data[0]?.last_name}`}
-					/>
+					{data[0] && (
+						<First_Ranking
+							picoProfile={data[0]?.img}
+							username={data[0]?.username}
+							full_name={`${data[0]?.first_name} ${data[0]?.last_name}`}
+						/>
+					)}
 
-					<Third_Ranking
-						picoProfile={data[2]?.img}
-						username={data[2]?.username}
-						full_name={`${data[2]?.first_name} ${data[2]?.last_name}`}
-					/>
+					{data[2] && (
+						<Third_Ranking
+							picoProfile={data[2]?.img}
+							username={data[2]?.username}
+							full_name={`${data[2]?.first_name} ${data[2]?.last_name}`}
+						/>
+					)}
 				</div>
 
 				<div className={`${styles.layer} ${styles.rank}`}>
