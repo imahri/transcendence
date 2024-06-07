@@ -34,7 +34,7 @@ export const WsChatProvider = ({ children }) => {
 	const { sendNotif, addListenerNotif } = useNotification();
 	const [data, setData] = useState({ conversations: [] });
 	const [Loading, setLoading] = useState(true);
-	const RenderIt = Loading && !isReady;
+	const RenderIt = Loading || !isReady;
 
 	useEffect(() => {
 		getConversations().then((_data) => {

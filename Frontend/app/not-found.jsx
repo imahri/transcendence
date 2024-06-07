@@ -1,11 +1,5 @@
-import Error404 from "@/app/(app)/errop/page";
+import { NotFound } from "./Components/NotFound";
 
-const Erro = () => {
-	return (
-		<div>
-			<Error404 />
-		</div>
-	);
-};
+const Error = () => <NotFound />;
 
-export default Erro;
+export default Error;
