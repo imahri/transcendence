@@ -5,7 +5,9 @@ import { UserProfileContext } from "../page";
 import Image from "next/image";
 import noTrophy from "../assets/noTrophy.png";
 import Trophy from "../assets/Trophy.png";
+import refreshSvg from "../assets/refresh.svg";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
+import { UserContext } from "@/app/(app)/context";
 
 function DisplayStatistic({ title, nb }) {
 	return (
@@ -79,26 +81,44 @@ function getDetails(id) {
 		1: "Finish the missons",
 		2: "Finish the missons",
 		3: "Finish the missons",
-		4: "Send message to redmega",
-		5: "Win 10 match in a row",
-		6: "Win against all staff",
-		7: "Play against fiddler and win",
-		8: "Win 20 match in a row",
-		9: "Win 15 match in row",
-		10: "Ask sakawi for it",
+		5: "Win 10 match",
+		7: "Play against fiddler",
+		8: "Win 20 match",
+		9: "Win 15 match",
 		11: "only staff",
 	};
 	return instruction[id];
 }
 
-function ShowRoom({ items }) {
+async function checkAchievment(setUpdate, setAch) {
+	const [isOk, status, data] = await fetch_jwt(APIs.game.check_acheivments);
+
+	if (status == 200) {
+		setUpdate(true);
+		setAch(true);
+	}
+}
+
+function ShowRoom({ items, setGetAch }) {
 	const [details, setDetails] = useState();
+	const { setUpdate } = useContext(UserContext);
 
 	return (
 		<div className="w-full flex flex-col items-center gap-[5px] relative">
-			<h1 className="font-Chakra font-bold text-[#BABABA] text-[20px]">
-				Acheivment
-			</h1>
+			<div className="flex items-center justify-between gap-[10px]">
+				<h1 className="font-Chakra font-bold text-[#BABABA] text-[20px]">
+					Achievment
+				</h1>
+				<div
+					className="cursor-pointer relative group"
+					onClick={() => checkAchievment(setUpdate, setGetAch)}
+				>
+					<Image src={refreshSvg} alt="" />
+					<span className="scale-0 group-hover:scale-100 absolute top-[-40px] w-auto p-2 m-2 min-w-max rounded-md shadow-md text-white bg-gray-900 text-xs font-bold transistion-all duration-100">
+						check if you unlocked new acievments
+					</span>
+				</div>
+			</div>
 			<div className="flex w-[90%] overflow-x-scroll pb-[10px]">
 				{items &&
 					items.map((obj, index) => {
@@ -110,7 +130,9 @@ function ShowRoom({ items }) {
 								height={70}
 								src={APIs.image(obj.icon_path)}
 								alt="Acheivment"
-								onMouseEnter={() => setDetails(obj.id)}
+								onMouseEnter={() =>
+									setDetails(getDetails(obj.id))
+								}
 								onMouseLeave={() => setDetails(false)}
 							/>
 						);
@@ -119,7 +141,7 @@ function ShowRoom({ items }) {
 			<span
 				className={`${details ? "scale-100" : ""} absolute top-[-10px] w-auto p-2 m-2 min-w-max  rounded-md shadow-md text-white bg-gray-900 text-xs font-bold transistion-all duration-100 scale-0 origin-bottom`}
 			>
-				{getDetails(details)}
+				{details}
 			</span>
 		</div>
 	);
@@ -170,9 +192,21 @@ async function GameHistoric(
 
 	setLoading(false);
 }
+const getAcheivments = async (setAch, username) => {
+	const [isOk, status, data] = await fetch_jwt(APIs.game.acheivments, {
+		username: username,
+	});
+	if (isOk) {
+		data.sort((a, b) => !a.unlocked);
+		setAch(data);
+		return;
+	}
+	console.log(data);
+};
 
 export default function MyState() {
 	const [ach, setAch] = useState();
+	const [getAch, setGetAch] = useState();
 	const [state, setState] = useState();
 	const [lastGame, setLastGame] = useState();
 	const [gameHistoric, setGmaeHistoric] = useState();
@@ -180,21 +214,6 @@ export default function MyState() {
 	const userProfile = useContext(UserProfileContext);
 
 	useEffect(() => {
-		const getAcheivments = async (setAch) => {
-			const [isOk, status, data] = await fetch_jwt(
-				APIs.game.acheivments,
-				{
-					username: userProfile.username,
-				},
-			);
-			if (isOk) {
-				data.sort((a, b) => !a.unlocked);
-				setAch(data);
-				return;
-			}
-			console.log(data);
-		};
-		getAcheivments(setAch);
 		GameHistoric(
 			userProfile.username,
 			setLastGame,
@@ -204,12 +223,16 @@ export default function MyState() {
 		);
 	}, []);
 
+	useEffect(() => {
+		if (!ach || getAch) getAcheivments(setAch, userProfile.username);
+	}, [getAch]);
+
 	return (
 		<div className="w-[95%] flex justify-center items-center gap-[20px] [@media(max-width:1400px)]:flex-col">
 			<div className="h-full pb-[15px] w-[30%] [@media(max-width:1400px)]:w-[95%] bg-[#2F2F2F] rounded-[10px] flex flex-col items-center gap-[20px]">
 				<Status state={state} />
 				<div className="[@media(max-width:1400px)]:flex [@media(max-width:650px)]:flex-col">
-					<ShowRoom items={ach} />
+					<ShowRoom items={ach} setGetAch={setGetAch} />
 					<Trournament nb={userProfile.info.tournament_win} />
 				</div>
 			</div>

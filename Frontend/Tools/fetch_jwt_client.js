@@ -1,4 +1,9 @@
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
+import {
+	getRefreshToken,
+	getToken,
+	removeTokens,
+	setcookie,
+} from "@/app/(auth)/AuthTools/tokenManagment";
 
 const BASE_URL = "http://localhost:8000";
 const WS = "ws://localhost:8000";
@@ -51,6 +56,7 @@ export const APIs = {
 		curren_item: `${GAME_APP}/equipeditem`,
 		missions: `${GAME_APP}/missions`,
 		acheivments: `${GAME_APP}/acheivement`,
+		check_acheivments: `${GAME_APP}/achievement/check`,
 		matches: `${GAME_APP}/match`,
 		create_room: `${GAME_APP}/room`,
 	},
@@ -61,6 +67,22 @@ export const APIs = {
 		get_tournament: `${TOURNAMENT_APP}/getbyname/`,
 	},
 };
+
+async function refreshToken() {
+	const refresh = getRefreshToken();
+	const response = await fetch(APIs.auth.refresh, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ refresh: refresh }),
+	});
+	if (response.ok) {
+		const data = await response.json();
+		return [true, data.access];
+	}
+	return [false, ""];
+}
 
 /**
  * Fetches data from the server using JWT authentication.
@@ -79,6 +101,16 @@ export const fetch_jwt = async (endpoint, query_params, init) => {
 		const headers = new Headers(init?.headers);
 		if (token) headers.set("Authorization", `Bearer ${token}`);
 		const response = await fetch(url, { ...init, headers });
+		if (response.status == 401) {
+			const [isOk, new_token] = await refreshToken();
+			if (isOk) {
+				setcookie("access_token", new_token);
+				return fetch_jwt(endpoint, query_params, init);
+			} else {
+				removeTokens();
+				return [false, 401, "Refresh token is Expired"];
+			}
+		}
 		const data = await response.json();
 		return [response.ok, response.status, data];
 	} catch (error) {
