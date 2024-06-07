@@ -5,6 +5,7 @@ import { logout } from "../settings/Components/SettingsUtils.js";
 import Link from "next/link";
 import { Searchbar } from "../searchBar/Searchbar";
 import Notification from "./Components/Notification";
+import Image from "next/image.js";
 
 import {
 	logoutSvg,
@@ -31,9 +32,11 @@ function ProfileBar() {
 					className="flex items-center justify-around cursor-pointer gap-[10px] "
 					onClick={() => setMore(!more)}
 				>
-					<img
+					<Image
 						className="w-[48px] h-[48px] rounded-[5px] [@media(max-width:600px)]:rounded-full"
 						src={APIs.image(user.info.profile_img)}
+						width={48}
+						height={48}
 						alt="user image"
 					/>
 					<div className="[@media(max-width:600px)]:hidden">

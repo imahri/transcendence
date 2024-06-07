@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChatSvg, GmaeSvg, FriendSvg, AccepSvg, DeclineSvg } from "./AllSvg";
 import { UserContext } from "../../context";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
-import trophy from "@/app/(app)/tournament/assets/trophy.png";
+import trophy from "@/app/(app)/tournament/assets/Trophy.png";
 
 import {
 	accept,
