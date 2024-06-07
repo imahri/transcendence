@@ -4,6 +4,7 @@ import { getToken } from "../(auth)/AuthTools/tokenManagment";
 import Settings from "./settings/Settings";
 import { APIs } from "@/Tools/fetch_jwt_client";
 import { useWebsocket } from "./hooks/useWebsocket";
+import { Loader } from "../Components/Loader";
 
 export const UserContext = createContext();
 
@@ -25,9 +26,7 @@ export const UserContextProvider = ({ children, value, setUpdate }) => {
 	return (
 		<>
 			{!isReady ? (
-				<div className="w-screen h-screen bg-[#202020] flex justify-center items-center text-white">
-					is Loading ...
-				</div>
+				<Loader />
 			) : (
 				<UserContext.Provider
 					value={{

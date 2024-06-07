@@ -9,6 +9,7 @@ import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
 import Friendspopup from "./Components/DisplayFreinds";
 import EditProfile from "./Components/EditProfile";
+import { Loader } from "@/app/Components/Loader";
 
 export const UserProfileContext = createContext();
 
@@ -50,7 +51,7 @@ function Profile({ params }) {
 			<UserProfileContext.Provider value={userProfile}>
 				<main className="w-full  mt-[100px] [@media(max-width:900px)]:mb-[70px] flex justify-center">
 					{isLoading ? (
-						<div>Is Loading ...</div>
+						<Loader />
 					) : (
 						<div className="w-full flex flex-col items-center gap-[20px]">
 							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
