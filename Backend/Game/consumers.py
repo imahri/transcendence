@@ -624,7 +624,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 print("reconect mode")
                 await asyncio.sleep(1)
                 obg.reconnect_counter += 1
-                if obg.reconnect_counter == 15:
+                if obg.reconnect_counter == 5:
                     obg.reconnect_counter = 0
                     checker = []
                     if find_player_in_game(self.game_room, self.user.username, checker):
@@ -647,8 +647,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                     "message": stop_game,
                                 },
                             )
-                            obg.matchs[0].delete()
-                            obg.matchs[1].delete()
+                            await database_sync_to_async(obg.matchs[0].delete)()
+                            await database_sync_to_async(obg.matchs[1].delete)()
                             self.task_manager[index].cancel()
                             break
 
