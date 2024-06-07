@@ -81,13 +81,10 @@ function getDetails(id) {
 		1: "Finish the missons",
 		2: "Finish the missons",
 		3: "Finish the missons",
-		4: "Send message to redmega",
-		5: "Win 10 match in a row",
-		6: "Win against all staff",
+		5: "Win 10 match",
 		7: "Play against fiddler",
-		8: "Win 20 match in a row",
-		9: "Win 15 match in row",
-		10: "Ask sakawi for it",
+		8: "Win 20 match",
+		9: "Win 15 match",
 		11: "only staff",
 	};
 	return instruction[id];
