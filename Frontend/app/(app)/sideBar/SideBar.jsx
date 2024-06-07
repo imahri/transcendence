@@ -20,8 +20,7 @@ export default function SideBar(props) {
 					priority={true}
 				/>
 			</div>
-			{/* <div className="h-10 w-full xs:bg-[#FF0000] sm:bg-[#FF6633] md:bg-[#FF9900] lg:bg-[#FFFF00] xl:bg-[#C2C2F0] 2xl:bg-[#E0E0E0]"></div> */}
-			<div className="h-[30%] mt-[20px] [@media(max-width:900px)]:mt-0 [@media(max-width:900px)]:mx-[15px] [@media(max-width:900px)]:size-full [@media(max-width:900px)]:flex [@media(max-width:900px)]:transition [@media(max-width:900px)]:duration[2000ms]">
+			<div className="h-[30%] mt-[20px] [@media(max-width:900px)]:mt-0 [@media(max-width:900px)]:mr-[15px] [@media(max-width:900px)]:size-full [@media(max-width:900px)]:flex [@media(max-width:900px)]:transition [@media(max-width:900px)]:duration[2000ms]">
 				<Links showSettings={setSettings} />
 			</div>
 		</div>

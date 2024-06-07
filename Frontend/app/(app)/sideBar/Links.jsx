@@ -29,33 +29,33 @@ function Links(props) {
 
 	return (
 		<>
-			<li className="h-full grid justify-center [@media(max-width:900px)]:w-full [@media(max-width:900px)]:flex [@media(max-width:900px)]:justify-between">
-				<ul className="relative m-[20px] flex justify-center cursor-pointer">
+			<li className="h-full grid justify-center gap-[20px] [@media(max-width:900px)]:w-full [@media(max-width:900px)]:pl-[20px] [@media(max-width:900px)]:flex [@media(max-width:900px)]:items-center [@media(max-width:900px)]:justify-between">
+				<ul className="relative flex justify-center cursor-pointer">
 					<Link href="/home">
 						{Home && borderLeft()}
 						{LinkSvg(HomePath(Home), 20, 21)}
 					</Link>
 				</ul>
 
-				<ul className="relative m-[20px] flex justify-center cursor-pointer">
+				<ul className="relative flex justify-center cursor-pointer">
 					<Link href="/chat">
 						{Chat && borderLeft()}
 						{LinkSvg(ChatPath(Chat), 20, 21)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center  cursor-pointer">
+				<ul className="relative flex justify-center  cursor-pointer">
 					<Link href="/game">
 						{Game && borderLeft()}
 						{LinkSvg(GamePath(Game), 28, 20)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center  cursor-pointer">
+				<ul className="relative flex justify-center  cursor-pointer">
 					<Link href="/store">
 						{Store && borderLeft()}
 						{LinkSvg(StorePath(Store), 20, 21)}
 					</Link>
 				</ul>
-				<ul className="relative m-[20px] flex justify-center  cursor-pointer">
+				<ul className="relative flex justify-center  cursor-pointer">
 					<Link href="/rank">
 						{Rank && borderLeft()}
 						{LinkSvg(RankPath(Rank), 28, 20)}
