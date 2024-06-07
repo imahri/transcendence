@@ -29,7 +29,7 @@ function Store() {
 		<>
 			<NavBar />
 
-			<div className="w-full mt-[100px] mb-[10px] flex flex-col items-center gap-[25px]">
+			<div className="w-full mt-[90px] mb-[10px] [@media(max-width:900px)]:mb-[90px] flex flex-col items-center gap-[25px]">
 				<div className="w-[90%] bg-opacity-[63%] rounded-[10px] flex flex-col items-center justify-between gap-[10px] relative">
 					<div className="bg-[#190019] flex justify-around w-[50%] rounded-[22px] [@media(max-width:1155px)]:w-full">
 						<Image
