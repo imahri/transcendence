@@ -9,7 +9,7 @@ export default function SideBar(props) {
 	const { setSettings } = useContext(UserContext);
 
 	return (
-		<div className="bg-[#353535] fixed w-[80px] h-full z-[1] [@media(max-width:900px)]:w-full [@media(max-width:900px)]:bottom-0 [@media(max-width:900px)]:h-[65px] [@media(max-width:900px)]:flex">
+		<div className="bg-[#2A2A2A] fixed w-[80px] h-full z-[1] [@media(max-width:900px)]:w-full [@media(max-width:900px)]:bottom-0 [@media(max-width:900px)]:h-[65px] [@media(max-width:900px)]:flex">
 			<div className="flex justify-center mt-[20px] mb-[40px] [@media(max-width:900px)]:hidden">
 				<Image
 					className="size-[81px]"

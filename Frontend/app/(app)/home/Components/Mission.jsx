@@ -60,7 +60,7 @@ export function Mission({ mission, setPopup, isLoading, title }) {
 						{MoreSvg}
 					</div>
 					<div
-						className={`${mission?.status == "completed" ? "" : "hidden"} size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
+						className={`${mission?.status == "completed" ? "" : "hidden"} size-full bg-[#2A2A2A] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
 					>
 						completed
 					</div>
@@ -131,7 +131,7 @@ export function GameMission({ mission, setPopup, isLoading }) {
 						</div>
 					</div>
 					<div
-						className={`${mission?.status == "completed" ? "" : "hidden"} size-full bg-[#353535] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
+						className={`${mission?.status == "completed" ? "" : "hidden"} size-full bg-[#2A2A2A] bg-opacity-75 absolute left-0 flex justify-center items-center font-bold text-[17px] text-white`}
 					>
 						completed
 					</div>

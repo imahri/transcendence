@@ -96,7 +96,7 @@ function StaffMission() {
 
 	return (
 		<div className="w-[50%] flex flex-col items-end gap-[10px] relative [@media(max-width:710px)]:w-full">
-			<div className="w-[90%] h-[55px] bg-[#353535] rounded-[7px] flex justify-center items-center [@media(max-width:710px)]:w-[100%]">
+			<div className="w-[90%] h-[55px] bg-[#2A2A2A] rounded-[7px] flex justify-center items-center [@media(max-width:710px)]:w-[100%]">
 				<h1 className=" font-bold text-[20px] text-white text-center">
 					Staff Mission
 				</h1>
@@ -134,7 +134,7 @@ function StaffMission() {
 			</button>
 
 			<div
-				className={`${popUp ? "" : "hidden"} w-[90%] [@media(max-width:710px)]:w-[100%] h-[282px] bg-[#353535] absolute top-[60px] rounded-[7px] animate-pop`}
+				className={`${popUp ? "" : "hidden"} w-[90%] [@media(max-width:710px)]:w-[100%] h-[282px] bg-[#2A2A2A] absolute top-[60px] rounded-[7px] animate-pop`}
 			>
 				{closePopopupSvg(setPopup)}
 				{popUp && <Task tasks={popUp} />}
