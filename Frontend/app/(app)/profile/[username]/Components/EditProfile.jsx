@@ -68,14 +68,14 @@ function EditProfile({ closePopup }) {
 
 	return (
 		<div className="size-full fixed z-[3] top-0 flex items-center justify-center backdrop-blur-[5px]">
-			<div className="w-[600px] max-[650px]:w-[80%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col gap-[20px] items-center">
+			<div className="w-[600px] [@media(max-width:650px)]:w-[90%] p-[20px] bg-[#343434] rounded-[25px] relative shadow-lg flex flex-col gap-[20px] items-center">
 				{closePopopupSvg(closePopup)}
 				<h1 className="font-Chakra font-semibold text-[24px] text-[#BABABA]">
 					Edit Profile
 				</h1>
 
 				<form
-					className="w-[90%] flex flex-col items-center gap-[20px]"
+					className="w-[90%] max-w-[330px] [@media(max-width:650px)]:w-[95%] flex flex-col items-center gap-[20px]"
 					ref={Form}
 					onSubmit={(e) =>
 						ChangeInfo(
