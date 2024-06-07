@@ -10,17 +10,21 @@ function init_socket(endpoint, query_params) {
 }
 
 export const useWebsocket = (endpoint, query_params = null) => {
+	const [isReady, setIsReady] = useState(false);
 	const [socket, setSocket] = useState(() =>
 		init_socket(endpoint, query_params),
 	);
 
 	useEffect(() => {
 		if (!socket) return;
-		socket.onopen = () => console.log(`Connected with ${endpoint}`);
+		socket.onopen = () => {
+			setIsReady(true);
+			console.log(`Connected with ${endpoint}`);
+		};
 		socket.onerror = () => console.log(`Error in ${endpoint}`);
 		socket.onclose = () => console.log(`Disconnected with ${endpoint}`);
 		return () => socket.close();
 	}, [socket]);
 
-	return socket;
+	return [socket, socket.readyState == socket.OPEN];
 };

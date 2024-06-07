@@ -12,7 +12,7 @@ export const UserContextProvider = ({ children, value, setUpdate }) => {
 	const [user, setUser] = useState(value);
 	const [settings, setSettings] = useState(false);
 
-	const ws = useWebsocket(APIs.user.notif_ws);
+	const [ws, isReady] = useWebsocket(APIs.user.notif_ws);
 
 	useEffect(() => {
 		setSocket(ws);
@@ -23,11 +23,25 @@ export const UserContextProvider = ({ children, value, setUpdate }) => {
 	}, [value]);
 
 	return (
-		<UserContext.Provider
-			value={{ ws: socket, user, setUser, setSettings, setUpdate }}
-		>
-			{children}
-			{settings && <Settings showSettings={setSettings} />}
-		</UserContext.Provider>
+		<>
+			{!isReady ? (
+				<div className="w-screen h-screen bg-[#202020] flex justify-center items-center text-white">
+					is Loading ...
+				</div>
+			) : (
+				<UserContext.Provider
+					value={{
+						ws: socket,
+						user,
+						setUser,
+						setSettings,
+						setUpdate,
+					}}
+				>
+					{children}
+					{settings && <Settings showSettings={setSettings} />}
+				</UserContext.Provider>
+			)}
+		</>
 	);
 };

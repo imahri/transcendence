@@ -1,5 +1,4 @@
 "use client";
-import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
@@ -30,11 +29,12 @@ async function getConversations() {
 
 export const WsChatProvider = ({ children }) => {
 	const messageUpdatedState = useState(false);
-	const socket = useWebsocket(APIs.chat.ws);
+	const [socket, isReady] = useWebsocket(APIs.chat.ws);
 	const { user } = useContext(UserContext);
 	const { sendNotif, addListenerNotif } = useNotification();
 	const [data, setData] = useState({ conversations: [] });
 	const [Loading, setLoading] = useState(true);
+	const RenderIt = Loading && !isReady;
 
 	useEffect(() => {
 		getConversations().then((_data) => {
@@ -45,7 +45,7 @@ export const WsChatProvider = ({ children }) => {
 
 	return (
 		<>
-			{Loading ? (
+			{RenderIt ? (
 				<div className="w-screen h-screen bg-[#202020] flex justify-center items-center text-white">
 					is Loading ....
 				</div>
