@@ -1,11 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { buyItem, walletSvg } from "./StoreItems";
 import styles from "./styles/Common.module.css";
 import Loading from "@/app/(auth)/Loading";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client";
+import { UserContext } from "../../context";
 
 function Paddle({ obj, owned, setOwned, setError }) {
+	const { setUpdate } = useContext(UserContext);
 	const isOwned = owned.includes(obj.id);
 	const [show, setShow] = useState();
 	const url = APIs.image(obj.image_path);
@@ -28,7 +30,9 @@ function Paddle({ obj, owned, setOwned, setError }) {
 			</div>
 			<button
 				className={`${show && !isOwned ? "" : "hidden"} w-[116px] h-[45px] rounded-[10px] bg-[#23A3BF] text-white text-[17px] font-bold cursor-pointer flex justify-center items-center`}
-				onClick={() => buyItem("padels", obj, setOwned, setError)}
+				onClick={() =>
+					buyItem("padels", obj, setOwned, setError, setUpdate)
+				}
 			>
 				Buy {obj.price}
 				{walletSvg}

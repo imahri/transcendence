@@ -10,7 +10,7 @@ import { UserContext } from "../../context";
 function BadgeItem({ obj, owned, setOwned, setError }) {
 	const [show, setshow] = useState();
 	const isOwned = owned.includes(obj.id);
-	const { user } = useContext(UserContext);
+	const { user, setUpdate } = useContext(UserContext);
 
 	return (
 		<div className="flex flex-col items-center gap-[10px]">
@@ -25,7 +25,9 @@ function BadgeItem({ obj, owned, setOwned, setError }) {
 			</div>
 			<button
 				className={`${show && !isOwned ? "" : "hidden"} w-[116px] h-[45px] rounded-[10px] bg-[#23A3BF] text-white text-[17px] font-bold cursor-pointer flex justify-center items-center`}
-				onClick={() => buyItem("badges", obj, setOwned, setError)}
+				onClick={() =>
+					buyItem("badges", obj, setOwned, setError, setUpdate)
+				}
 			>
 				Buy {obj.price}
 				{walletSvg}

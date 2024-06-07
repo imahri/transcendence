@@ -1,6 +1,6 @@
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 
-export async function buyItem(item_type, item, setOwned, setError) {
+export async function buyItem(item_type, item, setOwned, setError, setUpdate) {
 	const body = { action: "buy", item_type: item_type, item_id: item.id };
 
 	const [isOk, status, data] = await fetch_jwt(
@@ -21,6 +21,7 @@ export async function buyItem(item_type, item, setOwned, setError) {
 		return;
 	}
 	setOwned(data);
+	setUpdate(true);
 }
 
 export const walletSvg = (

@@ -1,12 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import common from "./styles/Common.module.css";
 import { buyItem, walletSvg } from "./StoreItems";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import Loading from "@/app/(auth)/Loading";
+import { UserContext } from "../../context";
 
 function Board({ obj, owned, setOwned, setError }) {
 	const isOwned = owned.includes(obj.id);
+	const { setUpdate } = useContext(UserContext);
 	const [show, setshow] = useState();
 	const url = APIs.image(obj.image_path);
 	const style = {
@@ -26,7 +28,9 @@ function Board({ obj, owned, setOwned, setError }) {
 			</div>
 			<button
 				className={`${show && !isOwned ? "" : "hidden"} w-[116px] h-[45px] rounded-[10px] bg-[#23A3BF] text-white text-[17px] font-bold cursor-pointer flex justify-center items-center`}
-				onClick={() => buyItem("boards", obj, setOwned, setError)}
+				onClick={() =>
+					buyItem("boards", obj, setOwned, setError, setUpdate)
+				}
 			>
 				Buy {obj.price}
 				{walletSvg}
