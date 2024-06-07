@@ -2,19 +2,21 @@
 import SideBar from "./sideBar/SideBar.jsx";
 import { UserContextProvider } from "./context.js";
 import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client.js";
-import { redirect } from "next/navigation.js";
+import { useRouter } from "next/navigation.js";
 import { useEffect, useState } from "react";
+import { logout } from "./settings/Components/SettingsUtils.js";
 
 export default function Layout({ children }) {
 	const [data, setData] = useState();
 	const [Loading, setisLoading] = useState(true);
 	const [update, setUpdate] = useState(false);
+	const router = useRouter();
 
 	useEffect(() => {
 		const getUser = async () => {
 			const [isOk, status, data] = await fetch_jwt(APIs.user.user);
 			if (!isOk) {
-				redirect("/login"); //for now redirect to login men be3d rendri error
+				logout(router);
 				return;
 			}
 			setData(data);
