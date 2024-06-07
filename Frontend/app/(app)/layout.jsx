@@ -21,10 +21,7 @@ export default function Layout({ children }) {
 			setUpdate(false);
 			setisLoading(false);
 		};
-		if (!data || update) {
-			getUser();
-			console.log("called");
-		}
+		if (!data || update) getUser();
 	}, [update]);
 
 	return (
