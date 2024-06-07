@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { APIs } from "./fetch_jwt_client";
 
-async function refreshToken() {
+export async function refreshToken() {
 	const refresh = cookies().get("refresh_token")?.value;
 	const response = await fetch(APIs.auth.refresh, {
 		method: "POST",
@@ -38,14 +38,8 @@ export const fetch_jwt = async (endpoint, query_params, init) => {
 			headers,
 			cache: "no-cache",
 		});
-		if (response.status == 401) {
-			const [isOk, new_token] = await refreshToken();
-			if (isOk) {
-				cookies().set("access_token", new_token);
-				console.log("----------ues");
-				return fetch_jwt(endpoint, query_params, init);
-			} else return [false, 401, "Refresh token is Expired"];
-		}
+		if (response.status == 401)
+			return [false, 401, "access token is Expired"];
 		const data = await response.json();
 		return [response.ok, response.status, data];
 	} catch (error) {
