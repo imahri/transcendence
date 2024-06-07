@@ -19,7 +19,7 @@ import Loading from "../Loading";
 function DoubleInput({ Info, error }) {
 	return (
 		<div
-			className={`bg-[#3F3A44] rounded-[5px] flex pt-[5px] [@media(max-width:592px)]:h-[50px] [@media(max-width:592px)]:mt-[30px] ${error ? "animate-shake border  border-red-600" : ""}`}
+			className={`bg-[#3F3A44] rounded-[5px] flex pt-[5px] [@media(max-width:592px)]:h-[50px] [@media(max-width:600px)]:mt-[20px] ${error ? "animate-shake border  border-red-600" : ""}`}
 		>
 			<label
 				className="absolute text-[#8C8C8C] text-sm mt-[-2px] ml-[19px]"
@@ -49,13 +49,13 @@ function Register() {
 	return (
 		<>
 			{closeSvg(navigate)}
-			<div className="flex items-center flex-col mb-0">
+			<div className="flex items-center flex-col">
 				<Image
 					src={logo}
 					className="[@media(max-width:450px)]:h-[100px]"
 					alt=""
 				/>
-				<h1 className=" font-bold text-[60px] text-white text-center [@media(max-width:450px)]:text-[40px]">
+				<h1 className=" font-bold text-[60px] text-white text-center [@media(max-width:450px)]:text-[30px]">
 					Create <br /> new{" "}
 					<span className="text-[#0275A3]">account</span>
 				</h1>
@@ -68,7 +68,7 @@ function Register() {
 					registerSubmit(e, Form, setError, navigate, setLoading)
 				}
 				ref={Form}
-				className="w-full  flex flex-col justify-center items-center gap-[20px] mt-[20px]"
+				className="w-full  flex flex-col justify-center items-center gap-[20px]"
 			>
 				<div className="w-[80%] h-[55px] flex justify-between [@media(max-width:592px)]:h-auto [@media(max-width:592px)]:block">
 					<DoubleInput
