@@ -51,6 +51,7 @@ export const APIs = {
 		curren_item: `${GAME_APP}/equipeditem`,
 		missions: `${GAME_APP}/missions`,
 		acheivments: `${GAME_APP}/acheivement`,
+		check_acheivments: `${GAME_APP}/achievement/check`,
 		matches: `${GAME_APP}/match`,
 		create_room: `${GAME_APP}/room`,
 	},

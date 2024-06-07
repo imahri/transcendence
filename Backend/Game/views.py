@@ -311,24 +311,31 @@ def get_equiped_item(request):
 
 @api_view(["GET"])
 def check_achievement(request):
+    isAdded = False
     try:
         user: User = request.user
         if not Acheivement.owner_of(user, "The Ghost"):
             if len(Match.objects.filter(user=user, score=5)) == 20:
                 Acheivement.objects.get(name="The Ghost").users.add(user)
+                isAdded = True
         if not Acheivement.owner_of(user, "The Killer"):
             if len(Match.objects.filter(user=user, score=5)) == 15:
                 Acheivement.objects.get(name="The Killer").users.add(user)
+                isAdded = True
         if not Acheivement.owner_of(user, "The Death"):
             if len(Match.objects.filter(user=user, score=5)) == 10:
                 Acheivement.objects.get(name="The Death").users.add(user)
+                isAdded = True
         if not Acheivement.owner_of(user, "Fiddler"):  # ! Create use with the same name
             if Match.objects.filter(
                 user=user, enemy=User.objects.get(username="Fiddler")
             ).exists():
                 Acheivement.objects.get(name="Fiddler").users.add(user)
+                isAdded = True
         if not Acheivement.owner_of(user, "SUDO"):
             if user.is_staff:
                 Acheivement.objects.get(name="SUDO").users.add(user)
+                isAdded = True
     except:
         pass
+    return Response({"state": "added"}) if isAdded else Response({"state": "not added"}, status=status.HTTP_204_NO_CONTENT)
