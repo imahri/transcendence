@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
 import SmallComponnent from "./components/SmallComponent";
+import { Loader } from "@/app/Components/Loader";
 
 async function getTournament(
 	tournamentName,
@@ -49,7 +50,7 @@ function Page({ params }) {
 
 	return (
 		<>
-			{isLoading && <div>is Loading...</div>}
+			{isLoading && <Loader />}
 
 			{!isLoading && (
 				<div className="size-full flex flex-col items-center justify-center gap-[20px]">

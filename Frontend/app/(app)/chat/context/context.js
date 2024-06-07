@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context";
 import { useNotification } from "../Hooks/useNotification";
 import { useWebsocket } from "../../hooks/useWebsocket";
+import { Loader } from "@/app/Components/Loader";
 
 export const WsChatContext = createContext();
 
@@ -46,9 +47,7 @@ export const WsChatProvider = ({ children }) => {
 	return (
 		<>
 			{RenderIt ? (
-				<div className="w-screen h-screen bg-[#202020] flex justify-center items-center text-white">
-					is Loading ....
-				</div>
+				<Loader />
 			) : (
 				<WsChatContext.Provider
 					value={{

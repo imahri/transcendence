@@ -5,6 +5,7 @@ import { APIs, fetch_jwt } from "@/Tools/fetch_jwt_client.js";
 import { useRouter } from "next/navigation.js";
 import { useEffect, useState } from "react";
 import { logout } from "./settings/Components/SettingsUtils.js";
+import { Loader } from "../Components/Loader.jsx";
 
 export default function Layout({ children }) {
 	const [data, setData] = useState();
@@ -29,9 +30,7 @@ export default function Layout({ children }) {
 	return (
 		<>
 			{Loading ? (
-				<div className="w-screen h-screen bg-[#202020] flex justify-center items-center text-white">
-					is Loading ....
-				</div>
+				<Loader />
 			) : (
 				<UserContextProvider value={data} setUpdate={setUpdate}>
 					<div className="w-full h-full flex">
