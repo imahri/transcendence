@@ -45,6 +45,8 @@ function Profile({ params }) {
 		getUser(params.username, setUserProfile, setisLoading, navigate);
 	}, [user]);
 
+	console.log(userProfile);
+
 	return (
 		<>
 			<NavBar />
