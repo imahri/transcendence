@@ -83,7 +83,7 @@
 .borad{
     height: 50rem;
     width: 90rem;
-    /* background: url('../images/board1.png'); */
+    background: url('../images/bot_board.jpg');
     background-size: cover;
     background-position: center;
     border-radius: 20px;

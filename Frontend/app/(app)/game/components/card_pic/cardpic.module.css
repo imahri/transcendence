@@ -51,7 +51,7 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    overflow: hidden;
+    overflow: auto;
     transition: 0.5s;
 }
 
@@ -115,5 +115,33 @@
     .title{
         margin-bottom: 0%;
         top: 5%;
+    }
+}
+
+/* @media (max-width: 800px) {
+    .card{
+        height: 100px;
+        width: 150px;
+        filter: grayscale(0.5);
+    }
+    .card:hover{
+        height: 100px;
+        width: 150px;
+        filter: grayscale(0);
+
+    }
+} */
+
+@media (max-height: 700px) {
+    .card{
+        height: 100px;
+        width: 150px;
+        filter: grayscale(0.5);
+    }
+    .card:hover{
+        height: 100px;
+        width: 150px;
+        filter: grayscale(0);
+
     }
 }

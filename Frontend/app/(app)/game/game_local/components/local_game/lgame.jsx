@@ -21,7 +21,7 @@ export const Gameson = ({
 			x: canvas.width / 2,
 			y: canvas.height / 2,
 			radius: 20,
-			speed: 20,
+			speed: 10,
 			velocityX: 5,
 			velocityY: 5,
 			color: "orange",
@@ -90,10 +90,10 @@ export const Gameson = ({
 		function updatePaddlePosition() {
 			if (!paused) {
 				if (upKeyPressed && user.y > 0) {
-					user.y -= 10;
+					user.y -= 15;
 				}
 				if (downKeyPressed && user.y + user.height < canvas.height) {
-					user.y += 10;
+					user.y += 15;
 				}
 			}
 		}
