@@ -21,7 +21,7 @@ function UserImage({ user, nb }) {
 						src={APIs.image(user?.user?.img)}
 						alt="user Image"
 					/>
-					<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+					<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#2A2A2A] shadow-lg z-10">
 						<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
 							{user?.name}
 						</h1>
@@ -48,7 +48,7 @@ export function Winner({ winner }) {
 					src={Trophy}
 					alt="Trophy image"
 				/>
-				<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+				<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#2A2A2A] shadow-lg z-10">
 					<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
 						{winner?.name}
 					</h1>
@@ -81,7 +81,7 @@ export function LastMatch({ tournament, participants, winner }) {
 								alt="user Image"
 							/>
 
-							<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+							<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#2A2A2A] shadow-lg z-10">
 								<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
 									{user1?.name}
 								</h1>
@@ -105,7 +105,7 @@ export function LastMatch({ tournament, participants, winner }) {
 								alt="user Image"
 							/>
 
-							<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#353535] shadow-lg z-10">
+							<div className="scale-0  min-w-[80px] max-w-[100px] group-hover:scale-100 transition-all duration-300 rounded-full absolute top-[-20px] px-[5px] py-[5px] bg-[#2A2A2A] shadow-lg z-10">
 								<h1 className="text-[15px] text-center text-white w-full overflow-x-hidden truncate">
 									{user2?.name}
 								</h1>

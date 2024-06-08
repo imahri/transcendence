@@ -11,7 +11,7 @@ import { errorSvg } from "@/app/(auth)/Allsvg";
 
 function Section({ title, children }) {
 	return (
-		<div className="w-[90%] bg-[#353535] opacity-[63%] p-[10px] rounded-[10px] flex flex-col items-center relative">
+		<div className="w-[90%] bg-[#2A2A2A] opacity-[63%] p-[10px] rounded-[10px] flex flex-col items-center relative">
 			<h1 className="text-[30px] text-white font-medium">{title}</h1>
 			<div
 				className={`${title == "Paddle" ? "h-[200px]" : "h-[280px]"} w-full flex items-center overflow-x-scroll`}

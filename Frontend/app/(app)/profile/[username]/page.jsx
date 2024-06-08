@@ -54,14 +54,14 @@ function Profile({ params }) {
 						<Loader />
 					) : (
 						<div className="w-full flex flex-col items-center gap-[20px]">
-							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px]">
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#2A2A2A] rounded-[25px]">
 								<Banner />
 								<ProfileInfo
 									displayFriends={setDisplayFriends}
 									EditProfile={setEditProfile}
 								/>
 							</div>
-							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#353535] rounded-[25px] mb-[10px]">
+							<div className="w-[1700px] [@media(max-width:1860px)]:w-[90%] bg-[#2A2A2A] rounded-[25px] mb-[10px]">
 								<Dashboard />
 							</div>
 						</div>

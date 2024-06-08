@@ -162,7 +162,7 @@ function Trournament({ nb }) {
 					src={src}
 					alt="Trophy"
 				/>
-				<div className="scale-0 group-hover:scale-100 transition-all duration-300 rounded-full absolute right-[-10px] top-[-20px] px-[10px] py-[5px] bg-[#353535] shadow-lg text-white z-10">
+				<div className="scale-0 group-hover:scale-100 transition-all duration-300 rounded-full absolute right-[-10px] top-[-20px] px-[10px] py-[5px] bg-[#2A2A2A] shadow-lg text-white z-10">
 					{nb}
 				</div>
 			</div>

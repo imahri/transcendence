@@ -134,7 +134,7 @@ function Friend({ displayFriends, username }) {
 					);
 				})}
 			{nbFriend > 0 && (
-				<div className="size-[35px] bg-[#353535] rounded-full flex items-center justify-center">
+				<div className="size-[35px] bg-[#2A2A2A] rounded-full flex items-center justify-center">
 					<span className="text-white text-[13px] font-bold">
 						+{nbFriend}
 					</span>
@@ -188,7 +188,7 @@ function ProfileInfo({ displayFriends, EditProfile }) {
 
 	return (
 		<div className="w-full h-[130px] flex items-center justify-center relative sm:h-[290px] xs:h-[290px] sm:flex-col xs:flex-col">
-			<div className="rounded-full size-[160px] md:size-[130px] sm:size-[150px] absolute left-[50px] lg:left-[20px] md:left-[20px] top-[-30px] flex justify-center items-center bg-[#353535] sm:relative xs:relative sm:top-0 xs:top-0 sm:left-0 xs:left-0">
+			<div className="rounded-full size-[160px] md:size-[130px] sm:size-[150px] absolute left-[50px] lg:left-[20px] md:left-[20px] top-[-30px] flex justify-center items-center bg-[#2A2A2A] sm:relative xs:relative sm:top-0 xs:top-0 sm:left-0 xs:left-0">
 				<Image
 					className="rounded-full size-[90%]"
 					src={APIs.image(user.info.profile_img)}
