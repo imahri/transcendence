@@ -28,6 +28,7 @@ class Game:
             "img": "",
             "user_name": "",
             "exp": 100,
+            "is_connect": False,
         }
 
         self.user2 = {
@@ -41,6 +42,7 @@ class Game:
             "img": "",
             "user_name": "",
             "exp": 100,
+            "is_connect": False,
         }
 
         self.ball = {
@@ -476,6 +478,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             asyncio.create_task(self.send_ball_coordinates())
                         )
         except Exception as error:
+            print(error)
             await self.disconnect(None)
 
     async def receive(self, text_data):
@@ -616,7 +619,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             else:
                 await asyncio.sleep(1)
                 obg.reconnect_counter += 1
-                if obg.reconnect_counter == 5:
+                if obg.reconnect_counter == 20:
                     obg.reconnect_counter = 0
                     checker = []
                     if find_player_in_game(self.game_room, self.user.username, checker):
@@ -628,7 +631,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             self.game_room[found][1][1] = (
                                 self.game_room[found][1][1] + "_old"
                             )
-                            stop_game = {"type": "forfeited", "end_it": True}
+
+                            # if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
+                            #     stop_game = {"type": "forfeited", "end_it": True, "id": 99}
+                            if obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
+                                stop_game = {"type": "forfeited", "end_it": True, "id": 1}
+                            elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
+                                stop_game = {"type": "forfeited", "end_it": True, "id": 2}
                             
 
                             await self.channel_layer.group_send(
@@ -638,8 +647,18 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                     "message": stop_game,
                                 },
                             )
-                            await database_sync_to_async(obg.matchs[0].delete)()
-                            await database_sync_to_async(obg.matchs[1].delete)()
+                            if obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
+                                obg.user1['is_connect'] = False
+
+                            elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
+                                obg.user2['is_connect'] = False
+                            
+                            if obg.matchs[0].mode == 2 and obg.matchs[0].tournament:
+                                await database_sync_to_async(obg.matchs[0].tournament.next_match)()
+                                print('call next match')
+                            else:
+                                await database_sync_to_async(obg.matchs[0].delete)()
+                                await database_sync_to_async(obg.matchs[1].delete)()
                             self.task_manager[index].cancel()
                             break
 
@@ -684,10 +703,19 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
             print("")
+        obg: Game = self.game_object[index]
+        result = []
+        if find_player_in_game(self.game_room, self.user.username, result):
+            if (result[1] + 1) == 1:
+                obg.user1['is_connect'] = True
+            else:
+                obg.user2['is_connect'] = True
+
+            print(obg.user1)
+            print(obg.user2)
         if len(self.game_room[index][1]) == 1:
             self.game_room[index][1][0] = self.game_room[index][1][0] + "_old"
             self.game_room[index][1].append("odin_old")
-        obg: Game = self.game_object[index]
         obg.reconnect = True
         obg.reconnect_counter = 0
         self.channels.pop(self.user.username, None)

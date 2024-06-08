@@ -14,8 +14,8 @@ let uid = 0;
 
 let player2_state = "not yet";
 let player1_state = "not yet";
-let player2_for = "not yet";
-let player1_for = "not yet";
+let player2_for = 0;
+let player1_for = 0;
 
 export const Gameson = ({
 	secondArrived,
@@ -51,21 +51,26 @@ export const Gameson = ({
 			if (data.event == "reconnect") {
 				secondArrived();
 			} else if (data.event == "forfeited") {
-				// console.log(data);
-				// player1_for = data?.message?.user1;
-				// player2_for = data?.message?.user2;
-				// if (uid == 1 && player1_for === "win") {
-				checkEnd();
-				// }
-				// if (uid == 2 && player2_for === "win") {
-				// 	checkWinner();
-				// }
-				// if (uid == 1 && player1_for === "lose") {
-				// 	checkLoser();
-				// }
-				// if (uid == 2 && player2_for === "lose") {
-				// 	checkLoser();
-				// }
+				player1_for = data?.message?.id;
+				player2_for = data?.message?.id;
+
+				if (player1_for === 99) {
+					checkEnd();
+				}
+
+				if (uid == 1 && player2_for === 2) {
+					checkWinner();
+				}
+
+				if (uid == 2 && player2_for === 1) {
+					checkWinner();
+				}
+				if (uid == 1 && player2_for === 1) {
+					checkLoser();
+				}
+				if (uid == 2 && player2_for === 2) {
+					checkLoser();
+				}
 			} else if (data.event == "goal") {
 				setScore(data.score);
 			} else if (data.event == "send_info") {
