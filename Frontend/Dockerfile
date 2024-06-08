@@ -1,12 +1,13 @@
 FROM node:latest
 
+RUN apt-get update
+
 WORKDIR /app
 
 COPY . .
 
-RUN apt-get update
+RUN npm install
 
-RUN npm install \
-    && npm build
+RUN npm run build
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "start", "--", "-H", "0.0.0.0", "-p", "443"]

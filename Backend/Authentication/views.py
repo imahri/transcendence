@@ -175,6 +175,7 @@ class intra_auth(APIView):
     @staticmethod
     def get_42access_token(code: str):
 
+        # !
         data = {
             "grant_type": "authorization_code",
             "client_id": "u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259",

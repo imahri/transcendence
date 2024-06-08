@@ -16,6 +16,7 @@ channels = "*"
 django-channels-jwt-auth-middleware = "*"
 daphne = "*"
 requests = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
