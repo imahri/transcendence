@@ -18,10 +18,14 @@ function LevelCircle({ level }) {
 					className="size-[90%] rounded-full flex justify-center items-center"
 				>
 					<div className="size-[90%] rounded-full flex flex-col justify-center items-center bg-gradient-to-r from-red-500 to-indigo-700">
-						<h1 className="font-bold text-[30px] text-white">
+						<h1 className="font-bold text-[30px] [@media(max-width:470px)]:text-[16px] text-white">
 							{level}
 						</h1>
-						<Image src={starpng} alt="Star for Level" />
+						<Image
+							className="[@media(max-width:470px)]:size-[30px]"
+							src={starpng}
+							alt="Star for Level"
+						/>
 					</div>
 				</div>
 			</div>
