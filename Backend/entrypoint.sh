@@ -2,6 +2,11 @@
 
 export DJANGO_SETTINGS_MODULE="core.settings"
 
+while ! psql -h database -U $POSTGRES_USER  -d $POSTGRES_DB -c "SELECT 1" 2> /dev/null | grep -c column 2> /dev/null
+    do
+        echo "Waiting for database to be created;"
+    done
+
 ./manage.py makemigrations
 
 ./manage.py migrate

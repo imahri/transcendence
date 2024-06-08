@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { useSearchParams } from "next/navigation";
-import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
+import { APIs, WS } from "@/Tools/fetch_jwt_client";
 
 let xcord = 0;
 let ycord = 0;
@@ -35,7 +35,7 @@ export const Gameson = ({
 		const tournament_name = searchParams.get("tournament");
 		const room_name = searchParams.get("room");
 		const ws = new WebSocket(
-			"ws://localhost:8000/ws/game?" +
+			`${WS}/ws/game?` +
 				`token=${getToken()}` +
 				`${room_name ? `&room=${room_name}` : ""}` +
 				`${tournament_name ? `&tournament=${tournament_name}&mode=Tournament` : ""}`,
