@@ -231,6 +231,7 @@ def find_player_in_game(game, search_string, pis):
             position = items.index(search_string)
             pis.append(room_name)
             pis.append(position)
+            print("find")
             return True
     return False
 
@@ -477,6 +478,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )
+                        print(self.game_room)
         except Exception as error:
             print(error)
             await self.disconnect(None)
@@ -592,6 +594,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         },
                     )
 
+
                 obg.updatePaddlePosition()
 
                 await asyncio.sleep(0.0060)
@@ -618,8 +621,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 )
             else:
                 await asyncio.sleep(1)
+                print("reconnect")
+                print(self.game_room)
                 obg.reconnect_counter += 1
-                if obg.reconnect_counter == 20:
+                if obg.reconnect_counter == 10:
                     obg.reconnect_counter = 0
                     checker = []
                     if find_player_in_game(self.game_room, self.user.username, checker):
@@ -632,12 +637,42 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 self.game_room[found][1][1] + "_old"
                             )
 
-                            # if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
-                            #     stop_game = {"type": "forfeited", "end_it": True, "id": 99}
-                            if obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
+                            if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
+                                print("both")
+                                stop_game = {"type": "forfeited", "end_it": True, "id": 99}
+
+                            elif obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
+                                print("first")
                                 stop_game = {"type": "forfeited", "end_it": True, "id": 1}
+                                [match1, match2] = obg.matchs
+                                obg.user1['score'] = 0
+                                obg.user2['score'] = 5
+                                
+                                await database_sync_to_async(match1.set_score)(
+                                    obg.user1["score"], 10
+                                )
+                                await database_sync_to_async(match2.set_score)(
+                                    obg.user2["score"], 500
+                                )
+                                if match1.mode == 2 and match1.tournament:
+                                    await database_sync_to_async(match1.tournament.next_match)()
+                                # break
+
                             elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
+                                print("second")
                                 stop_game = {"type": "forfeited", "end_it": True, "id": 2}
+                                [match1, match2] = obg.matchs
+                                obg.user1['score'] = 5
+                                obg.user2['score'] = 0
+
+                                await database_sync_to_async(match1.set_score)(
+                                    obg.user1["score"], 500
+                                )
+                                await database_sync_to_async(match2.set_score)(
+                                    obg.user2["score"], 10
+                                )
+                                if match1.mode == 2 and match1.tournament:
+                                    await database_sync_to_async(match1.tournament.next_match)()
                             
 
                             await self.channel_layer.group_send(
@@ -647,20 +682,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                     "message": stop_game,
                                 },
                             )
-                            if obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
-                                obg.user1['is_connect'] = False
-
-                            elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
-                                obg.user2['is_connect'] = False
-                            
-                            if obg.matchs[0].mode == 2 and obg.matchs[0].tournament:
-                                await database_sync_to_async(obg.matchs[0].tournament.next_match)()
-                                print('call next match')
-                            else:
-                                await database_sync_to_async(obg.matchs[0].delete)()
-                                await database_sync_to_async(obg.matchs[1].delete)()
-                            self.task_manager[index].cancel()
-                            break
+                            # self.task_manager[index].cancel()
 
     async def update(self, event):
         message = event["message"]
@@ -699,6 +721,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
+        print(self.game_room)
         self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
@@ -717,6 +740,5 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             self.game_room[index][1][0] = self.game_room[index][1][0] + "_old"
             self.game_room[index][1].append("odin_old")
         obg.reconnect = True
-        obg.reconnect_counter = 0
         self.channels.pop(self.user.username, None)
         await self.close(code)
