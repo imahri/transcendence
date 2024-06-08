@@ -82,7 +82,7 @@ class UserView(APIView):
             # get the friendship betwen me and the user
             if request.user.pk == friend.pk:
                 userObj["friendship"] = "owner"
-            if user.friend_is_blocked(friend):
+            elif user.friend_is_blocked(friend):
                 return Response({"error": "user is blocked"}, status=400)
             else:
                 try:
