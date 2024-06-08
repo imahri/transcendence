@@ -52,25 +52,22 @@ export const Gameson = ({
 				secondArrived();
 			} else if (data.event == "forfeited") {
 				player1_for = data?.message?.id;
-				player2_for = data?.message?.id;
 
-				if (player1_for === 99) {
-					checkEnd();
-				}
-
-				if (uid == 1 && player2_for === 2) {
-					checkWinner();
-				}
-
-				if (uid == 2 && player2_for === 1) {
-					checkWinner();
-				}
-				if (uid == 1 && player2_for === 1) {
-					checkLoser();
-				}
-				if (uid == 2 && player2_for === 2) {
-					checkLoser();
-				}
+				checkEnd();
+				// if (player1_for === 99) {
+				// }
+				// if (uid == 1 && player1_for === 2) {
+				// 	checkWinner();
+				// }
+				// if (uid == 2 && player1_for === 1) {
+				// 	checkWinner();
+				// }
+				// if (uid == 1 && player1_for === 1) {
+				// 	checkLoser();
+				// }
+				// if (uid == 2 && player1_for === 2) {
+				// 	checkLoser();
+				// }
 			} else if (data.event == "goal") {
 				setScore(data.score);
 			} else if (data.event == "send_info") {
