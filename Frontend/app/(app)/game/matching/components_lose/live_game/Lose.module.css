@@ -14,7 +14,7 @@
 .holder{
     position: absolute;
     width: 1000px;
-    height: 50%;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.875);
     border-radius: 25px;
     display: flex;
@@ -97,10 +97,6 @@
 }
 
 @media (max-width: 500px) {
-
-    .holder{
-        height: 30%;
-    }
 
     .title{
         font-size: 1.5rem;
