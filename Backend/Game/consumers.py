@@ -156,12 +156,10 @@ class Game:
                 self.ball["speed"] += 0.5
         if self.ball["x"] - self.ball["radius"] < 0:
             self.user2["score"] += 1
-            print("user2 score >> " + str(self.user2["score"]))
             self.reset_ball()
             return True
         elif self.ball["x"] + self.ball["radius"] > self.canvas["width"]:
             self.user1["score"] += 1
-            print("user1 score >> " + str(self.user1["score"]))
             self.reset_ball()
             return True
         else:
@@ -219,7 +217,6 @@ def check_for_game_start(nested_list, name):
     else:
         rn = creat_room_name(nested_list)
         nested_list.append([rn, [name]])
-        print("Room was created succesfully : " + rn)
         return False
 
 
@@ -230,7 +227,6 @@ def find_player_in_game(game, search_string, pis):
         items = room[1]
         if search_string in items:
             position = items.index(search_string)
-            print("find")
             pis.append(room_name)
             pis.append(position)
             return True
@@ -249,7 +245,6 @@ def update_item_in_room(game, room_name, index, new_string):
     for room in game:
         if room[0] == room_name:
             if 0 <= index < len(room[1]):
-                print(f"room value : {room[0]}")
                 room[1][index] = new_string
                 return True
             else:
@@ -308,6 +303,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "mode", ["Classic"]
                 )
+
                 # match mode:
                 #     case "Classic":
                 #         mode = 0
@@ -436,7 +432,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 "index": 1,
                             }
                         )
-                        print(self.game_room)
                     # User 2
                     else:
                         index = get_room_index(self.game_room, self.room_group_name)
@@ -481,7 +476,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             asyncio.create_task(self.send_ball_coordinates())
                         )
         except Exception as error:
-            print("================>", error)
             await self.disconnect(None)
 
     async def receive(self, text_data):
@@ -572,7 +566,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     )
                     res = get_player_room(self.game_room, self.user.username)
                     update_room_names(res, self.game_room)
-                    print("end_game")
                     [match1, match2] = self.loba.matchs
                     await database_sync_to_async(match1.set_score)(
                         obg.user1["score"], user1_earned_exp
@@ -621,7 +614,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     },
                 )
             else:
-                print("reconect mode")
                 await asyncio.sleep(1)
                 obg.reconnect_counter += 1
                 if obg.reconnect_counter == 5:
@@ -636,7 +628,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             self.game_room[found][1][1] = (
                                 self.game_room[found][1][1] + "_old"
                             )
-                            print("rodrygoo + " + str(self.game_room[found][1]))
                             stop_game = {"type": "forfeited", "end_it": True}
                             
 
@@ -692,11 +683,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
-            print("nooooo")
+            print("")
         if len(self.game_room[index][1]) == 1:
             self.game_room[index][1][0] = self.game_room[index][1][0] + "_old"
             self.game_room[index][1].append("odin_old")
-            print(self.game_room)
         obg: Game = self.game_object[index]
         obg.reconnect = True
         obg.reconnect_counter = 0
