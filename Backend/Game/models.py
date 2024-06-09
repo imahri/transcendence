@@ -140,7 +140,7 @@ class Match(models.Model):
 
 class Grade(models.Model):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to=IMAGES_ROOT_)
 
 
