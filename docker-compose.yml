@@ -44,8 +44,10 @@ services:
             PGPASSWORD: ${POSTGRES_PASSWORD}
         restart: always
         depends_on:
-            - database
-            - redis
+            database:
+                condition: service_healthy
+            redis:
+                condition: service_started
         #  In-Production
         #      - Configure with Postgress
         #      - DEBUG = False
