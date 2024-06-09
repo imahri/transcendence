@@ -321,7 +321,7 @@ class Item(models.Model):
 
 class Padel(Item):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     definition = models.TextField()
     # ability = None # !
     # special = None # !
@@ -329,9 +329,9 @@ class Padel(Item):
 
 class Badge(Item):
 
-    color = models.CharField(max_length=7, default="#FF0000")
+    color = models.CharField(max_length=7, unique=True)
 
 
 class Board(Item):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)

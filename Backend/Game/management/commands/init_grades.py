@@ -22,5 +22,5 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("Grades Created successfully"))
         except Exception as error:
             self.stderr.write(
-                self.style.ERROR(f"Acheivments not created because: {error}")
+                self.style.ERROR(f"Grades not created because: {error}")
             )
