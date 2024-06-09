@@ -16,6 +16,7 @@ import {
 	readNotif,
 	setType,
 } from "./NotifUtils";
+import { useRouter } from "next/navigation";
 
 function acceptDecline(callBack, svg) {
 	return (
@@ -95,22 +96,28 @@ async function getNotif(setNotif, setNbNotif) {
 	}
 }
 
-function handelNotif(data, setNotif, setNbNotif) {
-	if (data.content.type == "T") console.log(data.content);
+function handelNotif(data, setNotif, setNbNotif, route) {
+	const content = data.content;
 	setNotif((prev) => {
 		if (prev) {
-			prev.unshift(data.content);
+			prev.unshift(content);
 			return prev;
-		} else return data.content;
+		} else return content;
 	});
 	setNbNotif((prev) => prev + 1);
+	if (content.type == "G" && content.content.type == "start")
+		route.push(`/game/matching?room=${content.content.room_name}`);
+	else if (content.type == "T" && content.content.type == "match")
+		route.push(
+			`/game/matching?room=${content.content.room_name}&tournament=${content.content.tournament_name}`,
+		);
 }
 
 function Notification() {
 	const [notif, setNotif] = useState(false);
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
-
+	const route = useRouter();
 	const { user, ws } = useContext(UserContext);
 
 	useEffect(() => {
@@ -122,7 +129,7 @@ function Notification() {
 			ws.addEventListener("message", (e) => {
 				const data = JSON.parse(e.data);
 				if (data.type == "notification")
-					handelNotif(data, setNotif, setnbNotif);
+					handelNotif(data, setNotif, setnbNotif, route);
 			});
 		}
 	}, [ws]);

@@ -510,185 +510,181 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(content={"event": "reconnect", "state": "back"})
 
     async def send_ball_coordinates(self):
-        index = get_room_index(self.game_room, self.room_group_name)
-        obg: Game = self.game_object[index]
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "send_info",
-                "user1": {
-                    "username": obg.user1["user_name"],
-                    "image": obg.user1["img"],
+        try:
+            index = get_room_index(self.game_room, self.room_group_name)
+            obg: Game = self.game_object[index]
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "send_info",
+                    "user1": {
+                        "username": obg.user1["user_name"],
+                        "image": obg.user1["img"],
+                    },
+                    "user2": {
+                        "username": obg.user2["user_name"],
+                        "image": obg.user2["img"],
+                    },
                 },
-                "user2": {
-                    "username": obg.user2["user_name"],
-                    "image": obg.user2["img"],
-                },
-            },
-        )
-        await asyncio.sleep(3)
+            )
+            await asyncio.sleep(3)
 
-        while True:
-            if not obg.reconnect:
-                if obg.user1["score"] == 5 or obg.user2["score"] == 5:
+            while True:
+                if not obg.reconnect:
+                    if obg.user1["score"] == 5 or obg.user2["score"] == 5:
 
-                    if obg.user1["score"] > obg.user2["score"]:
-                        user1_st = "win"
-                        user2_st = "lose"
-                        user1_earned_exp = 500
-                        user2_earned_exp = 10
+                        if obg.user1["score"] > obg.user2["score"]:
+                            user1_st = "win"
+                            user2_st = "lose"
+                            user1_earned_exp = 500
+                            user2_earned_exp = 10
 
-                    if obg.user1["score"] < obg.user2["score"]:
-                        user1_st = "lose"
-                        user2_st = "win"
-                        user1_earned_exp = 10
-                        user2_earned_exp = 500
+                        if obg.user1["score"] < obg.user2["score"]:
+                            user1_st = "lose"
+                            user2_st = "win"
+                            user1_earned_exp = 10
+                            user2_earned_exp = 500
 
-                    l_w = {
-                        "type": "end_game",
-                        "user1": user1_st,
-                        "user1_res": obg.user1["score"],
-                        "user2": user2_st,
-                        "user2_res": obg.user2["score"],
+                        l_w = {
+                            "type": "end_game",
+                            "user1": user1_st,
+                            "user1_res": obg.user1["score"],
+                            "user2": user2_st,
+                            "user2_res": obg.user2["score"],
+                        }
+
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                "type": "end_game",
+                                "message": l_w,
+                            },
+                        )
+                        [match1, match2] = self.loba.matchs
+                        await database_sync_to_async(match1.set_score)(
+                            obg.user1["score"], user1_earned_exp
+                        )
+                        await database_sync_to_async(match2.set_score)(
+                            obg.user2["score"], user2_earned_exp
+                        )
+                        if match1.mode == 2 and match1.tournament:
+                            await database_sync_to_async(match1.tournament.next_match)()
+                        self.game_room.pop(index)
+                        self.game_object.pop(index)
+                        break
+
+                    if obg.update_ball():
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            {
+                                "type": "goal",
+                                "score": {
+                                    "score1": obg.user1["score"],
+                                    "score2": obg.user2["score"],
+                                },
+                            },
+                        )
+
+
+                    obg.updatePaddlePosition()
+
+                    await asyncio.sleep(0.0060)
+
+                    x = obg.ball["x"]
+                    y = obg.ball["y"]
+                    user1_y = obg.user1["y"]
+                    user2_y = obg.user2["y"]
+
+                    message = {
+                        "event": "update",
+                        "x": x,
+                        "y": y,
+                        "user1_y": user1_y,
+                        "user2_y": user2_y,
                     }
 
                     await self.channel_layer.group_send(
                         self.room_group_name,
                         {
-                            "type": "end_game",
-                            "message": l_w,
+                            "type": "update",
+                            "message": message,
                         },
                     )
-                    res = get_player_room(self.game_room, self.user.username)
-                    update_room_names(res, self.game_room)
-                    [match1, match2] = self.loba.matchs
-                    await database_sync_to_async(match1.set_score)(
-                        obg.user1["score"], user1_earned_exp
-                    )
-                    await database_sync_to_async(match2.set_score)(
-                        obg.user2["score"], user2_earned_exp
-                    )
-                    if match1.mode == 2 and match1.tournament:
-                        await database_sync_to_async(match1.tournament.next_match)()
-                    break
+                else:
+                    await asyncio.sleep(1)
+                    obg.reconnect_counter += 1
+                    if obg.reconnect_counter == 10:
+                        obg.reconnect_counter = 0
+                        checker = []
+                        if find_player_in_game(self.game_room, self.user.username, checker):
+                            found = get_room_index(self.game_room, checker[0])
+                            if len(self.game_room[found][1]) == 2:
+                                self.game_room.pop(found)
+                                self.game_object.pop(found)
 
-                if obg.update_ball():
-                    await self.channel_layer.group_send(
-                        self.room_group_name,
-                        {
-                            "type": "goal",
-                            "score": {
-                                "score1": obg.user1["score"],
-                                "score2": obg.user2["score"],
-                            },
-                        },
-                    )
+                                if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
+                                    stop_game = {"type": "forfeited", "end_it": True, "id": 99}
+                                    obg.reconnect = False
+                                    await self.channel_layer.group_send(
+                                        self.room_group_name,
+                                        {
+                                            "type": "forfeited",
+                                            "message": stop_game,
+                                        },
+                                    )
+                                    break
 
+                                elif obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
+                                    stop_game = {"type": "forfeited", "end_it": True, "id": 1}
+                                    [match1, match2] = obg.matchs
+                                    obg.user1['score'] = 0
+                                    obg.user2['score'] = 5
+                                    obg.reconnect = False
+                                    
+                                    await database_sync_to_async(match1.set_score)(
+                                        obg.user1["score"], 10
+                                    )
+                                    await database_sync_to_async(match2.set_score)(
+                                        obg.user2["score"], 500
+                                    )
+                                    if match1.mode == 2 and match1.tournament:
+                                        await database_sync_to_async(match1.tournament.next_match)()
+                                    
+                                    await self.channel_layer.group_send(
+                                        self.room_group_name,
+                                        {
+                                            "type": "forfeited",
+                                            "message": stop_game,
+                                        },
+                                    )
+                                    break
 
-                obg.updatePaddlePosition()
+                                elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
+                                    stop_game = {"type": "forfeited", "end_it": True, "id": 2}
+                                    [match1, match2] = obg.matchs
+                                    obg.user1['score'] = 5
+                                    obg.user2['score'] = 0
+                                    obg.reconnect = False
 
-                await asyncio.sleep(0.0060)
-
-                x = obg.ball["x"]
-                y = obg.ball["y"]
-                user1_y = obg.user1["y"]
-                user2_y = obg.user2["y"]
-
-                message = {
-                    "event": "update",
-                    "x": x,
-                    "y": y,
-                    "user1_y": user1_y,
-                    "user2_y": user2_y,
-                }
-
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    {
-                        "type": "update",
-                        "message": message,
-                    },
-                )
-            else:
-                await asyncio.sleep(1)
-                obg.reconnect_counter += 1
-                if obg.reconnect_counter == 10:
-                    obg.reconnect_counter = 0
-                    checker = []
-                    if find_player_in_game(self.game_room, self.user.username, checker):
-                        found = get_room_index(self.game_room, checker[0])
-                        if len(self.game_room[found][1]) == 2:
-                            self.game_room[found][1][0] = (
-                                self.game_room[found][1][0] + "_old"
-                            )
-                            self.game_room[found][1][1] = (
-                                self.game_room[found][1][1] + "_old"
-                            )
-
-                            if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
-                                stop_game = {"type": "forfeited", "end_it": True, "id": 99}
-                                obg.reconnect = False
-                                await self.channel_layer.group_send(
-                                    self.room_group_name,
-                                    {
-                                        "type": "forfeited",
-                                        "message": stop_game,
-                                    },
-                                )
-                                break
-
-                            elif obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
-                                stop_game = {"type": "forfeited", "end_it": True, "id": 1}
-                                [match1, match2] = obg.matchs
-                                obg.user1['score'] = 0
-                                obg.user2['score'] = 5
-                                obg.reconnect = False
-                                
-                                await database_sync_to_async(match1.set_score)(
-                                    obg.user1["score"], 10
-                                )
-                                await database_sync_to_async(match2.set_score)(
-                                    obg.user2["score"], 500
-                                )
-                                if match1.mode == 2 and match1.tournament:
-                                    await database_sync_to_async(match1.tournament.next_match)()
-                                
-                                await self.channel_layer.group_send(
-                                    self.room_group_name,
-                                    {
-                                        "type": "forfeited",
-                                        "message": stop_game,
-                                    },
-                                )
-                                break
-
-                            elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
-                                stop_game = {"type": "forfeited", "end_it": True, "id": 2}
-                                [match1, match2] = obg.matchs
-                                obg.user1['score'] = 5
-                                obg.user2['score'] = 0
-                                obg.reconnect = False
-
-                                await database_sync_to_async(match1.set_score)(
-                                    obg.user1["score"], 500
-                                )
-                                await database_sync_to_async(match2.set_score)(
-                                    obg.user2["score"], 10
-                                )
-                                if match1.mode == 2 and match1.tournament:
-                                    await database_sync_to_async(match1.tournament.next_match)()
-                                
-                                await self.channel_layer.group_send(
-                                    self.room_group_name,
-                                    {
-                                        "type": "forfeited",
-                                        "message": stop_game,
-                                    },
-                                )
-                                break
-                            
-
-                            # self.task_manager[index].cancel()
+                                    await database_sync_to_async(match1.set_score)(
+                                        obg.user1["score"], 500
+                                    )
+                                    await database_sync_to_async(match2.set_score)(
+                                        obg.user2["score"], 10
+                                    )
+                                    if match1.mode == 2 and match1.tournament:
+                                        await database_sync_to_async(match1.tournament.next_match)()
+                                    
+                                    await self.channel_layer.group_send(
+                                        self.room_group_name,
+                                        {
+                                            "type": "forfeited",
+                                            "message": stop_game,
+                                        },
+                                    )
+                                    break
+        except Exception as error:
+            pass
 
     async def update(self, event):
         message = event["message"]
@@ -728,20 +724,22 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, code):
         self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        index = get_room_index(self.game_room, self.room_group_name)
-        if index == -1:
-            print("")
-        obg: Game = self.game_object[index]
-        result = []
-        if find_player_in_game(self.game_room, self.user.username, result):
-            if (result[1] + 1) == 1:
-                obg.user1['is_connect'] = True
-            else:
-                obg.user2['is_connect'] = True
-
-        if len(self.game_room[index][1]) == 1:
-            self.game_room[index][1][0] = self.game_room[index][1][0] + "_old"
-            self.game_room[index][1].append("odin_old")
-        obg.reconnect = True
+        try:
+            index = get_room_index(self.game_room, self.room_group_name)
+            if index == -1:
+                print("")
+            obg: Game = self.game_object[index]
+            result = []
+            if find_player_in_game(self.game_room, self.user.username, result):
+                if (result[1] + 1) == 1:
+                    obg.user1['is_connect'] = True
+                else:
+                    obg.user2['is_connect'] = True
+            obg.reconnect = True
+            if len(self.game_room[index][1]) == 1:
+                self.game_room.pop(index)
+                self.game_object.pop(index)
+        except:
+            pass
         self.channels.pop(self.user.username, None)
         await self.close(code)
