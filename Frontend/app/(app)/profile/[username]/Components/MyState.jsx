@@ -81,11 +81,11 @@ function getDetails(id) {
 		1: "Finish the missons",
 		2: "Finish the missons",
 		3: "Finish the missons",
-		5: "Win 10 match",
-		7: "Play against fiddler",
-		8: "Win 20 match",
-		9: "Win 15 match",
-		11: "only staff",
+		4: "Win 10 match",
+		5: "Play against fiddler",
+		6: "Win 20 match",
+		7: "Win 15 match",
+		8: "only staff",
 	};
 	return instruction[id];
 }

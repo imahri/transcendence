@@ -8,11 +8,17 @@ volumes:
     grafana_data:
     elasticsearch-data:
     pgdata:
-        # driver: local
-        # driver_opts:
-        #     o: bind
-        #     type: none
-        #     device: /Volumes/SamsungPro/Macos/Documents/transcendence/DB
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/DB
+    static_mages:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/Backend/static
 
 services:
     frontend:
@@ -42,6 +48,8 @@ services:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             PGPASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - static_mages:/app/static
         restart: always
         depends_on:
             - database
@@ -66,7 +74,7 @@ services:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             PGDATA: /var/lib/postgresql/data
         volumes:
-            - pgdata:/var/lib/postgresql/data:rw
+            - pgdata:/var/lib/postgresql/data
         restart: always
         #  In-Production
         #       - Only auth host is "backend"
