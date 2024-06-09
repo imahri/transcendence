@@ -3,7 +3,6 @@ import Matching from "@/app/(app)/game/matching/components/match_making/matching
 import LGame from "@/app/(app)/game/matching/gcomponents/live_game/Livegame";
 import WInter from "@/app/(app)/game/game_local/game_win/live_game/Win";
 import LInter from "@/app/(app)/game/game_local/game_lose/live_game/Lose";
-import EInter from "@/app/(app)/game/game_local_fr/live_game/End";
 import Shit from "@/app/(app)/game/matching/end/End";
 import { useSearchParams } from "next/navigation";
 import React, { useContext, useState, useEffect } from "react";

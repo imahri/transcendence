@@ -231,7 +231,6 @@ def find_player_in_game(game, search_string, pis):
             position = items.index(search_string)
             pis.append(room_name)
             pis.append(position)
-            print("find")
             return True
     return False
 
@@ -374,7 +373,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     return
                 result = []
                 if find_player_in_game(self.game_room, self.user.username, result):
-                    print("here lococ")
                     is_valid = update_item_in_room(
                         self.game_room, result[0], result[1], self.user.username
                     )
@@ -471,9 +469,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )
-                        print(self.game_room)
+
         except Exception as error:
-            print(error)
             await self.disconnect(None)
 
     async def receive(self, text_data):
@@ -614,8 +611,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 )
             else:
                 await asyncio.sleep(1)
-                print("reconnect")
-                print(self.game_room)
                 obg.reconnect_counter += 1
                 if obg.reconnect_counter == 10:
                     obg.reconnect_counter = 0
@@ -631,7 +626,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             )
 
                             if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
-                                print("both")
                                 stop_game = {"type": "forfeited", "end_it": True, "id": 99}
                                 obg.reconnect = False
                                 await self.channel_layer.group_send(
@@ -644,7 +638,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 break
 
                             elif obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
-                                print("first")
                                 stop_game = {"type": "forfeited", "end_it": True, "id": 1}
                                 [match1, match2] = obg.matchs
                                 obg.user1['score'] = 0
@@ -670,7 +663,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 break
 
                             elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
-                                print("second")
                                 stop_game = {"type": "forfeited", "end_it": True, "id": 2}
                                 [match1, match2] = obg.matchs
                                 obg.user1['score'] = 5
@@ -735,7 +727,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
-        print(self.game_room)
         self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         index = get_room_index(self.game_room, self.room_group_name)
         if index == -1:
@@ -748,8 +739,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             else:
                 obg.user2['is_connect'] = True
 
-            print(obg.user1)
-            print(obg.user2)
         if len(self.game_room[index][1]) == 1:
             self.game_room[index][1][0] = self.game_room[index][1][0] + "_old"
             self.game_room[index][1].append("odin_old")

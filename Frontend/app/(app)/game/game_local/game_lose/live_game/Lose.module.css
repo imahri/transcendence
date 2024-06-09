@@ -37,7 +37,10 @@
 }
 
 .second_part{
-    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .title{
