@@ -86,7 +86,6 @@ export const registerSubmit = async (
 		first_name: form.firstname,
 		last_name: form.lastname,
 		password: form.password,
-		email: form.email,
 	};
 
 	try {
