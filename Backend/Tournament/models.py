@@ -52,6 +52,9 @@ class Tournament(models.Model):
     def quit(self, unique_name: str):
         self.participants.remove(Participant.objects.get(name=unique_name))
 
+    def is_participant(self, user: User):
+        return self.participants.filter(user=user).exists()
+
     def make_schedule(self):
         participants = self.participants.values()
         self.schedule = {

@@ -299,8 +299,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     tournament = await database_sync_to_async(Tournament.objects.get)(
                         name=_n
                     )
-
+                    if not await database_sync_to_async(tournament.is_participant)(self.user):
+                        raise Exception("not member of tournament")
                 except Exception as error:
+                    if str(error) == "not member of tournament":
+                        await self.disconnect(None)
+                        return
                     tournament = None
                 [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "mode", ["Classic"]
@@ -723,8 +727,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
-        self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         try:
+            self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             index = get_room_index(self.game_room, self.room_group_name)
             if index == -1:
                 print("")

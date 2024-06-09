@@ -107,10 +107,6 @@ function handelNotif(data, setNotif, setNbNotif, route) {
 	setNbNotif((prev) => prev + 1);
 	if (content.type == "G" && content.content.type == "start")
 		route.push(`/game/matching?room=${content.content.room_name}`);
-	else if (content.type == "T" && content.content.type == "match")
-		route.push(
-			`/game/matching?room=${content.content.room_name}&tournament=${content.content.tournament_name}`,
-		);
 }
 
 function Notification() {

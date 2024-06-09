@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { useSearchParams } from "next/navigation";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
+import { useWebsocket } from "@/app/(app)/hooks/useWebsocket";
+import { Loader } from "@/app/Components/Loader";
 
 let xcord = 0;
 let ycord = 0;
@@ -28,24 +30,22 @@ export const Gameson = ({
 	checkEnd,
 }) => {
 	const cvs = useRef(null);
-	const [socket, setSocket] = useState(null);
 	const searchParams = useSearchParams();
+	const tournament_name = searchParams.get("tournament");
+	const room_name = searchParams.get("room");
+	const query = {};
+	room_name ? (query.room = room_name) : "";
+	tournament_name ? (query.tournament = tournament_name) : "";
+	tournament_name ? (query.mode = "Tournament") : "";
+	const [socket, isReady] = useWebsocket(
+		"ws://localhost:8000/ws/game",
+		query,
+	);
 
 	useEffect(() => {
-		const tournament_name = searchParams.get("tournament");
-		const room_name = searchParams.get("room");
-		const ws = new WebSocket(
-			"ws://localhost:8000/ws/game?" +
-				`token=${getToken()}` +
-				`${room_name ? `&room=${room_name}` : ""}` +
-				`${tournament_name ? `&tournament=${tournament_name}&mode=Tournament` : ""}`,
-		);
+		if (!isReady) return;
 
-		ws.onopen = () => {
-			setSocket(ws);
-		};
-
-		ws.onmessage = (event) => {
+		socket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 
 			if (data.event == "reconnect") {
@@ -103,19 +103,11 @@ export const Gameson = ({
 				}
 			}
 		};
-
-		ws.onerror = () => {};
-
-		ws.onclose = () => {};
-
-		return () => {
-			ws.close();
-			setSocket(null);
-		};
-	}, []);
+		return () => socket.close();
+	}, [isReady]);
 
 	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (isReady) {
 			const canvas = cvs.current;
 			const ctx = canvas.getContext("2d");
 
@@ -263,16 +255,22 @@ export const Gameson = ({
 
 			return () => {};
 		}
-	}, [socket]);
+	}, [isReady]);
 
 	return (
-		<canvas
-			style={{
-				width: "100%",
-				height: "100%",
-				objectFit: "contain",
-			}}
-			ref={cvs}
-		></canvas>
+		<>
+			{!isReady ? (
+				<Loader />
+			) : (
+				<canvas
+					style={{
+						width: "100%",
+						height: "100%",
+						objectFit: "contain",
+					}}
+					ref={cvs}
+				></canvas>
+			)}
+		</>
 	);
 };

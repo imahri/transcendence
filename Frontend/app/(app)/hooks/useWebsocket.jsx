@@ -26,5 +26,5 @@ export const useWebsocket = (endpoint, query_params = null) => {
 		return () => socket.close();
 	}, [socket]);
 
-	return [socket, socket.readyState == socket.OPEN];
+	return [socket, isReady];
 };
