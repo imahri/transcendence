@@ -73,6 +73,8 @@ services:
     redis:
         container_name: redis
         image: redis
+        networks:
+            - transcendence_network
 
     # Infrastructure Setup with ELK (Elasticsearch, Logstash, Kibana)
     # elasticsearch:
