@@ -1,0 +1,149 @@
+.container{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:white
+
+}
+
+
+
+.holder{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 1);
+    /* border-radius: 25px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.first_part{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.second_part{
+    width: 100%;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title{
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+
+.pic{
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    box-shadow: 5px 5px 1px black;
+    border: 3px solid rgb(90, 201, 231);
+    overflow: hidden;
+}
+
+.player_picture{
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+.state{
+    font-size: 3.5rem;
+    font-weight: 500;
+    color: rgb(90, 201, 231);
+}
+.result{
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: rgb(90, 201, 231);
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.btbt{
+    padding: 15px 35px;
+    font-size: 2rem;
+    font-weight: 500;
+    background: #2a6d71b7;
+    border-radius: 15px;
+    transition: 0.5s;
+}
+.btbt:hover{
+    background: #2A6D71;
+}
+
+@media (max-width: 1100px) {
+
+    .holder{
+        width: 100%;
+    }
+
+    .second_part{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btbt{
+        padding: 9px 35px;
+        font-size: 2rem;
+        font-weight: 500;
+        border-radius: 15px;
+        transition: 0.5s;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .title{
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+    
+    .pic{
+        height: 100px;
+        width: 100px;
+        background: rgba(255, 255, 255, 0.406);
+        border-radius: 50%;
+    }
+
+    .state{
+        font-size: 2.5rem;
+    }
+
+    .result{
+        font-size: 1.5rem;
+    }
+
+    .btbt{
+        padding: 5px 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 10px;
+    }
+}
+.ban{
+    color: red;
+}

@@ -307,14 +307,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     "mode", ["Classic"]
                 )
 
-                # match mode:
-                #     case "Classic":
-                #         mode = 0
-                #     case "Ranked":
-                #         mode = 1
-                #     case "Tournement":
-                #         mode = 2
-
                 if _mode == "Classic":
                     mode = 0
                 elif _mode == "Ranked":
@@ -324,7 +316,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 room_name = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "room", None
                 )
-
                 if room_name:
                     self.room_group_name = room_name[0]
                 else:
@@ -332,6 +323,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await self.channel_layer.group_add(
                     self.room_group_name, self.channel_name
                 )
+
                 if room_name:
                     room = []
                     for [name, players] in self.game_room:
@@ -382,6 +374,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     return
                 result = []
                 if find_player_in_game(self.game_room, self.user.username, result):
+                    print("here lococ")
                     is_valid = update_item_in_room(
                         self.game_room, result[0], result[1], self.user.username
                     )
@@ -424,8 +417,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     xrr = len(self.game_room[index][1])
                     if xrr == 2:
                         await self.shouha()
+
                 else:
-                    # User 1
                     if not check_for_game_start(self.game_room, self.user.username):
                         self.loba = Game()
                         self.game_object.append(self.loba)
@@ -435,7 +428,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 "index": 1,
                             }
                         )
-                    # User 2
+
                     else:
                         index = get_room_index(self.game_room, self.room_group_name)
                         self.loba: Game = self.game_object[index]
@@ -640,6 +633,15 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                             if obg.user1['is_connect'] == True and obg.user2['is_connect'] == True:
                                 print("both")
                                 stop_game = {"type": "forfeited", "end_it": True, "id": 99}
+                                obg.reconnect = False
+                                await self.channel_layer.group_send(
+                                    self.room_group_name,
+                                    {
+                                        "type": "forfeited",
+                                        "message": stop_game,
+                                    },
+                                )
+                                break
 
                             elif obg.user1['is_connect'] == True and obg.user2['is_connect'] == False:
                                 print("first")
@@ -647,6 +649,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 [match1, match2] = obg.matchs
                                 obg.user1['score'] = 0
                                 obg.user2['score'] = 5
+                                obg.reconnect = False
                                 
                                 await database_sync_to_async(match1.set_score)(
                                     obg.user1["score"], 10
@@ -656,7 +659,15 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 )
                                 if match1.mode == 2 and match1.tournament:
                                     await database_sync_to_async(match1.tournament.next_match)()
-                                # break
+                                
+                                await self.channel_layer.group_send(
+                                    self.room_group_name,
+                                    {
+                                        "type": "forfeited",
+                                        "message": stop_game,
+                                    },
+                                )
+                                break
 
                             elif obg.user2['is_connect'] == True and obg.user1['is_connect'] == False:
                                 print("second")
@@ -664,6 +675,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 [match1, match2] = obg.matchs
                                 obg.user1['score'] = 5
                                 obg.user2['score'] = 0
+                                obg.reconnect = False
 
                                 await database_sync_to_async(match1.set_score)(
                                     obg.user1["score"], 500
@@ -673,15 +685,17 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                 )
                                 if match1.mode == 2 and match1.tournament:
                                     await database_sync_to_async(match1.tournament.next_match)()
+                                
+                                await self.channel_layer.group_send(
+                                    self.room_group_name,
+                                    {
+                                        "type": "forfeited",
+                                        "message": stop_game,
+                                    },
+                                )
+                                break
                             
 
-                            await self.channel_layer.group_send(
-                                self.room_group_name,
-                                {
-                                    "type": "forfeited",
-                                    "message": stop_game,
-                                },
-                            )
                             # self.task_manager[index].cancel()
 
     async def update(self, event):
