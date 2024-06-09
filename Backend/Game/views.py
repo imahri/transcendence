@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
-from Game.consumers import GameConsumer
+from Game.consumers import GameConsumer, TournamentConsumer
 from .serilaizers import (
     BadgeSerializer,
     PadelSerializer,
@@ -32,8 +32,8 @@ def catch_view_exception(func):
 class RoomView(APIView):
 
     @staticmethod
-    def is_exiting(room_name: str):
-        for _room in GameConsumer.game_room:
+    def is_exiting(room_name: str, Consumer):
+        for _room in Consumer.game_room:
             if _room[0] == room_name:
                 return _room[1]
         return None
@@ -49,7 +49,7 @@ class RoomView(APIView):
         if not is_Friend:
             return Response({"error": "Not Friend"}, status=400)
 
-        room_name: str = f"room_{random.randint(1000, 99999999)}"
+        room_name: str = f"room_private_{random.randint(1000, 99999999)}"
         GameConsumer.game_room.append([room_name, [user.username, username]])
 
         Match.send_accept_play(user, friend, room_name=room_name)
@@ -63,7 +63,7 @@ class RoomView(APIView):
         is_tournament = request.query_params.get("tournament", "false")
         if not room_name:
             return Response({"error": "room name required"})
-        room = RoomView.is_exiting(room_name)
+        room = RoomView.is_exiting(room_name, TournamentConsumer if is_tournament is "true" else GameConsumer)
         if not room:
             return Response(
                 {"error": "Room Does Not Exist"}, status=status.HTTP_404_NOT_FOUND

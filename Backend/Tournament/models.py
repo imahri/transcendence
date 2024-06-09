@@ -1,6 +1,6 @@
 import random
 from django.db import models
-from Game.consumers import GameConsumer
+from Game.consumers import TournamentConsumer
 from Game.models import Match
 from User_Management.models import User, Notification
 from asgiref.sync import async_to_sync
@@ -235,7 +235,7 @@ class Tournament(models.Model):
         ]
         room_name: str = f"room_{random.randint(1000, 99999999)}"
         players_name = [players[0].user.username, players[1].user.username]
-        GameConsumer.game_room.append([room_name, players_name])
+        TournamentConsumer.game_room.append([room_name, players_name])
         notification = Notification.createToMultiUsers(
             self.creator,
             content={

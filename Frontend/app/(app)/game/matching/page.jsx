@@ -53,10 +53,9 @@ const Vim = () => {
 		if (!room_name) return setCheckRoom(false);
 		const CheckRoom = async () => {
 			const tournament_name = searchParams.get("tournament");
-			const data = await GetRoom(room_name, tournament_name != "");
+			const data = await GetRoom(room_name, tournament_name != null);
 			console.log(data);
 			if (!data) return navigate.push("/404"); //hardcoded for now
-			// if (!data) return; //hardcoded for now
 			setCheckRoom(false);
 		};
 		CheckRoom();

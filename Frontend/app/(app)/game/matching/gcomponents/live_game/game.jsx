@@ -37,10 +37,16 @@ export const Gameson = ({
 	room_name ? (query.room = room_name) : "";
 	tournament_name ? (query.tournament = tournament_name) : "";
 	tournament_name ? (query.mode = "Tournament") : "";
-	const [socket, isReady] = useWebsocket(
-		"ws://localhost:8000/ws/game",
-		query,
-	);
+
+	const game_socket = "ws://localhost:8000/ws/game";
+	const prive_game = "ws://localhost:8000/ws/privegame";
+	const tournament_socket = "ws://localhost:8000/ws/tournament";
+
+	// console.log();
+
+	const end_socket = tournament_name ? tournament_socket : game_socket;
+	// const end_socket = tournament_name ? tournament_socket : room_name ? prive_game : game_socket
+	const [socket, isReady] = useWebsocket(end_socket, query);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -103,7 +109,6 @@ export const Gameson = ({
 				}
 			}
 		};
-		return () => socket.close();
 	}, [isReady]);
 
 	useEffect(() => {
