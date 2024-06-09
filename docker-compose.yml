@@ -55,7 +55,7 @@ services:
             database:
                 condition: service_healthy
             redis:
-                condition: service_started
+                condition: service_healthy
         #  In-Production
         #      - Configure with Postgress
         #      - DEBUG = False
@@ -69,7 +69,8 @@ services:
         networks:
             - transcendence_network
         healthcheck:
-            test: ["chmod", "0700", "/var/lib/postgresql/data"]
+            test: "pg_isready -U $POSTGRES_USER"
+            interval: 5s
         environment: # in env file
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
@@ -83,6 +84,9 @@ services:
     redis:
         container_name: redis
         image: redis
+        healthcheck:
+            test: "echo READY"
+            interval: 5s
         networks:
             - transcendence_network
 
