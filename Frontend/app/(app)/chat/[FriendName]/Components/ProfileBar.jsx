@@ -20,7 +20,7 @@ function Status({ status }) {
 					className={`${styles.status} ${status === ActiveStatusTypes.Active ? "bg-green-400" : "bg-red-700"}`}
 				></div>
 			</div>
-			<h3>{status}</h3>
+			<h3 className="xs:hidden sm:hidden">{status}</h3>
 		</div>
 	);
 }
@@ -92,7 +92,7 @@ export function ProfileBar({
 						/>
 					)}
 					<section className={styles.profileInfo}>
-						<h2>{name}</h2>
+						<h2 className="xs:hidden sm:hidden">{name}</h2>
 						<Status status={activeStatus} />
 					</section>
 				</button>

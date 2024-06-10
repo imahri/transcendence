@@ -1,6 +1,6 @@
 .sidebar {
 	@apply bg-inherit flex h-full min-w-[22rem] w-[40rem] justify-start  items-center flex-col;
-	@apply xs:mx-auto sm:mx-auto md:mx-auto;
+	@apply xs:mx-auto sm:mx-auto;
 }
 
 .sidebar_h {

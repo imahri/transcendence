@@ -10,7 +10,7 @@ export function Separator({ className }) {
 
 export function Separators() {
 	return (
-		<div className="h-screen w-1 flex flex-col justify-start xs:hidden sm:hidden md:hidden">
+		<div className="h-screen w-1 flex flex-col justify-start xs:hidden sm:hidden">
 			<Separator className="w-1 h-5 bg-transparent" />
 			<Separator className="w-1 h-16" />
 			<Separator className="w-1 h-16 bg-transparent" />

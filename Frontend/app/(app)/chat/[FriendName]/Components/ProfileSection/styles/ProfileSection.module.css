@@ -2,14 +2,19 @@
 	@apply h-screen w-[25rem] bg-[#282828] border-l-[1rem] border-[#202020];
 	@apply flex flex-col  items-center justify-end space-y-24;
 	@apply absolute right-0 rounded-l-[3rem];
-	@apply lg:h-[53rem] lg:space-y-10;
-	@apply md:h-[53rem] md:space-y-10;
-	@apply sm:h-[53rem] sm:space-y-10;
-	@apply xs:h-[53rem] xs:space-y-10;
+	@apply lg:h-auto lg:space-y-10;
+	@apply md:h-auto md:space-y-10;
+	@apply sm:h-auto sm:space-y-10;
+	@apply xs:h-auto xs:space-y-10;
+
+	@apply sm:w-[70%];
+	@apply xs:w-[70%];
 }
 
 .profile {
 	@apply w-full pt-10 flex flex-col justify-end items-center space-y-10;
+	@apply sm:mb-3;
+	@apply xs:mb-3;
 }
 
 .profile_img_container {
@@ -42,6 +47,8 @@
 
 .profile_section {
 	@apply w-full flex flex-col items-start justify-center space-y-8;
+	@apply sm:hidden;
+	@apply xs:hidden;
 }
 
 .badge_section {
@@ -63,6 +70,8 @@
 .footer {
 	@apply w-full grid place-items-center pb-5;
 	@apply text-[#A0A0A0] text-xl;
+	@apply sm:hidden;
+	@apply xs:hidden;
 }
 
 .footer h6 {

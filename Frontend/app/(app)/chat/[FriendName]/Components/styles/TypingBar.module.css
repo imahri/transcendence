@@ -4,6 +4,8 @@
 
 .container label {
 	@apply w-[95%] h-16 pl-14 flex justify-start items-center mb-7 rounded-2xl bg-[#303030];
+	@apply xs:w-[88%] xs:h-12;
+	@apply sm:w-[88%] sm:h-12;
 }
 
 .reachTheLimit {
@@ -14,6 +16,8 @@
 	@apply w-full h-full bg-inherit pb-1;
 	@apply font-normal text-2xl text-[#d6d6d6];
 	@apply focus:outline-none placeholder:cursor-default placeholder:font-normal placeholder:text-2xl placeholder:text-[#B4B4B4];
+	@apply xs:text-xl xs:placeholder:text-xl;
+	@apply sm:text-xl sm:placeholder:text-xl;
 }
 
 .container button {
@@ -22,4 +26,6 @@
 
 .img {
 	@apply w-8 h-8 mx-6;
+	@apply xs:w-6 xs:h-6;
+	@apply sm:w-6 sm:h-6;
 }

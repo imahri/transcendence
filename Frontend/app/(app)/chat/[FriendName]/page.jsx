@@ -118,7 +118,7 @@ export default function DM_Conversation({ params: { FriendName } }) {
 
 	return (
 		<>
-			<div className="flex-grow h-screen [@media(max-width:900px)]:h-[calc(100vh-65px)] flex flex-col justify-between items-center">
+			<div className="flex-grow w-full h-screen mt-3 [@media(max-width:900px)]:self-start [@media(max-width:900px)]:h-[calc(100vh-65px)] flex flex-col justify-between items-center">
 				<ProfileBar
 					friendinfo={friendinfo}
 					activeStatus={ActiveStatus}

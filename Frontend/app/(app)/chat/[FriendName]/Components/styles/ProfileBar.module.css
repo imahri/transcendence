@@ -12,6 +12,8 @@
 
 .profileBar_Image {
 	@apply w-[4.4rem] h-[4.4rem] rounded-full mx-4;
+	@apply xs:w-[3rem] xs:h-[3rem];
+	@apply sm:w-[3rem] sm:h-[3rem];
 }
 
 .profileInfo {
@@ -48,6 +50,7 @@
 
 .exitArrow {
 	@apply ml-5 w-16 h-full flex justify-center items-center hover:h-16 hover:rounded-full hover:bg-[#292929];
+	@apply xs:w-[1.3rem] sm:w-[1.3rem];
 }
 
 .exitArrow_Image {
