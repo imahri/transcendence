@@ -10,4 +10,4 @@ RUN npm install
 
 RUN npm run build
 
-CMD [ "npm", "start", "--", "-H", "0.0.0.0", "-p", "443"]
+CMD [ "npm", "start", "--", "-H", "0.0.0.0", "-p", "80"]
