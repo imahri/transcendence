@@ -23,7 +23,7 @@ export function SideBar() {
 				className={`${showSideBar ? styles.sidebar : styles.sidebar_h}`}
 			>
 				<Searchbar style_ops="chat" />
-				<Separator className={"w-72 h-1"} />
+				<Separator className="w-72 h-1" />
 				<Conversations
 					_convState={[convState, setConvState]}
 					_Conversations={_Conversations}
