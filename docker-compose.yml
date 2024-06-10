@@ -8,11 +8,6 @@ volumes:
     grafana_data:
     elasticsearch-data:
     pgdata:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${PWD}/DB
     static_mages:
         driver: local
         driver_opts:
@@ -38,8 +33,6 @@ services:
         build: ./Backend
         networks:
             - transcendence_network
-        healthcheck:
-            test: ["./manage.py", "check", "--deploy"]
         ports:
             - 443:443
         environment:
@@ -52,10 +45,8 @@ services:
             - static_mages:/app/static
         restart: always
         depends_on:
-            # condition: service_healthy
-            # - database
-            redis:
-                condition: service_healthy
+            - database
+            - redis
         #  In-Production
         #      - Configure with Postgress
         #      - DEBUG = False
@@ -84,9 +75,6 @@ services:
     redis:
         container_name: redis
         image: redis
-        healthcheck:
-            test: "echo READY"
-            interval: 5s
         networks:
             - transcendence_network
 
