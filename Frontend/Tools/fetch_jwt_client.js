@@ -59,6 +59,9 @@ export const APIs = {
 		check_acheivments: `${GAME_APP}/achievement/check`,
 		matches: `${GAME_APP}/match`,
 		create_room: `${GAME_APP}/room`,
+		ws_game: `${WS}/ws/game`,
+		ws_privegame: `${WS}/ws/privegame`,
+		ws_tournament: `${WS}/ws/tournament`,
 	},
 	tournament: {
 		tournament: `${TOURNAMENT_APP}/`,

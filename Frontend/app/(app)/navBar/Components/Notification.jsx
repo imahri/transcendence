@@ -105,8 +105,8 @@ function handelNotif(data, setNotif, setNbNotif, route) {
 		} else return content;
 	});
 	setNbNotif((prev) => prev + 1);
-	if (content.type == "G" && content.content.type == "start")
-		route.push(`/game/matching?room=${content.content.room_name}`);
+	// if (content.type == "G" && content.content.type == "start")
+	// 	route.push(`/game/matching?room=${content.content.room_name}`);
 }
 
 function Notification() {

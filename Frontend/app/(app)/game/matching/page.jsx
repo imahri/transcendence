@@ -10,10 +10,11 @@ import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
 import { useRouter } from "next/navigation";
 import { UserContext } from "../../context";
 
-async function GetRoom(room_name, is_tournament) {
+async function GetRoom(room_name, is_tournament, mode) {
 	const [isOk, status, data] = await fetch_jwt(APIs.game.create_room, {
 		room: room_name,
 		tournament: is_tournament,
+		mode: mode,
 	});
 	if (!isOk) {
 		return false;
@@ -53,7 +54,16 @@ const Vim = () => {
 		if (!room_name) return setCheckRoom(false);
 		const CheckRoom = async () => {
 			const tournament_name = searchParams.get("tournament");
-			const data = await GetRoom(room_name, tournament_name != null);
+			const mode = room_name.startsWith("room_private_", 0)
+				? "private"
+				: tournament_name
+					? "tournament"
+					: "random";
+			const data = await GetRoom(
+				room_name,
+				tournament_name != null,
+				mode,
+			);
 			console.log(data);
 			if (!data) return navigate.push("/404"); //hardcoded for now
 			setCheckRoom(false);

@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
-from Game.consumers import GameConsumer, TournamentConsumer
+from Game.consumers import GameConsumer, PrivegameConsumer, TournamentConsumer
 from .serilaizers import (
     BadgeSerializer,
     PadelSerializer,
@@ -33,6 +33,8 @@ class RoomView(APIView):
 
     @staticmethod
     def is_exiting(room_name: str, Consumer):
+        print("===> ", Consumer.game_room)
+        print("===> ", room_name)
         for _room in Consumer.game_room:
             if _room[0] == room_name:
                 return _room[1]
@@ -50,7 +52,7 @@ class RoomView(APIView):
             return Response({"error": "Not Friend"}, status=400)
 
         room_name: str = f"room_private_{random.randint(1000, 99999999)}"
-        GameConsumer.game_room.append([room_name, [user.username, username]])
+        PrivegameConsumer.game_room.append([room_name, [user.username, username]])
 
         Match.send_accept_play(user, friend, room_name=room_name)
 
@@ -61,9 +63,10 @@ class RoomView(APIView):
         user: User = request.user
         room_name = request.query_params.get("room", None)
         is_tournament = request.query_params.get("tournament", "false")
+        mode = request.query_params.get("mode")
         if not room_name:
             return Response({"error": "room name required"})
-        room = RoomView.is_exiting(room_name, TournamentConsumer if is_tournament is "true" else GameConsumer)
+        room = RoomView.is_exiting(room_name, TournamentConsumer if mode == "tournament" else PrivegameConsumer if mode == "private" else GameConsumer)
         if not room:
             return Response(
                 {"error": "Room Does Not Exist"}, status=status.HTTP_404_NOT_FOUND

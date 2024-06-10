@@ -38,14 +38,19 @@ export const Gameson = ({
 	tournament_name ? (query.tournament = tournament_name) : "";
 	tournament_name ? (query.mode = "Tournament") : "";
 
-	const game_socket = "ws://localhost:8000/ws/game";
-	const prive_game = "ws://localhost:8000/ws/privegame";
-	const tournament_socket = "ws://localhost:8000/ws/tournament";
+	// const game_socket = "ws://localhost:8000/ws/game";
+	// const prive_game = "ws://localhost:8000/ws/privegame";
+	// const tournament_socket = "ws://localhost:8000/ws/tournament";
 
-	// console.log();
+	const game_socket = APIs.game.ws_game;
+	const prive_game = APIs.game.ws_privegame;
+	const tournament_socket = APIs.game.ws_tournament;
 
-	const end_socket = tournament_name ? tournament_socket : game_socket;
-	// const end_socket = tournament_name ? tournament_socket : room_name ? prive_game : game_socket
+	const end_socket = tournament_name
+		? tournament_socket
+		: room_name
+			? prive_game
+			: game_socket;
 	const [socket, isReady] = useWebsocket(end_socket, query);
 
 	useEffect(() => {
@@ -60,20 +65,6 @@ export const Gameson = ({
 				player1_for = data?.message?.id;
 
 				checkEnd();
-				// if (player1_for === 99) {
-				// }
-				// if (uid == 1 && player1_for === 2) {
-				// 	checkWinner();
-				// }
-				// if (uid == 2 && player1_for === 1) {
-				// 	checkWinner();
-				// }
-				// if (uid == 1 && player1_for === 1) {
-				// 	checkLoser();
-				// }
-				// if (uid == 2 && player1_for === 2) {
-				// 	checkLoser();
-				// }
 			} else if (data.event == "goal") {
 				setScore(data.score);
 			} else if (data.event == "send_info") {
