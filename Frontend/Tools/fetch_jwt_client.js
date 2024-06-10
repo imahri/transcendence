@@ -6,8 +6,8 @@ import {
 } from "@/app/(auth)/AuthTools/tokenManagment";
 
 export const Host = process.env.NEXT_PUBLIC_HOST;
-export const BASE_URL = `https://${Host}:443`; // #! check this
-export const WS = `wss://${Host}:443`; // #! check this
+export const BASE_URL = `https://${Host}:443`;
+export const WS = `wss://${Host}:443`;
 
 const AUTH_APP = `${BASE_URL}/auth`;
 const GAME_APP = `${BASE_URL}/Game`;

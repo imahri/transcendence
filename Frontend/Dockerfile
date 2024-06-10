@@ -4,9 +4,13 @@ RUN apt-get update
 
 WORKDIR /app
 
-COPY . .
+COPY package.json .
+
+COPY package-lock.json .
 
 RUN npm install
+
+COPY . .
 
 RUN npm run build
 

@@ -21,6 +21,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "static")
 IMAGES_ROOT = os.path.join(MEDIA_ROOT, "images")
 IMAGES_ROOT_ = "images"
 
+# os.getenv('') #! check this
+
 
 DEFAULT_PROFILE_IMG = "default/default.png"
 DEFAULT_BANNER_IMG = "default/profileBanner.png"
@@ -38,6 +40,8 @@ DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = ["http://10.11.100.211:80"]
 
 AUTH_USER_MODEL = "User_Management.User"
 
@@ -116,28 +120,16 @@ ASGI_APPLICATION = "core.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    }
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("redis", 6379)],
-#         },
-#     },
-# }
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 DATABASES = {
     "default": {
