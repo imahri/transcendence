@@ -8,8 +8,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         badges = [
-            { "color": "#B23D18", "price" : 800, "image_path": "/static/images/badge3.png" },
-            { "color": "#A4212C", "price" : 400,  "image_path": "/static/images/badge2.png" },
+            { "color": "#B23D18", "price" : 800, "image_path": "/images/badge3.png" },
+            { "color": "#A4212C", "price" : 400,  "image_path": "/images/badge2.png" },
 	    ]
 
         try:

@@ -19,7 +19,7 @@ class Command(BaseCommand):
                 if user_obj.is_valid():
                     user_obj.save()
                 else:
-                    pass
+                  self.stderr.write(self.style.ERROR(f"User {user['username']} not created because: {user_obj.errors}"))
             self.stdout.write(self.style.SUCCESS("Users Created successfully"))
         except Exception as error:
             self.stderr.write(self.style.ERROR(f"Users not created because: {error}"))

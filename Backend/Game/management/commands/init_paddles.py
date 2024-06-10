@@ -8,9 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         padels = [
-            { "name": "default", "price" : 500, "definition" : "the best",  "image_path": "/static/images/1.png" },
-            { "name": "Tower", "price" : 700, "definition" : "the last",  "image_path": "/static/images/2.png" },
-            { "name": "Bird", "price" : 1000, "definition" : "SuperNova",  "image_path": "/static/images/14.png" },
+            { "name": "default", "price" : 500, "definition" : "the best",  "image_path": "/images/1.png" },
+            { "name": "Tower", "price" : 700, "definition" : "the last",  "image_path": "/images/2.png" },
+            { "name": "Bird", "price" : 1000, "definition" : "SuperNova",  "image_path": "/images/14.png" },
 	    ]
 
         try:

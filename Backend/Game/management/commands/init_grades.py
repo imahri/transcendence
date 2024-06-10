@@ -8,12 +8,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         grades = [
-        { "name": "Bronze", "image": "/static/images/Bronze.png" },
-	    { "name": "Silver", "image": "/static/images/Silver.png" },
-	    { "name": "Gold", "image": "/static/images/Gold.png"},
-	    { "name": "Platinum", "image": "/static/images/Platinum.png" },
-	    { "name": "Master", "image": "/static/images/Master.png" },
-	    { "name": "Grand Master", "image": "/static/images/GrandMaster.png" },
+        { "name": "Bronze", "image": "/images/Bronze.png" },
+	    { "name": "Silver", "image": "/images/Silver.png" },
+	    { "name": "Gold", "image": "/images/Gold.png"},
+	    { "name": "Platinum", "image": "/images/Platinum.png" },
+	    { "name": "Master", "image": "/images/Master.png" },
+	    { "name": "Grand Master", "image": "/images/GrandMaster.png" },
         ]
 
         try:

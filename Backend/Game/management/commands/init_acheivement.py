@@ -10,35 +10,35 @@ class Command(BaseCommand):
         achs = [
             {
                 "name": "the_smart",
-                "icon_path": "/static/images/TheSmart.png",
+                "icon_path": "/images/TheSmart.png",
             },
             {
                 "name": "the_mortal",
-                "icon_path": "/static/images/theMortal.png",
+                "icon_path": "/images/theMortal.png",
             },
             {
                 "name": "Volcano",
-                "icon_path": "/static/images/Volcano.png",
+                "icon_path": "/images/Volcano.png",
             },
             {
                 "name": "The Death",
-                "icon_path": "/static/images/death.png",
+                "icon_path": "/images/death.png",
             },
             {
                 "name": "Fiddler",
-                "icon_path": "/static/images/fiddler.png",
+                "icon_path": "/images/fiddler.png",
             },
             {
                 "name": "The Ghost",
-                "icon_path": "/static/images/Ghost.png",
+                "icon_path": "/images/Ghost.png",
             },
             {
                 "name": "The Killer",
-                "icon_path": "/static/images/Killer.png",
+                "icon_path": "/images/Killer.png",
             },
             {
                 "name": "SUDO",
-                "icon_path": "/static/images/sudo.png",
+                "icon_path": "/images/sudo.png",
             },
         ]
 

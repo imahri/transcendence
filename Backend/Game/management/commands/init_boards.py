@@ -8,8 +8,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         boards = [
-            { "name": "defaut", "price" : 700,  "image_path": "/static/images/Board1.png" },
-            { "name": "fire", "price" : 800,  "image_path": "/static/images/Board2.png" },
+            { "name": "default", "price" : 700,  "image_path": "/images/Board1.png" },
+            { "name": "fire", "price" : 800,  "image_path": "/images/Board2.png" },
 	    ]
 
         try:
