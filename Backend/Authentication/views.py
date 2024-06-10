@@ -13,6 +13,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
 import requests
 from User_Management.serializers import UserSerializer
+from core import settings
 
 # ! Use request.user
 
@@ -178,14 +179,13 @@ class intra_auth(APIView):
         # !
         data = {
             "grant_type": "authorization_code",
-            "client_id": "u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259",
-            "client_secret": "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",
+            "client_id": settings.ITNRA_CLIENT_KEY,
+            "client_secret": settings.INTRA_SECRET_KEY,
             "code": code,
-            "redirect_uri": "http://localhost:3000/login",
+            "redirect_uri": settings.INTRA_REDIRECT_URL,
         }
 
         response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
-
         data = response.json()
         if response.status_code != 200:
             raise Exception(data.get("error"))

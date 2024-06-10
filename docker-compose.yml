@@ -37,6 +37,9 @@ services:
             - 443:443
         environment:
             SECRET_KEY: ${SECRET_KEY}
+            INTRA_SECRET_KEY: ${INTRA_SECRET_KEY}
+            INTRA_CLIENT_KEY: ${INTRA_CLIENT_KEY}
+            INTRA_REDIRECT_URL: ${INTRA_REDIRECT_URL}
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

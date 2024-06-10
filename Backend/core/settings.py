@@ -33,6 +33,10 @@ DEFAULT_BANNER_IMG = "default/profileBanner.png"
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+INTRA_SECRET_KEY = os.getenv("INTRA_SECRET_KEY")
+ITNRA_CLIENT_KEY = os.getenv("INTRA_CLIENT_KEY")
+INTRA_REDIRECT_URL = os.getenv("INTRA_REDIRECT_URL")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
