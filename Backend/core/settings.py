@@ -31,15 +31,10 @@ DEFAULT_BANNER_IMG = "default/profileBanner.png"
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-
-INTRA_SECRET_KEY = os.getenv("INTRA_SECRET_KEY")
-ITNRA_CLIENT_KEY = os.getenv("INTRA_CLIENT_KEY")
-INTRA_REDIRECT_URL = os.getenv("INTRA_REDIRECT_URL")
+SECRET_KEY = "django-insecure-489b$se1cdo4@e5=#$q9i4px=c6s+--=*p9fl7@ft))&odu3z+"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -125,25 +120,17 @@ ASGI_APPLICATION = "core.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", 6379)],
-        },
-    },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    }
 }
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "database",
-        "PORT": "5432",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 

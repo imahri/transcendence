@@ -5,9 +5,9 @@ import {
 	setcookie,
 } from "@/app/(auth)/AuthTools/tokenManagment";
 
-export const Host = process.env.NEXT_PUBLIC_HOST;
-export const BASE_URL = `https://${Host}:443`;
-export const WS = `wss://${Host}:443`;
+export const Host = "localhost"; // !! change this
+export const BASE_URL = `http://${Host}:8000`; // !! change this
+export const WS = `ws://${Host}:8000`; // !! change this
 
 const AUTH_APP = `${BASE_URL}/auth`;
 const GAME_APP = `${BASE_URL}/Game`;
