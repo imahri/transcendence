@@ -5,8 +5,9 @@ import {
 	setcookie,
 } from "@/app/(auth)/AuthTools/tokenManagment";
 
-const BASE_URL = "http://localhost:8000";
-const WS = "ws://localhost:8000";
+export const Host = process.env.NEXT_PUBLIC_HOST;
+export const BASE_URL = `https://${Host}:443`;
+export const WS = `wss://${Host}:443`;
 
 const AUTH_APP = `${BASE_URL}/auth`;
 const GAME_APP = `${BASE_URL}/Game`;
@@ -30,9 +31,7 @@ export const APIs = {
 		towfactor: `${AUTH_APP}/2FA`,
 		towfactor_qr: `${AUTH_APP}/2FA/qrcode`,
 	},
-	image: (path) => {
-		return `${USER_APP}/image?path=${path}`;
-	},
+	image: (path) => `${USER_APP}/image?path=${path}`,
 	user: {
 		notif_ws: `${WS}/ws/notif`,
 		user: `${USER_APP}/`,

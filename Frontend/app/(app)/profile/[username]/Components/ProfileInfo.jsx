@@ -46,10 +46,15 @@ function Button({ action, color, friend_id, ws }) {
 }
 
 function updateStatus(data, setStatus, profileId) {
-	console.log(data);
-
 	if (data.friend_id == profileId) {
 		setStatus(data.status);
+	}
+}
+
+function notifupdateStatus(content, setStatus, profileId) {
+	if (content.user.id == profileId) {
+		if (content.content.status == "add") setStatus("I");
+		if (content.content.status == "accept") setStatus("F");
 	}
 }
 
@@ -63,6 +68,9 @@ function Buttons({ profileUser, EditProfile }) {
 				const data = JSON.parse(e.data);
 				if (data.type == "friendShip")
 					updateStatus(data, setStatus, profileUser.id);
+				if (data.type == "notification" && data.content.type == "F") {
+					notifupdateStatus(data.content, setStatus, profileUser.id);
+				}
 			};
 			ws.addEventListener("message", HandelMsg);
 

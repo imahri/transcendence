@@ -65,9 +65,8 @@ export const handel42 = async (e) => {
 
 	const externalUrl = "https://api.intra.42.fr/oauth/authorize";
 	const params = {
-		client_id:
-			"u-s4t2ud-ef24706709b2ebced52c2f14a643d130751366c3ebabc309cb18be033c4f8259",
-		redirect_uri: "http://localhost:3000/login",
+		client_id: process.env.NEXT_PUBLIC_42_CLIENT_KEY,
+		redirect_uri: process.env.NEXT_PUBLIC_42_REDIRECT_URL,
 		response_type: "code",
 	};
 

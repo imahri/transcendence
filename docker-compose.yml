@@ -6,28 +6,60 @@ networks:
 
 volumes:
     grafana_data:
+    elasticsearch-data:
+    pgdata:
+    static_mages:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/Backend/static
 
 services:
-    Frontend:
-        container_name: Frontend
-        image: Frontend
+    frontend:
+        container_name: frontend
+        image: frontend
         build: ./Frontend
         ports:
-            - 443:443
+            - 80:80
         networks:
             - transcendence_network
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "5"
         restart: always
-    Backend:
-        container_name: Backend
-        image: Backend
+        depends_on:
+            - backend
+    backend:
+        container_name: backend
+        image: backend
         build: ./Backend
         networks:
             - transcendence_network
-        healthcheck:
-            test: "manage.py check --deploy"
+        ports:
+            - 443:443
         environment:
             SECRET_KEY: ${SECRET_KEY}
+            INTRA_SECRET_KEY: ${INTRA_SECRET_KEY}
+            INTRA_CLIENT_KEY: ${INTRA_CLIENT_KEY}
+            INTRA_REDIRECT_URL: ${INTRA_REDIRECT_URL}
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            PGPASSWORD: ${POSTGRES_PASSWORD}
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "5"
+        volumes:
+            - static_mages:/app/static
         restart: always
+        depends_on:
+            - database
+            - redis
         #  In-Production
         #      - Configure with Postgress
         #      - DEBUG = False
@@ -35,52 +67,86 @@ services:
         #      - Redis for Channels
         #      - server static_files https://docs.djangoproject.com/en/5.0/howto/static-files/deployment/
         #      - HTTPS
-    Database:
+    database:
+        container_name: database
         image: postgres
         networks:
             - transcendence_network
+        # healthcheck:
+        #     test: "pg_isready -U $POSTGRES_USER"
+        #     interval: 5s
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "5"
         environment: # in env file
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             PGDATA: /var/lib/postgresql/data
         volumes:
-            - ./DB:/var/lib/postgresql/data
+            - pgdata:/var/lib/postgresql/data
         restart: always
         #  In-Production
         #       - Only auth host is "backend"
-    Redis:
+    redis:
+        container_name: redis
         image: redis
+        networks:
+            - transcendence_network
 
-    # Infrastructure Setup with ELK (Elasticsearch, Logstash, Kibana)
-    elasticsearch:
-        image: elasticsearch:8.13.4
-        environment:
-            - DISCOVERY_TYPE=single-node
-        volumes:
-            - elasticsearch-data:/var/lib/elasticsearch
-    logstash:
-        image: logstash:8.13.4
-        volumes:
-            - ./logstash.conf:/etc/logstash/conf.d/00-main.conf
-    kibana:
-        image: kibana:8.13.4
-        ports:
-            - 5601:5601
-        depends_on:
-            - elasticsearch
-
-    # Monitoring system with Prometheus and Grafana
     prometheus:
+        container_name: prometheus
         image: prom/prometheus:latest
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
         ports:
             - 9090:9090
+        networks:
+            - transcendence_network
+
     grafana:
+        container_name: grafana
         image: grafana/grafana:latest
         volumes:
-            - ./grafana.ini:/etc/grafana/grafana.ini
             - grafana_data:/var/lib/grafana
         ports:
             - 3000:3000
+        networks:
+            - transcendence_network
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+        container_name: elasticsearch
+        environment:
+        - discovery.type=single-node
+        - xpack.monitoring.enabled=true
+        networks:
+        - transcendence_network
+        ports:
+        - "9200:9200"
+        - "9300:9300"
+
+    logstash:
+        image: docker.elastic.co/logstash/logstash:7.17.9
+        container_name: logstash
+        volumes:
+        - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+        networks:
+        - transcendence_network
+        ports:
+        - "5000:5000"
+        depends_on:
+        - elasticsearch
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana:7.17.9
+        container_name: kibana
+        networks:
+        - transcendence_network
+        ports:
+        - "5601:5601"
+        depends_on:
+        - elasticsearch

@@ -2,9 +2,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { useSearchParams } from "next/navigation";
-import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
-import { useWebsocket } from "@/app/(app)/hooks/useWebsocket";
-import { Loader } from "@/app/Components/Loader";
+import { APIs, WS } from "@/Tools/fetch_jwt_client";
 
 let xcord = 0;
 let ycord = 0;
@@ -16,8 +14,8 @@ let uid = 0;
 
 let player2_state = "not yet";
 let player1_state = "not yet";
-let player2_for = 0;
-let player1_for = 0;
+let player2_for = "not yet";
+let player1_for = "not yet";
 
 export const Gameson = ({
 	secondArrived,
@@ -30,6 +28,7 @@ export const Gameson = ({
 	checkEnd,
 }) => {
 	const cvs = useRef(null);
+	const [socket, setSocket] = useState(null);
 	const searchParams = useSearchParams();
 	const tournament_name = searchParams.get("tournament");
 	const room_name = searchParams.get("room");
@@ -37,10 +36,6 @@ export const Gameson = ({
 	room_name ? (query.room = room_name) : "";
 	tournament_name ? (query.tournament = tournament_name) : "";
 	tournament_name ? (query.mode = "Tournament") : "";
-
-	// const game_socket = "ws://localhost:8000/ws/game";
-	// const prive_game = "ws://localhost:8000/ws/privegame";
-	// const tournament_socket = "ws://localhost:8000/ws/tournament";
 
 	const game_socket = APIs.game.ws_game;
 	const prive_game = APIs.game.ws_privegame;
@@ -54,16 +49,29 @@ export const Gameson = ({
 	const [socket, isReady] = useWebsocket(end_socket, query);
 
 	useEffect(() => {
-		if (!isReady) return;
+		const tournament_name = searchParams.get("tournament");
+		const room_name = searchParams.get("room");
+		const ws = new WebSocket(
+			`${WS}/ws/game?` +
+				`token=${getToken()}` +
+				`${room_name ? `&room=${room_name}` : ""}` +
+				`${tournament_name ? `&tournament=${tournament_name}&mode=Tournament` : ""}`,
+		);
 
-		socket.onmessage = (event) => {
+		ws.onopen = () => {
+			setSocket(ws);
+		};
+
+		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 
 			if (data.event == "reconnect") {
 				secondArrived();
 			} else if (data.event == "forfeited") {
-				player1_for = data?.message?.id;
-
+				// console.log(data);
+				// player1_for = data?.message?.user1;
+				// player2_for = data?.message?.user2;
+				// if (uid == 1 && player1_for === "win") {
 				checkEnd();
 			} else if (data.event == "goal") {
 				setScore(data.score);
@@ -103,7 +111,7 @@ export const Gameson = ({
 	}, [isReady]);
 
 	useEffect(() => {
-		if (isReady) {
+		if (socket && socket.readyState === WebSocket.OPEN) {
 			const canvas = cvs.current;
 			const ctx = canvas.getContext("2d");
 
@@ -251,22 +259,16 @@ export const Gameson = ({
 
 			return () => {};
 		}
-	}, [isReady]);
+	}, [socket]);
 
 	return (
-		<>
-			{!isReady ? (
-				<Loader />
-			) : (
-				<canvas
-					style={{
-						width: "100%",
-						height: "100%",
-						objectFit: "contain",
-					}}
-					ref={cvs}
-				></canvas>
-			)}
-		</>
+		<canvas
+			style={{
+				width: "100%",
+				height: "100%",
+				objectFit: "contain",
+			}}
+			ref={cvs}
+		></canvas>
 	);
 };

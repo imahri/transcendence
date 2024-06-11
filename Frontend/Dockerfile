@@ -1,12 +1,17 @@
 FROM node:latest
 
+RUN apt-get update
+
 WORKDIR /app
+
+COPY package.json .
+
+COPY package-lock.json .
+
+RUN npm install
 
 COPY . .
 
-RUN apt-get update
+RUN npm run build
 
-RUN npm install \
-    && npm build
-
-CMD [ "npm", "start" ]
+CMD [ "npm", "start", "--", "-H", "0.0.0.0", "-p", "80"]

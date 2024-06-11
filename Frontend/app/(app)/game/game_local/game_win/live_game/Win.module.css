@@ -41,10 +41,9 @@
 }
 
 .second_part{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    width: 80%;
+
+
 }
 
 .title{
@@ -80,7 +79,7 @@
 }
 
 .btbt{
-    padding: 10px 30px;
+    padding: 2% 10%;
     font-size: 2rem;
     font-weight: 500;
     background: #2a6d71b7;

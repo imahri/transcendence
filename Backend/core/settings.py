@@ -19,7 +19,9 @@ APP_NAME = "transcendence App"
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, "static")
 IMAGES_ROOT = os.path.join(MEDIA_ROOT, "images")
-IMAGES_ROOT_ = "static/images"
+IMAGES_ROOT_ = "images"
+
+# os.getenv('') #! check this
 
 
 DEFAULT_PROFILE_IMG = "default/default.png"
@@ -29,14 +31,21 @@ DEFAULT_BANNER_IMG = "default/profileBanner.png"
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-489b$se1cdo4@e5=#$q9i4px=c6s+--=*p9fl7@ft))&odu3z+"
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+INTRA_SECRET_KEY = os.getenv("INTRA_SECRET_KEY")
+ITNRA_CLIENT_KEY = os.getenv("INTRA_CLIENT_KEY")
+INTRA_REDIRECT_URL = os.getenv("INTRA_REDIRECT_URL")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
 
 ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = ["http://10.11.100.211:80"]
 
 AUTH_USER_MODEL = "User_Management.User"
 
@@ -52,8 +61,8 @@ REST_FRAMEWORK = {
 # JWT Config
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  #! Edit this
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  #! Edit this
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
@@ -73,6 +82,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
+    "channels",
+    'django_prometheus',
     "User_Management",
     "Authentication",
     "Game",
@@ -84,11 +95,13 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -114,20 +127,27 @@ ASGI_APPLICATION = "core.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    }
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": "database",
+        "PORT": "5432",
     }
 }
-
 
 # Logs     install python-beats
 #!!

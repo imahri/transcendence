@@ -8,7 +8,7 @@ from asgiref.sync import async_to_sync
 
 class Acheivement(models.Model):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     icon_path = models.ImageField(upload_to=IMAGES_ROOT_)
     users = models.ManyToManyField(
         "User_Management.User", related_name="acheivements", blank=True
@@ -140,7 +140,7 @@ class Match(models.Model):
 
 class Grade(models.Model):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to=IMAGES_ROOT_)
 
 
@@ -168,20 +168,15 @@ class Items(models.Model):
     # ''' get current_item object of the <item_class> object'''
     @staticmethod
     def set_default_items(user):
-        # default_paddle : Padel = Padel.objects.get(name="default")
-        # paddle_item : Items = Items(user=user, item_class="padels", current_item=default_paddle)
-        # paddle_item.save()
-        # paddle_item.owned_items.add(default_paddle)
-        # default_badge : Badge = Badge.objects.first()
-        # badge_item : Items = Items(user=user, item_class="badges", current_item=default_badge)
-        # badge_item.save()
-        # badge_item.owned_items.add(default_badge)
-        default_board: Board = Board.objects.get(name="default")
-        board_item: Items = Items(
-            user=user, item_class="boards", current_item=default_board
-        )
-        board_item.save()
-        board_item.owned_items.add(default_board)
+        try:
+            default_board: Board = Board.objects.get(name="default")
+            board_item: Items = Items(
+                user=user, item_class="boards", current_item=default_board
+            )
+            board_item.save()
+            board_item.owned_items.add(default_board)
+        except:
+            pass
 
     def SerializeItem(self, item_id):
         # define the type of item && fetch it && serialize it
@@ -326,7 +321,7 @@ class Item(models.Model):
 
 class Padel(Item):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     definition = models.TextField()
     # ability = None # !
     # special = None # !
@@ -334,9 +329,9 @@ class Padel(Item):
 
 class Badge(Item):
 
-    color = models.CharField(max_length=7, default="#FF0000")
+    color = models.CharField(max_length=7, unique=True)
 
 
 class Board(Item):
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)

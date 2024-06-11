@@ -1,9 +1,28 @@
 #!/bin/bash
 
-django-admin makemigrations
+export DJANGO_SETTINGS_MODULE="core.settings"
 
-django-admin migrate
+while ! pg_isready  -h database -U $POSTGRES_USER  -d $POSTGRES_DB  2> /dev/null
+    do
+        echo "Waiting for database to be created;"
+    done
 
-openssl req -x509 -newkey rsa:4096 -keyout transcendence.com.key -out transcendence.com.crt -days 365 -subj "/C=MA/ST=BNK/L=KH/O=1337/CN=transcendence.com"
+./manage.py makemigrations
 
-daphne -b 0.0.0.0:8080 --ssl --cert-file transcendence.com.crt --key-file transcendence.com.key core.asgi:application
+./manage.py migrate
+
+./manage.py init_badges
+
+./manage.py init_paddles 
+
+./manage.py init_boards 
+
+./manage.py init_grades
+
+./manage.py init_users
+
+./manage.py init_acheivement
+
+openssl req -x509 -newkey rsa:4096 -keyout transcendence.com.key -out transcendence.com.crt -days 365 -subj "/C=MA/ST=BNK/L=KH/O=1337/CN=transcendence.com" -nodes
+
+daphne -b 0.0.0.0 -e ssl:443:privateKey=./transcendence.com.key:certKey=./transcendence.com.crt core.asgi:application

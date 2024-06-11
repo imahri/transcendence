@@ -67,10 +67,6 @@ class TournamentView(APIView):
         user = request.user
 
         tournament: Tournament = Tournament.objects.get(id=id)
-        if tournament.participants.count() == 8:
-            return Response(
-                data="Tournament is Full", status=status.HTTP_400_BAD_REQUEST
-            )
         if tournament.join(user=user, unique_name=alias_name) is False:
             return Response(
                 data="User Arleady in Tournament", status=status.HTTP_400_BAD_REQUEST

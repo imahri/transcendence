@@ -16,7 +16,6 @@ import {
 	readNotif,
 	setType,
 } from "./NotifUtils";
-import { useRouter } from "next/navigation";
 
 function acceptDecline(callBack, svg) {
 	return (
@@ -96,13 +95,13 @@ async function getNotif(setNotif, setNbNotif) {
 	}
 }
 
-function handelNotif(data, setNotif, setNbNotif, route) {
-	const content = data.content;
+function handelNotif(data, setNotif, setNbNotif) {
+	if (data.content.type == "T") console.log(data.content);
 	setNotif((prev) => {
 		if (prev) {
-			prev.unshift(content);
+			prev.unshift(data.content);
 			return prev;
-		} else return content;
+		} else return data.content;
 	});
 	setNbNotif((prev) => prev + 1);
 	// if (content.type == "G" && content.content.type == "start")
@@ -113,7 +112,7 @@ function Notification() {
 	const [notif, setNotif] = useState(false);
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
-	const route = useRouter();
+
 	const { user, ws } = useContext(UserContext);
 
 	useEffect(() => {
@@ -125,7 +124,7 @@ function Notification() {
 			ws.addEventListener("message", (e) => {
 				const data = JSON.parse(e.data);
 				if (data.type == "notification")
-					handelNotif(data, setNotif, setnbNotif, route);
+					handelNotif(data, setNotif, setnbNotif);
 			});
 		}
 	}, [ws]);
@@ -149,11 +148,7 @@ function Notification() {
 				/>
 			</svg>
 			<div className="size-5 bg-greatBlue rounded-full absolute top-[-2px] left-4 flex justify-center items-center">
-				<span
-					className={`text-white ${nbNotif < 100 ? "text-[13px]" : "text-[10px]"}`}
-				>
-					{nbNotif}
-				</span>
+				<span className="text-white text-[13px]">{nbNotif}</span>
 			</div>
 			<div
 				className={`w-[300px] bg-[#303030] absolute [@media(max-width:400px)]:w-[290px] right-[5px] top-[35px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
