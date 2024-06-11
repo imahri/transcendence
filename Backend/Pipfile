@@ -18,6 +18,7 @@ daphne = "*"
 requests = "*"
 psycopg2-binary = "*"
 channels_redis = "*"
+django-prometheus = "*"
 
 [dev-packages]
 

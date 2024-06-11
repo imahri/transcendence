@@ -100,16 +100,27 @@ services:
     #         - elasticsearch
 
     # # Monitoring system with Prometheus and Grafana
-    # prometheus:
-    #     image: prom/prometheus:latest
-    #     volumes:
-    #         - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    #     ports:
-    #         - 9090:9090
-    # grafana:
-    #     image: grafana/grafana:latest
-    #     volumes:
-    #         - ./grafana.ini:/etc/grafana/grafana.ini
-    #         - grafana_data:/var/lib/grafana
-    #     ports:
-    #         - 3000:3000
+    prometheus:
+        container_name: prometheus
+        image: prom/prometheus:latest
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
+            # - ./cert.cert:/etc/prometheus/cert.cert
+            # - ./cert.key:/etc/prometheus/cert.key
+        ports:
+            - 9090:9090
+        networks:
+            - transcendence_network
+
+    grafana:
+        container_name: grafana
+        image: grafana/grafana:latest
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD=password
+        volumes:
+            - grafana_data:/var/lib/grafana
+        ports:
+            - 3000:3000
+        networks:
+            - transcendence_network

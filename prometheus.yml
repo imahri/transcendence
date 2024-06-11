@@ -4,78 +4,19 @@ global:
 scrape_configs:
     - job_name: Frontend
       static_configs:
-          - targets: ["Frontend:443"]
-          - groups:
-                - name: Frontend Alerts
-                  rules:
-                      - alert: High_Frontend_CPU
-                        expr: container_cpu_usage_seconds{container!="Frontend"} > 0.8
-                        for: 5s
-                        labels:
-                            severity: critical
-                            container: cpu
-                        annotations:
-                            summary: "High CPU Usage on Frontend Container"
-                            description: "Frontend container experiencing high CPU utilization exceeding 80% for the past 5 minutes. Investigate immediately."
+          - targets: ["frontend:80"]
 
-                      - alert: High_Frontend_Memory
-                        expr: container_memory_usage_bytes{container!="Frontend"} > 800Mi
-                        for: 5s
-                        labels:
-                            severity: critical
-                            container: memory
-                        annotations:
-                            summary: "High Memory Usage on Frontend Container"
-                            description: "Frontend container exceeding 800Mi of memory usage for the past 5 minutes. Investigate resource allocation and potential memory leaks."
-
-    - job_name: Backend
+    - job_name: 'backend'
       static_configs:
-          - targets: ["Backend:8080"]
-          - groups:
-                - name: Backend Alerts
-                  rules:
-                      - alert: High_Backend_CPU
-                        expr: container_cpu_usage_seconds{container!="Backend"} > 0.8
-                        for: 5s
-                        labels:
-                            severity: critical
-                            container: cpu
-                        annotations:
-                            summary: "High CPU Usage on Backend Container"
-                            description: "Backend container experiencing high CPU utilization exceeding 80% for the past 5 minutes. Investigate immediately."
-
-                      - alert: High_Backend_Memory
-                        expr: container_memory_usage_bytes{container!="Backend"} > 800Mi
-                        for: 5s
-                        labels:
-                            severity: critical
-                            container: memory
-                        annotations:
-                            summary: "High Memory Usage on Backend Container"
-                            description: "Backend container exceeding 800Mi of memory usage for the past 5 minutes. Investigate resource allocation and potential memory leaks."
+          - targets: ['backend:443']
+      scheme: https
+      tls_config:
+        insecure_skip_verify: true
 
     - job_name: Database
       static_configs:
-          - targets: ["Database:5432"]
-          - groups:
-                - name: Database Alerts
-                  rules:
-                      - alert: High_Database_CPU
-                        expr: container_cpu_usage_seconds{container!="Database"} > 0.8
-                        for: 5s
-                        labels:
-                            severity: critical
-                            container: cpu
-                        annotations:
-                            summary: "High CPU Usage on Database Container"
-                            description: "Database container experiencing high CPU utilization exceeding 80% for the past 5 minutes. Investigate database load and performance."
+          - targets: ["database:5432"]
 
-                      - alert: High_Database_Memory
-                        expr: container_cpu_usage_seconds{container!="Database"} > 800Mi
-                        for: 5s
-                        labels:
-                            severity: critical
-                            container: memory
-                        annotations:
-                            summary: "High Memory Usage on Database Container"
-                            description: "Database container exceeding 800Mi of memory usage for the past 5 minutes. Investigate database resource allocation and potential memory leaks."
+
+rule_files:
+  - alert_rules.yml
