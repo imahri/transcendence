@@ -106,8 +106,6 @@ services:
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
             - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
-            # - ./cert.cert:/etc/prometheus/cert.cert
-            # - ./cert.key:/etc/prometheus/cert.key
         ports:
             - 9090:9090
         networks:
@@ -116,8 +114,6 @@ services:
     grafana:
         container_name: grafana
         image: grafana/grafana:latest
-        environment:
-            - GF_SECURITY_ADMIN_PASSWORD=password
         volumes:
             - grafana_data:/var/lib/grafana
         ports:
