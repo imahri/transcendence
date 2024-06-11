@@ -18,7 +18,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("Authentication.urls")),
@@ -26,5 +25,4 @@ urlpatterns = [
     path("Game/", include("Game.urls")),
     path("user/", include("User_Management.urls")),
     path("tournament/", include("Tournament.urls")),
-    path('', include("django_prometheus.urls")),
 ]

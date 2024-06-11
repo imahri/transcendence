@@ -19,9 +19,7 @@ APP_NAME = "transcendence App"
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, "static")
 IMAGES_ROOT = os.path.join(MEDIA_ROOT, "images")
-IMAGES_ROOT_ = "images"
-
-# os.getenv('') #! check this
+IMAGES_ROOT_ = "static/images"
 
 
 DEFAULT_PROFILE_IMG = "default/default.png"
@@ -54,8 +52,8 @@ REST_FRAMEWORK = {
 # JWT Config
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  #! Edit this
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  #! Edit this
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
@@ -75,8 +73,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
-    "channels",
-    'django_prometheus',
     "User_Management",
     "Authentication",
     "Game",
@@ -88,13 +84,11 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -134,6 +128,37 @@ DATABASES = {
     }
 }
 
+
+# Logs     install python-beats
+#!!
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+#         },
+#     },
+#     "handlers": {
+#         "beats": {
+#             "level": "INFO",
+#             "class": "beats.handlers.BeatsHandler",
+#             "host": "Backend",
+#             "port": 5044,
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["beats"],
+#             "level": "INFO",
+#             "propagate": True,
+#         },
+#     },
+# }
+
+#  To use log
+# import logging
+# logger = logging.getLogger(__name__)
 
 
 # Password validation
