@@ -19,7 +19,6 @@ async function GameHistoric(
 		username: username,
 	});
 	if (!isOk) {
-		console.log(data);
 		setLoading(false);
 		return;
 	}

@@ -49,7 +49,6 @@ export default function Friendspopup({ DisplayFriends, username }) {
 				return;
 			}
 			setFriends(data);
-			console.log(data);
 		};
 		getFriends();
 	}, []);

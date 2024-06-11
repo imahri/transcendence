@@ -55,10 +55,8 @@ async function handleCreate(user, username, Tournament, setError) {
 	if (!isOk) {
 		//hanedl error Tournament name or username
 		myseterror(setError, "tournament");
-		console.log(data);
 		return;
 	}
-	console.log(data);
 	myseterror(setError, "success");
 }
 

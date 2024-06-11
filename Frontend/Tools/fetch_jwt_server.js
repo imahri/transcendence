@@ -43,7 +43,6 @@ export const fetch_jwt = async (endpoint, query_params, init) => {
 		const data = await response.json();
 		return [response.ok, response.status, data];
 	} catch (error) {
-		console.log(error);
 		return [false, 500, error];
 	}
 };

@@ -18,7 +18,6 @@ async function getUser(username, setUserProfile, setisLoading, navigate) {
 		username: username,
 	});
 	if (!isOk) {
-		console.log("error fetch");
 		navigate.replace("/home");
 		return;
 	}
@@ -45,7 +44,6 @@ function Profile({ params }) {
 		getUser(params.username, setUserProfile, setisLoading, navigate);
 	}, [user]);
 
-	console.log(userProfile);
 
 	return (
 		<>

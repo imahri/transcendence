@@ -68,10 +68,6 @@ export const Gameson = ({
 			if (data.event == "reconnect") {
 				secondArrived();
 			} else if (data.event == "forfeited") {
-				// console.log(data);
-				// player1_for = data?.message?.user1;
-				// player2_for = data?.message?.user2;
-				// if (uid == 1 && player1_for === "win") {
 				checkEnd();
 			} else if (data.event == "goal") {
 				setScore(data.score);

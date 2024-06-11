@@ -25,7 +25,6 @@ async function deblock(friend_id, setBlockedUsers, setError) {
 			setError(true);
 		});
 
-		console.log(data);
 	}
 }
 
@@ -74,7 +73,6 @@ function BlockedUsers({ setPopUp }) {
 					return;
 				}
 				setBlockedUsers(data);
-				console.log(data);
 			};
 			getUsers();
 		}

@@ -64,7 +64,6 @@ const Vim = () => {
 				tournament_name != null,
 				mode,
 			);
-			console.log(data);
 			if (!data) return navigate.push("/404"); //hardcoded for now
 			setCheckRoom(false);
 		};

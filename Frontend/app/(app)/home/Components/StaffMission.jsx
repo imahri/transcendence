@@ -67,7 +67,6 @@ async function verify(setMissions, setverify, setUpdate) {
 		setUpdate(true);
 		return;
 	}
-	console.log(data);
 }
 
 function StaffMission() {

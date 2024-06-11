@@ -182,7 +182,6 @@ async function GameHistoric(
 		username: username,
 	});
 	if (!isOk) {
-		console.log(data);
 		setLoading(false);
 		return;
 	}
@@ -201,7 +200,6 @@ const getAcheivments = async (setAch, username) => {
 		setAch(data);
 		return;
 	}
-	console.log(data);
 };
 
 export default function MyState() {

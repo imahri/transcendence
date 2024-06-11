@@ -25,7 +25,6 @@ export async function joinTournament(
 	);
 
 	if (!isOk) {
-		console.log(data);
 		myseterror(setError, true);
 		return;
 	}
@@ -42,7 +41,6 @@ export async function startTournament(id, setError, setButton, setInfo) {
 	);
 
 	if (!isOk) {
-		console.log(data);
 		myseterror(setError, data);
 		return;
 	}
@@ -52,5 +50,4 @@ export async function startTournament(id, setError, setButton, setInfo) {
 
 export async function quitTournament(id, setError) {
 	//quit tournament
-	console.log("quit tournament");
 }

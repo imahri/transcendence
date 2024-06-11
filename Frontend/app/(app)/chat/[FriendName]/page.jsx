@@ -82,7 +82,6 @@ export default function DM_Conversation({ params: { FriendName } }) {
 			new_msg,
 			messageList.length == 0,
 		);
-		console.log(message);
 		addNewMessage(message);
 	};
 

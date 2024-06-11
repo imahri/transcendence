@@ -104,7 +104,6 @@ export async function get42Token(
 				return setPopUp2Fa(data.username);
 			}
 			settoken(data);
-			console.log("Login successful");
 			navigate.replace("/home");
 		} else {
 			setisLoading(false);
@@ -112,10 +111,8 @@ export async function get42Token(
 				{ type: "intra", msg: "Login with intra failed" },
 				setError,
 			);
-			console.error("Login failed");
 		}
 	} catch (error) {
 		setisLoading(false);
-		console.error("Network error:", error);
 	}
 }

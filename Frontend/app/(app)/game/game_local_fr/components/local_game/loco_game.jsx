@@ -9,7 +9,6 @@ import Image from "next/image";
 const LGame = ({ checkEnd, boardpic }) => {
 	const [playerOne, setPlayerone] = useState(0);
 	const [playerTwo, setPlayertwo] = useState(0);
-	console.log(boardpic);
 	return (
 		<div className={styles.page}>
 			<div className={styles.container}>

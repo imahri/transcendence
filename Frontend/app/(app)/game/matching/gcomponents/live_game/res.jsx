@@ -4,8 +4,6 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { APIs } from "@/Tools/fetch_jwt_client";
 
 const Res = ({ score, player1, player2 }) => {
-	console.log(player1);
-	console.log(player2);
 	return (
 		<div className={styles.score}>
 			<div className={styles.score_first}></div>

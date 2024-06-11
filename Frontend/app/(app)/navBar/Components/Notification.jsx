@@ -96,7 +96,6 @@ async function getNotif(setNotif, setNbNotif) {
 }
 
 function handelNotif(data, setNotif, setNbNotif) {
-	if (data.content.type == "T") console.log(data.content);
 	setNotif((prev) => {
 		if (prev) {
 			prev.unshift(data.content);
@@ -104,8 +103,6 @@ function handelNotif(data, setNotif, setNbNotif) {
 		} else return data.content;
 	});
 	setNbNotif((prev) => prev + 1);
-	// if (content.type == "G" && content.content.type == "start")
-	// 	route.push(`/game/matching?room=${content.content.room_name}`);
 }
 
 function Notification() {

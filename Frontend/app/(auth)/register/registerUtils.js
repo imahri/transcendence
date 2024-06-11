@@ -93,7 +93,6 @@ export const registerSubmit = async (
 		const response = await postRequest(APIs.auth.register, requestBody);
 
 		if (response.ok) {
-			console.log("Login successful");
 			navigate.replace("/login");
 		} else {
 			const responseBody = await response.json();

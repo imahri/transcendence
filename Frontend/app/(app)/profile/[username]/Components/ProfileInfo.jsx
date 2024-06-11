@@ -156,7 +156,6 @@ function updateOnlineStatus(setOnline, e, user) {
 	const data = JSON.parse(e.data);
 	if (data.type == "onlineStatus") {
 		const isOnline = data.status == "online";
-		console.log("online status recived : ", data);
 		if (user.username == data.username) setOnline(isOnline);
 	}
 }

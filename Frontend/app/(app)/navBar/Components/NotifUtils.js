@@ -105,8 +105,6 @@ export async function accept(notif) {
 		{ method: "POST" },
 	);
 	if (!isOk) {
-		console.log(data);
 		return;
 	}
-	console.log(data);
 }

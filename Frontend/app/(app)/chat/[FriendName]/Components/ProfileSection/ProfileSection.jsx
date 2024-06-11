@@ -71,7 +71,6 @@ const Options = ({ name, id }) => {
 				className={styles.flex_col_container}
 				onClick={() => {
 					if (id) {
-						console.log(id);
 						BlockUser(ws, id);
 					}
 				}}

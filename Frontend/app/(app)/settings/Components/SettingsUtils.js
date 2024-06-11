@@ -20,7 +20,6 @@ export async function logout(navigate) {
 		},
 	);
 	if (!isOk) {
-		console.log(data);
 		return;
 	}
 	removeTokens();
@@ -55,7 +54,6 @@ export async function TowFaHandler(TowFa, setTowFa, setQrImage) {
 				},
 			);
 			if (isOk) {
-				console.log("2Fa desactivated");
 				setTowFa(false);
 			} else {
 				console.error("error in desactivat", resonse);
@@ -68,11 +66,6 @@ export async function TowFaHandler(TowFa, setTowFa, setQrImage) {
 			const src = URL.createObjectURL(responseBlob);
 			setQrImage(src);
 			setTowFa(true);
-		} else if (response.status == 401) {
-			//navigate to login
-			console.log("error", response);
-		} else {
-			console.log("error", response);
 		}
 	} catch (error) {
 		console.error("Fetch error", error);
@@ -90,11 +83,6 @@ export async function getCodeQr(setShowQr, qrCode) {
 			const responseBlob = await response.blob();
 			const src = URL.createObjectURL(responseBlob);
 			setShowQr(src);
-		} else if (response.status == 401) {
-			//navigate to login
-			console.log("error", response);
-		} else {
-			console.log("error", response);
 		}
 	} catch (error) {
 		console.error("Fetch error", error);

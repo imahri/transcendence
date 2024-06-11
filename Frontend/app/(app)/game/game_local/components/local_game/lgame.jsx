@@ -226,8 +226,6 @@ export const Gameson = ({
 					);
 					timeoutId = setTimeout(game, 300);
 				}
-			} else {
-				console.log("end game");
 			}
 		}
 

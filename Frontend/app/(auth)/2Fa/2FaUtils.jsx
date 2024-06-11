@@ -28,14 +28,11 @@ export async function submitNumber(username, code, setErrorSubmit, navigate) {
 		if (response.ok) {
 			const tokens = await response.json();
 			settoken(tokens);
-			console.log("login success");
-			navigate.push("/home");
+			navigate.replace("/home");
 		} else {
 			error();
-			console.log("error response :", response);
 		}
 	} catch (error) {
-		console.log("Network error : ", error);
 	}
 }
 

@@ -17,7 +17,6 @@ async function equipItem(item_id, items_id, setter) {
 		},
 	);
 	if (isOk) {
-		console.log(data);
 		setter(data);
 	}
 }
@@ -195,7 +194,7 @@ export default function MyCollection() {
 				setBoards(data.boards);
 				setPaddles(data.padels);
 				setBadges(data.badges);
-			} else console.log(data);
+			}
 		};
 
 		fetchItems();

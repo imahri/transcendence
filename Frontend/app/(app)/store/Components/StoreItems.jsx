@@ -17,7 +17,6 @@ export async function buyItem(item_type, item, setOwned, setError, setUpdate) {
 		setTimeout(() => {
 			setError(false);
 		}, 5000);
-		console.log(data);
 		return;
 	}
 	setOwned(data);

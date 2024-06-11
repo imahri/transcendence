@@ -19,10 +19,7 @@ export const useWebsocket = (endpoint, query_params = null) => {
 		if (!socket) return;
 		socket.onopen = () => {
 			setIsReady(true);
-			console.log(`Connected with ${endpoint}`);
 		};
-		socket.onerror = () => console.log(`Error in ${endpoint}`);
-		socket.onclose = () => console.log(`Disconnected with ${endpoint}`);
 		return () => socket.close();
 	}, [socket]);
 

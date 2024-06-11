@@ -68,7 +68,6 @@ async function getLastMsgs(setMsgs, setLoading) {
 	const [isOk, status, data] = await fetch_jwt(APIs.user.msg_notification);
 	if (!isOk) {
 		setLoading(false);
-		console.log(data);
 		return;
 	}
 	setMsgs(data);
