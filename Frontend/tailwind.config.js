@@ -25,7 +25,6 @@ module.exports = {
 					"linear-gradient(90deg, rgba(203,55,55,0.95) 0%, rgba(125,70,242,1) 100%)",
 				goto: "linear-gradient(90deg, rgba(255,76,0,1) 0%, rgba(194,37,97,1) 100%)",
 				do: "linear-gradient(90deg, rgba(192, 80, 235, 0.44) 0%, rgba(182, 54, 240, 0.6696) 50%, rgba(63, 10, 98, 1) 100%)",
-				// WelcomeImg: "url('./dist/assets/background_gradient.png')",
 			},
 		},
 		fontFamily: {

@@ -94,13 +94,13 @@ function Round({ round, match1, match2, match3, match4 }) {
 
 function getSchedule(participants, schedule) {
 	const result = {
-		1: { user1: null, user2: null }, //first match First 3rd : 1
-		2: { user1: null, user2: null }, //first match second 3rd : 2
-		3: { user1: null, user2: null }, //first match First 3rd : 3
-		4: { user1: null, user2: null }, //first match Second 3rd : 4
-		5: { user1: null, user2: null }, //Second match First 2nd : 5
-		6: { user1: null, user2: null }, //Second match Second 2nd : 6
-		7: { user1: null, user2: null }, //last match last
+		1: { user1: null, user2: null },
+		2: { user1: null, user2: null },
+		3: { user1: null, user2: null },
+		4: { user1: null, user2: null },
+		5: { user1: null, user2: null },
+		6: { user1: null, user2: null },
+		7: { user1: null, user2: null },
 	};
 
 	const FirstSide = schedule.FirstSide;

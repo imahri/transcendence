@@ -11,7 +11,6 @@ function Security({ setShowQr }) {
 
 	useEffect(() => {
 		const refetchUser = async () => {
-			//refetch user after update 2Fa state
 			const [isOk, status, data] = await fetch_jwt(APIs.user.user);
 
 			if (isOk) {

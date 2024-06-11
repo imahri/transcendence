@@ -296,7 +296,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         from Tournament.models import Tournament
 
         try:
-            print("game 3adiya")
             self.user: User = self.scope["user"]
             if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
@@ -704,7 +703,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                                     self.game_object.pop(found)
                                     break
                         else:
-                            print("papi")
                             stop_game = {"type": "forfeited", "end_it": True, "id": 99}
                             obg.reconnect = False
                             await self.channel_layer.group_send(
@@ -764,8 +762,6 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         try:
             self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             index = get_room_index(self.game_room, self.room_group_name)
-            if index == -1:
-                print("")
             obg: Game = self.game_object[index]
             result = []
             if find_player_in_gameS(self.game_room, self.user.username, result):
@@ -1138,8 +1134,6 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
         try:
             self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             index = get_room_index(self.game_room, self.room_group_name)
-            if index == -1:
-                print("")
             obg: Game = self.game_object[index]
             result = []
             if find_player_in_game(self.game_room, self.user.username, result):
@@ -1182,7 +1176,6 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
         from Tournament.models import Tournament
 
         try:
-            print("alloha")
             self.user: User = self.scope["user"]
             if not self.user.is_authenticated:
                 raise Exception("Not Authorizer")
@@ -1629,8 +1622,6 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
         try:
             self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             index = get_room_index(self.game_room, self.room_group_name)
-            if index == -1:
-                print("")
             obg: Game = self.game_object[index]
             result = []
             if find_player_in_game(self.game_room, self.user.username, result):

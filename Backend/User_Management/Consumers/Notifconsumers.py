@@ -23,7 +23,6 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             if self.user.is_anonymous:
                 raise Exception("Not Authorized")
             else:
-                print("Notification ws connect : ")
                 self.register_channel(self.user.username, self.channel_name)
                 await self.accept()
                 group_name = f"{self.user.username}_status"
@@ -37,11 +36,9 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 )
 
         except Exception as error:
-            print("Notification ws connect error : ", error)
             await self.disconnect(None)
 
     async def disconnect(self, close_code):
-        print(self.user.username, " disconnect from ws", close_code)
         username: str = self.user.username
         group_name = f"{username}_status"
         await self.channel_layer.group_send(
@@ -68,13 +65,12 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 await self.set_friendship(text_data["content"])
 
         except Exception as error:
-            print("error : ", error)
+            pass
 
     async def discardFromGroup(self, username):
         group_name = f"{username}_status"
         await self.channel_layer.group_discard(group_name, self.channel_name)
 
-        print(self.user.username, " deleted from : ", group_name)
 
     async def markConversationAsRead(self, id):
         """
@@ -90,7 +86,6 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             group_name = f"{username}_status"
             await self.channel_layer.group_add(group_name, self.channel_name)
 
-            print(self.user.username, " user added to : ", group_name)
             target_channel = self.get_channel_by_user(username)
             await self.send_json(
                 content={
@@ -101,7 +96,6 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             )
 
         except Exception as error:
-            print("online status catch : ", error)
             await self.send_json(
                 content={
                     "type": "onlineStatus",
@@ -160,7 +154,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             )
 
         except Exception as error:
-            print("update status: ", error)
+            pass
 
     async def redirect(self, event):
         content = event["content"]
@@ -198,7 +192,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 sended_to_CL, {"type": "redirect", "content": data}
             )
         except Exception as error:
-            print("notif error : ", error)
+            pass
 
     async def set_friendship(self, content: dict):
         """
@@ -240,4 +234,4 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
             # send new status to friend
             await self.send_friend_status(friend, user)
         except Exception as error:
-            print(error)
+            pass

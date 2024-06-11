@@ -33,8 +33,6 @@ class RoomView(APIView):
 
     @staticmethod
     def is_exiting(room_name: str, Consumer):
-        print("===> ", Consumer.game_room)
-        print("===> ", room_name)
         for _room in Consumer.game_room:
             if _room[0] == room_name:
                 return _room[1]
@@ -224,7 +222,6 @@ class ItemsView(APIView):
             return Response(response)
 
         except Exception as error:
-            print("catch : ", error)
             return Response(data=str(error), status=400)
 
     def put(self, request):
@@ -248,7 +245,6 @@ class ItemsView(APIView):
             return Response(data=response)
 
         except Exception as error:
-            print("catch : ", error)
             return Response(data=str(error), status=400)
 
 

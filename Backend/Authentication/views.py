@@ -15,8 +15,6 @@ import requests
 from User_Management.serializers import UserSerializer
 from core import settings
 
-# ! Use request.user
-
 
 @permission_classes([AllowAny])
 class Register(APIView):
@@ -34,7 +32,6 @@ class Register(APIView):
                 )
 
         except Exception as error:
-            print(error)
             return JsonResponse(
                 {"failure": str(error)}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -176,7 +173,6 @@ class intra_auth(APIView):
     @staticmethod
     def get_42access_token(code: str):
 
-        # !
         data = {
             "grant_type": "authorization_code",
             "client_id": settings.ITNRA_CLIENT_KEY,

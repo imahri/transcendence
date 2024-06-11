@@ -4,7 +4,6 @@ import logo from "@/app/logo.svg";
 import { APIs } from "@/Tools/fetch_jwt_client";
 
 function Badge({ user, BadgeInfo }) {
-	// const { user } = useContext(UserContext); // you should pass the user
 
 	const levelPercent = user.info.level.toString().split(".")[1];
 	const progresBarstyle = {

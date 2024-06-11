@@ -71,7 +71,6 @@ function Conversation({ info }) {
 	const ConvRef = useRef();
 	const [convState, setConvState] = useContext(ConvChatContext);
 	const isActive = convState === name;
-	// !! For security: Change it to Image object
 
 	useEffect(() => {
 		if (ws) {
@@ -193,7 +192,6 @@ export default function Conversations({
 						id = conv.id;
 					}
 				});
-				// TODO: use route handler
 				const [isOk, status, data] = await fetch_jwt(
 					`${APIs.chat.last_message}${id}`,
 				);

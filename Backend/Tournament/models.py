@@ -261,7 +261,6 @@ class Tournament(models.Model):
                     {"type": "redirect", "content": data},
                 )
             except:
-                print("amakayench : ", username)
                 pass
 
     def getPlayerByName(self, arrNames):

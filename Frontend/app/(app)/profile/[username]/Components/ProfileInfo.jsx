@@ -104,7 +104,6 @@ function Buttons({ profileUser, EditProfile }) {
 }
 
 function Friend({ displayFriends, username }) {
-	//fetch only 5 friends
 	const [friends, setFriends] = useState();
 	const [nbFriend, setnbFriend] = useState(0);
 
@@ -117,7 +116,6 @@ function Friend({ displayFriends, username }) {
 				},
 			);
 			if (!isOk) {
-				// setError(true); /// error
 				return;
 			}
 			setFriends(data.friends);

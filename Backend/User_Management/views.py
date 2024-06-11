@@ -65,7 +65,6 @@ class UserView(APIView):
 
                 return Response(UserData)
             else:
-                print(UserSerialized.errors)
                 return Response(UserSerialized.errors, status=400)
         except Exception as error:
             return Response({"error": str(error)}, status=400)
@@ -267,7 +266,6 @@ class NotifView(APIView):
             return Response({"allNotif": all_notif, "nb_unreaded": nbUnreadedNotif})
 
         except Exception as error:
-            print("notif view error : ", error)
             return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -282,5 +280,4 @@ def getUnseenMsgs(request):
         return Response(data=msgs_notif_serialzied)
 
     except Exception as error:
-        print("last msg view error : ", error)
         return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)

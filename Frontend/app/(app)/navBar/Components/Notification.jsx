@@ -29,8 +29,6 @@ function acceptDecline(callBack, svg) {
 }
 
 function AcceptDeclineGame({ notif, ws }) {
-	//send friend id to endpoint and send notif to user inform it friend accept your invit
-	// if decline send notif to other user user decline
 	return (
 		<div className="flex justify-between items-center gap-[5px]">
 			{acceptDecline(() => accept(notif), AccepSvg)}

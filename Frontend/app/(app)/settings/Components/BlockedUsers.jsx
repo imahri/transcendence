@@ -3,7 +3,6 @@ import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-//convert to socket
 async function deblock(friend_id, setBlockedUsers, setError) {
 	const bodyData = JSON.stringify({ friend_id: friend_id });
 
@@ -64,7 +63,6 @@ function BlockedUsers({ setPopUp }) {
 
 	useEffect(() => {
 		if (!BlockedUsers) {
-			//fetch all blocked users
 			const getUsers = async () => {
 				const [isOk, status, data] = await fetch_jwt(APIs.user.block);
 

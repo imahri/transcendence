@@ -13,7 +13,6 @@ import { useMessageList } from "../Hooks/useMessages";
 import { UserContext } from "../../context";
 
 async function getFriendInfo(FriendName) {
-	// TODO: use route handler
 	const [isOk, status, data] = await fetch_jwt(APIs.user.get_user, {
 		username: FriendName,
 	});

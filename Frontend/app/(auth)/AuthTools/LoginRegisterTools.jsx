@@ -8,10 +8,8 @@ export function showPassword() {
 }
 
 export function errorInForm(obj, setError) {
-	//I change the state to true to re-render the componnents and disply the eroor section
 	setError(obj);
 	setTimeout(() => {
-		//here i try to display error msg but only for 5s
 		setError(false);
 	}, 5000);
 }

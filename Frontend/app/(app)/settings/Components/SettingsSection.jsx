@@ -5,59 +5,6 @@ import { logout } from "./SettingsUtils.js";
 
 import { AccountSvg, AboutSvg, SecuritySvg, LogoutSvg } from "./Icons";
 import { closePopopupSvg } from "@/app/(auth)/2Fa/Popup";
-// import { fetch_jwt } from "@/Tools/fetch_jwt_client";
-// import { USER_URL } from "@/app/URLS";
-// import { removeTokens } from "@/app/(auth)/AuthTools/tokenManagment";
-
-// function deleteAccount(password, navigate) {
-// 	if (!password || password < 9) return;
-// 	const bodyData = JSON.stringify({ password: password });
-
-// 	fetch_jwt(
-// 		USER_URL,
-// 		{},
-// 		{
-// 			method: "DELETE",
-// 			body: bodyData,
-// 			headers: { "Content-Type": "application/json" },
-// 		},
-// 	).then(([isOk, status, data]) => {
-// 		if (isOk) {
-// 			removeTokens();
-// 			navigate.replace("/welcome");
-// 		}
-// 	});
-// }
-
-// function DeleteComponent() {
-// 	const [password, setPassword] = useState();
-// 	const navigate = useRouter();
-
-// 	return (
-// 		<div className="w-full flex flex-col justify-center items-center gap-[10px] mb-[20px]">
-// 			<h2 className="text-[#C0BBBB] font-bold text-[17px]">
-// 				Enter Your password
-// 			</h2>
-// 			<input
-// 				onChange={(e) => setPassword(e.target.value)}
-// 				className="w-[295px] [@media(max-width:550px)]:w-[90%] h-[50px] rounded-[10px] bg-[#D9D9D9] pt-[2px] focus:outline-none text-white text-[30px] pl-[10px]"
-// 				required
-// 				type="password"
-// 				id="password"
-// 				placeholder=""
-// 			/>
-
-// 			<button
-// 				className="w-[138px] h-[37px] bg-green-500 rounded-[10px] font-bold text-[16px] text-white cursor-pointer"
-// 				onClick={() => {
-// 					deleteAccount(password, navigate);
-// 				}}
-// 			>
-// 				Delete
-// 			</button>
-// 		</div>
-// 	);
-// }
 
 function Sections({ title, callBack, svg }) {
 	return (

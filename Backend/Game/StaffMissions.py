@@ -17,7 +17,7 @@ class MissionView(APIView):
             acheivment: Acheivement = Acheivement.objects.get(name=name)
             return AcheivmentSerializer(acheivment).data
         except Exception as error:
-            print(error)
+            pass
 
     def checkMission(self, Acheivement_name):
         user: User = self.request.user

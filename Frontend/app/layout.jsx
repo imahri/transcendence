@@ -1,9 +1,7 @@
 "use client";
-import { Inter, Chakra_Petch } from "next/font/google";
+import {Chakra_Petch } from "next/font/google";
 
 import "./globals.css";
-
-// const inter = Inter({ subsets: ["latin"] });
 
 const chakra = Chakra_Petch({
 	subsets: ["latin"],

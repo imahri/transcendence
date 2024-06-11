@@ -53,7 +53,6 @@ async function handleCreate(user, username, Tournament, setError) {
 	);
 
 	if (!isOk) {
-		//hanedl error Tournament name or username
 		myseterror(setError, "tournament");
 		return;
 	}

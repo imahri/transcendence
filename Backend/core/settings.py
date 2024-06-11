@@ -45,8 +45,6 @@ ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = ["http://10.11.100.211:80"]
-
 AUTH_USER_MODEL = "User_Management.User"
 
 REST_FRAMEWORK = {
@@ -149,36 +147,6 @@ DATABASES = {
     }
 }
 
-# Logs     install python-beats
-#!!
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "formatters": {
-#         "verbose": {
-#             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-#         },
-#     },
-#     "handlers": {
-#         "beats": {
-#             "level": "INFO",
-#             "class": "beats.handlers.BeatsHandler",
-#             "host": "Backend",
-#             "port": 5044,
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["beats"],
-#             "level": "INFO",
-#             "propagate": True,
-#         },
-#     },
-# }
-
-#  To use log
-# import logging
-# logger = logging.getLogger(__name__)
 
 
 # Password validation
