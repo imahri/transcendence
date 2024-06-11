@@ -2,7 +2,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { getToken } from "@/app/(auth)/AuthTools/tokenManagment";
 import { useSearchParams } from "next/navigation";
-import { APIs, WS } from "@/Tools/fetch_jwt_client";
+import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
+import { useWebsocket } from "@/app/(app)/hooks/useWebsocket";
+import { Loader } from "@/app/Components/Loader";
 
 let xcord = 0;
 let ycord = 0;
@@ -14,8 +16,8 @@ let uid = 0;
 
 let player2_state = "not yet";
 let player1_state = "not yet";
-let player2_for = "not yet";
-let player1_for = "not yet";
+let player2_for = 0;
+let player1_for = 0;
 
 export const Gameson = ({
 	secondArrived,
@@ -28,7 +30,6 @@ export const Gameson = ({
 	checkEnd,
 }) => {
 	const cvs = useRef(null);
-	const [socket, setSocket] = useState(null);
 	const searchParams = useSearchParams();
 	const tournament_name = searchParams.get("tournament");
 	const room_name = searchParams.get("room");
@@ -49,25 +50,16 @@ export const Gameson = ({
 	const [socket, isReady] = useWebsocket(end_socket, query);
 
 	useEffect(() => {
-		const tournament_name = searchParams.get("tournament");
-		const room_name = searchParams.get("room");
-		const ws = new WebSocket(
-			`${WS}/ws/game?` +
-				`token=${getToken()}` +
-				`${room_name ? `&room=${room_name}` : ""}` +
-				`${tournament_name ? `&tournament=${tournament_name}&mode=Tournament` : ""}`,
-		);
+		if (!isReady) return;
 
-		ws.onopen = () => {
-			setSocket(ws);
-		};
-
-		ws.onmessage = (event) => {
+		socket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 
 			if (data.event == "reconnect") {
 				secondArrived();
 			} else if (data.event == "forfeited") {
+				player1_for = data?.message?.id;
+
 				checkEnd();
 			} else if (data.event == "goal") {
 				setScore(data.score);
@@ -107,7 +99,7 @@ export const Gameson = ({
 	}, [isReady]);
 
 	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (isReady) {
 			const canvas = cvs.current;
 			const ctx = canvas.getContext("2d");
 
@@ -255,16 +247,22 @@ export const Gameson = ({
 
 			return () => {};
 		}
-	}, [socket]);
+	}, [isReady]);
 
 	return (
-		<canvas
-			style={{
-				width: "100%",
-				height: "100%",
-				objectFit: "contain",
-			}}
-			ref={cvs}
-		></canvas>
+		<>
+			{!isReady ? (
+				<Loader />
+			) : (
+				<canvas
+					style={{
+						width: "100%",
+						height: "100%",
+						objectFit: "contain",
+					}}
+					ref={cvs}
+				></canvas>
+			)}
+		</>
 	);
 };
