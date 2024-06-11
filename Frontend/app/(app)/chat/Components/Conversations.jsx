@@ -200,7 +200,7 @@ export default function Conversations({
 				if (isOk) {
 					_convList[idx].last_message = data;
 					_convList.sort((f, s) =>
-						f.last_message.sended_at > s.last_message.sended_at
+						f.last_message?.sended_at > s.last_message?.sended_at
 							? -1
 							: 1,
 					);
