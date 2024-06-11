@@ -3,7 +3,7 @@ import Matching from "@/app/(app)/game/matching/components/match_making/matching
 import LGame from "@/app/(app)/game/matching/gcomponents/live_game/Livegame";
 import WInter from "@/app/(app)/game/game_local/game_win/live_game/Win";
 import LInter from "@/app/(app)/game/game_local/game_lose/live_game/Lose";
-import EInter from "@/app/(app)/game/game_local_fr/live_game/End";
+import Shit from "@/app/(app)/game/matching/end/End";
 import { useSearchParams } from "next/navigation";
 import React, { useContext, useState, useEffect } from "react";
 import { fetch_jwt, APIs } from "@/Tools/fetch_jwt_client";
@@ -47,7 +47,6 @@ const Vim = () => {
 	const [loadImage, setLoadImage] = useState(true);
 	const { user } = useContext(UserContext);
 
-	//check query param if it's none normal  else check if room exist && send it to connect socket
 	const searchParams = useSearchParams();
 	useEffect(() => {
 		const room_name = searchParams.get("room");
@@ -64,7 +63,7 @@ const Vim = () => {
 				tournament_name != null,
 				mode,
 			);
-			if (!data) return navigate.push("/404"); //hardcoded for now
+			if (!data) return navigate.push("/404");
 			setCheckRoom(false);
 		};
 		CheckRoom();
@@ -120,7 +119,7 @@ const Vim = () => {
 					)}
 					{win && <WInter />}
 					{lose && <LInter />}
-					{end && <EInter />}
+					{end && <Shit />}
 				</>
 			)}
 		</div>

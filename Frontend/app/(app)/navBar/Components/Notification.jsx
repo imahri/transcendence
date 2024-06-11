@@ -94,11 +94,12 @@ async function getNotif(setNotif, setNbNotif) {
 }
 
 function handelNotif(data, setNotif, setNbNotif) {
+	const content = data.content;
 	setNotif((prev) => {
 		if (prev) {
-			prev.unshift(data.content);
+			prev.unshift(content);
 			return prev;
-		} else return data.content;
+		} else return content;
 	});
 	setNbNotif((prev) => prev + 1);
 }
@@ -107,7 +108,6 @@ function Notification() {
 	const [notif, setNotif] = useState(false);
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
-
 	const { user, ws } = useContext(UserContext);
 
 	useEffect(() => {
@@ -143,7 +143,11 @@ function Notification() {
 				/>
 			</svg>
 			<div className="size-5 bg-greatBlue rounded-full absolute top-[-2px] left-4 flex justify-center items-center">
-				<span className="text-white text-[13px]">{nbNotif}</span>
+				<span
+					className={`text-white ${nbNotif < 100 ? "text-[13px]" : "text-[10px]"}`}
+				>
+					{nbNotif}
+				</span>
 			</div>
 			<div
 				className={`w-[300px] bg-[#303030] absolute [@media(max-width:400px)]:w-[290px] right-[5px] top-[35px] rounded-b-[20px] flex flex-col gap-[10px] ${active ? "" : "hidden"}`}
