@@ -11,9 +11,6 @@ class Command(BaseCommand):
             { "name": "default", "price" : 700,  "image_path": "/images/Board1.png" },
             { "name": "fire", "price" : 800,  "image_path": "/images/Board2.png" },
             { "name": "Dark_luffy", "price" : 900,  "image_path": "/images/Frame4.png" },
-            { "name": "groot", "price" : 1000,  "image_path": "/images/Frame5.png" },
-            { "name": "Mountain", "price" : 300,  "image_path": "/images/Frame6.png" },
-            { "name": "Goku", "price" : 900,  "image_path": "/images/Frame7.png" },
 	    ]
 
         try:
