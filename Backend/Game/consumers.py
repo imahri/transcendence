@@ -855,7 +855,16 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                     other_player = (
                         players[0] if players[0] != self.user.username else players[1]
                     )
-                    if not self.get_channel_by_user(other_player):
+                    def im_first() -> bool:
+                        try:
+                            index = get_room_index(self.game_room, self.room_group_name)
+                            self.game_object[index]
+                            return True
+                        except:
+                            return False
+                        
+                    
+                    if not im_first():
                         self.loba = Game()
                         self.game_object.append(self.loba)
                         await self.send_json(
@@ -889,10 +898,13 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                         )
 
                         index = get_room_index(self.game_room, self.room_group_name)
+                        if index == -1:
+                            return
                         self.loba: Game = self.game_object[index]
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )
+                    return
 
         except Exception as error:
             await self.disconnect(None)
@@ -900,6 +912,8 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
     async def receive(self, text_data):
 
         index = get_room_index(self.game_room, self.room_group_name)
+        if index == -1:
+            return
         obg = self.game_object[index]
         data = json.loads(text_data)
         if data.get("event") == "resize":
@@ -936,6 +950,8 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
     async def send_ball_coordinates(self):
         try:
             index = get_room_index(self.game_room, self.room_group_name)
+            if index == -1:
+                return
             obg: Game = self.game_object[index]
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -1064,6 +1080,8 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                                         "message": stop_game,
                                     },
                                 )
+                                self.game_room.pop(found)
+                                self.game_object.pop(found)
                                 break
 
                             else:
@@ -1089,6 +1107,8 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                                         "message": stop_game,
                                     },
                                 )
+                                self.game_room.pop(found)
+                                self.game_object.pop(found)
                                 break
 
         except Exception as error:
@@ -1131,9 +1151,12 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
+        self.channels.pop(self.user.username, None)
         try:
             self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             index = get_room_index(self.game_room, self.room_group_name)
+            if index == -1:
+                return
             obg: Game = self.game_object[index]
             result = []
             if find_player_in_game(self.game_room, self.user.username, result):
@@ -1147,9 +1170,7 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                 self.game_object.pop(index)
         except:
             pass
-        self.channels.pop(self.user.username, None)
         await self.close(code)
-
 
 
 class PrivegameConsumer(AsyncJsonWebsocketConsumer):
@@ -1227,7 +1248,16 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
                     other_player = (
                         players[0] if players[0] != self.user.username else players[1]
                     )
-                    if not self.get_channel_by_user(other_player):
+                    def im_first() -> bool:
+                        try:
+                            index = get_room_index(self.game_room, self.room_group_name)
+                            self.game_object[index]
+                            return True
+                        except:
+                            return False
+                        
+                    
+                    if not im_first():
                         self.loba = Game()
                         self.game_object.append(self.loba)
                         await self.send_json(
@@ -1255,115 +1285,23 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
                                 "index": 2,
                             }
                         )
+                        
                         await self.channel_layer.group_send(
                             self.room_group_name,
                             {"type": "change_state", "state": "start"},
                         )
 
+
                         index = get_room_index(self.game_room, self.room_group_name)
+                        if index == -1:
+                            return
                         self.loba: Game = self.game_object[index]
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )
                     return
-                result = []
-                if find_player_in_gameS(self.game_room, self.user.username, result):
-                    is_valid = update_item_in_room(
-                        self.game_room, result[0], result[1], self.user.username
-                    )
-                    await self.channel_layer.group_add(result[0], self.channel_name)
-                    await self.send_json(
-                        content={
-                            "event": "index_player",
-                            "index": (result[1] + 1),
-                        }
-                    )
 
-                    index = get_room_index(self.game_room, self.room_group_name)
-                    obg = self.game_object[index]
-                    obg.pause = True
-                    obg.reconnect = False
-                    await self.channel_layer.group_send(
-                        self.room_group_name,
-                        {
-                            "type": "send_info",
-                            "user1": {
-                                "username": obg.user1["user_name"],
-                                "image": obg.user1["img"],
-                            },
-                            "user2": {
-                                "username": obg.user2["user_name"],
-                                "image": obg.user2["img"],
-                            },
-                        },
-                    )
-                    await self.channel_layer.group_send(
-                        self.room_group_name,
-                        {
-                            "type": "goal",
-                            "score": {
-                                "score1": obg.user1["score"],
-                                "score2": obg.user2["score"],
-                            },
-                        },
-                    )
-                    xrr = len(self.game_room[index][1])
-                    if xrr == 2:
-                        await self.shouha()
 
-                else:
-                    if not check_for_game_start(self.game_room, self.user.username):
-                        self.loba = Game()
-                        self.game_object.append(self.loba)
-                        await self.send_json(
-                            content={
-                                "event": "index_player",
-                                "index": 1,
-                            }
-                        )
-
-                    else:
-                        index = get_room_index(self.game_room, self.room_group_name)
-                        self.loba: Game = self.game_object[index]
-
-                        room = []
-                        for [name, players] in self.game_room:
-                            if self.room_group_name == name:
-                                room = [name, players]
-                        [name, players] = room
-                        other_player = (
-                            players[0]
-                            if players[0] != self.user.username
-                            else players[1]
-                        )
-
-                        user = await database_sync_to_async(User.objects.get)(
-                            username=other_player
-                        )
-                        enemy = self.user
-                        self.loba.matchs = await database_sync_to_async(Match.create)(
-                            user, enemy, mode, tournament
-                        )
-                        self.loba.user1["user_name"] = self.loba.matchs[0].user.username
-                        info1 = await self.loba.matchs[0].user.info_async()
-                        self.loba.user1["img"] = info1.profile_img.url
-                        self.loba.user2["user_name"] = self.loba.matchs[1].user.username
-                        info2 = await self.loba.matchs[1].user.info_async()
-                        self.loba.user2["img"] = info2.profile_img.url
-
-                        await self.send_json(
-                            content={
-                                "event": "index_player",
-                                "index": 2,
-                            }
-                        )
-                        await self.channel_layer.group_send(
-                            self.room_group_name,
-                            {"type": "change_state", "state": "start"},
-                        )
-                        self.task_manager.append(
-                            asyncio.create_task(self.send_ball_coordinates())
-                        )
 
         except Exception as error:
             await self.disconnect(None)
@@ -1371,6 +1309,8 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
     async def receive(self, text_data):
 
         index = get_room_index(self.game_room, self.room_group_name)
+        if index == -1:
+            return
         obg = self.game_object[index]
         data = json.loads(text_data)
         if data.get("event") == "resize":
@@ -1407,6 +1347,8 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
     async def send_ball_coordinates(self):
         try:
             index = get_room_index(self.game_room, self.room_group_name)
+            if index == -1:
+                return
             obg: Game = self.game_object[index]
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -1619,9 +1561,12 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def disconnect(self, code):
+        self.channels.pop(self.user.username, None)
         try:
             self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             index = get_room_index(self.game_room, self.room_group_name)
+            if index == -1:
+                return
             obg: Game = self.game_object[index]
             result = []
             if find_player_in_game(self.game_room, self.user.username, result):
@@ -1635,5 +1580,4 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
                 self.game_object.pop(index)
         except:
             pass
-        self.channels.pop(self.user.username, None)
         await self.close(code)

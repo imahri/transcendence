@@ -141,9 +141,6 @@ export const Gameson = ({
 			document.addEventListener("keyup", keyUpHandler);
 
 			function keyDownHandler(event) {
-				if (event.keyCode === 32) {
-					togglePause();
-				}
 				if (event.keyCode === 87) {
 					upKeyPressed = true;
 					sendPaddleUpdate();
