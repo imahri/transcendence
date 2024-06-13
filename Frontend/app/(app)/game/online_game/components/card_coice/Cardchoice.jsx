@@ -12,19 +12,7 @@ const Cardchoice = () => {
 				</div>
 				<div className={`${styles.rows_exac} ${styles.fliko}`}>
 					<div className={styles.content}>
-						<div className={`${styles.item}`}>
-							<div
-								className={`${styles.card} ${styles.second} ${styles.middle_it}`}
-							>
-								<Link
-									href="/game/matching"
-									className={styles.lunin}
-								></Link>
-								<p className={`${styles.graf}`}>Matching</p>
-							</div>
-							<span className={styles.ti_n}>Classic</span>
-							<div className={styles.shad}></div>
-						</div>
+
 
 						<Link href={"/tournament"} className={`${styles.item}`}>
 							<div className={`${styles.card} ${styles.third}`}>
