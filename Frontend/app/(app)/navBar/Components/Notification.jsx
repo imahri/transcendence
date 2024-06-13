@@ -100,13 +100,13 @@ function handelNotif(data, setNotif, setNbNotif) {
 			const tmp =  prev.slice();
 			tmp.unshift(content);
 			return tmp
-		} else return content;
+		} else return [content];
 	});
 	setNbNotif((prev) => prev + 1);
 }
 
 function Notification() {
-	const [notif, setNotif] = useState(false);
+	const [notif, setNotif] = useState();
 	const [active, setactive] = useState();
 	const [nbNotif, setnbNotif] = useState();
 	const { user, ws } = useContext(UserContext);
@@ -158,7 +158,7 @@ function Notification() {
 					<h1 className="text-white font-semibold"> Notification</h1>
 				</div>
 				<div className="max-h-[300px] mb-[20px] overflow-y-auto flex flex-col gap-[5px] pl-[5px]">
-					{notif &&  
+					{Array.isArray(notif) &&  
 						notif?.map((notif, index) => {
 								return (
 									<div

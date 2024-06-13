@@ -89,7 +89,9 @@ function LastNotif() {
 		const data = JSON.parse(e.data);
 		if (data.type == "notification" && data.content.type == "C") {
 			setMsgs((prev) => {
-				return [...prev, data.content];
+				if (Array.isArray(prev))
+					return [...prev, data.content];
+				else return [data.content];
 			});
 		}
 	};
