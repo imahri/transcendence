@@ -88,7 +88,7 @@ async function getNotif(setNotif, setNbNotif) {
 	const [isOk, status, data] = await fetch_jwt(APIs.user.notification);
 	if (isOk) {
 		setNbNotif(data.nb_unreaded);
-		setNotif(data.allNotif);
+		setNotif(data.allNotif?.sort((a, b) => new Date(b.time) - new Date(a.time)));
 		return;
 	}
 }
@@ -97,8 +97,9 @@ function handelNotif(data, setNotif, setNbNotif) {
 	const content = data.content;
 	setNotif((prev) => {
 		if (prev) {
-			prev.unshift(content);
-			return prev;
+			const tmp =  prev.slice();
+			tmp.unshift(content);
+			return tmp
 		} else return content;
 	});
 	setNbNotif((prev) => prev + 1);
@@ -118,8 +119,9 @@ function Notification() {
 		if (ws) {
 			ws.addEventListener("message", (e) => {
 				const data = JSON.parse(e.data);
-				if (data.type == "notification")
+				if (data.type == "notification"){
 					handelNotif(data, setNotif, setnbNotif);
+				}
 			});
 		}
 	}, [ws]);
@@ -156,10 +158,8 @@ function Notification() {
 					<h1 className="text-white font-semibold"> Notification</h1>
 				</div>
 				<div className="max-h-[300px] mb-[20px] overflow-y-auto flex flex-col gap-[5px] pl-[5px]">
-					{notif &&
-						notif
-							?.sort((a, b) => new Date(b.time) - new Date(a.time))
-							.map((notif, index) => {
+					{notif &&  
+						notif?.map((notif, index) => {
 								return (
 									<div
 										onClick={() =>
