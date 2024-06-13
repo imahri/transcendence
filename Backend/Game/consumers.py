@@ -10,12 +10,13 @@ from urllib.parse import parse_qs
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, creator):
         self.canvas = {"height": 1300, "width": 2560}
         self.matchs: list[Match]
         self.paused = False
         self.reconnect = False
         self.reconnect_counter = 0
+        self.creator: str = creator
 
         self.user1 = {
             "x": 3,
@@ -861,7 +862,10 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                         
                     
                     if not im_first():
-                        self.loba = Game()
+                        index = get_room_index(self.game_room, self.room_group_name)
+                        if index == -1:
+                            return
+                        self.loba = Game(creator=self.user.username)
                         self.game_object.append(self.loba)
                         await self.send_json(
                             content={
@@ -882,6 +886,18 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                         info2 = await self.loba.matchs[1].user.info_async()
                         self.loba.user2["img"] = info2.profile_img.url
                     else:
+                        index = get_room_index(self.game_room, self.room_group_name)
+                        if index == -1:
+                            return
+                        self.loba: Game = self.game_object[index]
+                        if self.loba.creator == self.user.username:
+                            await self.send_json(
+                                content={
+                                    "event": "index_player",
+                                    "index": 1,
+                                }
+                            )
+                            return
                         await self.send_json(
                             content={
                                 "event": "index_player",
@@ -892,11 +908,6 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                             self.room_group_name,
                             {"type": "change_state", "state": "start"},
                         )
-
-                        index = get_room_index(self.game_room, self.room_group_name)
-                        if index == -1:
-                            return
-                        self.loba: Game = self.game_object[index]
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )
@@ -1252,7 +1263,10 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
                         
                     
                     if not im_first():
-                        self.loba = Game()
+                        index = get_room_index(self.game_room, self.room_group_name)
+                        if index == -1:
+                            return
+                        self.loba = Game(creator=self.user.username)
                         self.game_object.append(self.loba)
                         await self.send_json(
                             content={
@@ -1273,23 +1287,28 @@ class PrivegameConsumer(AsyncJsonWebsocketConsumer):
                         info2 = await self.loba.matchs[1].user.info_async()
                         self.loba.user2["img"] = info2.profile_img.url
                     else:
+                        index = get_room_index(self.game_room, self.room_group_name)
+                        if index == -1:
+                            return
+                        self.loba: Game = self.game_object[index]
+                        if self.loba.creator == self.user.username:
+                            await self.send_json(
+                                content={
+                                    "event": "index_player",
+                                    "index": 1,
+                                }
+                            )
+                            return
                         await self.send_json(
                             content={
                                 "event": "index_player",
                                 "index": 2,
                             }
                         )
-                        
                         await self.channel_layer.group_send(
                             self.room_group_name,
                             {"type": "change_state", "state": "start"},
                         )
-
-
-                        index = get_room_index(self.game_room, self.room_group_name)
-                        if index == -1:
-                            return
-                        self.loba: Game = self.game_object[index]
                         self.task_manager.append(
                             asyncio.create_task(self.send_ball_coordinates())
                         )

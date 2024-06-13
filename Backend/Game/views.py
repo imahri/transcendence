@@ -327,7 +327,7 @@ def check_achievement(request):
                 isAdded = True
         if not Acheivement.owner_of(user, "Fiddler"):  # ! Create use with the same name
             if Match.objects.filter(
-                user=user, enemy=User.objects.get(username="Fiddler")
+                user=user, enemy=User.objects.get(username="fiddler")
             ).exists():
                 Acheivement.objects.get(name="Fiddler").users.add(user)
                 isAdded = True

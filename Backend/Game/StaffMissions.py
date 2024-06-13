@@ -39,7 +39,7 @@ class MissionView(APIView):
 
         tasks = [
             {"task": "Change profile Image", "state": profileImage},
-            {"task": "Add Tow Friend", "state": TowFriend},
+            {"task": "Add Two Friend", "state": TowFriend},
             {"task": "Reach level 2", "state": level},
         ]
         return tasks
