@@ -59,22 +59,12 @@ services:
         restart: always
         depends_on:
             - database
-            # - redis
-        #  In-Production
-        #      - Configure with Postgress
-        #      - DEBUG = False
-        #      - ALLOWED_HOSTS = ["frontend"]
-        #      - Redis for Channels
-        #      - server static_files https://docs.djangoproject.com/en/5.0/howto/static-files/deployment/
-        #      - HTTPS
+
     database:
         container_name: database
         image: postgres
         networks:
             - transcendence_network
-        # healthcheck:
-        #     test: "pg_isready -U $POSTGRES_USER"
-        #     interval: 5s
         logging:
             driver: json-file
             options:
@@ -88,13 +78,7 @@ services:
         volumes:
             - pgdata:/var/lib/postgresql/data
         restart: always
-        #  In-Production
-        #       - Only auth host is "backend"
-    # redis:
-    #     container_name: redis
-    #     image: redis
-    #     networks:
-    #         - transcendence_network
+  
 
     prometheus:
         container_name: prometheus
