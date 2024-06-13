@@ -124,7 +124,7 @@ function LastNotif() {
 					{isLoading && <Loading />}
 					{!Msgs && !isLoading && <NoMsg />}
 					{Msgs &&
-						Msgs.sort(
+						Msgs?.sort(
 							(a, b) => new Date(b.time) - new Date(a.time),
 						).map((msg, index) => {
 							return (

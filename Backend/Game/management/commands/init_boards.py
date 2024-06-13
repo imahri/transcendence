@@ -10,6 +10,7 @@ class Command(BaseCommand):
         boards = [
             { "name": "default", "price" : 700,  "image_path": "/images/Board1.png" },
             { "name": "fire", "price" : 800,  "image_path": "/images/Board2.png" },
+            { "name": "Dark_luffy", "price" : 900,  "image_path": "/images/Frame4.png" },
 	    ]
 
         try:

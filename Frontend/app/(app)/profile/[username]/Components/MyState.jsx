@@ -196,7 +196,7 @@ const getAcheivments = async (setAch, username) => {
 		username: username,
 	});
 	if (isOk) {
-		data.sort((a, b) => !a.unlocked);
+		data?.sort((a, b) => !a.unlocked);
 		setAch(data);
 		return;
 	}

@@ -820,28 +820,24 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                     )
                     if not await database_sync_to_async(tournament.is_participant)(self.user):
                         raise Exception("not member of tournament")
-                except Exception as error:
-                    if str(error) == "not member of tournament":
-                        await self.disconnect(None)
-                        return
-                    tournament = None
+                except:
+                    await self.disconnect(None)
+                    return
                 [_mode] = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "mode", ["Classic"]
                 )
 
-                if _mode == "Classic":
-                    mode = 0
-                elif _mode == "Ranked":
-                    mode = 1
-                elif _mode == "Tournament":
+                if _mode == "Tournament":
                     mode = 2
+                else:
+                    raise Exception("only for Tournament")
                 room_name = parse_qs(self.scope["query_string"].decode("utf8")).get(
                     "room", None
                 )
                 if room_name:
                     self.room_group_name = room_name[0]
                 else:
-                    self.room_group_name = creat_room_name(self.game_room)
+                    raise Exception("only for Tournament")
                 await self.channel_layer.group_add(
                     self.room_group_name, self.channel_name
                 )
@@ -1070,8 +1066,7 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                                 await database_sync_to_async(match2.set_score)(
                                     obg.user2["score"], 500
                                 )
-                                if match1.mode == 2 and match1.tournament:
-                                    await database_sync_to_async(match1.tournament.next_match)()
+                                await database_sync_to_async(match1.tournament.next_match)()
                                 
                                 await self.channel_layer.group_send(
                                     self.room_group_name,
@@ -1097,8 +1092,7 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                                 await database_sync_to_async(match2.set_score)(
                                     obg.user2["score"], 10
                                 )
-                                if match1.mode == 2 and match1.tournament:
-                                    await database_sync_to_async(match1.tournament.next_match)()
+                                await database_sync_to_async(match1.tournament.next_match)()
                                 
                                 await self.channel_layer.group_send(
                                     self.room_group_name,

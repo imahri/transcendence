@@ -158,7 +158,7 @@ function Notification() {
 				<div className="max-h-[300px] mb-[20px] overflow-y-auto flex flex-col gap-[5px] pl-[5px]">
 					{notif &&
 						notif
-							.sort((a, b) => new Date(b.time) - new Date(a.time))
+							?.sort((a, b) => new Date(b.time) - new Date(a.time))
 							.map((notif, index) => {
 								return (
 									<div

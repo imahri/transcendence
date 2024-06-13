@@ -83,7 +83,7 @@ export const useConversations = (initialState) => {
 					newList.push(obj);
 				}
 			}
-			newList.sort((f, s) =>
+			newList?.sort((f, s) =>
 				f.last_message?.sended_at > s.last_message?.sended_at ? -1 : 1,
 			);
 			setConversationList(newList);

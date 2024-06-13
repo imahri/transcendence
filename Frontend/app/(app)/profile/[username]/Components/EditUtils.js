@@ -87,7 +87,7 @@ export function ChangeInfo(
 		setLoading(false);
 		return;
 	}
-	if (NewInfo.profile_img.name.length > 100) {
+	if (NewInfo.profile_img && NewInfo.profile_img.name.length > 100) {
 		const newName =
 			username +
 			"_profile_img." +

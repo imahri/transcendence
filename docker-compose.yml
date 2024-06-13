@@ -59,7 +59,7 @@ services:
         restart: always
         depends_on:
             - database
-            - redis
+            # - redis
         #  In-Production
         #      - Configure with Postgress
         #      - DEBUG = False
@@ -90,11 +90,11 @@ services:
         restart: always
         #  In-Production
         #       - Only auth host is "backend"
-    redis:
-        container_name: redis
-        image: redis
-        networks:
-            - transcendence_network
+    # redis:
+    #     container_name: redis
+    #     image: redis
+    #     networks:
+    #         - transcendence_network
 
     prometheus:
         container_name: prometheus
