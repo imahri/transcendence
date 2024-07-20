@@ -78,59 +78,59 @@ services:
         volumes:
             - pgdata:/var/lib/postgresql/data
         restart: always
-  
 
-    prometheus:
-        container_name: prometheus
-        image: prom/prometheus:latest
-        volumes:
-            - ./prometheus.yml:/etc/prometheus/prometheus.yml
-            - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
-        ports:
-            - 9090:9090
-        networks:
-            - transcendence_network
 
-    grafana:
-        container_name: grafana
-        image: grafana/grafana:latest
-        volumes:
-            - grafana_data:/var/lib/grafana
-        ports:
-            - 3000:3000
-        networks:
-            - transcendence_network
+    # prometheus:
+    #     container_name: prometheus
+    #     image: prom/prometheus:latest
+    #     volumes:
+    #         - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    #         - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
+    #     ports:
+    #         - 9090:9090
+    #     networks:
+    #         - transcendence_network
 
-    elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
-        container_name: elasticsearch
-        environment:
-        - discovery.type=single-node
-        - xpack.monitoring.enabled=true
-        networks:
-        - transcendence_network
-        ports:
-        - "9200:9200"
-        - "9300:9300"
+    # grafana:
+    #     container_name: grafana
+    #     image: grafana/grafana:latest
+    #     volumes:
+    #         - grafana_data:/var/lib/grafana
+    #     ports:
+    #         - 3000:3000
+    #     networks:
+    #         - transcendence_network
 
-    logstash:
-        image: docker.elastic.co/logstash/logstash:7.17.9
-        container_name: logstash
-        volumes:
-        - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-        networks:
-        - transcendence_network
-        ports:
-        - "5000:5000"
-        depends_on:
-        - elasticsearch
+    # elasticsearch:
+    #     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    #     container_name: elasticsearch
+    #     environment:
+    #     - discovery.type=single-node
+    #     - xpack.monitoring.enabled=true
+    #     networks:
+    #     - transcendence_network
+    #     ports:
+    #     - "9200:9200"
+    #     - "9300:9300"
 
-    kibana:
-        image: docker.elastic.co/kibana/kibana:7.17.9
-        container_name: kibana
-        networks:
-        - transcendence_network
-        ports:
-        - "5601:5601"
-        depends_on:
-        - elasticsearch
+    # logstash:
+    #     image: docker.elastic.co/logstash/logstash:7.17.9
+    #     container_name: logstash
+    #     volumes:
+    #     - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    #     networks:
+    #     - transcendence_network
+    #     ports:
+    #     - "5000:5000"
+    #     depends_on:
+    #     - elasticsearch
+
+    # kibana:
+    #     image: docker.elastic.co/kibana/kibana:7.17.9
+    #     container_name: kibana
+    #     networks:
+    #     - transcendence_network
+    #     ports:
+    #     - "5601:5601"
+    #     depends_on:
+    #     - elasticsearch
